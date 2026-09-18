@@ -24,6 +24,31 @@
       }, 150);
     })();
   </script>
+  <script>
+    // Disable right click / context menu / long-press callout
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Disable dragging of images and elements
+    document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    document.addEventListener('drop', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Lock window scroll
+    window.addEventListener('scroll', function() {
+      if (window.scrollX !== 0 || window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+    }, { passive: false });
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#FACC15">
@@ -227,7 +252,7 @@
   <!-- Preload Cinema Wallpaper Background -->
   <link rel="preload" as="image" href="/bg/cinema_bg.webp" type="image/webp">
 </head>
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
   <!-- SOFT BLURRED CINEMA WALLPAPER BACKDROP & FOCUS SCRIM -->
   <div id="bgBackdrop" class="bg-backdrop" aria-hidden="true"></div>
   <div id="bgFocusScrim" class="bg-focus-scrim" aria-hidden="true"></div>

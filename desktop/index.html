@@ -25,6 +25,31 @@
       }, 150);
     })();
   </script>
+  <script>
+    // Disable right click / context menu
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Disable dragging of images and elements
+    document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    document.addEventListener('drop', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Lock window scroll
+    window.addEventListener('scroll', function() {
+      if (window.scrollX !== 0 || window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+    }, { passive: false });
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#FFFDF5">
@@ -247,10 +272,44 @@
     }
 
     html, body {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       background: #F4EEDC url('bg/cinema_bg.webp') no-repeat center center fixed !important;
       background-size: cover !important;
       -webkit-background-size: cover !important;
-      overflow-x: hidden !important;
+    }
+
+    * {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      -webkit-touch-callout: none;
+    }
+
+    img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      pointer-events: auto;
+      -webkit-touch-callout: none;
+    }
+
+    input, textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
     }
 
     #app {
@@ -258,6 +317,7 @@
       height: 100%;
       position: relative;
       transition: background 0.7s ease;
+      overflow: hidden;
     }
 
     .screen {
@@ -267,6 +327,7 @@
       position: absolute;
       top: 0;
       left: 0;
+      overflow: hidden;
     }
 
     .screen.active {
@@ -12615,7 +12676,7 @@
   <script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"></script>
 </head>
 
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
   <svg style="display: none;">
     <defs>
       <symbol id="icon-clipboard-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
