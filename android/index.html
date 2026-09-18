@@ -103,6 +103,10 @@
         <span style="display:none; font-family:var(--font-display); font-size:1.25rem;">SCOOPCAST</span>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
+        <button class="icon-btn" id="btnChatToggle" onclick="UI.toggleChatDrawer();" aria-label="Open Chat" style="display:none; position:relative;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="unread-badge-dot" id="chatUnreadDot"></span>
+        </button>
         <button class="icon-btn" id="btnSoundToggle" onclick="SoundEffects.toggleMute(); UI.updateSoundBtn();" aria-label="Toggle Sound">
           <svg class="ui-icon" id="soundIconSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
         </button>
@@ -353,21 +357,6 @@
         <button class="btn-nb-primary" onclick="GameClient.leaveRoom();" style="max-width:340px;">RETURN TO LOBBY <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
       </div>
     </main>
-
-    <!-- ═══════════ FLOATING CHAT TRIGGER ═══════════ -->
-    <button class="floating-chat-trigger" id="floatingChatBtn" onclick="
-      const gs = document.getElementById('gameScreen');
-      if (gs && gs.classList.contains('active')) {
-        const inp = document.getElementById('mobileGuessInput');
-        if (inp) inp.focus();
-      } else {
-        document.getElementById('chatDrawer').classList.add('open');
-        document.getElementById('sheetBackdrop').classList.add('active');
-      }
-    " aria-label="Open Chat">
-      <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span class="unread-badge-dot" id="chatUnreadDot"></span>
-    </button>
 
     <!-- ═══════════ BOTTOM DRAWERS ═══════════ -->
     <div class="drawer-backdrop" id="sheetBackdrop" onclick="document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open')); this.classList.remove('active');"></div>

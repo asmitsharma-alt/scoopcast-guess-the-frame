@@ -384,6 +384,42 @@ const UI = {
     }
     // Dismiss keyboard on screen shift
     if (document.activeElement) document.activeElement.blur();
+
+    // Close any open drawers when shifting to homeScreen
+    if (screenId === 'homeScreen') {
+      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
+      const backdrop = document.getElementById('sheetBackdrop');
+      if (backdrop) backdrop.classList.remove('active');
+    }
+
+    // Toggle top-bar chat button: visible only in room/game screens, hidden on home screen
+    const chatBtn = document.getElementById('btnChatToggle');
+    if (chatBtn) {
+      chatBtn.style.display = (screenId !== 'homeScreen') ? 'flex' : 'none';
+    }
+  },
+
+  toggleChatDrawer() {
+    if (typeof Haptics !== 'undefined') Haptics.tap();
+    const drawer = document.getElementById('chatDrawer');
+    const backdrop = document.getElementById('sheetBackdrop');
+    const dot = document.getElementById('chatUnreadDot');
+    if (dot) dot.style.display = 'none';
+
+    if (!drawer) return;
+    const isOpen = drawer.classList.contains('open');
+    if (isOpen) {
+      drawer.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('active');
+    } else {
+      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
+      drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('active');
+      const chatInput = document.getElementById('mobileChatInput');
+      if (chatInput) {
+        setTimeout(() => chatInput.focus(), 150);
+      }
+    }
   },
 
   showToast(message) {
