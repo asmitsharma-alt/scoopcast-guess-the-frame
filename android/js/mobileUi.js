@@ -233,6 +233,7 @@ const UI = {
       copyLinkBtn.addEventListener('click', () => {
         const code = GameClient.roomCode || '';
         const url = window.location.origin + '/?room=' + code;
+        if (window.AnalyticsEngine) AnalyticsEngine.trackShare('copy_link');
         if (navigator.clipboard) {
           navigator.clipboard.writeText(url);
           UI.showToast((typeof SvgIcons !== 'undefined' ? SvgIcons.copy : '') + ' Room link copied to clipboard!');
@@ -248,6 +249,7 @@ const UI = {
         const code = GameClient.roomCode || '';
         const url = window.location.origin + '/?room=' + code;
         const text = `Join my cinema frame guessing party on Scoopcast! Room Code: ${code} | ${url}`;
+        if (window.AnalyticsEngine) AnalyticsEngine.trackShare('whatsapp');
         if (navigator.share) {
           navigator.share({ title: 'Guess The Frame', text, url });
         } else {

@@ -518,6 +518,7 @@ const GameClient = {
     UI.showScreen('lobbyScreen');
     const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
     UI.showToast(`${crownIcon} Room ${this.roomCode} created! Share the code with friends.`);
+    if (window.AnalyticsEngine) AnalyticsEngine.trackRoomCreate(this.roomCode, this.hostSettings);
   },
 
   joinGame(roomCode) {
@@ -527,6 +528,8 @@ const GameClient = {
       UI.showToast('Please enter a valid 4-letter room code!');
       return;
     }
+
+    if (window.AnalyticsEngine) AnalyticsEngine.trackRoomJoin(cleanCode);
 
     this.isHost = false;
     this.roomCode = cleanCode;
@@ -731,6 +734,7 @@ const GameClient = {
       }
 
       case 'PLAYER_USED_HINT': {
+        if (window.AnalyticsEngine) AnalyticsEngine.trackHint();
         if (msg.updatedPlayers) {
           this.players = msg.updatedPlayers;
           UI.renderScoreboard();
@@ -755,6 +759,10 @@ const GameClient = {
       case 'GAME_OVER_BROADCAST': {
         this.isMatchActive = false;
         this.isRoundFinished = true;
+        if (window.AnalyticsEngine) {
+          const winner = (msg.players && msg.players[0]) ? msg.players[0].name : 'Unknown';
+          AnalyticsEngine.trackGameOver(winner, this.totalRounds || 0);
+        }
         if (msg.players) this.players = msg.players;
         if (typeof SoundEffects !== 'undefined') SoundEffects.playReveal();
         UI.showScreen('gameOverScreen');
@@ -788,6 +796,7 @@ const GameClient = {
 
   startGame(options = {}) {
     if (!this.isHost) return;
+    if (window.AnalyticsEngine) AnalyticsEngine.trackGameStart(this.roomCode, options);
 
     const counts = options.roundsByMode || this.hostSettings.roundsByMode;
     const cat = options.category || this.hostSettings.category || 'all';
@@ -897,6 +906,10 @@ const GameClient = {
       maskedHint: this.currentMaskedHint
     });
 
+    if (window.AnalyticsEngine) {
+      AnalyticsEngine.trackRoundStart(frame.type || 'frames', roundIndex);
+    }
+
     this.setupRoundUI(clientFrame, timerDuration, roundIndex);
   },
 
@@ -909,6 +922,11 @@ const GameClient = {
     this.hasUsedHintThisRound = false;
     this.currentMaskedHint = msg.maskedHint || '';
     this.currentFrame = msg.frame;
+
+    if (window.AnalyticsEngine) {
+      const mode = (msg && msg.frame) ? (msg.frame.type || (msg.frame.src && msg.frame.src.includes('EYES') ? 'eyes' : (msg.frame.dialogue ? 'dialogue' : 'frames'))) : 'frames';
+      AnalyticsEngine.trackRoundStart(mode, msg.roundIndex);
+    }
 
     const timerDuration = msg.timerDuration || 30;
     this.setupRoundUI(msg.frame, timerDuration, msg.roundIndex, msg.totalRounds);
@@ -961,6 +979,8 @@ const GameClient = {
   submitGuess(text) {
     const clean = String(text || '').trim();
     if (!clean) return;
+
+    if (window.AnalyticsEngine) AnalyticsEngine.trackGuess(false, clean);
 
     if (this.hasGuessedThisRound || this.isRoundFinished) {
       this.sendChat(clean);
@@ -1074,6 +1094,7 @@ const GameClient = {
     }
 
     if (winRecord && winRecord.playerId === this.playerId) {
+      if (window.AnalyticsEngine) AnalyticsEngine.trackGuess(true, winRecord.guess || '');
       this.hasGuessedThisRound = true;
       if (typeof Haptics !== 'undefined') Haptics.correct();
       if (typeof SoundEffects !== 'undefined') SoundEffects.playCorrect();
@@ -1094,6 +1115,7 @@ const GameClient = {
   requestHint() {
     if (this.hasUsedHintThisRound || this.hasGuessedThisRound) return;
     this.hasUsedHintThisRound = true;
+    if (window.AnalyticsEngine) AnalyticsEngine.trackHint();
 
     // Deduct 2 points
     const me = this.players.find(p => p.id === this.playerId);
@@ -1210,6 +1232,8 @@ const GameClient = {
   sendChat(text) {
     const clean = String(text || '').trim();
     if (!clean) return;
+
+    if (window.AnalyticsEngine) AnalyticsEngine.trackChatMessage();
 
     // Spoiler prevention: check if message matches current round answer
     const currentAns = (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]?.answer) ||
