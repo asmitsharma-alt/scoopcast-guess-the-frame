@@ -678,24 +678,81 @@ const UI = {
   },
 
   appendChatMessage(chat) {
-    const stream = document.getElementById('chatMessagesStream');
-    if (!stream) return;
+    if (!chat) return;
 
-    const msg = document.createElement('div');
-    msg.style.marginBottom = '8px';
-    msg.style.fontSize = '0.9rem';
+    const isMe = (typeof GameClient !== 'undefined' && chat.senderId === GameClient.playerId);
+    const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.text || '')) : this.escapeHtml(chat.text || '');
+    const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName || 'Player')) : this.escapeHtml(chat.senderName || 'Player');
 
-    if (chat.isSystem) {
-      const parsed = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(chat.text) : chat.text;
-      msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${parsed}</span>`;
-    } else {
-      const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.text)) : this.escapeHtml(chat.text);
-      const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName)) : this.escapeHtml(chat.senderName);
-      msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
+    // 1. In-game live chat stream (#gameInGameChatStream in gameScreen empty space)
+    const gameStream = document.getElementById('gameInGameChatStream');
+    if (gameStream) {
+      const placeholder = document.getElementById('gameChatPlaceholder');
+      if (placeholder) placeholder.remove();
+
+      const item = document.createElement('div');
+      if (chat.isWinner) {
+        item.className = 'chat-row-event winner';
+        const trophySvg = typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
+        item.innerHTML = `${trophySvg} <span><strong>${parsedName}</strong> guessed the frame! (+${chat.points || 10} pts)</span>`;
+      } else if (chat.isHint) {
+        item.className = 'chat-row-event hint';
+        const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>';
+        item.innerHTML = `${hintSvg} <span>${parsedText}</span>`;
+      } else if (chat.isSystem) {
+        item.className = 'chat-row-event system';
+        item.innerHTML = `<span>${parsedText}</span>`;
+      } else {
+        item.className = `chat-row-item ${isMe ? 'chat-me' : ''}`;
+        const avatarSrc = this.getAvatarSrc(chat.senderAvatar);
+        item.innerHTML = `
+          <img class="chat-row-avatar" src="${avatarSrc}" alt="${parsedName}">
+          <div class="chat-row-body">
+            <span class="chat-row-name">${parsedName}${isMe ? ' (You)' : ''}</span>
+            <span class="chat-row-text">${parsedText}</span>
+          </div>
+        `;
+      }
+      gameStream.appendChild(item);
+      gameStream.scrollTop = gameStream.scrollHeight;
     }
 
-    stream.appendChild(msg);
-    stream.scrollTop = stream.scrollHeight;
+    // 2. Drawer chat stream (#chatMessagesStream in bottom sheet drawer)
+    const drawerStream = document.getElementById('chatMessagesStream');
+    if (drawerStream) {
+      const msg = document.createElement('div');
+      msg.style.marginBottom = '8px';
+      msg.style.fontSize = '0.9rem';
+
+      if (chat.isWinner) {
+        const trophySvg = typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '';
+        msg.innerHTML = `<span style="font-weight:900; color:#ca8a04;">${trophySvg} ${parsedName} guessed the frame! (+${chat.points || 10} pts)</span>`;
+      } else if (chat.isHint) {
+        const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '';
+        msg.innerHTML = `<span style="font-weight:800; color:#c2410c;">${hintSvg} ${parsedText}</span>`;
+      } else if (chat.isSystem) {
+        msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${parsedText}</span>`;
+      } else {
+        msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
+      }
+
+      drawerStream.appendChild(msg);
+      drawerStream.scrollTop = drawerStream.scrollHeight;
+    }
+  },
+
+  renderRoundNotice(round, totalRounds) {
+    const gameStream = document.getElementById('gameInGameChatStream');
+    if (gameStream) {
+      const placeholder = document.getElementById('gameChatPlaceholder');
+      if (placeholder) placeholder.remove();
+
+      const divider = document.createElement('div');
+      divider.className = 'chat-round-divider';
+      divider.innerHTML = `<span>ROUND ${round}/${totalRounds}</span>`;
+      gameStream.appendChild(divider);
+      gameStream.scrollTop = gameStream.scrollHeight;
+    }
   },
 
 

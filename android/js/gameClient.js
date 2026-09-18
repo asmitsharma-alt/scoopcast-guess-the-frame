@@ -735,6 +735,13 @@ const GameClient = {
           this.players = msg.updatedPlayers;
           UI.renderScoreboard();
         }
+        if (msg.playerName && msg.playerName !== this.playerName && typeof UI !== 'undefined' && UI.appendChatMessage) {
+          UI.appendChatMessage({
+            isHint: true,
+            isSystem: true,
+            text: `${msg.playerName} unlocked a hint! (-2 pts)`
+          });
+        }
         break;
       }
 
@@ -921,6 +928,9 @@ const GameClient = {
     });
 
     this.startTimer(timerDuration);
+    if (typeof UI !== 'undefined' && UI.renderRoundNotice) {
+      UI.renderRoundNotice(roundIndex + 1, totalRounds);
+    }
   },
 
   startTimer(duration) {
@@ -955,6 +965,14 @@ const GameClient = {
     if (this.hasGuessedThisRound || this.isRoundFinished) {
       this.sendChat(clean);
       return;
+    }
+
+    if (clean.startsWith('/chat ') || clean.startsWith('/c ')) {
+      const chatMsg = clean.replace(/^\/(chat|c)\s+/, '');
+      if (chatMsg) {
+        this.sendChat(chatMsg);
+        return;
+      }
     }
 
     if (this.isHost) {
@@ -1013,6 +1031,16 @@ const GameClient = {
 
       UI.renderScoreboard();
 
+      if (typeof UI !== 'undefined' && UI.appendChatMessage) {
+        UI.appendChatMessage({
+          isWinner: true,
+          isSystem: true,
+          senderName: data.playerName,
+          points: pts,
+          text: `${data.playerName} guessed the frame! (+${pts} pts)`
+        });
+      }
+
       this.sendEvent('GUESS_CORRECT_BROADCAST', {
         winRecord,
         updatedPlayers: this.players
@@ -1051,6 +1079,16 @@ const GameClient = {
       if (typeof SoundEffects !== 'undefined') SoundEffects.playCorrect();
       UI.showGuessSuccess(winRecord.position, winRecord.points);
     }
+
+    if (winRecord && typeof UI !== 'undefined' && UI.appendChatMessage) {
+      UI.appendChatMessage({
+        isWinner: true,
+        isSystem: true,
+        senderName: winRecord.playerName || 'Player',
+        points: winRecord.points,
+        text: `${winRecord.playerName || 'Player'} guessed the frame! (+${winRecord.points} pts)`
+      });
+    }
   },
 
   requestHint() {
@@ -1067,6 +1105,14 @@ const GameClient = {
     if (typeof SoundEffects !== 'undefined') SoundEffects.playHint();
     UI.displayHintBanner(this.currentMaskedHint || 'H _ N T', 2);
     UI.renderScoreboard();
+
+    if (typeof UI !== 'undefined' && UI.appendChatMessage) {
+      UI.appendChatMessage({
+        isHint: true,
+        isSystem: true,
+        text: `${this.playerName} unlocked a hint! (-2 pts)`
+      });
+    }
 
     this.sendEvent('PLAYER_USED_HINT', {
       playerId: this.playerId,
