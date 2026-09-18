@@ -1,0 +1,4 @@
+guess-the-frame-colyseus/
+.git/
+node_modules/
+.env*

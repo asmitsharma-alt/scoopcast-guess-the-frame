@@ -1,0 +1,114 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(bg|GUESSTHEFRAME|GUESSTHEEYES|avvtar)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*Android.*"
+        }
+      ],
+      "destination": "/android/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "destination": "/desktop/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*Android.*"
+        }
+      ],
+      "destination": "/android/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "destination": "/desktop/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/android/avvtar/:match*",
+      "destination": "/avvtar/:match*"
+    },
+    {
+      "source": "/android/bg/:match*",
+      "destination": "/bg/:match*"
+    },
+    {
+      "source": "/android/GUESSTHEFRAME/:match*",
+      "destination": "/GUESSTHEFRAME/:match*"
+    },
+    {
+      "source": "/android/GUESSTHEEYES/:match*",
+      "destination": "/GUESSTHEEYES/:match*"
+    },
+    {
+      "source": "/android/logo.png",
+      "destination": "/logo.png"
+    },
+    {
+      "source": "/desktop/avvtar/:match*",
+      "destination": "/avvtar/:match*"
+    },
+    {
+      "source": "/desktop/bg/:match*",
+      "destination": "/bg/:match*"
+    },
+    {
+      "source": "/desktop/GUESSTHEFRAME/:match*",
+      "destination": "/GUESSTHEFRAME/:match*"
+    },
+    {
+      "source": "/desktop/GUESSTHEEYES/:match*",
+      "destination": "/GUESSTHEEYES/:match*"
+    },
+    {
+      "source": "/desktop/css/:match*",
+      "destination": "/css/:match*"
+    },
+    {
+      "source": "/desktop/logo.png",
+      "destination": "/logo.png"
+    },
+    {
+      "source": "/css/android.css",
+      "destination": "/android/css/android.css"
+    },
+    {
+      "source": "/js/:match*",
+      "destination": "/android/js/:match*"
+    }
+  ]
+}

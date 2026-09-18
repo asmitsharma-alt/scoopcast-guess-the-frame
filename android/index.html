@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#FACC15">
+  <link rel="manifest" href="/android/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AC%3C/text%3E%3C/svg%3E">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:wght@400;500;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <title>Scoopcast: Guess The Frame (Mobile)</title>
+  
+  <!-- Neobrutalist Mobile Stylesheet -->
+  <link rel="stylesheet" href="/android/css/android.css">
+  
+  <!-- MQTT Realtime Engine (Bundled Locally + CDN Fallback) -->
+  <script src="/android/js/mqtt.min.js"></script>
+  <script>
+    if (typeof mqtt === 'undefined') {
+      document.write('<script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- ═══════════ MARQUEE FILMSTRIP TICKER ═══════════ -->
+    <div class="filmstrip-ticker" aria-hidden="true">
+      <div class="filmstrip-track">
+        <span class="ticker-item">🎬 MARVEL</span>
+        <span class="ticker-item">⚡ DC</span>
+        <span class="ticker-item">🧙 HARRY POTTER</span>
+        <span class="ticker-item">⚔️ STAR WARS</span>
+        <span class="ticker-item">💍 LORD OF THE RINGS</span>
+        <span class="ticker-item">🏎️ FAST &amp; FURIOUS</span>
+        <span class="ticker-item">🦖 JURASSIC PARK</span>
+        <span class="ticker-item">🕵️ MISSION IMPOSSIBLE</span>
+        <span class="ticker-item">🎯 JOHN WICK</span>
+        <span class="ticker-item">🍸 JAMES BOND</span>
+        <span class="ticker-item">🏴‍☠️ PIRATES</span>
+        <span class="ticker-item">🤖 TRANSFORMERS</span>
+        <span class="ticker-item">🕷️ SPIDER-MAN</span>
+        <span class="ticker-item">🦇 BATMAN</span>
+        <span class="ticker-item">🎬 MARVEL</span>
+        <span class="ticker-item">⚡ DC</span>
+        <span class="ticker-item">🧙 HARRY POTTER</span>
+        <span class="ticker-item">⚔️ STAR WARS</span>
+        <span class="ticker-item">💍 LORD OF THE RINGS</span>
+        <span class="ticker-item">🏎️ FAST &amp; FURIOUS</span>
+      </div>
+    </div>
+
+    <!-- ═══════════ TOP APP BAR ═══════════ -->
+    <header class="mobile-top-bar">
+      <div class="app-brand">
+        <img src="/logo.png" alt="Logo" onerror="this.style.display='none'">
+        <span>SCOOPCAST</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="icon-btn" id="btnSoundToggle" onclick="SoundEffects.toggleMute(); this.textContent = SoundEffects.muted ? '🔇' : '🔊';" aria-label="Toggle Sound">🔊</button>
+      </div>
+    </header>
+
+    <!-- ═══════════ SCREEN 1: HOME & AVATAR PICKER ═══════════ -->
+    <main class="screen active" id="homeScreen">
+      <div class="home-content">
+        
+        <div class="hero-banner-wrap">
+          <img src="/bg/guess_the_frame.webp" alt="Guess The Frame" onerror="this.src='/logo.png'">
+        </div>
+        
+        <span class="hero-tagline">⚡ MULTIPLAYER CINEMA TRIVIA ⚡</span>
+
+        <div class="nb-card">
+          <label class="input-label" for="playerNameInput">Your Nickname</label>
+          <input type="text" id="playerNameInput" class="nb-input" placeholder="e.g. Cinephile" maxlength="16" autocomplete="off" autocorrect="off">
+
+          <label class="input-label">Choose Avatar</label>
+          <div class="avatar-grid-row" id="avatarPicker">
+            <div class="avatar-chip selected" data-avatar="aman">
+              <img src="/avvtar/aman.svg" alt="Aman">
+              <span class="avatar-chip-name">Aman</span>
+            </div>
+            <div class="avatar-chip" data-avatar="amish">
+              <img src="/avvtar/amish.svg" alt="Amish">
+              <span class="avatar-chip-name">Amish</span>
+            </div>
+            <div class="avatar-chip" data-avatar="aziz">
+              <img src="/avvtar/aziz.svg" alt="Aziz">
+              <span class="avatar-chip-name">Aziz</span>
+            </div>
+            <div class="avatar-chip" data-avatar="vish">
+              <img src="/avvtar/vish.svg" alt="Vish">
+              <span class="avatar-chip-name">Vish</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-action-col">
+          <button class="btn-nb-primary" id="btnHostGame">
+            <span>👑</span>
+            <span>CREATE ROOM (HOST)</span>
+          </button>
+          <button class="btn-nb-secondary" id="btnOpenJoin">
+            <span>🎮</span>
+            <span>JOIN WITH CODE</span>
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ═══════════ JOIN MODAL ═══════════ -->
+    <div class="nb-modal-overlay" id="joinModal">
+      <div class="nb-modal-card">
+        <h3 class="nb-modal-title">ENTER ROOM CODE</h3>
+        <input type="text" id="joinCodeInput" class="nb-input code-input-lg" placeholder="ABCD" maxlength="4">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-nb-primary" id="btnConfirmJoin">JOIN GAME 🚀</button>
+          <button class="pill-btn-sm" style="justify-content:center; height:42px;" onclick="document.getElementById('joinModal').classList.remove('active');">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SCREEN 2: MOBILE LOBBY ═══════════ -->
+    <main class="screen" id="lobbyScreen">
+      <div class="lobby-header">
+        <div class="room-badge-nb">
+          <span class="room-badge-label">ROOM CODE</span>
+          <span class="room-badge-code" id="lobbyRoomCodeText">----</span>
+        </div>
+        <div class="share-row">
+          <button class="pill-btn-sm" id="btnCopyLink">📋 Copy Link</button>
+          <button class="pill-btn-sm" id="btnShareRoom">📲 WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="lobby-players-box">
+        <div class="section-head-sm">PLAYERS IN ROOM</div>
+        <div class="players-grid-2col" id="lobbyPlayersGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Host Controls -->
+      <div class="lobby-footer-controls" id="lobbyHostControls" style="display:none;">
+        <div class="input-label" style="margin-bottom:6px;">SELECT MODE</div>
+        <div style="display:flex; gap:6px; margin-bottom:12px;">
+          <button class="pill-btn-sm cat-pill active" data-category="all" style="flex:1; justify-content:center;">✨ All</button>
+          <button class="pill-btn-sm cat-pill" data-category="frames" style="flex:1; justify-content:center;">🎬 Frames</button>
+          <button class="pill-btn-sm cat-pill" data-category="dialogue" style="flex:1; justify-content:center;">💬 Quotes</button>
+          <button class="pill-btn-sm cat-pill" data-category="eyes" style="flex:1; justify-content:center;">👀 Eyes</button>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <div class="input-label">ROUNDS</div>
+            <select id="settingRounds" class="nb-input" style="margin-bottom:0; height:42px; font-size:0.95rem;">
+              <option value="10">10 Rounds</option>
+              <option value="20" selected>20 Rounds</option>
+              <option value="30">30 Rounds</option>
+              <option value="40">40 Rounds</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <div class="input-label">TIMER</div>
+            <select id="settingTimer" class="nb-input" style="margin-bottom:0; height:42px; font-size:0.95rem;">
+              <option value="15">15 Seconds</option>
+              <option value="30" selected>30 Seconds</option>
+              <option value="45">45 Seconds</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-nb-primary" id="btnStartMatch">START MATCH 🚀</button>
+      </div>
+
+      <!-- Waiting Notice for non-hosts -->
+      <div id="lobbyWaitingNotice" style="display:none; padding:18px; text-align:center; font-weight:800; color:#666;">
+        ⌛ Waiting for Host to start the match...
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 3: ACTIVE GAME SCREEN ═══════════ -->
+    <main class="screen" id="gameScreen">
+      <!-- Mini-HUD Top Bar -->
+      <div class="game-hud">
+        <span class="hud-pill" id="hudRoundPill">ROUND 1/20</span>
+        <div class="hud-timer" id="hudTimerBadge">
+          <span>⏱</span>
+          <span id="hudTimerText">30s</span>
+        </div>
+        <span class="hud-score" id="hudScorePill" onclick="document.getElementById('scoreboardDrawer').classList.add('open'); document.getElementById('sheetBackdrop').classList.add('active');">⭐ 0 PTS</span>
+      </div>
+
+      <!-- Active Masked Hint Banner -->
+      <div class="hint-banner-row" id="activeHintBanner">
+        💡 <span id="activeHintText">M _ _ _ _ N</span>
+      </div>
+
+      <!-- Center Stage: The Frame Container (Resizes smoothly when keyboard opens) -->
+      <div class="stage-area dismiss-kb" id="frameStage">
+        <div class="frame-card-nb" id="frameMediaContainer">
+          <img id="gameFrameImage" src="" alt="Frame Scene" style="display:none;">
+          <div id="gameDialogueBox" class="dialogue-card-nb" style="display:none;">
+            <p id="gameDialogueText"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE TYPING MIRROR PILL (Visible above Android keyboard while typing) -->
+      <div class="live-typing-mirror" id="liveTypingMirror">
+        <span class="mirror-label">TYPING:</span>
+        <span class="mirror-text" id="liveTypingMirrorText"></span>
+        <span class="mirror-clear-btn" onclick="KeyboardManager.clearInput();">✕</span>
+      </div>
+
+      <!-- Floating Action Dock (Pinned at thumb level above keyboard) -->
+      <div class="mobile-action-dock" id="mobileActionDock">
+        <div class="action-dock-row">
+          <button class="dock-hint-btn" id="mobileHintBtn">💡 -2</button>
+          <input type="text" id="mobileGuessInput" class="dock-guess-input" placeholder="TYPE YOUR GUESS..." autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+          <button class="dock-submit-btn" id="mobileSubmitGuessBtn">⏎</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 4: ROUND REVEAL ═══════════ -->
+    <main class="screen" id="revealScreen">
+      <div class="reveal-content">
+        <span class="reveal-badge-tag">ANSWER REVEALED</span>
+        <h2 class="reveal-movie-title" id="revealTitle">12TH FAIL</h2>
+        <div class="reveal-movie-year" id="revealYear">(2023)</div>
+
+        <div class="reveal-frame-box">
+          <img id="revealImage" src="" alt="Revealed Scene">
+        </div>
+
+        <div class="winners-list-col" id="revealWinnersRow">
+          <!-- Populated dynamically -->
+        </div>
+
+        <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none;">NEXT ROUND ⏭</button>
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 5: GAME OVER ═══════════ -->
+    <main class="screen" id="gameOverScreen">
+      <div class="reveal-content">
+        <h1 class="reveal-movie-title" style="font-size:2.2rem;">🏁 MATCH OVER</h1>
+        <p style="font-weight:800; color:#666; margin-bottom:16px;">Final Standings</p>
+
+        <div class="winners-list-col" id="finalPodiumRow"></div>
+
+        <button class="btn-nb-primary" onclick="GameClient.leaveRoom();" style="max-width:340px;">RETURN TO LOBBY 🏠</button>
+      </div>
+    </main>
+
+    <!-- ═══════════ FLOATING CHAT TRIGGER ═══════════ -->
+    <button class="floating-chat-trigger" id="floatingChatBtn" onclick="
+      const gs = document.getElementById('gameScreen');
+      if (gs && gs.classList.contains('active')) {
+        const inp = document.getElementById('mobileGuessInput');
+        if (inp) inp.focus();
+      } else {
+        document.getElementById('chatDrawer').classList.add('open');
+        document.getElementById('sheetBackdrop').classList.add('active');
+      }
+    " aria-label="Open Chat">
+      💬
+      <span class="unread-badge-dot" id="chatUnreadDot"></span>
+    </button>
+
+    <!-- ═══════════ BOTTOM DRAWERS ═══════════ -->
+    <div class="drawer-backdrop" id="sheetBackdrop" onclick="document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open')); this.classList.remove('active');"></div>
+
+    <!-- Chat Drawer -->
+    <div class="drawer-sheet" id="chatDrawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-header">💬 Live Room Chat</div>
+      <div class="drawer-body" id="chatMessagesStream" style="height:240px;"></div>
+      <div style="padding:8px 14px; display:flex; gap:8px; border-top:var(--nb-border-sm);">
+        <input type="text" id="chatInput" class="dock-guess-input" placeholder="Say something (no spoilers)..." style="height:44px; text-transform:none;">
+        <button class="dock-submit-btn" style="height:44px; padding:0 14px;" onclick="
+          const ci = document.getElementById('chatInput');
+          if (ci && ci.value.trim()) { GameClient.sendChat(ci.value); ci.value = ''; }
+        ">Send</button>
+      </div>
+    </div>
+
+    <!-- Scoreboard Drawer -->
+    <div class="drawer-sheet" id="scoreboardDrawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-header">🏆 Match Standings</div>
+      <div class="drawer-body" id="scoreboardList" style="max-height:340px;"></div>
+    </div>
+
+    <!-- ═══════════ FLOATING TOAST NOTIFICATION ═══════════ -->
+    <div id="mobileToast"></div>
+
+    <!-- ═══════════ COUNTDOWN OVERLAY (3.. 2.. 1..) ═══════════ -->
+    <div id="countdownOverlay" style="
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 253, 245, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 600;
+    ">
+      <div id="countdownNumber" style="
+        font-family: var(--font-display);
+        font-size: 7rem;
+        color: var(--nb-pink);
+        text-shadow: 4px 4px 0px var(--nb-ink);
+        animation: scaleNum 1s infinite;
+      ">3</div>
+    </div>
+    <style>
+      #countdownOverlay.active { display: flex; }
+      @keyframes scaleNum {
+        0% { transform: scale(1.4); opacity: 0; }
+        30% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0.85); opacity: 0.8; }
+      }
+    </style>
+
+    <!-- ═══════════ LOADING OVERLAY ═══════════ -->
+    <div id="loadingOverlay" style="
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 253, 245, 0.9);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 700;
+    ">
+      <div style="width:44px; height:44px; border:4px solid var(--nb-ink); border-top-color:var(--nb-yellow); border-radius:50%; animation:spin 0.7s linear infinite;"></div>
+      <span id="loadingText" style="font-family:var(--font-mono); font-weight:800; color:var(--nb-ink); font-size:1rem;">Connecting...</span>
+    </div>
+    <style>
+      #loadingOverlay.active { display: flex; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+  </div>
+
+  <!-- Mobile Scripts (Absolute Paths to Guarantee Resolution) -->
+  <script src="/android/js/haptics.js"></script>
+  <script src="/android/js/audio.js"></script>
+  <script src="/android/js/keyboard.js"></script>
+  <script src="/android/js/gameClient.js"></script>
+  <script src="/android/js/mobileUi.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      UI.init();
+      KeyboardManager.init();
+      GameClient.init();
+
+      // Check if URL has room param (e.g. ?room=ABCD)
+      const params = new URLSearchParams(window.location.search);
+      const roomParam = params.get('room');
+      if (roomParam && roomParam.length === 4) {
+        GameClient.joinGame(roomParam);
+      }
+    });
+  </script>
+</body>
+</html>
