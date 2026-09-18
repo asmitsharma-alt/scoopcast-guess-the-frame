@@ -342,8 +342,16 @@
       const file = e.target.files?.[0];
       if (!file) return;
 
+      const validMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/avif'];
+      if (file.type && !validMimes.includes(file.type.toLowerCase()) && !file.type.startsWith('image/')) {
+        alert('Invalid file format! Please upload a valid image file (PNG, JPG, WEBP, SVG, or GIF).');
+        e.target.value = '';
+        return;
+      }
+
       if (file.size > 3 * 1024 * 1024) {
         alert('Avatar file too large! Please choose an image under 3 MB.');
+        e.target.value = '';
         return;
       }
 
@@ -351,18 +359,22 @@
       reader.onload = (evt) => {
         this.playSuccess();
         const dataUrl = evt.target?.result;
+        const safeName = file.name.replace(/[^\w\s.-]/gi, '').replace(/\.[^/.]+$/, '').trim().slice(0, 16) || 'Avatar';
+        const isSvg = file.name.toLowerCase().endsWith('.svg') || file.type === 'image/svg+xml';
+        const isGif = file.name.toLowerCase().endsWith('.gif') || file.type === 'image/gif';
+        const isPng = file.name.toLowerCase().endsWith('.png') || file.type === 'image/png';
         this.customAvatarObj = {
           id: 'custom_upload_' + Date.now(),
-          name: file.name.replace(/\.[^/.]+$/, '').slice(0, 16),
+          name: safeName,
           category: 'custom',
           categoryLabel: 'Custom Upload',
           url: dataUrl,
-          format: file.name.endsWith('.svg') ? 'SVG' : (file.name.endsWith('.gif') ? 'GIF' : 'IMG'),
+          format: isSvg ? 'SVG' : (isGif ? 'GIF' : 'IMG'),
           color: '38bdf8',
           isKnownDark: false,
           isKnownPortrait: false,
-          isVector: file.name.endsWith('.svg'),
-          isTransparent: file.name.endsWith('.svg') || file.name.endsWith('.png')
+          isVector: isSvg,
+          isTransparent: isSvg || isPng
         };
         this.selectAvatar(dataUrl);
         if (typeof callback === 'function') callback(dataUrl);
