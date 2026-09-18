@@ -15,6 +15,65 @@ const UI = {
     this.bindAvatarPicker();
     this.bindButtons();
     this.loadSavedUser();
+    if (typeof AvatarPicker !== 'undefined') {
+      AvatarPicker.init({
+        initialAvatar: this.selectedAvatar,
+        onSelect: (url, meta) => {
+          this.selectAvatar(url);
+        }
+      });
+      AvatarPicker.renderCategories('androidCategoryBar');
+      AvatarPicker.renderGrid('androidAvatarGrid', 'androidLoadingIndicator');
+    }
+  },
+
+  openAvatarStudio() {
+    if (typeof Haptics !== 'undefined') Haptics.tap();
+    const modal = document.getElementById('androidAvatarModal');
+    if (modal) {
+      modal.classList.add('active');
+      if (typeof AvatarPicker !== 'undefined') {
+        AvatarPicker.selectedAvatar = this.selectedAvatar;
+        AvatarPicker.updateAllPreviews();
+        AvatarPicker.renderCategories('androidCategoryBar');
+        AvatarPicker.renderGrid('androidAvatarGrid', 'androidLoadingIndicator');
+      }
+    }
+  },
+
+  closeAvatarStudio() {
+    if (typeof Haptics !== 'undefined') Haptics.tap();
+    const modal = document.getElementById('androidAvatarModal');
+    if (modal) modal.classList.remove('active');
+  },
+
+  getAvatarSrc(av) {
+    if (!av) return '/avvtar/aman.svg';
+    if (typeof AvatarPicker !== 'undefined') {
+      const meta = AvatarPicker.getAvatarMeta(av);
+      if (meta && meta.url) return meta.url;
+    }
+    if (av.startsWith('http://') || av.startsWith('https://') || av.startsWith('data:') || av.startsWith('/')) {
+      return av;
+    }
+    return '/avvtar/' + av + '.svg';
+  },
+
+  getAvatarBg(av) {
+    if (typeof AvatarPicker !== 'undefined') {
+      const meta = AvatarPicker.getAvatarMeta(av);
+      if (meta) return meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'));
+    }
+    return '#facc15';
+  },
+
+  getAvatarFit(av) {
+    if (typeof AvatarPicker !== 'undefined') {
+      const meta = AvatarPicker.getAvatarMeta(av);
+      if (meta && meta.isTransparent) return 'object-fit: contain; padding: 2px;';
+      if (meta && meta.isKnownPortrait) return 'object-fit: cover; object-position: center 12%;';
+    }
+    return 'object-fit: cover;';
   },
 
   loadSavedUser() {
@@ -44,8 +103,19 @@ const UI = {
     localStorage.setItem('gtf_m_avatar', av);
     if (typeof GameClient !== 'undefined') GameClient.playerAvatar = av;
 
+    if (typeof AvatarPicker !== 'undefined') {
+      AvatarPicker.selectedAvatar = av;
+      AvatarPicker.updateAllPreviews();
+    } else {
+      const mobImg = document.getElementById('mobileTriggerImg');
+      const mobName = document.getElementById('mobileTriggerName');
+      if (mobImg) mobImg.src = this.getAvatarSrc(av);
+      if (mobName) mobName.innerText = av ? (av.charAt(0).toUpperCase() + av.slice(1)) : 'Aman';
+    }
+
     document.querySelectorAll('.avatar-chip').forEach(chip => {
-      chip.classList.toggle('selected', chip.dataset.avatar === av);
+      const chipAv = chip.dataset.avatar;
+      chip.classList.toggle('selected', chipAv === av || (av && av.includes('/' + chipAv + '.')));
     });
   },
 
@@ -381,7 +451,7 @@ const UI = {
         <div class="winner-row-nb ${cls}">
           <div style="display:flex; align-items:center; gap:8px;">
             <span>${medal}</span>
-            <img src="/avvtar/${p.avatar || 'aman'}.svg" style="width:28px; height:28px; border-radius:50%; border:1px solid #1a1a1a;" onerror="this.src='/avvtar/aman.svg';">
+            <div style="width:28px; height:28px; min-width:28px; border-radius:50%; border:1px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='/avvtar/aman.svg';"></div>
             <span>${this.formatName(p.name)}</span>
           </div>
           <span>${p.score || 0} PTS</span>
@@ -396,15 +466,22 @@ const UI = {
 
     const players = GameClient.players || [];
     const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
-    grid.innerHTML = players.map(p => `
-      <div class="player-chip-nb">
-        <img src="/avvtar/${p.avatar || 'aman'}.svg" alt="${this.escapeHtml(p.name)}" onerror="this.src='/avvtar/aman.svg';">
-        <div style="overflow:hidden; flex:1;">
-          <div class="player-chip-name">${this.formatName(p.name)}</div>
-          <div class="player-chip-badge">${p.isHost ? `${crownIcon} HOST` : 'PLAYER'}</div>
+    grid.innerHTML = players.map(p => {
+      const avSrc = this.getAvatarSrc(p.avatar);
+      const avBg = this.getAvatarBg(p.avatar);
+      const avFit = this.getAvatarFit(p.avatar);
+      return `
+        <div class="player-chip-nb">
+          <div style="width:36px; height:36px; min-width:36px; border-radius:10px; border:2px solid #1a1a1a; background:${avBg}; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img src="${avSrc}" alt="${this.escapeHtml(p.name)}" style="width:100%; height:100%; ${avFit}" onerror="this.src='/avvtar/aman.svg';">
+          </div>
+          <div style="overflow:hidden; flex:1;">
+            <div class="player-chip-name">${this.formatName(p.name)}</div>
+            <div class="player-chip-badge">${p.isHost ? `${crownIcon} HOST` : 'PLAYER'}</div>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   },
 
   renderScoreboard() {
@@ -418,7 +495,7 @@ const UI = {
       <div class="winner-row-nb" style="margin-bottom:8px;">
         <div style="display:flex; align-items:center; gap:10px;">
           <span style="font-weight:900; font-family:var(--font-mono);">${idx + 1}.</span>
-          <img src="/avvtar/${p.avatar || 'aman'}.svg" style="width:30px; height:30px; border-radius:50%; border:1.5px solid #1a1a1a;" onerror="this.src='/avvtar/aman.svg';">
+          <div style="width:30px; height:30px; min-width:30px; border-radius:8px; border:1.5px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='/avvtar/aman.svg';"></div>
           <span>${this.formatName(p.name)}</span>
         </div>
         <span style="font-family:var(--font-mono); font-weight:900;">${p.score || 0} PTS</span>
