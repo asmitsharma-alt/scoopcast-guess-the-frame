@@ -214,33 +214,59 @@
         </div>
       </div>
 
-      <!-- Host Controls -->
+      <!-- Host Controls: 3 Tabs (Frames, Eyes, Dialogue) + Rounds & Timer Steppers -->
       <div class="lobby-footer-controls" id="lobbyHostControls" style="display:none;">
-        <div class="input-label" style="margin-bottom:6px;">SELECT MODE</div>
-        <div style="display:flex; gap:6px; margin-bottom:12px;">
-          <button class="pill-btn-sm cat-pill active" data-category="all" style="flex:1; justify-content:center;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> All</button>
-          <button class="pill-btn-sm cat-pill" data-category="frames" style="flex:1; justify-content:center;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> Frames</button>
-          <button class="pill-btn-sm cat-pill" data-category="dialogue" style="flex:1; justify-content:center;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> Quotes</button>
-          <button class="pill-btn-sm cat-pill" data-category="eyes" style="flex:1; justify-content:center;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Eyes</button>
+        <!-- Mode Tabs -->
+        <div class="lobby-mode-tabs" role="tablist">
+          <button type="button" class="mode-tab-btn active" data-tab="frames" id="tabBtnFrames" role="tab" aria-selected="true">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <span>Frames</span>
+            <span class="tab-count-badge" id="tabPillFrames">10</span>
+          </button>
+          <button type="button" class="mode-tab-btn" data-tab="eyes" id="tabBtnEyes" role="tab" aria-selected="false">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Eyes</span>
+            <span class="tab-count-badge" id="tabPillEyes">10</span>
+          </button>
+          <button type="button" class="mode-tab-btn" data-tab="dialogue" id="tabBtnDialogue" role="tab" aria-selected="false">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            <span>Dialogue</span>
+            <span class="tab-count-badge" id="tabPillDialogue">10</span>
+          </button>
         </div>
 
-        <div style="display:flex; gap:8px; margin-bottom:12px;">
-          <div style="flex:1;">
-            <div class="input-label">ROUNDS</div>
-            <select id="settingRounds" class="nb-input" style="margin-bottom:0; height:42px; font-size:0.95rem;">
-              <option value="10">10 Rounds</option>
-              <option value="20" selected>20 Rounds</option>
-              <option value="30">30 Rounds</option>
-              <option value="40">40 Rounds</option>
-            </select>
+        <!-- Steppers Row: Rounds (Active Tab) & Timer -->
+        <div class="lobby-steppers-row">
+          <!-- Active Tab Rounds Stepper -->
+          <div class="stepper-card">
+            <div class="stepper-header">
+              <span class="stepper-title" id="currentTabRoundsTitle">FRAMES ROUNDS</span>
+              <span class="stepper-sub" id="totalRoundsSummary">Total: 30</span>
+            </div>
+            <div class="stepper-ctrl">
+              <button type="button" class="step-btn step-minus" id="btnRoundMinus" aria-label="Decrease rounds">−</button>
+              <div class="step-value-box">
+                <span class="step-value-num" id="currentRoundValue">10</span>
+                <span class="step-value-unit">rounds</span>
+              </div>
+              <button type="button" class="step-btn step-plus" id="btnRoundPlus" aria-label="Increase rounds">+</button>
+            </div>
           </div>
-          <div style="flex:1;">
-            <div class="input-label">TIMER</div>
-            <select id="settingTimer" class="nb-input" style="margin-bottom:0; height:42px; font-size:0.95rem;">
-              <option value="15">15 Seconds</option>
-              <option value="30" selected>30 Seconds</option>
-              <option value="45">45 Seconds</option>
-            </select>
+
+          <!-- Timer Stepper -->
+          <div class="stepper-card">
+            <div class="stepper-header">
+              <span class="stepper-title">ROUND TIMER</span>
+              <span class="stepper-sub">Per Frame</span>
+            </div>
+            <div class="stepper-ctrl">
+              <button type="button" class="step-btn step-minus" id="btnTimerMinus" aria-label="Decrease timer">−</button>
+              <div class="step-value-box">
+                <span class="step-value-num" id="currentTimerValue">30</span>
+                <span class="step-value-unit">seconds</span>
+              </div>
+              <button type="button" class="step-btn step-plus" id="btnTimerPlus" aria-label="Increase timer">+</button>
+            </div>
           </div>
         </div>
 

@@ -641,7 +641,15 @@ const GameClient = {
         if (Array.isArray(msg.players) && msg.players.length > 0) {
           this.players = msg.players;
         }
-        if (msg.hostSettings) this.hostSettings = msg.hostSettings;
+        if (msg.hostSettings) {
+          this.hostSettings = Object.assign(this.hostSettings || {}, msg.hostSettings);
+          if (msg.hostSettings.roundsByMode && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.roundsByMode = { ...msg.hostSettings.roundsByMode };
+          }
+          if (msg.hostSettings.timer && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.timer = msg.hostSettings.timer;
+          }
+        }
         if (msg.currentPlaylist && msg.currentPlaylist.length > 0) this.currentPlaylist = msg.currentPlaylist;
         if (msg.currentPlayIndex !== undefined) this.currentPlayIndex = msg.currentPlayIndex;
         if (msg.currentRoundWinners) this.currentRoundWinners = msg.currentRoundWinners;
@@ -660,6 +668,20 @@ const GameClient = {
           const rocketIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : '';
           UI.showToast(`${rocketIcon} Connected to room ${this.roomCode}!`);
           this.startHeartbeat();
+        }
+        break;
+      }
+
+      case 'UPDATE_HOST_SETTINGS': {
+        if (msg.settings) {
+          this.hostSettings = Object.assign(this.hostSettings || {}, msg.settings);
+          if (msg.settings.roundsByMode && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.roundsByMode = { ...msg.settings.roundsByMode };
+          }
+          if (msg.settings.timer && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.timer = msg.settings.timer;
+          }
+          if (typeof UI !== 'undefined') UI.renderLobbyControls();
         }
         break;
       }
@@ -760,15 +782,30 @@ const GameClient = {
   startGame(options = {}) {
     if (!this.isHost) return;
 
+    const counts = options.roundsByMode || this.hostSettings.roundsByMode;
     const cat = options.category || this.hostSettings.category || 'all';
-    const totalRounds = Number(options.rounds) || this.hostSettings.rounds || 20;
+    const totalRounds = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : (Number(options.rounds) || this.hostSettings.rounds || 20);
     const timer = Number(options.timer) || this.hostSettings.timer || 30;
 
-    this.hostSettings = { category: cat, rounds: totalRounds, timer };
+    this.hostSettings = { category: cat, rounds: totalRounds, timer, roundsByMode: counts };
 
     // Build playlist from sections
     let pool = [];
-    if (cat === 'frames') {
+    if (counts) {
+      const s1 = GAME_SECTIONS.find(s => s.id === 1);
+      const s2 = GAME_SECTIONS.find(s => s.id === 2);
+      const s3 = GAME_SECTIONS.find(s => s.id === 3);
+
+      const numFrames = counts.frames !== undefined ? Number(counts.frames) : 10;
+      const numEyes = counts.eyes !== undefined ? Number(counts.eyes) : 10;
+      const numDial = counts.dialogue !== undefined ? Number(counts.dialogue) : 10;
+
+      const fFrames = (s1 && numFrames > 0) ? [...s1.frames].sort(() => 0.5 - Math.random()).slice(0, numFrames) : [];
+      const fEyes = (s3 && numEyes > 0) ? [...s3.frames].sort(() => 0.5 - Math.random()).slice(0, numEyes) : [];
+      const fDial = (s2 && numDial > 0) ? [...s2.frames].sort(() => 0.5 - Math.random()).slice(0, numDial) : [];
+
+      pool = [...fFrames, ...fEyes, ...fDial];
+    } else if (cat === 'frames') {
       const s1 = GAME_SECTIONS.find(s => s.id === 1);
       if (s1) pool = [...s1.frames].sort(() => 0.5 - Math.random()).slice(0, totalRounds);
     } else if (cat === 'dialogue') {

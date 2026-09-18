@@ -10,6 +10,11 @@ function resolveMediaPath(src) {
 const UI = {
   currentScreen: 'homeScreen',
   selectedAvatar: 'aman',
+  hostSettings: {
+    activeTab: 'frames',
+    roundsByMode: { frames: 10, eyes: 10, dialogue: 10 },
+    timer: 30
+  },
 
   init() {
     this.bindAvatarPicker();
@@ -167,10 +172,19 @@ const UI = {
         if (startMatchBtn.disabled) return;
         startMatchBtn.disabled = true;
         startMatchBtn.innerHTML = `STARTING MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
-        const rounds = Number(document.getElementById('settingRounds')?.value) || 20;
-        const timer = Number(document.getElementById('settingTimer')?.value) || 30;
-        const category = document.querySelector('.cat-pill.active')?.dataset.category || 'all';
-        GameClient.startGame({ rounds, timer, category });
+        const counts = UI.hostSettings.roundsByMode;
+        const totalRounds = Object.values(counts).reduce((a, b) => a + b, 0);
+        if (totalRounds <= 0) {
+          startMatchBtn.disabled = false;
+          UI.showToast('Please select at least 1 round to start!');
+          return;
+        }
+        startMatchBtn.disabled = true;
+        startMatchBtn.innerHTML = `STARTING MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
+        const timer = UI.hostSettings.timer || 30;
+        const activeModes = Object.keys(counts).filter(k => counts[k] > 0);
+        const category = activeModes.length === 1 ? activeModes[0] : (activeModes.length === 3 ? 'all' : 'mixed');
+        GameClient.startGame({ roundsByMode: counts, rounds: totalRounds, timer, category });
       });
     }
 
@@ -243,14 +257,114 @@ const UI = {
       });
     }
 
-    // Category Selector in lobby
-    document.querySelectorAll('.cat-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
+    // Lobby Mode Tabs (Frames, Eyes, Dialogue)
+    document.querySelectorAll('.mode-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        if (tab) UI.setLobbyActiveTab(tab);
         if (typeof Haptics !== 'undefined') Haptics.tap();
       });
     });
+
+    // Rounds Stepper (- and +)
+    const btnRoundMinus = document.getElementById('btnRoundMinus');
+    const btnRoundPlus = document.getElementById('btnRoundPlus');
+    if (btnRoundMinus) {
+      btnRoundMinus.addEventListener('click', () => {
+        UI.adjustLobbyRounds(-1);
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+      });
+    }
+    if (btnRoundPlus) {
+      btnRoundPlus.addEventListener('click', () => {
+        UI.adjustLobbyRounds(1);
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+      });
+    }
+
+    // Timer Stepper (- and +)
+    const btnTimerMinus = document.getElementById('btnTimerMinus');
+    const btnTimerPlus = document.getElementById('btnTimerPlus');
+    if (btnTimerMinus) {
+      btnTimerMinus.addEventListener('click', () => {
+        UI.adjustLobbyTimer(-5);
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+      });
+    }
+    if (btnTimerPlus) {
+      btnTimerPlus.addEventListener('click', () => {
+        UI.adjustLobbyTimer(5);
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+      });
+    }
+  },
+
+  setLobbyActiveTab(tab) {
+    this.hostSettings.activeTab = tab;
+    document.querySelectorAll('.mode-tab-btn').forEach(b => {
+      const isCurrent = b.dataset.tab === tab;
+      b.classList.toggle('active', isCurrent);
+      b.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+    });
+    this.renderLobbyControls();
+  },
+
+  adjustLobbyRounds(delta) {
+    const tab = this.hostSettings.activeTab || 'frames';
+    let current = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : 10;
+    current = Math.max(0, Math.min(30, current + delta));
+    this.hostSettings.roundsByMode[tab] = current;
+    this.renderLobbyControls();
+    this.syncHostSettings();
+  },
+
+  adjustLobbyTimer(delta) {
+    let current = Number(this.hostSettings.timer) || 30;
+    current = Math.max(5, Math.min(90, current + delta));
+    this.hostSettings.timer = current;
+    this.renderLobbyControls();
+    this.syncHostSettings();
+  },
+
+  renderLobbyControls() {
+    const tab = this.hostSettings.activeTab || 'frames';
+    const currentRounds = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : 10;
+
+    // Update tab badges & classes
+    ['frames', 'eyes', 'dialogue'].forEach(m => {
+      const count = this.hostSettings.roundsByMode[m] !== undefined ? this.hostSettings.roundsByMode[m] : 10;
+      const pill = document.getElementById(`tabPill${m.charAt(0).toUpperCase() + m.slice(1)}`);
+      if (pill) pill.textContent = count;
+      const btn = document.getElementById(`tabBtn${m.charAt(0).toUpperCase() + m.slice(1)}`);
+      if (btn) btn.classList.toggle('mode-off', count === 0);
+    });
+
+    // Update current round stepper title & value
+    const roundTitle = document.getElementById('currentTabRoundsTitle');
+    if (roundTitle) roundTitle.textContent = `${tab.toUpperCase()} ROUNDS`;
+    const roundVal = document.getElementById('currentRoundValue');
+    if (roundVal) roundVal.textContent = currentRounds;
+
+    // Total rounds summary
+    const total = Object.values(this.hostSettings.roundsByMode).reduce((a, b) => a + b, 0);
+    const summary = document.getElementById('totalRoundsSummary');
+    if (summary) summary.textContent = `Total: ${total}`;
+
+    // Update timer stepper
+    const timerVal = document.getElementById('currentTimerValue');
+    if (timerVal) timerVal.textContent = this.hostSettings.timer || 30;
+  },
+
+  syncHostSettings() {
+    if (typeof GameClient !== 'undefined' && GameClient.isHost) {
+      const s = {
+        roundsByMode: { ...this.hostSettings.roundsByMode },
+        timer: this.hostSettings.timer || 30,
+        rounds: Object.values(this.hostSettings.roundsByMode).reduce((a, b) => a + b, 0)
+      };
+      GameClient.hostSettings = Object.assign(GameClient.hostSettings || {}, s);
+      GameClient.sendEvent('UPDATE_HOST_SETTINGS', { settings: s });
+    }
   },
 
   saveName() {
@@ -299,14 +413,24 @@ const UI = {
     const waitingNotice = document.getElementById('lobbyWaitingNotice');
     const hostNextBtn = document.getElementById('btnNextRound');
 
-    if (hostControls) hostControls.style.display = isHost ? 'block' : 'none';
+    if (hostControls) hostControls.style.display = isHost ? 'flex' : 'none';
     if (startBtn) {
       startBtn.style.display = isHost ? 'flex' : 'none';
       startBtn.disabled = false;
       startBtn.innerHTML = `START MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
     }
-    if (waitingNotice) waitingNotice.style.display = isHost ? 'none' : 'block';
+    if (waitingNotice) {
+      waitingNotice.style.display = isHost ? 'none' : 'block';
+      const s = (typeof GameClient !== 'undefined' && GameClient.hostSettings) ? GameClient.hostSettings : null;
+      if (s && s.roundsByMode) {
+        waitingNotice.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="font-size:0.85rem; font-weight:900;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for Host to start match...</span><span style="font-size:0.75rem; color:#64748b; font-family:var(--font-mono);">${s.roundsByMode.frames || 0} Frames • ${s.roundsByMode.eyes || 0} Eyes • ${s.roundsByMode.dialogue || 0} Dialogue • ${s.timer || 30}s Timer</span></div>`;
+      }
+    }
     if (hostNextBtn) hostNextBtn.style.display = isHost ? 'flex' : 'none';
+
+    if (isHost) {
+      this.renderLobbyControls();
+    }
   },
 
   updateTimer(timeRemaining) {
