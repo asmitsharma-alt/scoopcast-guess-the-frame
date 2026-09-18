@@ -17,6 +17,13 @@
   <!-- Neobrutalist Mobile Stylesheet -->
   <link rel="stylesheet" href="/android/css/android.css">
   
+  <!-- Lucide Icons Engine (Local Bundle + CDN Fallback: https://lucide.dev/guide/) -->
+  <script src="/android/js/lucide.min.js"></script>
+  <script>
+    if (typeof lucide === 'undefined') {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
   <!-- SVG Icon Library -->
   <script src="/android/js/icons.js"></script>
 
