@@ -356,7 +356,7 @@ const UI = {
           const cls = w.position === 1 ? 'gold' : (w.position === 2 ? 'silver' : 'bronze');
           return `
             <div class="winner-row-nb ${cls}">
-              <span>${medal} ${this.escapeHtml(w.playerName)}</span>
+              <span>${medal} ${this.formatName(w.playerName)}</span>
               <span style="color:var(--nb-ink); font-weight:900;">+${w.points} PTS</span>
             </div>
           `;
@@ -382,7 +382,7 @@ const UI = {
           <div style="display:flex; align-items:center; gap:8px;">
             <span>${medal}</span>
             <img src="/avvtar/${p.avatar || 'aman'}.svg" style="width:28px; height:28px; border-radius:50%; border:1px solid #1a1a1a;" onerror="this.src='/avvtar/aman.svg';">
-            <span>${this.escapeHtml(p.name)}</span>
+            <span>${this.formatName(p.name)}</span>
           </div>
           <span>${p.score || 0} PTS</span>
         </div>
@@ -400,7 +400,7 @@ const UI = {
       <div class="player-chip-nb">
         <img src="/avvtar/${p.avatar || 'aman'}.svg" alt="${this.escapeHtml(p.name)}" onerror="this.src='/avvtar/aman.svg';">
         <div style="overflow:hidden; flex:1;">
-          <div class="player-chip-name">${this.escapeHtml(p.name)}</div>
+          <div class="player-chip-name">${this.formatName(p.name)}</div>
           <div class="player-chip-badge">${p.isHost ? `${crownIcon} HOST` : 'PLAYER'}</div>
         </div>
       </div>
@@ -419,7 +419,7 @@ const UI = {
         <div style="display:flex; align-items:center; gap:10px;">
           <span style="font-weight:900; font-family:var(--font-mono);">${idx + 1}.</span>
           <img src="/avvtar/${p.avatar || 'aman'}.svg" style="width:30px; height:30px; border-radius:50%; border:1.5px solid #1a1a1a;" onerror="this.src='/avvtar/aman.svg';">
-          <span>${this.escapeHtml(p.name)}</span>
+          <span>${this.formatName(p.name)}</span>
         </div>
         <span style="font-family:var(--font-mono); font-weight:900;">${p.score || 0} PTS</span>
       </div>
@@ -445,7 +445,9 @@ const UI = {
       const parsed = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(chat.text) : chat.text;
       msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${parsed}</span>`;
     } else {
-      msg.innerHTML = `<strong>${this.escapeHtml(chat.senderName)}:</strong> <span>${this.escapeHtml(chat.text)}</span>`;
+      const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.text)) : this.escapeHtml(chat.text);
+      const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName)) : this.escapeHtml(chat.senderName);
+      msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
     }
 
     stream.appendChild(msg);
@@ -490,6 +492,11 @@ const UI = {
 
   escapeHtml(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  },
+
+  formatName(name) {
+    const escaped = this.escapeHtml(name || 'Player');
+    return typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(escaped) : escaped;
   }
 };
 

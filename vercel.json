@@ -21,43 +21,37 @@
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*Android.*"
-        }
-      ],
-      "destination": "/android/",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "destination": "/desktop/",
-      "permanent": false
-    },
-    {
-      "source": "/index.html",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*Android.*"
-        }
-      ],
-      "destination": "/android/",
-      "permanent": false
-    },
-    {
-      "source": "/index.html",
-      "destination": "/desktop/",
-      "permanent": false
-    }
-  ],
   "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(Android|iPhone|iPod|Mobile).*"
+        }
+      ],
+      "destination": "/android/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/desktop/index.html"
+    },
+    {
+      "source": "/index.html",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(Android|iPhone|iPod|Mobile).*"
+        }
+      ],
+      "destination": "/android/index.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/desktop/index.html"
+    },
     {
       "source": "/android/avvtar/:match*",
       "destination": "/avvtar/:match*"

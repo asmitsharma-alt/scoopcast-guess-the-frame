@@ -4,12 +4,11 @@
 <head>
   <script>
     (function() {
-      var isAndroid = /Android/i.test(navigator.userAgent);
-      var path = window.location.pathname;
-      if (isAndroid && !path.startsWith('/android') && !path.startsWith('/desktop')) {
-        window.location.replace('/android/' + window.location.search);
-      } else if (!isAndroid && !path.startsWith('/desktop') && !path.startsWith('/android')) {
-        window.location.replace('/desktop/' + window.location.search);
+      // Clean URL: Mask any legacy /android or /desktop path segments
+      if (window.location.pathname.startsWith('/desktop') || window.location.pathname.startsWith('/android')) {
+        try {
+          window.history.replaceState(null, '', '/' + window.location.search + window.location.hash);
+        } catch (e) {}
       }
     })();
   </script>
