@@ -3,11 +3,25 @@
 <head>
   <script>
     (function() {
-      if (window.location.pathname.startsWith('/android') || window.location.pathname.startsWith('/desktop')) {
-        try {
-          window.history.replaceState(null, '', '/' + window.location.search + window.location.hash);
-        } catch (e) {}
+      function cleanUrl() {
+        if (window.location.pathname.startsWith('/android') || window.location.pathname.startsWith('/desktop')) {
+          try {
+            window.history.replaceState(null, '', '/' + window.location.search + window.location.hash);
+          } catch (e) {}
+        }
       }
+      cleanUrl();
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', cleanUrl);
+      }
+      window.addEventListener('load', cleanUrl);
+      window.addEventListener('pageshow', cleanUrl);
+      let count = 0;
+      const interval = setInterval(function() {
+        cleanUrl();
+        count++;
+        if (count > 10) clearInterval(interval);
+      }, 150);
     })();
   </script>
   <meta charset="UTF-8">

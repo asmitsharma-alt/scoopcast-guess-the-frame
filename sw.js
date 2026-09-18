@@ -1,10 +1,9 @@
 // Scoopcast Guess The Frame - Production Service Worker
 // Enables instant 0ms asset retrieval via Cache-First strategy
 
-const CACHE_NAME = 'gtf-cache-v4';
+const CACHE_NAME = 'gtf-cache-v5';
 const CORE_PRECACHE = [
   '/',
-  '/index.html',
   '/css/tailwind.min.css',
   '/bg/guess_the_frame.webp',
   '/bg/cinema_bg.webp',
@@ -100,7 +99,7 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          return caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
+          return caches.match(event.request).then((cached) => cached || caches.match('/'));
         })
     );
     return;

@@ -2,7 +2,7 @@
   "name": "Scoopcast: Guess The Frame",
   "short_name": "GuessTheFrame",
   "description": "Multiplayer cinema trivia party game. Guess movie scenes, dialogues, and celebrity eyes in real-time!",
-  "start_url": "/android/",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FFFDF5",
