@@ -14919,36 +14919,42 @@
         const readyCount = GS.players.filter(p => p.loaded === true || (!GameController._onlineMode && GS.framesLoaded)).length;
         if (infoReady) infoReady.textContent = `${readyCount} / ${GS.players.length || 1}`;
 
-        // Update Start Buttons - ONLY enabled when EVERY player's assets are 100% loaded!
-        // In local mode, if framesLoaded, ensure all players are marked loaded
-        if (!GameController._onlineMode && GS.framesLoaded && Array.isArray(GS.players)) {
+        // Update Start Buttons
+        // In local mode, ensure all players have loaded state
+        if (!GameController._onlineMode && Array.isArray(GS.players)) {
           GS.players.forEach(p => {
             p.loaded = true;
             p.loadProgress = 100;
           });
         }
         const isHost = !GameController._onlineMode || MultiplayerEngine.isHost;
-        const allLoaded = GS.players.length >= 1 && (GS.framesLoaded || GS.players.every(p => p.loaded === true));
-        const canStart = isHost && allLoaded;
+        const canStart = isHost && GS.players.length >= 1;
 
         [startBtn, mobileStartBtn].forEach(btn => {
           if (!btn) return;
           btn.disabled = !canStart;
-          btn.style.opacity = canStart ? '1' : '0.6';
+          btn.style.opacity = canStart ? '1' : '0.65';
           btn.style.cursor = canStart ? 'pointer' : 'not-allowed';
+          if (canStart) {
+            btn.removeAttribute('disabled');
+            btn.classList.remove('opacity-60', 'cursor-not-allowed');
+            btn.classList.add('cursor-pointer');
+          } else {
+            btn.setAttribute('disabled', 'true');
+            btn.classList.add('opacity-60', 'cursor-not-allowed');
+            btn.classList.remove('cursor-pointer');
+          }
         });
 
         let label = 'Start Match';
-        if (!allLoaded) {
-          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : ''} WAITING FOR ASSETS... (${readyCount}/${GS.players.length} READY)`;
-        } else if (!isHost) {
+        if (!isHost) {
           label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : ''} WAITING FOR HOST TO START...`;
         } else {
           label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : ''} START MATCH ${typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : ''}`;
         }
 
-        if (startText) startText.textContent = label;
-        if (mobileStartText) mobileStartText.textContent = label;
+        if (startText) startText.innerHTML = label;
+        if (mobileStartText) mobileStartText.innerHTML = label;
       },
 
       applyPreset(preset) {
@@ -18350,7 +18356,7 @@
               const hfbHostOnly = document.getElementById('hfbHostOnly');
               if (hfbHostOnly) hfbHostOnly.style.display = 'none';
               const hfbLabel = document.getElementById('hfbLabel');
-              if (hfbLabel) hfbLabel.textContent = ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
+              if (hfbLabel) hfbLabel.innerHTML = ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
               const waitPill = document.getElementById('ansWaitingHostPill');
               const nextBtn = document.getElementById('ansNextRoundBtn');
               if (nextBtn) nextBtn.style.display = 'none';
@@ -18410,9 +18416,20 @@
         }
 
         if (pool.length === 0) {
-          // Fallback to section 1 frames if empty
-          const s1 = GS.sections.find(s => s.id === 1);
-          if (s1) pool = [...s1.frames.slice(0, 20).map(f => ({ ...f, sectionName: 'Guess the Frame', sectionId: 1 }))];
+          // Robust fallback to collect from any available section
+          if (Array.isArray(GS.sections)) {
+            for (const s of GS.sections) {
+              if (s && Array.isArray(s.frames) && s.frames.length > 0) {
+                const shuf = [...s.frames].sort(() => 0.5 - Math.random());
+                pool.push(...shuf.slice(0, 20).map(f => ({
+                  ...f,
+                  sectionName: s.name || 'Guess the Frame',
+                  sectionId: s.id || 1
+                })));
+                if (pool.length > 0) break;
+              }
+            }
+          }
         }
 
         this.currentPlaylist = pool;
@@ -18458,6 +18475,9 @@
         this.totalMatchRounds = msg.totalRounds || (msg.playlist ? msg.playlist.length : 10);
         this.hostSettings = msg.hostSettings || this.hostSettings;
         GS.players = msg.players || GS.players;
+        if (msg.playlist && msg.playlist.length > 0) {
+          this.currentPlaylist = msg.playlist;
+        }
         this.currentPlayIndex = 0;
         UI.showScreen('gameScreen');
         const ogp = document.getElementById('onlineGuessPanel'); if (ogp) ogp.classList.add('active');
@@ -18466,7 +18486,7 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
+        if (hfbLabel) hfbLabel.innerHTML = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
         this.saveActiveSession();
       },
 
@@ -18616,7 +18636,7 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = 'inline-flex';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:');
+        if (hfbLabel) hfbLabel.innerHTML = ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:');
 
         const nextBtn = document.getElementById('ansNextRoundBtn');
         const waitPill = document.getElementById('ansWaitingHostPill');
@@ -18888,7 +18908,7 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
+        if (hfbLabel) hfbLabel.innerHTML = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
 
         // Reset Hint UI for new round
         const hintBtns = document.querySelectorAll('#chatHintBtn, #hfbHintBtn, #mobileQuickHintBtn');
@@ -20007,29 +20027,19 @@
           title.textContent = percent >= 100 ? 'All Frames Loaded & Ready!' : 'Preloading Game Frames...';
         }
 
-        if (isOnline) {
-          if (typeof RoomLobby !== 'undefined' && RoomLobby.channel) RoomLobby.updatePlayerLoadProgress(normalized);
-        } else {
-          if (percent >= 100) {
-            GS.framesLoaded = true;
-            if (Array.isArray(GS.players)) {
-              GS.players.forEach(p => {
-                p.loaded = true;
-                p.loadProgress = 100;
-              });
+        if (percent >= 100) {
+          GS.framesLoaded = true;
+        }
+        if (Array.isArray(GS.players)) {
+          GS.players.forEach(p => {
+            if (percent >= 100 || !p.loaded) {
+              p.loaded = (percent >= 100);
+              p.loadProgress = normalized;
             }
-          } else if (Array.isArray(GS.players)) {
-            GS.players.forEach(p => {
-              p.loaded = false;
-              p.loadProgress = Math.round(percent);
-            });
-          }
-          if (typeof PlayerLobby !== 'undefined' && PlayerLobby.render) {
-            PlayerLobby.render();
-          }
-          const startBtn = document.getElementById('lobbyStartBtn');
-          const canStart = GS.players.length === 1 || (GS.players.length > 1 && GS.framesLoaded);
-          if (startBtn) startBtn.disabled = !canStart;
+          });
+        }
+        if (typeof PlayerLobby !== 'undefined' && PlayerLobby.render) {
+          PlayerLobby.render();
         }
       },
       renderLB() {
