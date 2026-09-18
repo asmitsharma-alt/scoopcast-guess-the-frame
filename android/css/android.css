@@ -101,7 +101,7 @@ html, body {
    ══════════════════════════════════════════════════════════════ */
 .mobile-top-bar {
   width: 100%;
-  height: 48px;
+  height: 52px;
   background: #fff;
   border-bottom: var(--nb-border);
   display: flex;
@@ -115,17 +115,16 @@ html, body {
 .app-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  letter-spacing: 0.5px;
-  color: var(--nb-ink);
+  height: 100%;
 }
 
 .app-brand img {
-  width: 28px;
-  height: 28px;
+  height: 38px;
+  max-height: 40px;
+  width: auto;
+  max-width: 170px;
   object-fit: contain;
+  display: block;
 }
 
 .icon-btn {

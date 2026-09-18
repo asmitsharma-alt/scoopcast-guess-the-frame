@@ -94,8 +94,8 @@
     <!-- ═══════════ TOP APP BAR ═══════════ -->
     <header class="mobile-top-bar">
       <div class="app-brand">
-        <img src="/logo.png" alt="Logo" onerror="this.style.display='none'">
-        <span>SCOOPCAST</span>
+        <img src="/logo.png" alt="Scoopcast" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none; font-family:var(--font-display); font-size:1.25rem;">SCOOPCAST</span>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
         <button class="icon-btn" id="btnSoundToggle" onclick="SoundEffects.toggleMute(); UI.updateSoundBtn();" aria-label="Toggle Sound">
