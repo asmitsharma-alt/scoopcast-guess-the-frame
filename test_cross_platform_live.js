@@ -123,10 +123,33 @@ async function runLiveMultiplayerVerification() {
       { id: 'host_desktop', name: 'DesktopHost', avatar: 'aman', score: 0, isHost: true }
     ];
 
+    let hostSubscribed = false;
+    let clientSubscribed = false;
+    let joinInterval = null;
+
+    function trySendJoin() {
+      if (!hostSubscribed || !clientSubscribed || step >= 1) return;
+      console.log('📲 [Android Client] Sending PLAYER_JOIN to room...');
+      const joinMsg = {
+        token: tokenClient,
+        type: 'PLAYER_JOIN',
+        roomId: 'room_' + roomCode,
+        roomCode: roomCode,
+        senderId: 'client_android',
+        id: 'client_android',
+        name: 'AndroidGamer',
+        avatar: 'vish',
+        timestamp: Date.now()
+      };
+      androidClient.publish(topic, JSON.stringify(joinMsg), { qos: 1 });
+    }
+
     desktopHost.on('connect', () => {
       console.log('✅ [Desktop Host] Connected to live EMQX broker!');
       desktopHost.subscribe(topic, { qos: 1 }, () => {
         console.log(`✅ [Desktop Host] Subscribed to topic: ${topic}`);
+        hostSubscribed = true;
+        trySendJoin();
       });
     });
 
@@ -134,22 +157,15 @@ async function runLiveMultiplayerVerification() {
       console.log('✅ [Android Client] Connected to live EMQX broker!');
       androidClient.subscribe(topic, { qos: 1 }, () => {
         console.log(`✅ [Android Client] Subscribed to topic: ${topic}`);
-        // Android sends PLAYER_JOIN
-        setTimeout(() => {
-          console.log('📲 [Android Client] Sending PLAYER_JOIN to room...');
-          const joinMsg = {
-            token: tokenClient,
-            type: 'PLAYER_JOIN',
-            roomId: 'room_' + roomCode,
-            roomCode: roomCode,
-            senderId: 'client_android',
-            id: 'client_android',
-            name: 'AndroidGamer',
-            avatar: 'vish',
-            timestamp: Date.now()
-          };
-          androidClient.publish(topic, JSON.stringify(joinMsg), { qos: 1 });
-        }, 500);
+        clientSubscribed = true;
+        trySendJoin();
+        joinInterval = setInterval(() => {
+          if (step >= 1) {
+            clearInterval(joinInterval);
+            return;
+          }
+          trySendJoin();
+        }, 800);
       });
     });
 
@@ -162,6 +178,7 @@ async function runLiveMultiplayerVerification() {
 
       if (msg.type === 'PLAYER_JOIN' && step === 0) {
         step = 1;
+        if (joinInterval) clearInterval(joinInterval);
         console.log(`✅ [Desktop Host] Received PLAYER_JOIN from ${msg.name} (${msg.senderId})`);
         desktopPlayers.push({
           id: msg.id,
