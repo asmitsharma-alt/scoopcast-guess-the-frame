@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#FFFDF5">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AC%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FACC15' stroke='%23111827' stroke-width='2'%3E%3Cpath d='M20.2 6 3 11l-.9-2.4c-.7-1.1-.3-2.5.7-3.1l9.6-4.5c1.2-.6 2.6-.1 3.1 1l.7 1.6'/%3E%3Cpath d='m5 12 15-5'/%3E%3Cpath d='M3 11v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7'/%3E%3C/svg%3E">
+  <script src="/js/icons.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -10395,7 +10396,7 @@
 
     
     /* ══════════════════════════════════════════════════════════════
-       🏆 REDESIGNED CINEMA AWARDS GALA WINNER SCREEN (NEO-BRUTALIST)
+       [AWARDS] REDESIGNED CINEMA AWARDS GALA WINNER SCREEN (NEO-BRUTALIST)
        ══════════════════════════════════════════════════════════════ */
     #winnerScreen {
       display: none;
@@ -10532,7 +10533,7 @@
       min-height: 0;
     }
 
-    /* 🏆 Grand Champion Spotlight Card */
+    /* [CHAMPION] Grand Champion Spotlight Card */
     .champion-hero-card {
       background: radial-gradient(circle at 50% 25%, #FEF08A 0%, #FACC15 45%, #EAB308 100%);
       border: 3.5px solid #111827;
@@ -10695,7 +10696,7 @@
       text-transform: uppercase;
     }
 
-    /* 🥈🥉 Runner-Up Wings Row (2nd & 3rd Place) */
+    /* [RUNNER-UP] Runner-Up Wings Row (2nd & 3rd Place) */
     .runners-wings-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -11070,7 +11071,7 @@
     
     
     /* ══════════════════════════════════════════════════════════════
-       🏆 PRODUCTION POLISHED COMIC GALA WINNER SCREEN WITH SCOREBOARD
+       [AWARDS] PRODUCTION POLISHED COMIC GALA WINNER SCREEN WITH SCOREBOARD
        ══════════════════════════════════════════════════════════════ */
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11087,7 +11088,7 @@
     }
 
     /* ══════════════════════════════════════════════════════════
-       🏆 EXACT PIXEL-PERFECT NEO-BRUTALIST VICTORY SCREEN
+       [AWARDS] EXACT PIXEL-PERFECT NEO-BRUTALIST VICTORY SCREEN
        ══════════════════════════════════════════════════════════ */
     #winnerScreen {
       display: none;
@@ -12429,6 +12430,25 @@
       .hta-start-btn { width: 100%; padding: 12px 20px; font-size: 20px; }
       .hta-client-status { width: 100%; justify-content: center; box-sizing: border-box; }
     }
+  
+    /* Universal SVG Icon styling */
+    .ui-icon {
+      display: inline-block;
+      width: 1.15em;
+      height: 1.15em;
+      vertical-align: -0.18em;
+      flex-shrink: 0;
+    }
+    .ui-icon-zap { fill: #FACC15; stroke: none; }
+    .ui-icon-crown { fill: #F59E0B; stroke: none; }
+    .ui-icon-trophy { stroke: #D97706; }
+    .ui-icon-star { fill: #F59E0B; stroke: none; }
+    .ui-icon-lightbulb { stroke: #CA8A04; }
+    .ui-icon-play { fill: currentColor; stroke: none; }
+    .ui-medal-gold { color: #D97706; }
+    .ui-medal-silver { color: #6B7280; }
+    .ui-medal-bronze { color: #C2410C; }
+  
   </style>
   <!-- Appwrite Web SDK & QRCode for Online Multiplayer -->
   <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
@@ -12775,7 +12795,7 @@
     <div class="mp-modal-overlay" id="createRoomModal">
       <div class="mp-modal-box">
         <div class="mp-modal-header">
-          <div class="mp-modal-title">⚡ Create Online Room</div>
+          <div class="mp-modal-title"><svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Create Online Room</div>
           <button class="mp-modal-close" onclick="MultiplayerEngine.closeModals()">✕</button>
         </div>
 
@@ -12813,7 +12833,7 @@
     <div class="mp-modal-overlay" id="joinRoomModal">
       <div class="mp-modal-box">
         <div class="mp-modal-header">
-          <div class="mp-modal-title">🎮 Join Online Room</div>
+          <div class="mp-modal-title"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg> Join Online Room</div>
           <button class="mp-modal-close" onclick="MultiplayerEngine.closeModals()">✕</button>
         </div>
         <div class="mp-form-group">
@@ -12855,7 +12875,7 @@
     <div class="mp-modal-overlay" id="rejoinRoomModal">
       <div class="mp-modal-box" style="text-align:center; max-width: 440px;">
         <div class="mp-modal-header" style="justify-content: center; position: relative;">
-          <div class="mp-modal-title" style="font-size: 20px;">🔄 Active Match Found!</div>
+          <div class="mp-modal-title" style="font-size: 20px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg> Active Match Found!</div>
           <button class="mp-modal-close" onclick="MultiplayerEngine.dismissRejoinAndStartNew()" style="position: absolute; right: 12px; top: 12px;">✕</button>
         </div>
         
@@ -12899,12 +12919,12 @@
     <div class="mp-modal-overlay" id="qrModal">
       <div class="mp-modal-box" style="text-align:center;">
         <div class="mp-modal-header">
-          <div class="mp-modal-title">📱 Scan to Join Room</div>
+          <div class="mp-modal-title"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Scan to Join Room</div>
           <button class="mp-modal-close" onclick="MultiplayerEngine.closeModals()">✕</button>
         </div>
         <div id="qrcodeCanvasContainer" style="display:flex; justify-content:center; padding:16px; background:#fff; border-radius:12px; border:2px solid #1a1a1a; margin-bottom:16px;"></div>
         <div style="font-size:16px; font-weight:800; color:#1a1a1a;">Room Code: <span id="qrRoomCodeText" style="font-size:22px; font-weight:900; background:#FFF9DB; padding:2px 8px; border-radius:6px; border:2px solid #1a1a1a;"></span></div>
-        <button class="mp-btn-primary" onclick="MultiplayerEngine.copyRoomLink(this)" style="margin-top:14px;">📋 COPY INVITE LINK</button>
+        <button class="mp-btn-primary" onclick="MultiplayerEngine.copyRoomLink(this)" style="margin-top:14px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg> COPY INVITE LINK</button>
       </div>
     </div>
 
@@ -13200,7 +13220,7 @@
             </svg>
           </div>
           <div class="hta-timer-badge">
-            <span class="hta-timer-icon">⏱️</span>
+            <span class="hta-timer-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="12" y1="14" y2="8"/><circle cx="12" cy="14" r="8"/></svg></span>
             <div class="hta-timer-text-wrap">
               <span class="hta-timer-digits" id="htaTimerCount">10s</span>
               <span class="hta-timer-label">GAME STARTS IN</span>
@@ -13272,7 +13292,7 @@
             <h3 class="hta-step-title">STEP 2: TYPE GUESS</h3>
             <p class="hta-step-desc">Typos are forgiven! Acronyms accepted.</p>
             <div class="hta-search-pill">
-              <span class="hsp-search-icon">🔍</span>
+              <span class="hsp-search-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg></span>
               <span class="hsp-search-text">Inception</span>
               <span class="hsp-typo-badge">TYPO OK</span>
             </div>
@@ -13309,7 +13329,7 @@
         <!-- POINTING SYSTEM SECTION -->
         <div class="hta-pointing-header">
           <div class="hta-pointing-title">
-            <span>🏆</span>
+            <span><svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
             <span>POINTING SYSTEM</span>
           </div>
           <div class="hta-divider-line"></div>
@@ -13393,7 +13413,7 @@
         <!-- CENTERED FOOTER ACTION: BIG GREEN START BUTTON WITH ACTION RAYS -->
         <div class="hta-footer-center">
           <div id="htaClientStatus" class="hta-client-status" style="display:none;">
-            <span class="hta-spinner">⏳</span>
+            <span class="hta-spinner"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
             <span id="htaClientStatusText">Reading rules... Waiting for host (10s)</span>
           </div>
           <div class="hta-btn-container">
@@ -13401,7 +13421,7 @@
               <span></span><span></span><span></span>
             </div>
             <button id="htaHostStartBtn" class="hta-start-btn" disabled>
-              <span class="hta-play-icon">▶</span>
+              <span class="hta-play-icon"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
               <span class="hta-btn-text">START GAME</span>
             </button>
             <div class="hta-action-rays right">
@@ -13468,10 +13488,10 @@
               <div class="ans-dialogue" id="ansDialogue"></div>
               <div class="ans-action-bar" id="ansActionBar">
                 <button type="button" class="ans-next-round-btn" id="ansNextRoundBtn" onclick="MultiplayerEngine.hostNextRound()">
-                  NEXT ROUND ⏭
+                  NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>
                 </button>
                 <div class="ans-waiting-host-pill" id="ansWaitingHostPill" style="display:none;">
-                  ⌛ Waiting for host to start next round...
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for host to start next round...
                 </div>
               </div>
             </div>
@@ -13496,9 +13516,9 @@
           <div class="locked-ind" id="lockedInd"><svg class="svg-icon">
               <use href="#icon-check" />
             </svg> Points Awarded — Moving to Next Round...</div>
-          <div class="skipped-ind" id="skippedInd">⏭ Skipped — No One Knew</div>
+          <div class="skipped-ind" id="skippedInd"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg> Skipped — No One Knew</div>
           <div class="waiting-host-ind" id="waitingHostInd"
-            style="display:none; color: var(--gray); font-style: italic; margin-top: 15px; font-size: 14px;">⌛ Waiting
+            style="display:none; color: var(--gray); font-style: italic; margin-top: 15px; font-size: 14px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting
             for host to award points...</div>
         </div>
       </div>
@@ -13506,18 +13526,18 @@
     
       <!-- HOST CONTROLS (AT BOTTOM OF FRAMES) -->
       <div class="host-floating-bar" id="hostFloatingBar" style="display:none;">
-        <span class="hfb-label" id="hfbLabel">👑 HOST CONTROLS:</span>
+        <span class="hfb-label" id="hfbLabel"><svg class="ui-icon ui-icon-crown" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST CONTROLS:</span>
         <div class="hfb-host-only" id="hfbHostOnly" style="display:inline-flex; align-items:center; gap:8px;">
-          <button type="button" class="hfb-btn" id="hfbSkipBtn" onclick="MultiplayerEngine.hostSkipRound()">⏭ Skip Frame</button>
-          <button type="button" class="hfb-btn" id="hfbNextBtn" onclick="MultiplayerEngine.hostNextRound()" style="display:none; background:#10B981 !important; color:#fff !important;">▶ Next Round</button>
-          <button type="button" class="hfb-btn" id="hfbPauseBtn" onclick="MultiplayerEngine.hostTogglePause()">⏸ Pause</button>
-          <button type="button" class="hfb-btn" onclick="MultiplayerEngine.hostEndGame()">🏁 End Match</button>
+          <button type="button" class="hfb-btn" id="hfbSkipBtn" onclick="MultiplayerEngine.hostSkipRound()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg> Skip Frame</button>
+          <button type="button" class="hfb-btn" id="hfbNextBtn" onclick="MultiplayerEngine.hostNextRound()" style="display:none; background:#10B981 !important; color:#fff !important;"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg> Next Round</button>
+          <button type="button" class="hfb-btn" id="hfbPauseBtn" onclick="MultiplayerEngine.hostTogglePause()"><svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause</button>
+          <button type="button" class="hfb-btn" onclick="MultiplayerEngine.hostEndGame()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> End Match</button>
         </div>
-        <button type="button" class="hfb-btn" id="hfbHintBtn" onclick="MultiplayerEngine.requestHint()" style="background:#FDE047 !important;">💡 Hint (-2 pts)</button>
+        <button type="button" class="hfb-btn" id="hfbHintBtn" onclick="MultiplayerEngine.requestHint()" style="background:#FDE047 !important;"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Hint (-2 pts)</button>
         
         <!-- ACTIVE HINT DISPLAY ON SIDE OF CONTROLS -->
         <div class="hfb-active-hint-pill" id="hfbActiveHintPill" style="display:none;">
-          <span class="hahp-badge">💡 HINT:</span>
+          <span class="hahp-badge"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> HINT:</span>
           <span class="hahp-text" id="hfbActiveHintText"></span>
         </div>
       </div>
@@ -13566,17 +13586,17 @@
       <div class="live-chat-panel" id="liveChatPanel">
         <div class="chat-header">
           <div class="chat-header-title">
-            <span>💬 Live Chat & Guesses</span>
+            <span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Live Chat & Guesses</span>
           </div>
-          <button type="button" class="chat-hint-btn" id="chatHintBtn" onclick="MultiplayerEngine.requestHint()" title="Get a masked letter hint for -2 points">💡 Hint (-2 pts)</button>
+          <button type="button" class="chat-hint-btn" id="chatHintBtn" onclick="MultiplayerEngine.requestHint()" title="Get a masked letter hint for -2 points"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> Hint (-2 pts)</button>
           <button type="button" class="chat-close-btn" onclick="ChatEngine.toggleMobileDrawer(false)">✕ Close</button>
         </div>
         <div class="chat-active-hint" id="chatActiveHint" style="display:none;">
-          <div class="cah-label">💡 HINT (-2 PTS):</div>
+          <div class="cah-label"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> HINT (-2 PTS):</div>
           <div class="cah-text" id="chatActiveHintText"></div>
         </div>
         <div class="chat-stream" id="liveChatStream">
-          <div class="chat-msg-round">🎬 Welcome to Live Guess Stream!</div>
+          <div class="chat-msg-round"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.7-1.1-.3-2.5.7-3.1l9.6-4.5c1.2-.6 2.6-.1 3.1 1l.7 1.6"/><path d="m5 12 15-5"/><path d="M3 11v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/></svg> Welcome to Live Guess Stream!</div>
         </div>
 
         <form class="chat-input-form" id="chatInputForm" onsubmit="ChatEngine.handleFormSubmit(event)">
@@ -13593,7 +13613,7 @@
     <!-- Mobile Sticky Bottom Guess & Chat Bar -->
     <div class="mobile-bottom-bar" id="mobileBottomBar">
       <div id="mobileHintBanner" class="mobile-hint-banner" style="display:none;">
-        <span class="mhb-badge">💡 HINT:</span>
+        <span class="mhb-badge"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> HINT:</span>
         <span class="mhb-text" id="mobileHintText"></span>
       </div>
       <div class="mobile-bottom-bar-row">
@@ -13614,10 +13634,10 @@
           </button>
         </form>
         <button type="button" class="mobile-bar-hint-btn" id="mobileQuickHintBtn" onclick="MultiplayerEngine.requestHint()" title="Get Hint (-2 pts)">
-          <span>💡</span>
+          <span><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span>
         </button>
         <button type="button" class="mobile-bar-chat-btn" id="mobileChatToggleBtn" onclick="ChatEngine.toggleMobileDrawer(true)" title="Open Live Chat">
-          <span style="font-size:18px;">💬</span>
+          <span style="font-size:18px;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
           <span id="mobileChatBadge" class="mobile-chat-badge" style="display:none;">0</span>
         </button>
       </div>
@@ -13627,16 +13647,16 @@
 
   <!-- ═══ UPGRADED NEOBRUTALIST WINNER SCREEN ═══ -->
     <!-- ══════════════════════════════════════════════════════════
-       🏆 REDESIGNED CINEMA AWARDS GALA WINNER SCREEN
+       [AWARDS] REDESIGNED CINEMA AWARDS GALA WINNER SCREEN
        ══════════════════════════════════════════════════════════ -->
     <!-- ══════════════════════════════════════════════════════════
-       🎮 AAA GAME VICTORY & MATCH SUMMARY SCREEN
+       [GAME] AAA GAME VICTORY & MATCH SUMMARY SCREEN
        ══════════════════════════════════════════════════════════ -->
     <!-- ══════════════════════════════════════════════════════════
-       🏆 EXACT REPLICA: AAA COMIC VICTORY WINNER SCREEN
+       [AWARDS] EXACT REPLICA: AAA COMIC VICTORY WINNER SCREEN
        ══════════════════════════════════════════════════════════ -->
     <!-- ══════════════════════════════════════════════════════════
-       🏆 EXACT REPLICA: AAA COMIC VICTORY WINNER SCREEN
+       [AWARDS] EXACT REPLICA: AAA COMIC VICTORY WINNER SCREEN
        ══════════════════════════════════════════════════════════ -->
           <div id="winnerScreen" class="screen">
     <div class="comic-confetti-layer" id="confettiBox" aria-hidden="true"></div>
@@ -13659,7 +13679,7 @@
           <path d="M19 14C21 16 25 16 27 14" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round"/>
           <circle cx="23" cy="8" r="3" fill="#FDE047"/>
         </svg>
-        <span class="popper-tooltip">🎉 POP ME!</span>
+        <span class="popper-tooltip"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/></svg> POP ME!</span>
       </div>
 
       <div class="cw-party-popper popper-right" id="popperRight" onclick="WinnerScreen.triggerPopper('right')" role="button" tabindex="0" title="Click to pop confetti!">
@@ -13672,7 +13692,7 @@
           <path d="M19 14C21 16 25 16 27 14" stroke="#4ADE80" stroke-width="3.5" stroke-linecap="round"/>
           <circle cx="23" cy="8" r="3" fill="#FACC15"/>
         </svg>
-        <span class="popper-tooltip">🎉 POP ME!</span>
+        <span class="popper-tooltip"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/></svg> POP ME!</span>
       </div>
 
       <!-- ── VICTORY HEADER ── -->
@@ -13722,7 +13742,7 @@
             </div>
             <p class="cw-info-text">
               Umeed hai ki aapko game khelne mein maza aaya hoga. Ab agle week website audience ke liye live kar denge. <br>
-              <span class="cw-info-closing">Milte hain next week phir 🙌</span>
+              <span class="cw-info-closing">Milte hain next week phir <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.83L7 15"/></svg></span>
             </p>
           </div>
         </div>
@@ -13789,7 +13809,7 @@
         <div class="cw-right-col">
           <div class="cw-scoreboard-card">
             <div class="cw-scoreboard-header">
-              <span class="trophy-icon">🏆</span>
+              <span class="trophy-icon"><svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
               <span>SCOREBOARD</span>
             </div>
             <div class="cw-sb-list" id="winnerScoreboardList">
@@ -13847,15 +13867,15 @@
       <!-- ── BOTTOM BUTTONS DECK (3 BUTTONS) ── -->
       <div class="cw-buttons-deck">
         <button type="button" class="cw-btn btn-play-again" onclick="MultiplayerEngine.rematch()">
-          <span class="cw-btn-icon">▶</span>
+          <span class="cw-btn-icon"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
           <span class="cw-btn-text">PLAY AGAIN</span>
         </button>
         <button type="button" class="cw-btn btn-rematch" onclick="MultiplayerEngine.rematch()">
-          <span class="cw-btn-icon">👥</span>
+          <span class="cw-btn-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
           <span class="cw-btn-text">REMATCH</span>
         </button>
         <button type="button" class="cw-btn btn-lobby" onclick="MultiplayerEngine.returnToLobby()">
-          <span class="cw-btn-icon">🏠</span>
+          <span class="cw-btn-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
           <span class="cw-btn-text">RETURN TO LOBBY</span>
         </button>
       </div>
@@ -13925,7 +13945,7 @@
         <div class="admin-tab-content" id="tab-settings">
           <div class="admin-grid">
             <div class="admin-section">
-              <h3>⏱ Timer</h3>
+              <h3><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="12" y1="14" y2="8"/><circle cx="12" cy="14" r="8"/></svg> Timer</h3>
               <div class="input-group"><label>Round Duration (s)</label><input type="number" id="cfgTimer" value="20"
                   min="5" max="120"></div>
               <div class="input-group"><label>Judge Phase (s)</label><input type="number" id="cfgJudgeTimer" value="5"
@@ -14044,7 +14064,7 @@
           <span class="jo-dot jo-dot-yellow"></span>
           <span class="jo-dot jo-dot-green"></span>
         </div>
-        <div class="jo-win-tag">⚖️ JUDGE SELECTION</div>
+        <div class="jo-win-tag"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="3" y2="21"/><line x1="4" x2="20" y1="7" y2="7"/><polyline points="1 13 4 7 7 13"/><path d="M1 13a3 3 0 0 0 6 0"/><polyline points="17 13 20 7 23 13"/><path d="M17 13a3 3 0 0 0 6 0"/><line x1="8" x2="16" y1="21" y2="21"/></svg> JUDGE SELECTION</div>
       </div>
 
       <!-- Window Body -->
@@ -14057,7 +14077,7 @@
 
         <!-- Result Banner -->
         <div class="jo-sel-msg" id="joSelMsg">
-          👑 <span class="sn" id="joSelName">Player</span> IS THE JUDGE!
+          <svg class="ui-icon ui-icon-crown" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> <span class="sn" id="joSelName">Player</span> IS THE JUDGE!
         </div>
 
         <!-- Footer Info -->
@@ -14541,7 +14561,7 @@
                            onblur="PlayerLobby.renamePlayer(${i}, this.value)"
                            onkeydown="if(event.key==='Enter') this.blur();"
                     />
-                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity">✏️</span>
+                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
                   </div>
                 ` : `
                   <div class="border-2 border-on-surface px-3 py-1 rounded-lg font-headline-sm text-sm sm:text-base uppercase font-black tracking-wide text-on-surface truncate max-w-full text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" style="background-color: ${avConfig.color};">
@@ -14549,7 +14569,7 @@
                   </div>
                 `}
                 <div class="mt-2.5 ${p.loaded ? 'bg-[#86EFAC] text-[#14532D]' : 'bg-[#FEF08A] text-[#854D0E]'} border-2 border-on-surface px-2.5 py-0.5 rounded-full font-label-bold text-[10px] uppercase font-black flex items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  ${p.loaded ? '<span>✅ READY</span>' : `<span>⏳ LOADING (${p.loadProgress || 0}%)...</span>`}
+                  ${p.loaded ? ('<span>' + (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ' READY</span>') : ('<span>' + (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ` LOADING (${p.loadProgress || 0}%)...</span>`)}
                 </div>
               </div>
             `;
@@ -14697,11 +14717,11 @@
 
         let label = 'Start Match';
         if (!allLoaded) {
-          label = `⏳ WAITING FOR ASSETS... (${readyCount}/${GS.players.length} READY)`;
+          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : ''} WAITING FOR ASSETS... (${readyCount}/${GS.players.length} READY)`;
         } else if (!isHost) {
-          label = '⌛ WAITING FOR HOST TO START...';
+          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : ''} WAITING FOR HOST TO START...`;
         } else {
-          label = '🎮 START MATCH 🚀';
+          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : ''} START MATCH ${typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : ''}`;
         }
 
         if (startText) startText.textContent = label;
@@ -15993,7 +16013,7 @@
             // Add red X stamp
             const stamp = document.createElement('div');
             stamp.className = 'jo-elim-stamp';
-            stamp.textContent = '✖';
+            stamp.textContent = '✕';
             victim.appendChild(stamp);
 
             SoundManager.playSkip();
@@ -16357,7 +16377,7 @@
         if (!stream) return;
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-msg-hint';
-        msgEl.innerHTML = '<div class="cmh-header">💡 YOUR PRIVATE HINT (-2 PTS)</div><div class="cmh-body">' + SecurityUtil.escapeHtml(hintText) + '</div>';
+        msgEl.innerHTML = '<div class="cmh-header">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + ' YOUR PRIVATE HINT (-2 PTS)</div><div class="cmh-body">' + SecurityUtil.escapeHtml(hintText) + '</div>';
         stream.appendChild(msgEl);
         stream.scrollTop = stream.scrollHeight;
       },
@@ -16421,7 +16441,7 @@
             return;
           } else {
             // Already won: block spoiling in chat
-            this.renderSystemMessage('⚠️ <strong>Shh!</strong> That\'s the answer! Don\'t spoil it in chat! 🤫');
+            this.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' <strong>Shh!</strong> That\'s the answer! Don\'t spoil it in chat!');
             if (typeof SoundManager !== 'undefined' && SoundManager.playPop) {
               SoundManager.playPop();
             }
@@ -16431,7 +16451,7 @@
 
         // If player already won or round is active, check for obvious spoiler leaks
         if (roundActive && currentAns && this.isAnswerOrSpoiler(text, currentAns)) {
-          this.renderSystemMessage('⚠️ <strong>Shh!</strong> That\'s the answer! Don\'t spoil it in chat! 🤫');
+          this.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' <strong>Shh!</strong> That\'s the answer! Don\'t spoil it in chat!');
           return;
         }
 
@@ -16487,19 +16507,19 @@
 
         const reactionButtonsHtml = isMe ?
           ('<span class="chat-reaction-btn chat-self-disabled" title="You cannot vote on your own answer">' +
-            '<span class="reaction-emoji">👍</span>' +
+            '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsUp : '') + '</span>' +
             '<span class="reaction-count" id="likeCount_' + safeMsgId + '"></span>' +
           '</span>' +
           '<span class="chat-reaction-btn chat-self-disabled" title="You cannot vote on your own answer">' +
-            '<span class="reaction-emoji">👎</span>' +
+            '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsDown : '') + '</span>' +
             '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
           '</span>') :
           ('<button type="button" class="chat-reaction-btn chat-like-btn" id="likeBtn_' + safeMsgId + '" onclick="ChatEngine.toggleReaction(\'' + safeMsgId + '\', \'like\')" title="Like this answer">' +
-            '<span class="reaction-emoji">👍</span>' +
+            '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsUp : '') + '</span>' +
             '<span class="reaction-count" id="likeCount_' + safeMsgId + '"></span>' +
           '</button>' +
           '<button type="button" class="chat-reaction-btn chat-dislike-btn" id="dislikeBtn_' + safeMsgId + '" onclick="ChatEngine.toggleReaction(\'' + safeMsgId + '\', \'dislike\')" title="Dislike this answer">' +
-            '<span class="reaction-emoji">👎</span>' +
+            '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsDown : '') + '</span>' +
             '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
           '</button>');
 
@@ -16509,7 +16529,7 @@
           '<div class="chat-msg-body">' +
           '<div class="chat-msg-header">' +
           '<span style="color:#1a1a1a;">' + SecurityUtil.escapeHtml(msg.senderName) + '</span>' +
-          (msg.isGuessed ? '<span class="chat-badge-guessed">🏆 GUESSED</span>' : '') +
+          (msg.isGuessed ? '<span class="chat-badge-guessed">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '') + ' GUESSED</span>' : '') +
           (isMe ? '<span style="color:#3b82f6; font-size:10px;">(YOU)</span>' : '') +
           '</div>' +
           '<div class="chat-msg-text">' + SecurityUtil.escapeHtml(msg.text) + '</div>' +
@@ -16611,7 +16631,7 @@
 
         const noticeEl = document.createElement('div');
         noticeEl.className = 'chat-notice-subtle';
-        noticeEl.innerHTML = '<span class="cns-icon">' + (notice.reaction === 'like' ? '👍' : '👎') + '</span>' +
+        noticeEl.innerHTML = '<span class="cns-icon">' + (notice.reaction === 'like' ? (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsUp : '') : (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsDown : '')) + '</span>' +
           '<span class="cns-text">' + SecurityUtil.escapeHtml(text) + '</span>';
 
         stream.appendChild(noticeEl);
@@ -16646,10 +16666,10 @@
 
         const banner = document.createElement('div');
         banner.className = 'chat-msg-winner';
-        banner.innerHTML = '<div style="font-size:24px;">🎉</div>' +
+        banner.innerHTML = '<div style="font-size:24px;">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + '</div>' +
           '<div class="chat-winner-text">' +
           '<strong>' + SecurityUtil.escapeHtml(winRecord.playerName) + '</strong> guessed the answer! ' +
-          '<span style="color:#b45309; font-weight:900;">(+' + winRecord.points + ' pts - ' + (winRecord.position === 1 ? '🥇 1st' : winRecord.position === 2 ? '🥈 2nd' : '🥉 3rd') + ')</span>' +
+          '<span style="color:#b45309; font-weight:900;">(+' + winRecord.points + ' pts - ' + (winRecord.position === 1 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st') : winRecord.position === 2 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd')) + ')</span>' +
           '</div>';
 
         stream.appendChild(banner);
@@ -16662,7 +16682,7 @@
 
         const sep = document.createElement('div');
         sep.className = 'chat-msg-round';
-        sep.textContent = '🎬 --- Round ' + (roundIndex + 1) + ' Started ---';
+        sep.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.clapper : '') + ' --- Round ' + (roundIndex + 1) + ' Started ---';
         stream.appendChild(sep);
         stream.scrollTop = stream.scrollHeight;
       },
@@ -16913,7 +16933,7 @@
 
         if (codeEl) codeEl.textContent = session.roomCode;
         if (nameEl) nameEl.textContent = session.playerName || this.getAvatarDisplayName(av);
-        if (roleEl) roleEl.textContent = session.isHost ? 'Host 👑' : 'Player';
+        if (roleEl) roleEl.innerHTML = session.isHost ? ('Host ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '')) : 'Player';
         if (avImg) avImg.src = `avvtar/${av}.svg`;
         if (avContainer) avContainer.style.backgroundColor = avConfig.color;
 
@@ -17017,7 +17037,7 @@
           const hfbHostOnly = document.getElementById('hfbHostOnly');
           if (hfbHostOnly) hfbHostOnly.style.display = 'none';
           const hfbLabel = document.getElementById('hfbLabel');
-          if (hfbLabel) hfbLabel.textContent = '🎮 CONTROLS:';
+          if (hfbLabel) hfbLabel.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:';
 
           if (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) {
             const curFrame = this.currentPlaylist[this.currentPlayIndex];
@@ -17288,7 +17308,7 @@
         const joinBtnOrigHtml = joinBtn ? joinBtn.innerHTML : '';
         if (joinBtn) {
           joinBtn.disabled = true;
-          joinBtn.innerHTML = '⏳ Connecting to room...';
+          joinBtn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' Connecting to room...';
         }
 
         // FIX: Do NOT navigate to playerLobbyScreen yet (Root Cause 1)
@@ -17386,7 +17406,7 @@
                         const hfbHostOnly = document.getElementById('hfbHostOnly');
                         if (hfbHostOnly) hfbHostOnly.style.display = 'inline-flex';
                         const hfbLabel = document.getElementById('hfbLabel');
-                        if (hfbLabel) hfbLabel.textContent = '👑 HOST CONTROLS:';
+                        if (hfbLabel) hfbLabel.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:';
                         if (this.isMatchActive) {
                           UI.showScreen('gameScreen');
                           this.broadcastState('HOST_RECONNECTED');
@@ -17394,7 +17414,7 @@
                           this.renderLobbyUI();
                           this.broadcastState('HOST_ONLINE');
                         }
-                        ChatEngine.renderSystemMessage('👑 <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> (Host) reconnected!');
+                        ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> (Host) reconnected!');
                       }
                     }, 2500);
                   }
@@ -17481,8 +17501,8 @@
             bar.appendChild(dot);
           }
           dot.innerHTML = online 
-            ? '<span style="color:#22c55e;">🟢 Cloud Live</span>' 
-            : '<span style="color:#f59e0b;">🟡 Connecting...</span>';
+            ? '<span style="color:#22c55e;"><svg class="ui-icon" viewBox="0 0 24 24" fill="#22c55e"><circle cx="12" cy="12" r="8"/></svg> Cloud Live</span>' 
+            : '<span style="color:#f59e0b;"><svg class="ui-icon" viewBox="0 0 24 24" fill="#f59e0b"><circle cx="12" cy="12" r="8"/></svg> Connecting...</span>';
         }
       },
 
@@ -17600,7 +17620,7 @@
                 this.saveActiveSession();
                 this.renderLobbyUI();
                 UI.renderLB();
-                ChatEngine.renderSystemMessage(`🚪 <strong>${SecurityUtil.escapeHtml(leftPlayer.name || 'A player')}</strong> left the room.`);
+                ChatEngine.renderSystemMessage(`${typeof SvgIcons !== 'undefined' ? SvgIcons.door : ''} <strong>${SecurityUtil.escapeHtml(leftPlayer.name || 'A player')}</strong> left the room.`);
                 if (this.isHost) {
                   this.broadcastState('PLAYER_LEFT');
                 } else if (leftPlayer.isHost || msg.isHost) {
@@ -17623,7 +17643,7 @@
                 const [kickedPlayer] = GS.players.splice(idx, 1);
                 this.renderLobbyUI();
                 UI.renderLB();
-                ChatEngine.renderSystemMessage(`👢 <strong>${SecurityUtil.escapeHtml(kickedPlayer.name || 'A player')}</strong> was removed by the host.`);
+                ChatEngine.renderSystemMessage(`${typeof SvgIcons !== 'undefined' ? SvgIcons.boot : ''} <strong>${SecurityUtil.escapeHtml(kickedPlayer.name || 'A player')}</strong> was removed by the host.`);
               }
             }
             break;
@@ -17751,7 +17771,7 @@
               const hfbHostOnly = document.getElementById('hfbHostOnly');
               if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
               const hfbLabel = document.getElementById('hfbLabel');
-              if (hfbLabel) hfbLabel.textContent = this.isHost ? '👑 HOST CONTROLS:' : '🎮 CONTROLS:';
+              if (hfbLabel) hfbLabel.innerHTML = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
 
               const curFrame = msg.currentFrame || (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) || this.currentClientFrame;
               if (curFrame) {
@@ -18030,7 +18050,7 @@
             if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
             if (msg.targetPlayerId === this.playerId && !msg.isCorrect) {
               SoundManager.play('wrong');
-              this.showGuessFeedback(false, '❌ Not quite, try again!');
+              this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
               const input = document.getElementById('onlineGuessInput');
               if (input) {
                 input.classList.add('shake-input');
@@ -18094,13 +18114,13 @@
               const hfbHostOnly = document.getElementById('hfbHostOnly');
               if (hfbHostOnly) hfbHostOnly.style.display = 'none';
               const hfbLabel = document.getElementById('hfbLabel');
-              if (hfbLabel) hfbLabel.textContent = '🎮 CONTROLS:';
+              if (hfbLabel) hfbLabel.textContent = ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
               const waitPill = document.getElementById('ansWaitingHostPill');
               const nextBtn = document.getElementById('ansNextRoundBtn');
               if (nextBtn) nextBtn.style.display = 'none';
               if (waitPill) waitPill.style.display = 'inline-flex';
               this.renderLobbyUI();
-              ChatEngine.renderSystemMessage('👑 <strong>' + SecurityUtil.escapeHtml(msg.newHostName || 'Player') + '</strong> is now the Host!');
+              ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(msg.newHostName || 'Player') + '</strong> is now the Host!');
             }
             break;
         }
@@ -18210,7 +18230,7 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = this.isHost ? '👑 HOST CONTROLS:' : '🎮 CONTROLS:';
+        if (hfbLabel) hfbLabel.textContent = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
         this.saveActiveSession();
       },
 
@@ -18315,7 +18335,7 @@
           const gap = now - (this.lastHostHeartbeat || now);
           if (gap > 5500 && !this._hostWarnActive && gap <= 12000) {
             this._hostWarnActive = true;
-            ChatEngine.renderSystemMessage('⚠️ <em>Host disconnected. Electing new host shortly...</em>');
+            ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' <em>Host disconnected. Electing new host shortly...</em>');
           }
           if (this.lastHostHeartbeat && (now - this.lastHostHeartbeat > 12000)) {
             this._hostWarnActive = false;
@@ -18360,7 +18380,7 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = 'inline-flex';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = '👑 HOST CONTROLS:';
+        if (hfbLabel) hfbLabel.textContent = ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:');
 
         const nextBtn = document.getElementById('ansNextRoundBtn');
         const waitPill = document.getElementById('ansWaitingHostPill');
@@ -18385,7 +18405,7 @@
         this.startHostPresenceWatchdog();
         this.saveActiveSession();
 
-        ChatEngine.renderSystemMessage('👑 <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> is now the Host!');
+        ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> is now the Host!');
 
         this.sendEvent('HOST_MIGRATED', {
           newHostId: this.playerId,
@@ -18478,11 +18498,11 @@
         const hfbSkip = document.getElementById('hfbSkipBtn');
         if (hfbSkip) {
           if (state === 'next') {
-            hfbSkip.textContent = isLast ? '🏁 Finish Match' : '▶ Next Round';
+            hfbSkip.innerHTML = isLast ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.flag : '') + ' Finish Match') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.play : '') + ' Next Round');
             hfbSkip.classList.add('next-round-state');
             hfbSkip.onclick = () => MultiplayerEngine.hostNextRound();
           } else {
-            hfbSkip.textContent = '⏭ Skip Frame';
+            hfbSkip.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '') + ' Skip Frame';
             hfbSkip.classList.remove('next-round-state');
             hfbSkip.onclick = () => MultiplayerEngine.hostSkipRound();
           }
@@ -18538,7 +18558,7 @@
         // Generate the single authoritative randomized hint for this round
         this.currentMaskedHint = this.generateMaskedHint(frame.answer);
 
-        // Reset Skip button back to "⏭ Skip Frame" for the active round
+        // Reset Skip button back to "Skip Frame" for the active round
         this.setHostSkipButtonState('skip');
 
         // Reset Hint UI for new round
@@ -18546,7 +18566,7 @@
         hintBtns.forEach(b => {
           b.disabled = false;
           b.style.opacity = '1';
-          b.textContent = b.id === 'mobileQuickHintBtn' ? '💡' : '💡 Hint (-2 pts)';
+          b.innerHTML = b.id === 'mobileQuickHintBtn' ? (typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + ' Hint (-2 pts)');
         });
         const cah = document.getElementById('chatActiveHint');
         if (cah) cah.style.display = 'none';
@@ -18632,14 +18652,14 @@
         const hfbHostOnly = document.getElementById('hfbHostOnly');
         if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
         const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.textContent = this.isHost ? '👑 HOST CONTROLS:' : '🎮 CONTROLS:';
+        if (hfbLabel) hfbLabel.textContent = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
 
         // Reset Hint UI for new round
         const hintBtns = document.querySelectorAll('#chatHintBtn, #hfbHintBtn, #mobileQuickHintBtn');
         hintBtns.forEach(b => {
           b.disabled = false;
           b.style.opacity = '1';
-          b.textContent = b.id === 'mobileQuickHintBtn' ? '💡' : '💡 Hint (-2 pts)';
+          b.innerHTML = b.id === 'mobileQuickHintBtn' ? (typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + ' Hint (-2 pts)');
         });
         const cah = document.getElementById('chatActiveHint');
         if (cah) cah.style.display = 'none';
@@ -18708,7 +18728,7 @@
             roundIndex: this.currentPlayIndex
           });
         } else {
-          this.showGuessFeedback(null, '⏳ Checking guess...');
+          this.showGuessFeedback(null, (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' Checking guess...');
           this.sendEvent('SUBMIT_GUESS', {
             playerId: this.playerId,
             playerName: this.playerName,
@@ -18720,7 +18740,7 @@
           this._guessTimeoutId = setTimeout(() => {
             const fb = document.getElementById('onlineGuessFeedback');
             if (fb && fb.textContent && fb.textContent.includes('Checking guess')) {
-              this.showGuessFeedback(null, '⚠️ Host lag — try again!');
+              this.showGuessFeedback(null, (typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' Host lag — try again!');
               const input = document.getElementById('onlineGuessInput');
               const submitBtn = document.getElementById('onlineGuessSubmitBtn');
               const alreadyWon = (this.currentRoundWinners || []).some(w => w.playerId === this.playerId);
@@ -18768,7 +18788,7 @@
 
             if (data.playerId === this.playerId) {
               SoundManager.play('correct');
-              this.showGuessFeedback(true, '🎉 Correct! +' + pts + ' Pts (' + (pos === 1 ? '1st' : pos === 2 ? '2nd' : '3rd') + ' Place!)');
+              this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + ' Correct! +' + pts + ' Pts (' + (pos === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st' : pos === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd' : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd') + ' Place!)');
               const input = document.getElementById('onlineGuessInput');
               if (input) input.disabled = true;
               const ogb = document.getElementById('onlineGuessSubmitBtn');
@@ -18804,7 +18824,7 @@
         } else {
           if (data.playerId === this.playerId) {
             SoundManager.play('wrong');
-            this.showGuessFeedback(false, '❌ Not quite, try again!');
+            this.showGuessFeedback(false, 'Not quite, try again!');
             const input = document.getElementById('onlineGuessInput');
             if (input) {
               input.classList.add('shake-input');
@@ -18847,7 +18867,7 @@
 
         if (winRecord && winRecord.playerId === this.playerId) {
           SoundManager.play('correct');
-          this.showGuessFeedback(true, '🎉 Correct! +' + winRecord.points + ' Pts (' + (winRecord.position === 1 ? '1st' : winRecord.position === 2 ? '2nd' : '3rd') + ' Place!)');
+          this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + ' Correct! +' + winRecord.points + ' Pts (' + (winRecord.position === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st' : winRecord.position === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd' : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd') + ' Place!)');
           const input = document.getElementById('onlineGuessInput');
           if (input) input.disabled = true;
           const ogb = document.getElementById('onlineGuessSubmitBtn');
@@ -18922,10 +18942,10 @@
         if (this.currentRoundWinners.length > 0) {
           spotlightHtml += '<div class="winners-spotlight">' + this.currentRoundWinners.map(w => {
             const badgeClass = w.position === 1 ? 'winner-pill-1' : (w.position === 2 ? 'winner-pill-2' : 'winner-pill-3');
-            return `<div class="winner-pill ${badgeClass}"><span>${w.position === 1 ? '🥇' : w.position === 2 ? '🥈' : '🥉'} ${SecurityUtil.escapeHtml(w.playerName)}</span><span>+${Number(w.points) || 0} pts</span></div>`;
+            return `<div class="winner-pill ${badgeClass}"><span>${w.position === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') : w.position === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '')} ${SecurityUtil.escapeHtml(w.playerName)}</span><span>+${Number(w.points) || 0} pts</span></div>`;
           }).join('') + '</div>';
         } else {
-          spotlightHtml += '<div style="margin-top:10px; font-weight:800; color:#ff6b6b;">⏭ No one got it in time!</div>';
+          spotlightHtml += '<div style="margin-top:10px; font-weight:800; color:#ff6b6b;">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '') + ' No one got it in time!</div>';
         }
 
         const ansDialogue = document.getElementById('ansDialogue');
@@ -18946,7 +18966,7 @@
           const nextBtn = document.getElementById('ansNextRoundBtn');
           const waitPill = document.getElementById('ansWaitingHostPill');
           const isLast = (this.currentPlayIndex + 1 >= this.currentPlaylist.length);
-          const baseLabel = isLast ? 'FINISH MATCH 🏁' : 'NEXT ROUND ⏭';
+          const baseLabel = isLast ? ('FINISH MATCH ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.flag : '')) : ('NEXT ROUND ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : ''));
           if (nextBtn) {
             nextBtn.style.display = 'inline-flex';
             nextBtn.textContent = baseLabel + ' (20s)';
@@ -18968,7 +18988,7 @@
             }
           }, 1000);
 
-          // Dynamically morph Skip button into "▶ Next Round" (or "🏁 Finish Match")
+          // Dynamically morph Skip button into "<svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg> Next Round" (or "Finish Match")
           this.setHostSkipButtonState('next');
         }
         this.saveActiveSession();
@@ -19026,10 +19046,10 @@
         if (this.currentRoundWinners.length > 0) {
           spotlightHtml += '<div class="winners-spotlight">' + this.currentRoundWinners.map(w => {
             const badgeClass = w.position === 1 ? 'winner-pill-1' : (w.position === 2 ? 'winner-pill-2' : 'winner-pill-3');
-            return `<div class="winner-pill ${badgeClass}"><span>${w.position === 1 ? '🥇' : w.position === 2 ? '🥈' : '🥉'} ${SecurityUtil.escapeHtml(w.playerName)}</span><span>+${Number(w.points) || 0} pts</span></div>`;
+            return `<div class="winner-pill ${badgeClass}"><span>${w.position === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') : w.position === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '')} ${SecurityUtil.escapeHtml(w.playerName)}</span><span>+${Number(w.points) || 0} pts</span></div>`;
           }).join('') + '</div>';
         } else {
-          spotlightHtml += '<div style="margin-top:10px; font-weight:800; color:#ff6b6b;">⏭ No one got it in time!</div>';
+          spotlightHtml += '<div style="margin-top:10px; font-weight:800; color:#ff6b6b;">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '') + ' No one got it in time!</div>';
         }
 
         const ansDialogue = document.getElementById('ansDialogue');
@@ -19043,7 +19063,7 @@
         if (nextBtn) nextBtn.style.display = 'none';
         if (waitPill) {
           waitPill.style.display = 'inline-flex';
-          waitPill.textContent = '⌛ WAITING FOR HOST... (20s)';
+          waitPill.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' WAITING FOR HOST... (20s)';
         }
 
         if (this._clientWaitTimer) clearInterval(this._clientWaitTimer);
@@ -19051,7 +19071,7 @@
         this._clientWaitTimer = setInterval(() => {
           clientCountdown--;
           if (waitPill && waitPill.style.display !== 'none') {
-            waitPill.textContent = '⌛ WAITING FOR HOST... (' + clientCountdown + 's)';
+            waitPill.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' WAITING FOR HOST... (' + clientCountdown + 's)';
           }
           if (clientCountdown <= 0) {
             clearInterval(this._clientWaitTimer);
@@ -19134,7 +19154,7 @@
 
       requestHint() {
         if (this.hasUsedHintThisRound) {
-          ChatEngine.renderSystemMessage('⚠️ You already unlocked the hint for this round!');
+          ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' You already unlocked the hint for this round!');
           return;
         }
         const currentFrame = this.currentPlaylist[this.currentPlayIndex] || this.currentClientFrame;
@@ -19162,7 +19182,7 @@
         hintBtns.forEach(b => {
           b.disabled = true;
           b.style.opacity = '0.6';
-          b.textContent = b.id === 'mobileQuickHintBtn' ? '💡✓' : '💡 Hint Used';
+          b.innerHTML = b.id === 'mobileQuickHintBtn' ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + '✓') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + ' Hint Used');
         });
 
         // Show persistent banner in chat panel (visible only to this player)
@@ -19228,7 +19248,7 @@
         }
         // NOTE: Hints are strictly individual! Remote hint text is NEVER displayed here.
         if (msg.playerId !== this.playerId && msg.playerName !== this.playerName) {
-          ChatEngine.renderSystemMessage(`💡 <strong>${SecurityUtil.escapeHtml(msg.playerName)}</strong> unlocked a hint! (-2 pts)`);
+          ChatEngine.renderSystemMessage(`${typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : ''} <strong>${SecurityUtil.escapeHtml(msg.playerName)}</strong> unlocked a hint! (-2 pts)`);
         }
       },
 
@@ -19253,7 +19273,7 @@
         const tieOv = document.getElementById('tieVsOv');
         const tiePlayersEl = document.getElementById('tieVsPlayers');
         if (tiePlayersEl) {
-          tiePlayersEl.innerHTML = tiedPlayers.map(p => `<div style="font-size:20px; font-weight:900; color:#1a1a1a;">⚡ ${SecurityUtil.escapeHtml(p.name)}</div>`).join('');
+          tiePlayersEl.innerHTML = tiedPlayers.map(p => `<div style="font-size:20px; font-weight:900; color:#1a1a1a;">${typeof SvgIcons !== 'undefined' ? SvgIcons.zap : ''} ${SecurityUtil.escapeHtml(p.name)}</div>`).join('');
         }
         if (tieOv) tieOv.classList.add('on');
 
@@ -19274,7 +19294,7 @@
         const tieOv = document.getElementById('tieVsOv');
         const tiePlayersEl = document.getElementById('tieVsPlayers');
         if (tiePlayersEl) {
-          tiePlayersEl.innerHTML = (msg.tiedPlayers || []).map(p => `<div style="font-size:20px; font-weight:900; color:#1a1a1a;">⚡ ${SecurityUtil.escapeHtml(p.name)}</div>`).join('');
+          tiePlayersEl.innerHTML = (msg.tiedPlayers || []).map(p => `<div style="font-size:20px; font-weight:900; color:#1a1a1a;">${typeof SvgIcons !== 'undefined' ? SvgIcons.zap : ''} ${SecurityUtil.escapeHtml(p.name)}</div>`).join('');
         }
         if (tieOv) tieOv.classList.add('on');
         setTimeout(() => {
@@ -19320,10 +19340,10 @@
         const btn = document.getElementById('hfbPauseBtn');
         if (this.isPaused) {
           TC.pause();
-          if (btn) btn.textContent = '▶ Resume';
+          if (btn) btn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.play : '') + ' Resume';
         } else {
           TC.resume();
-          if (btn) btn.textContent = '⏸ Pause';
+          if (btn) btn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.pause : '') + ' Pause';
         }
         this.sendEvent('HOST_PAUSE_BROADCAST', { paused: this.isPaused });
       },
@@ -19350,7 +19370,7 @@
       },
 
       handleRemoteRematch() {
-        alert('👑 Host has initiated a rematch! Get ready!');
+        alert('Host has initiated a rematch! Get ready!');
       },
 
       returnToLobby() {
@@ -19780,7 +19800,7 @@
           const isJ = p.name === cj, ja = isJ && isJP;
           const color = colors[i % colors.length];
           const av = renderAvatar(p, 'lb');
-          const rankDisplay = (i === 0 && p.score > 0) ? '👑' : `${rank}`;
+          const rankDisplay = (i === 0 && p.score > 0) ? (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '#1') : `${rank}`;
           const realIdx = GS.players.findIndex(x => x.name === p.name && (x.avatar === p.avatar || x.avatarImg === p.avatarImg));
           const safeName = SecurityUtil.escapeHtml(p.name);
           return `<div class="lb-item ${i === 0 && p.score > 0 ? 'top' : ''} ${isJ ? 'is-j' : ''} ${ja ? 'j-act' : ''}">
@@ -21053,7 +21073,7 @@
           ]
         },
         {
-          category: '⏳ Countdown', sounds: [
+          category: 'Countdown', sounds: [
             { key: 'countBeep', label: 'Count Beep (3/2/1)', play: () => SoundManager.playCountBeep(2) },
             { key: 'fanfare', label: 'GO! Fanfare', play: () => SoundManager.playCountBeep(0) },
           ]
@@ -21133,7 +21153,7 @@
                 <option value="soft"    ${cfg.style === 'soft' ? 'selected' : ''}>Soft</option>
                 <option value="arcade"  ${cfg.style === 'arcade' ? 'selected' : ''}>Arcade</option>
               </select>
-              <button class="snd-play-btn" onclick="AdminPanel.previewSound('${snd.key}')" title="Preview">▶</button>
+              <button class="snd-play-btn" onclick="AdminPanel.previewSound('${snd.key}')" title="Preview"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg></button>
             </div>`;
           });
           html += '</div>';
@@ -21516,7 +21536,7 @@
           if (playerCard) {
             const nameEl = playerCard.querySelector('.lp-name, .lb-name, .jo-cname, .sp-name, .podium-name');
             if (nameEl) {
-              name = nameEl.textContent.replace(/JUDGE|👑|\d+/g, '').trim();
+              name = nameEl.textContent.replace(/JUDGE|\d+/g, '').trim();
             }
           }
           if (!name && avWrap.getAttribute('aria-label')) {

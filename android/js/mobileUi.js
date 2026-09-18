@@ -148,7 +148,7 @@ const UI = {
         const url = window.location.origin + '/android/?room=' + code;
         if (navigator.clipboard) {
           navigator.clipboard.writeText(url);
-          UI.showToast('📋 Room link copied to clipboard!');
+          UI.showToast((typeof SvgIcons !== 'undefined' ? SvgIcons.copy : '') + ' Room link copied to clipboard!');
         }
         if (typeof Haptics !== 'undefined') Haptics.tap();
       });
@@ -160,7 +160,7 @@ const UI = {
       shareBtn.addEventListener('click', () => {
         const code = GameClient.roomCode || '';
         const url = window.location.origin + '/android/?room=' + code;
-        const text = `Join my cinema frame guessing party on Scoopcast! Room Code: ${code} 👉 ${url}`;
+        const text = `Join my cinema frame guessing party on Scoopcast! Room Code: ${code} | ${url}`;
         if (navigator.share) {
           navigator.share({ title: 'Guess The Frame', text, url });
         } else {
@@ -202,9 +202,17 @@ const UI = {
   showToast(message) {
     const toast = document.getElementById('mobileToast');
     if (!toast) return;
-    toast.textContent = message;
+    toast.innerHTML = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(message) : message;
     toast.classList.add('visible');
     setTimeout(() => toast.classList.remove('visible'), 2600);
+  },
+
+  updateSoundBtn() {
+    const btn = document.getElementById('btnSoundToggle');
+    if (!btn) return;
+    if (typeof SvgIcons !== 'undefined') {
+      btn.innerHTML = SoundEffects.muted ? SvgIcons.volumeX : SvgIcons.volume2;
+    }
   },
 
   setRoomCode(code) {
@@ -259,7 +267,7 @@ const UI = {
     // Update player score in HUD
     if (myScore && Array.isArray(GameClient.players)) {
       const me = GameClient.players.find(p => p.id === GameClient.playerId);
-      if (me) myScore.textContent = `⭐ ${me.score || 0} PTS`;
+      if (me) myScore.innerHTML = `${typeof SvgIcons !== 'undefined' ? SvgIcons.star : ''} <span id="hudScore">${me.score || 0}</span> PTS`;
     }
 
     // Display appropriate media
@@ -284,13 +292,17 @@ const UI = {
 
   showGuessSuccess(position, points) {
     const input = document.getElementById('mobileGuessInput');
-    const medal = position === 1 ? '🥇 1ST PLACE!' : (position === 2 ? '🥈 2ND PLACE!' : '🥉 3RD PLACE!');
+    const medalIcon = typeof SvgIcons !== 'undefined'
+      ? (position === 1 ? SvgIcons.medal1 : (position === 2 ? SvgIcons.medal2 : SvgIcons.medal3))
+      : '';
+    const posLabel = position === 1 ? '1ST PLACE!' : (position === 2 ? '2ND PLACE!' : '3RD PLACE!');
     if (input) {
       input.value = '';
       input.disabled = false;
       input.placeholder = 'YOU GUESSED IT! CHAT FREELY...';
     }
-    this.showToast(`🎉 Correct! ${medal} (+${points} pts)`);
+    const partyIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.party : '';
+    this.showToast(`${partyIcon} Correct! ${medalIcon} ${posLabel} (+${points} pts)`);
   },
 
   shakeGuessInput() {
@@ -299,7 +311,8 @@ const UI = {
       dock.classList.add('shake-anim');
       setTimeout(() => dock.classList.remove('shake-anim'), 360);
     }
-    this.showToast('❌ Not quite, try again!');
+    const crossIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '';
+    this.showToast(`${crossIcon} Not quite, try again!`);
   },
 
   displayHintBanner(maskedHint, pointsDeducted) {
@@ -315,7 +328,8 @@ const UI = {
       hintBtn.disabled = true;
       hintBtn.style.opacity = '0.5';
     }
-    this.showToast(`💡 Hint unlocked (-${pointsDeducted} pts)!`);
+    const bulbIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '';
+    this.showToast(`${bulbIcon} Hint unlocked (-${pointsDeducted} pts)!`);
   },
 
   renderRoundReveal({ answer, year, type, content, revealedContent, winners }) {
@@ -336,7 +350,9 @@ const UI = {
         podiumEl.innerHTML = '<div style="color:#666; font-weight:800;">Time ran out! No one guessed it.</div>';
       } else {
         podiumEl.innerHTML = winners.map(w => {
-          const medal = w.position === 1 ? '🥇' : (w.position === 2 ? '🥈' : '🥉');
+          const medal = typeof SvgIcons !== 'undefined'
+            ? (w.position === 1 ? SvgIcons.medal1 : (w.position === 2 ? SvgIcons.medal2 : SvgIcons.medal3))
+            : (w.position === 1 ? '#1' : (w.position === 2 ? '#2' : '#3'));
           const cls = w.position === 1 ? 'gold' : (w.position === 2 ? 'silver' : 'bronze');
           return `
             <div class="winner-row-nb ${cls}">
@@ -357,7 +373,9 @@ const UI = {
       .sort((a, b) => (b.score || 0) - (a.score || 0));
 
     podiumEl.innerHTML = players.map((p, idx) => {
-      const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `#${idx + 1}`));
+      const medal = typeof SvgIcons !== 'undefined'
+        ? (idx === 0 ? SvgIcons.medal1 : (idx === 1 ? SvgIcons.medal2 : (idx === 2 ? SvgIcons.medal3 : `#${idx + 1}`)))
+        : `#${idx + 1}`;
       const cls = idx === 0 ? 'gold' : (idx === 1 ? 'silver' : (idx === 2 ? 'bronze' : ''));
       return `
         <div class="winner-row-nb ${cls}">
@@ -377,12 +395,13 @@ const UI = {
     if (!grid) return;
 
     const players = GameClient.players || [];
+    const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
     grid.innerHTML = players.map(p => `
       <div class="player-chip-nb">
         <img src="/avvtar/${p.avatar || 'aman'}.svg" alt="${this.escapeHtml(p.name)}" onerror="this.src='/avvtar/aman.svg';">
         <div style="overflow:hidden; flex:1;">
           <div class="player-chip-name">${this.escapeHtml(p.name)}</div>
-          <div class="player-chip-badge">${p.isHost ? '👑 HOST' : 'PLAYER'}</div>
+          <div class="player-chip-badge">${p.isHost ? `${crownIcon} HOST` : 'PLAYER'}</div>
         </div>
       </div>
     `).join('');
@@ -410,7 +429,7 @@ const UI = {
     const myScore = document.getElementById('hudScorePill');
     if (myScore && Array.isArray(GameClient.players)) {
       const me = GameClient.players.find(p => p.id === GameClient.playerId);
-      if (me) myScore.textContent = `⭐ ${me.score || 0} PTS`;
+      if (me) myScore.innerHTML = `${typeof SvgIcons !== 'undefined' ? SvgIcons.star : ''} <span id="hudScore">${me.score || 0}</span> PTS`;
     }
   },
 
@@ -423,7 +442,8 @@ const UI = {
     msg.style.fontSize = '0.9rem';
 
     if (chat.isSystem) {
-      msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${chat.text}</span>`;
+      const parsed = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(chat.text) : chat.text;
+      msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${parsed}</span>`;
     } else {
       msg.innerHTML = `<strong>${this.escapeHtml(chat.senderName)}:</strong> <span>${this.escapeHtml(chat.text)}</span>`;
     }
@@ -431,6 +451,7 @@ const UI = {
     stream.appendChild(msg);
     stream.scrollTop = stream.scrollHeight;
   },
+
 
   showLoading(text) {
     const loader = document.getElementById('loadingOverlay');

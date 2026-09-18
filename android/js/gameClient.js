@@ -516,7 +516,8 @@ const GameClient = {
     UI.renderLobbyPlayers();
     UI.renderScoreboard();
     UI.showScreen('lobbyScreen');
-    UI.showToast(`👑 Room ${this.roomCode} created! Share the code with friends.`);
+    const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
+    UI.showToast(`${crownIcon} Room ${this.roomCode} created! Share the code with friends.`);
   },
 
   joinGame(roomCode) {
@@ -553,7 +554,8 @@ const GameClient = {
         if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
         this.cleanupTransport();
         UI.hideLoading();
-        UI.showToast('⚠️ Lobby not found. Please verify your room code and make sure the host is online.');
+        const warnIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '';
+        UI.showToast(`${warnIcon} Lobby not found. Please verify your room code and make sure the host is online.`);
       }
     }, 14000);
   },
@@ -617,7 +619,8 @@ const GameClient = {
               isHost: false,
               loaded: true
             });
-            UI.showToast(`👋 ${joiningName} joined the room!`);
+            const waveIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.wave : '';
+            UI.showToast(`${waveIcon} ${joiningName} joined the room!`);
             if (typeof SoundEffects !== 'undefined') SoundEffects.playPop();
           }
 
@@ -654,7 +657,8 @@ const GameClient = {
 
         if (wasJoining) {
           UI.showScreen('lobbyScreen');
-          UI.showToast(`🚀 Connected to room ${this.roomCode}!`);
+          const rocketIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : '';
+          UI.showToast(`${rocketIcon} Connected to room ${this.roomCode}!`);
           this.startHeartbeat();
         }
         break;
@@ -713,7 +717,8 @@ const GameClient = {
       }
 
       case 'HOST_SKIP_BROADCAST': {
-        UI.showToast('⏭ Host skipped the round!');
+        const skipIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '';
+        UI.showToast(`${skipIcon} Host skipped the round!`);
         if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
         break;
       }
@@ -1132,7 +1137,8 @@ const GameClient = {
         this.submitGuess(clean);
         return;
       } else {
-        UI.showToast("⚠️ Shh! That's the answer! Don't spoil it in chat! 🤫");
+        const warnIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '';
+        UI.showToast(`${warnIcon} Shh! That's the answer! Don't spoil it in chat!`);
         return;
       }
     }

@@ -1064,9 +1064,36 @@ body.keyboard-open .mobile-action-dock {
   pointer-events: none;
   opacity: 0;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 #mobileToast.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   UNIVERSAL SVG ICONS (Replaces all Unicode Emojis)
+   ══════════════════════════════════════════════════════════════ */
+.ui-icon {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.22em;
+  flex-shrink: 0;
+}
+
+.ui-icon-zap { fill: var(--nb-yellow); stroke: none; }
+.ui-icon-crown { fill: #F59E0B; stroke: none; }
+.ui-icon-trophy { stroke: #D97706; }
+.ui-icon-star { fill: #F59E0B; stroke: none; }
+.ui-icon-lightbulb { stroke: #CA8A04; }
+.ui-icon-play { fill: currentColor; stroke: none; }
+
+.ui-medal-gold { color: #D97706; }
+.ui-medal-silver { color: #6B7280; }
+.ui-medal-bronze { color: #C2410C; }
+
