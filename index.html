@@ -1,4 +1,35 @@
-<!DOCTYP
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    (function() {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent) || (window.innerWidth <= 768 && 'ontouchstart' in window);
+      if (isMobile) {
+        window.location.replace('/android/' + window.location.search + window.location.hash);
+        return;
+      }
+      function cleanUrl() {
+        if (window.location.pathname.startsWith('/desktop') || window.location.pathname.startsWith('/android')) {
+          try {
+            window.history.replaceState(null, '', '/' + window.location.search + window.location.hash);
+          } catch (e) {}
+        }
+      }
+      cleanUrl();
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', cleanUrl);
+      }
+      window.addEventListener('load', cleanUrl);
+      window.addEventListener('pageshow', cleanUrl);
+      let count = 0;
+      const interval = setInterval(function() {
+        cleanUrl();
+        count++;
+        if (count > 10) clearInterval(interval);
+      }, 150);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#FFFDF5">
@@ -15,9 +46,6 @@
   <!-- Vercel Web Analytics & Speed Insights -->
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
-  <!-- Universal Web & Game Analytics Engine -->
-  <link rel="stylesheet" href="/css/analytics.css">
-  <script src="/js/analytics.js"></script>
   <script src="/js/avatars-data.js"></script>
   <script src="/js/avatar-picker.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13013,14 +13041,6 @@
         </div>
       </div>
 
-      <!-- Live Web & Game Analytics Trigger -->
-      <div style="margin-top: 14px; margin-bottom: 6px; display: flex; justify-content: center; z-index: 2; position: relative;">
-        <button type="button" class="btn-analytics-trigger" onclick="AnalyticsEngine.openModal()" title="View live page views, games played & playtime">
-          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-          <span>LIVE WEB &amp; GAME ANALYTICS</span>
-        </button>
-      </div>
-
       <!-- Bottom caption -->
       <div class="h-footer">How many can <em>you</em> name?</div>
 
@@ -16975,8 +16995,6 @@
         // Render locally
         this.renderMessage(msg);
 
-        if (window.AnalyticsEngine) AnalyticsEngine.trackChatMessage();
-
         // Broadcast to cloud WebSocket
         MultiplayerEngine.sendEvent('CHAT_MESSAGE', { msg });
       },
@@ -17768,8 +17786,6 @@
         this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30 };
         this.roomId = 'room_' + this.roomCode;
 
-        if (window.AnalyticsEngine) AnalyticsEngine.trackRoomCreate(this.roomCode, this.hostSettings);
-
         localStorage.setItem('gtf_player_name', this.playerName);
         localStorage.setItem('gtf_player_avatar', this.playerAvatar);
 
@@ -17820,8 +17836,6 @@
         this.roomId = 'room_' + this.roomCode;
         this.hasJoinedAck = false;
         this.isJoining = true;
-
-        if (window.AnalyticsEngine) AnalyticsEngine.trackRoomJoin(code);
 
         localStorage.setItem('gtf_player_name', this.playerName);
         localStorage.setItem('gtf_player_avatar', this.playerAvatar);
@@ -18560,10 +18574,6 @@
             break;
 
           case 'ROUND_START':
-            if (window.AnalyticsEngine) {
-              const mode = (msg && msg.frame) ? (msg.frame.type || (msg.frame.src && msg.frame.src.includes('EYES') ? 'eyes' : (msg.frame.dialogue ? 'dialogue' : 'frames'))) : 'frames';
-              AnalyticsEngine.trackRoundStart(mode, msg.roundIndex);
-            }
             this.handleRemoteRoundStart(msg);
             break;
 
@@ -18596,7 +18606,6 @@
             break;
 
           case 'PLAYER_USED_HINT':
-            if (window.AnalyticsEngine) AnalyticsEngine.trackHint();
             this.handleRemoteHint(msg);
             break;
 
@@ -18613,10 +18622,6 @@
             break;
 
           case 'GAME_OVER_BROADCAST':
-            if (window.AnalyticsEngine) {
-              const winner = (msg.players && msg.players[0]) ? msg.players[0].name : 'Unknown';
-              AnalyticsEngine.trackGameOver(winner, this.totalRounds || 0);
-            }
             this.handleRemoteGameOver(msg);
             break;
 
@@ -18664,7 +18669,6 @@
 
       startMatch() {
         if (!this.isHost) return;
-        if (window.AnalyticsEngine) AnalyticsEngine.trackGameStart(this.roomCode, this.hostSettings);
         let pool = [];
         if (!this.hostSettings) {
           this.hostSettings = {
@@ -19261,8 +19265,6 @@
         guess = guess.trim();
         if (this.currentRoundWinners.some(w => w.playerId === this.playerId)) return;
 
-        if (window.AnalyticsEngine) AnalyticsEngine.trackGuess(false, guess);
-
         if (!this.sessionStats) {
           this.sessionStats = { roundsWon: 0, totalGuesses: 0, correctGuesses: 0, fastestGuessSeconds: null, roundStartTime: 0 };
         }
@@ -19287,11 +19289,21 @@
           });
           if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
           this._guessTimeoutId = setTimeout(() => {
-            const pill = document.getElementById('guessFeedbackPill');
-            if (pill && pill.style.display !== 'none' && pill.textContent.includes('Checking')) {
-              this.showGuessFeedback(false, 'No response from host');
+            const fb = document.getElementById('onlineGuessFeedback');
+            if (fb && fb.textContent && fb.textContent.includes('Checking guess')) {
+              this.showGuessFeedback(null, (typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' Host lag — try again!');
+              const input = document.getElementById('onlineGuessInput');
+              const submitBtn = document.getElementById('onlineGuessSubmitBtn');
+              const alreadyWon = (this.currentRoundWinners || []).some(w => w.playerId === this.playerId);
+              if (input && !alreadyWon) {
+                input.disabled = false;
+                input.focus();
+              }
+              if (submitBtn && !alreadyWon) {
+                submitBtn.disabled = false;
+              }
             }
-          }, 6000);
+          }, 3500);
         }
       },
 
@@ -19326,7 +19338,6 @@
             this.currentRoundWinners.push(winRecord);
 
             if (data.playerId === this.playerId) {
-              if (window.AnalyticsEngine) AnalyticsEngine.trackGuess(true, data.guess || '');
               SoundManager.play('correct');
               this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + ' Correct! +' + pts + ' Pts (' + (pos === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st' : pos === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd' : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd') + ' Place!)');
               const input = document.getElementById('onlineGuessInput');
@@ -19338,40 +19349,33 @@
               if (!this.sessionStats) {
                 this.sessionStats = { roundsWon: 0, totalGuesses: 0, correctGuesses: 0, fastestGuessSeconds: null, roundStartTime: 0 };
               }
-              this.sessionStats.roundsWon = (this.sessionStats.roundsWon || 0) + 1;
               this.sessionStats.correctGuesses = (this.sessionStats.correctGuesses || 0) + 1;
-              if (this.sessionStats.roundStartTime > 0) {
-                const elapsedSec = (Date.now() - this.sessionStats.roundStartTime) / 1000;
-                if (this.sessionStats.fastestGuessSeconds === null || elapsedSec < this.sessionStats.fastestGuessSeconds) {
-                  this.sessionStats.fastestGuessSeconds = Math.round(elapsedSec * 10) / 10;
+              this.sessionStats.roundsWon = (this.sessionStats.roundsWon || 0) + 1;
+              if (this.currentRoundStartTime) {
+                const sec = Math.max(0.5, Math.round(((Date.now() - this.currentRoundStartTime) / 1000) * 10) / 10);
+                if (this.sessionStats.fastestGuessSeconds === null || sec < this.sessionStats.fastestGuessSeconds) {
+                  this.sessionStats.fastestGuessSeconds = sec;
                 }
               }
             }
 
-            ChatEngine.renderWinnerBanner(winRecord);
             UI.renderLB();
+            ChatEngine.renderWinnerBanner(winRecord);
             this.saveActiveSession();
 
             this.sendEvent('GUESS_CORRECT_BROADCAST', {
-              winRecord: winRecord,
+              winRecord,
               updatedPlayers: GS.players
             });
 
-            if (this.currentRoundWinners.length === 1) {
-              const allAnswered = this.currentRoundWinners.length >= GS.players.length;
-              if (allAnswered) {
-                this.endRound();
-              } else {
-                this.startRoundCountdownGrace(10);
-              }
-            } else if (this.currentRoundWinners.length >= GS.players.length) {
-              this.endRound();
+            if (this.currentRoundWinners.length >= 3) {
+              setTimeout(() => this.endRound(), 600);
             }
           }
         } else {
           if (data.playerId === this.playerId) {
             SoundManager.play('wrong');
-            this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
+            this.showGuessFeedback(false, 'Not quite, try again!');
             const input = document.getElementById('onlineGuessInput');
             if (input) {
               input.classList.add('shake-input');
@@ -19413,7 +19417,6 @@
         this.saveActiveSession();
 
         if (winRecord && winRecord.playerId === this.playerId) {
-          if (window.AnalyticsEngine) AnalyticsEngine.trackGuess(true, winRecord.guess || '');
           SoundManager.play('correct');
           this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + ' Correct! +' + winRecord.points + ' Pts (' + (winRecord.position === 1 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st' : winRecord.position === 2 ? (typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd' : (typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd') + ' Place!)');
           const input = document.getElementById('onlineGuessInput');
@@ -19760,7 +19763,6 @@
         SoundManager.play('wrong');
 
         // Broadcast hint usage & updated score across room - NEVER send maskedHint to other players!
-        if (window.AnalyticsEngine) AnalyticsEngine.trackHint();
         this.sendEvent('PLAYER_USED_HINT', {
           playerId: this.playerId,
           playerName: this.playerName,
