@@ -61,8 +61,13 @@
       document.write('<script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"><\/script>');
     }
   </script>
+  <!-- Preload Cinema Wallpaper Background -->
+  <link rel="preload" as="image" href="/bg/cinema_bg.webp" type="image/webp">
 </head>
 <body>
+  <!-- SOFT BLURRED CINEMA WALLPAPER BACKDROP & FOCUS SCRIM -->
+  <div id="bgBackdrop" class="bg-backdrop" aria-hidden="true"></div>
+  <div id="bgFocusScrim" class="bg-focus-scrim" aria-hidden="true"></div>
   <div id="app">
 
     <!-- ═══════════ MARQUEE FILMSTRIP TICKER ═══════════ -->

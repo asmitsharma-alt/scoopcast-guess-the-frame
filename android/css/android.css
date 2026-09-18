@@ -36,11 +36,46 @@ html, body {
   width: 100%;
   height: 100dvh;
   overflow: hidden;
-  background-color: var(--nb-bg);
+  background: #F4EEDC url('/bg/cinema_bg.webp') no-repeat center center fixed;
+  background-size: cover;
   color: var(--nb-ink);
   font-family: var(--font-body);
   user-select: none;
   overscroll-behavior-y: contain;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CINEMA WALLPAPER BACKDROP & FOCUS SCRIM
+   ══════════════════════════════════════════════════════════════ */
+.bg-backdrop {
+  position: fixed;
+  top: -10px;
+  left: -10px;
+  width: calc(100vw + 20px);
+  height: calc(100vh + 20px);
+  background: #F4EEDC url('/bg/cinema_bg.webp') no-repeat center center;
+  background-size: cover;
+  -webkit-background-size: cover;
+  filter: blur(2px) saturate(0.95) brightness(0.98);
+  transform: translate3d(0, 0, 0) scale(1.02);
+  -webkit-transform: translate3d(0, 0, 0) scale(1.02);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+  contain: strict;
+}
+
+.bg-focus-scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 253, 245, 0.68) 0%, rgba(255, 253, 245, 0.38) 55%, rgba(20, 20, 20, 0.16) 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* App Container */
@@ -51,7 +86,8 @@ html, body {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background-color: var(--nb-bg);
+  background-color: transparent;
+  z-index: 1;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -154,7 +190,7 @@ html, body {
 .screen {
   display: none;
   width: 100%;
-  height: calc(100dvh - 76px);
+  height: calc(100dvh - 80px);
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
@@ -522,7 +558,7 @@ html, body {
    SCREEN 3: ACTIVE GAME SCREEN & ANDROID KEYBOARD ERGONOMICS
    ══════════════════════════════════════════════════════════════ */
 #gameScreen {
-  height: calc(100dvh - 76px);
+  height: calc(100dvh - 80px);
   overflow: hidden;
   display: none;
   flex-direction: column;
