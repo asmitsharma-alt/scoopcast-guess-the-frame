@@ -341,7 +341,7 @@ input, textarea {
 .avatar-chip img {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 1.5px solid var(--nb-ink);
 }
 
@@ -587,7 +587,7 @@ input, textarea {
 .player-chip-nb img {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 1.5px solid var(--nb-ink);
 }
 
@@ -1086,7 +1086,7 @@ input, textarea {
 .chat-row-avatar {
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: 6px;
   border: 1px solid var(--nb-ink);
   flex-shrink: 0;
   margin-top: 1px;

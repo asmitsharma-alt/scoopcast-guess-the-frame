@@ -750,7 +750,7 @@ const UI = {
         <div class="winner-row-nb ${cls}">
           <div style="display:flex; align-items:center; gap:8px;">
             <span>${medal}</span>
-            <div style="width:28px; height:28px; min-width:28px; border-radius:50%; border:1px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';"></div>
+            <div style="width:28px; height:28px; min-width:28px; border-radius:8px; border:1px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';"></div>
             <span>${this.formatName(p.name)}</span>
           </div>
           <span>${p.score || 0} PTS</span>
