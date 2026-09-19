@@ -7,17 +7,17 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://scoopcast.me/bg/guess_the_frame.webp</image:loc>
+      <image:loc>https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp</image:loc>
       <image:title>Guess The Frame - Online Movie Trivia Party Game</image:title>
       <image:caption>Play Scoopcast Guess The Frame free with friends in real time</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://scoopcast.me/logo.png</image:loc>
+      <image:loc>https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png</image:loc>
       <image:title>Scoopcast Cinema Games</image:title>
       <image:caption>Scoopcast Official Logo</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://scoopcast.me/bg/cinema_bg.webp</image:loc>
+      <image:loc>https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp</image:loc>
       <image:title>Cinema Wallpaper Background</image:title>
       <image:caption>Scoopcast Movie Trivia Cinema Wallpaper</image:caption>
     </image:image>

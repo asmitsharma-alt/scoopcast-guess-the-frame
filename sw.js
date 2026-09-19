@@ -1,17 +1,17 @@
 // Scoopcast Guess The Frame - Production Service Worker
 // Enables instant 0ms asset retrieval via Cache-First strategy
 
-const CACHE_NAME = 'gtf-cache-v5';
+const CACHE_NAME = 'gtf-cache-v6';
 const CORE_PRECACHE = [
   '/',
   '/css/tailwind.min.css',
-  '/bg/guess_the_frame.webp',
-  '/bg/cinema_bg.webp',
-  '/logo.png',
-  '/avvtar/aman.svg',
-  '/avvtar/amish.svg',
-  '/avvtar/aziz.svg',
-  '/avvtar/vish.svg'
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg',
+  'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -50,8 +50,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-First for media assets: movie frames, eyes, sounds, avatars, fonts
+  // Cache-First for media assets: movie frames, eyes, sounds, avatars, fonts, and Cloudinary CDN
   const isMediaAsset =
+    url.hostname.includes('cloudinary.com') ||
     url.pathname.includes('/GUESSTHEFRAME/') ||
     url.pathname.includes('/GUESSTHEEYES/') ||
     url.pathname.includes('/tie breaker/') ||

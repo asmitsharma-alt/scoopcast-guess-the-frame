@@ -18,7 +18,7 @@
   ]);
 
   const AvatarPicker = {
-    selectedAvatar: '/avvtar/aman.svg',
+    selectedAvatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
     currentCategory: 'all',
     searchQuery: '',
     loadedCount: INITIAL_BATCH,
@@ -44,10 +44,10 @@
         return window.AVATAR_DATA.avatars;
       }
       return [
-        { id: 'av_0', name: 'Aman', category: 'founders', categoryLabel: 'Founders', url: '/avvtar/aman.svg', format: 'SVG', color: 'facc15', isVector: true, isTransparent: true },
-        { id: 'av_1', name: 'Amish', category: 'founders', categoryLabel: 'Founders', url: '/avvtar/amish.svg', format: 'SVG', color: 'ff6b9d', isVector: true, isTransparent: true },
-        { id: 'av_2', name: 'Aziz', category: 'founders', categoryLabel: 'Founders', url: '/avvtar/aziz.svg', format: 'SVG', color: '38bdf8', isVector: true, isTransparent: true },
-        { id: 'av_3', name: 'Vish', category: 'founders', categoryLabel: 'Founders', url: '/avvtar/vish.svg', format: 'SVG', color: '84cc16', isVector: true, isTransparent: true }
+        { id: 'av_0', name: 'Aman', category: 'founders', categoryLabel: 'Founders', url: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg', format: 'SVG', color: 'facc15', isVector: true, isTransparent: true },
+        { id: 'av_1', name: 'Amish', category: 'founders', categoryLabel: 'Founders', url: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg', format: 'SVG', color: 'ff6b9d', isVector: true, isTransparent: true },
+        { id: 'av_2', name: 'Aziz', category: 'founders', categoryLabel: 'Founders', url: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg', format: 'SVG', color: '38bdf8', isVector: true, isTransparent: true },
+        { id: 'av_3', name: 'Vish', category: 'founders', categoryLabel: 'Founders', url: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg', format: 'SVG', color: '84cc16', isVector: true, isTransparent: true }
       ];
     },
 

@@ -45,7 +45,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden !important;
-  background: #F4EEDC url('/bg/cinema_bg.webp') no-repeat center center fixed;
+  background: #F4EEDC url('https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp') no-repeat center center fixed;
   background-size: cover;
   color: var(--nb-ink);
   font-family: var(--font-body);
@@ -80,7 +80,7 @@ input, textarea {
   left: -10px;
   width: calc(100vw + 20px);
   height: calc(100vh + 20px);
-  background: #F4EEDC url('/bg/cinema_bg.webp') no-repeat center center;
+  background: #F4EEDC url('https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp') no-repeat center center;
   background-size: cover;
   -webkit-background-size: cover;
   filter: blur(2px) saturate(0.95) brightness(0.98);

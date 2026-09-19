@@ -218,7 +218,7 @@ async function runLiveMultiplayerVerification() {
             totalRounds: 20,
             frame: {
               type: 'image',
-              content: 'GUESSTHEFRAME/12th Fail (2023).webp',
+              content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799679/scoopcast/GUESSTHEFRAME/12th_Fail_2023.webp',
               sectionName: 'Guess the Frame'
             },
             timerDuration: 30,

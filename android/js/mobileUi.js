@@ -1,10 +1,81 @@
-// Mobile UI State & DOM Controller (Neobrutalist Android)
+const CLOUDINARY_MEDIA_MAP = {
+  "bg/guess_the_frame.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp",
+  "logo.png": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
+  "GUESSTHEFRAME/12th Fail (2023).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799679/scoopcast/GUESSTHEFRAME/12th_Fail_2023.webp",
+  "avvtar/aman.svg": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg",
+  "avvtar/amish.svg": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg",
+  "avvtar/aziz.svg": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg",
+  "avvtar/vish.svg": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg",
+  "bg/cinema_bg.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp",
+  "GUESSTHEEYES/Aaron Pierre copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799983/scoopcast/GUESSTHEEYES/Aaron_Pierre_copy.webp",
+  "GUESSTHEEYES/Aaron Pierre.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799988/scoopcast/GUESSTHEEYES/Aaron_Pierre.webp",
+  "GUESSTHEEYES/Alexandra Daddario copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799996/scoopcast/GUESSTHEEYES/Alexandra_Daddario_copy.webp",
+  "GUESSTHEEYES/Alexandra Daddario.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800005/scoopcast/GUESSTHEEYES/Alexandra_Daddario.webp",
+  "GUESSTHEEYES/Angelina Jolie copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800049/scoopcast/GUESSTHEEYES/Angelina_Jolie_copy.webp",
+  "GUESSTHEEYES/Angelina Jolie.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800061/scoopcast/GUESSTHEEYES/Angelina_Jolie.webp",
+  "GUESSTHEEYES/Disha Patani copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800066/scoopcast/GUESSTHEEYES/Disha_Patani_copy.webp",
+  "GUESSTHEEYES/Disha Patani.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800071/scoopcast/GUESSTHEEYES/Disha_Patani.webp",
+  "GUESSTHEEYES/Hunter Schafer copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800077/scoopcast/GUESSTHEEYES/Hunter_Schafer_copy.webp",
+  "GUESSTHEEYES/Hunter Schafer.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800104/scoopcast/GUESSTHEEYES/Hunter_Schafer.webp",
+  "GUESSTHEEYES/Leonardo DiCaprio copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800148/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio_copy.webp",
+  "GUESSTHEEYES/Leonardo DiCaprio.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800159/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio.webp",
+  "GUESSTHEEYES/Meryl Streep copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800163/scoopcast/GUESSTHEEYES/Meryl_Streep_copy.webp",
+  "GUESSTHEEYES/Meryl Streep.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800172/scoopcast/GUESSTHEEYES/Meryl_Streep.webp",
+  "GUESSTHEEYES/Nicole Kidman copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800182/scoopcast/GUESSTHEEYES/Nicole_Kidman_copy.webp",
+  "GUESSTHEEYES/Wamiqa Gabbi copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800245/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi_copy.webp",
+  "GUESSTHEEYES/Wamiqa Gabbi.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800254/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi.webp",
+  "GUESSTHEEYES/Yash copy.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800260/scoopcast/GUESSTHEEYES/Yash_copy.webp",
+  "GUESSTHEEYES/Yash.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800266/scoopcast/GUESSTHEEYES/Yash.webp",
+  "GUESSTHEFRAME/After Hours (1985).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800272/scoopcast/GUESSTHEFRAME/After_Hours_1985.webp",
+  "GUESSTHEFRAME/Bramayugam (2024).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800275/scoopcast/GUESSTHEFRAME/Bramayugam_2024.webp",
+  "GUESSTHEFRAME/Brothers (2009).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800286/scoopcast/GUESSTHEFRAME/Brothers_2009.webp",
+  "GUESSTHEFRAME/Cocktail 2 (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800296/scoopcast/GUESSTHEFRAME/Cocktail_2_2026.webp",
+  "GUESSTHEFRAME/Detective Byomkesh Bakshy (2015).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800306/scoopcast/GUESSTHEFRAME/Detective_Byomkesh_Bakshy_2015.webp",
+  "GUESSTHEFRAME/Ghanchakkar (2013).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800340/scoopcast/GUESSTHEFRAME/Ghanchakkar_2013.webp",
+  "GUESSTHEFRAME/khosla ka gholsa(2006).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800357/scoopcast/GUESSTHEFRAME/khosla_ka_gholsa_2006.webp",
+  "GUESSTHEFRAME/Lapata Ladies (2023).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800363/scoopcast/GUESSTHEFRAME/Lapata_Ladies_2023.webp",
+  "GUESSTHEFRAME/Lars and the Real Girl (2007).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800367/scoopcast/GUESSTHEFRAME/Lars_and_the_Real_Girl_2007.webp",
+  "GUESSTHEFRAME/Mahaan (2022).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800389/scoopcast/GUESSTHEFRAME/Mahaan_2022.webp",
+  "GUESSTHEFRAME/One Night Only (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800404/scoopcast/GUESSTHEFRAME/One_Night_Only_2026.webp",
+  "GUESSTHEFRAME/Piku (2015).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800411/scoopcast/GUESSTHEFRAME/Piku_2015.webp",
+  "GUESSTHEFRAME/Satluj (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800420/scoopcast/GUESSTHEFRAME/Satluj_2026.webp",
+  "GUESSTHEFRAME/The End of Oak Street (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800428/scoopcast/GUESSTHEFRAME/The_End_of_Oak_Street_2026.webp",
+  "GUESSTHEFRAME/The French Dispatch (2021).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800435/scoopcast/GUESSTHEFRAME/The_French_Dispatch_2021.webp",
+  "GUESSTHEFRAME/The Revenant (2015).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800471/scoopcast/GUESSTHEFRAME/The_Revenant_2015.webp",
+  "GUESSTHEFRAME/The Rivals of Amziah King (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800476/scoopcast/GUESSTHEFRAME/The_Rivals_of_Amziah_King_2026.webp",
+  "GUESSTHEFRAME/tony (2026).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800482/scoopcast/GUESSTHEFRAME/tony_2026.webp",
+  "tie breaker/Anatomy of a Fall (2023).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800486/scoopcast/tie_breaker/Anatomy_of_a_Fall_2023.webp",
+  "tie breaker/Eyes Wide Shut (1999).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800490/scoopcast/tie_breaker/Eyes_Wide_Shut_1999.webp",
+  "tie breaker/Ghilli (2004).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800495/scoopcast/tie_breaker/Ghilli_2004.webp",
+  "tie breaker/La Haine(1995).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800502/scoopcast/tie_breaker/La_Haine_1995.webp",
+  "tie breaker/Mad Max 2.jpg.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800515/scoopcast/tie_breaker/Mad_Max_2.jpg.webp",
+  "tie breaker/Moonrise Kingdom (2012).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800518/scoopcast/tie_breaker/Moonrise_Kingdom_2012.webp",
+  "tie breaker/The Batman (2022).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800523/scoopcast/tie_breaker/The_Batman_2022.webp",
+  "tie breaker/The Holdovers(2023).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800526/scoopcast/tie_breaker/The_Holdovers_2023.webp",
+  "tie breaker/The Life of Chuck(2024).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800530/scoopcast/tie_breaker/The_Life_of_Chuck_2024.webp",
+  "tie breaker/The Lighthouse (2019).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800533/scoopcast/tie_breaker/The_Lighthouse_2019.webp",
+  "tie breaker/The Wolf of Wall Street (2013).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800537/scoopcast/tie_breaker/The_Wolf_of_Wall_Street_2013.webp",
+  "tie breaker/They Call Him OG (2025).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800546/scoopcast/tie_breaker/They_Call_Him_OG_2025.webp",
+  "tie breaker/Top Gun Maverick (2022).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800586/scoopcast/tie_breaker/Top_Gun_Maverick_2022.webp",
+  "tie breaker/Under the Silver Lake (2018).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800609/scoopcast/tie_breaker/Under_the_Silver_Lake_2018.webp",
+  "GUESSTHEEYES/Nicole Kidman.webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800638/scoopcast/GUESSTHEEYES/Nicole_Kidman.webp",
+  "GUESSTHEFRAME/The Menu (2022).webp": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800643/scoopcast/GUESSTHEFRAME/The_Menu_2022.webp"
+};
+
 function resolveMediaPath(src) {
   if (!src) return '';
-  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/')) {
+  if (src.startsWith('http://') || src.startsWith('https://')) {
     return src;
   }
-  return '/' + src;
+  const clean = src.startsWith('/') ? src.slice(1) : src;
+  if (CLOUDINARY_MEDIA_MAP[clean]) {
+    return CLOUDINARY_MEDIA_MAP[clean];
+  }
+  try {
+    const decoded = decodeURIComponent(clean);
+    if (CLOUDINARY_MEDIA_MAP[decoded]) return CLOUDINARY_MEDIA_MAP[decoded];
+  } catch (e) {}
+  return src.startsWith('/') ? src : '/' + src;
 }
 
 const UI = {
@@ -53,7 +124,7 @@ const UI = {
   },
 
   getAvatarSrc(av) {
-    if (!av) return '/avvtar/aman.svg';
+    if (!av) return 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
     if (typeof AvatarPicker !== 'undefined') {
       const meta = AvatarPicker.getAvatarMeta(av);
       if (meta && meta.url) return meta.url;
@@ -618,7 +689,7 @@ const UI = {
         <div class="winner-row-nb ${cls}">
           <div style="display:flex; align-items:center; gap:8px;">
             <span>${medal}</span>
-            <div style="width:28px; height:28px; min-width:28px; border-radius:50%; border:1px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='/avvtar/aman.svg';"></div>
+            <div style="width:28px; height:28px; min-width:28px; border-radius:50%; border:1px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';"></div>
             <span>${this.formatName(p.name)}</span>
           </div>
           <span>${p.score || 0} PTS</span>
@@ -640,7 +711,7 @@ const UI = {
       return `
         <div class="player-chip-nb">
           <div style="width:36px; height:36px; min-width:36px; border-radius:10px; border:2px solid #1a1a1a; background:${avBg}; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-            <img src="${avSrc}" alt="${this.escapeHtml(p.name)}" style="width:100%; height:100%; ${avFit}" onerror="this.src='/avvtar/aman.svg';">
+            <img src="${avSrc}" alt="${this.escapeHtml(p.name)}" style="width:100%; height:100%; ${avFit}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
           </div>
           <div style="overflow:hidden; flex:1;">
             <div class="player-chip-name">${this.formatName(p.name)}</div>
@@ -662,7 +733,7 @@ const UI = {
       <div class="winner-row-nb" style="margin-bottom:8px;">
         <div style="display:flex; align-items:center; gap:10px;">
           <span style="font-weight:900; font-family:var(--font-mono);">${idx + 1}.</span>
-          <div style="width:30px; height:30px; min-width:30px; border-radius:8px; border:1.5px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='/avvtar/aman.svg';"></div>
+          <div style="width:30px; height:30px; min-width:30px; border-radius:8px; border:1.5px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';"></div>
           <span>${this.formatName(p.name)}</span>
         </div>
         <span style="font-family:var(--font-mono); font-weight:900;">${p.score || 0} PTS</span>
