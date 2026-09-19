@@ -81,7 +81,6 @@ function resolveMediaPath(src) {
 const UI = {
   currentScreen: 'homeScreen',
   selectedAvatar: 'aman',
-  feedTab: 'chat',
   hostSettings: {
     activeTab: 'frames',
     roundsByMode: { frames: 10, eyes: 10, dialogue: 10 },
@@ -488,10 +487,6 @@ const UI = {
       if (backdrop) backdrop.classList.remove('active');
     }
 
-    if (screenId === 'gameScreen') {
-      this.renderScoreboard();
-    }
-
     // Toggle top-bar chat button: visible only in room/game screens, hidden on home screen
     const chatBtn = document.getElementById('btnChatToggle');
     if (chatBtn) {
@@ -499,7 +494,7 @@ const UI = {
     }
   },
 
-  toggleChatDrawer(open) {
+  toggleChatDrawer() {
     if (typeof Haptics !== 'undefined') Haptics.tap();
     const drawer = document.getElementById('chatDrawer');
     const backdrop = document.getElementById('sheetBackdrop');
@@ -507,83 +502,18 @@ const UI = {
     if (dot) dot.style.display = 'none';
 
     if (!drawer) return;
-    const shouldOpen = (open !== undefined) ? !!open : !drawer.classList.contains('open');
-    if (!shouldOpen) {
+    const isOpen = drawer.classList.contains('open');
+    if (isOpen) {
       drawer.classList.remove('open');
       if (backdrop) backdrop.classList.remove('active');
     } else {
       document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
       drawer.classList.add('open');
       if (backdrop) backdrop.classList.add('active');
-      const chatInput = document.getElementById('chatInput');
+      const chatInput = document.getElementById('mobileChatInput');
       if (chatInput) {
         setTimeout(() => chatInput.focus(), 150);
       }
-    }
-  },
-
-  toggleScoreboardDrawer(open) {
-    if (typeof Haptics !== 'undefined') Haptics.tap();
-    const drawer = document.getElementById('scoreboardDrawer');
-    const backdrop = document.getElementById('sheetBackdrop');
-    if (!drawer) return;
-
-    const shouldOpen = (open !== undefined) ? !!open : !drawer.classList.contains('open');
-    if (!shouldOpen) {
-      drawer.classList.remove('open');
-      if (backdrop) backdrop.classList.remove('active');
-    } else {
-      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
-      this.renderScoreboard();
-      drawer.classList.add('open');
-      if (backdrop) backdrop.classList.add('active');
-    }
-  },
-
-  switchFeedTab(tab) {
-    if (typeof Haptics !== 'undefined') Haptics.tap();
-    const chatStream = document.getElementById('gameInGameChatStream');
-    const lbStream = document.getElementById('gameInGameLeaderboardStream');
-    const btnChat = document.getElementById('btnFeedChat');
-    const btnLb = document.getElementById('btnFeedLeaderboard');
-    const expandText = document.getElementById('btnFeedExpandText');
-
-    if (tab === 'leaderboard') {
-      this.feedTab = 'leaderboard';
-      if (chatStream) chatStream.style.display = 'none';
-      if (lbStream) lbStream.style.display = 'flex';
-      if (btnChat) {
-        btnChat.classList.remove('active');
-        btnChat.setAttribute('aria-selected', 'false');
-      }
-      if (btnLb) {
-        btnLb.classList.add('active');
-        btnLb.setAttribute('aria-selected', 'true');
-      }
-      if (expandText) expandText.textContent = 'STANDINGS';
-      this.renderScoreboard();
-    } else {
-      this.feedTab = 'chat';
-      if (chatStream) chatStream.style.display = 'flex';
-      if (lbStream) lbStream.style.display = 'none';
-      if (btnChat) {
-        btnChat.classList.add('active');
-        btnChat.setAttribute('aria-selected', 'true');
-      }
-      if (btnLb) {
-        btnLb.classList.remove('active');
-        btnLb.setAttribute('aria-selected', 'false');
-      }
-      if (expandText) expandText.textContent = 'CHAT';
-      if (chatStream) chatStream.scrollTop = chatStream.scrollHeight;
-    }
-  },
-
-  expandCurrentFeedDrawer() {
-    if (this.feedTab === 'leaderboard') {
-      this.toggleScoreboardDrawer(true);
-    } else {
-      this.toggleChatDrawer(true);
     }
   },
 
@@ -666,8 +596,11 @@ const UI = {
     if (banner) banner.style.display = 'none';
     if (roundPill) roundPill.textContent = `ROUND ${round}/${totalRounds}`;
 
-    // Keep HUD score, rank, and in-game leaderboard updated
-    this.renderScoreboard();
+    // Update player score in HUD
+    if (myScore && Array.isArray(GameClient.players)) {
+      const me = GameClient.players.find(p => p.id === GameClient.playerId);
+      if (me) myScore.innerHTML = `${typeof SvgIcons !== 'undefined' ? SvgIcons.star : ''} <span id="hudScore">${me.score || 0}</span> PTS`;
+    }
 
     // Display appropriate media
     const imgEl = document.getElementById('gameFrameImage');
@@ -871,93 +804,28 @@ const UI = {
   },
 
   renderScoreboard() {
+    const list = document.getElementById('scoreboardList');
+    if (!list) return;
+
     const players = [...(GameClient.players || [])]
       .sort((a, b) => (b.score || 0) - (a.score || 0));
-    const myId = (typeof GameClient !== 'undefined') ? GameClient.playerId : null;
-    const myIndex = players.findIndex(p => p.id === myId);
-    const myRank = myIndex !== -1 ? (myIndex + 1) : null;
-    const me = myIndex !== -1 ? players[myIndex] : null;
 
-    // 1. Update Top HUD Pill Rank and Score
-    const rankTag = document.getElementById('hudRankTag');
-    if (rankTag) {
-      rankTag.textContent = myRank ? `#${myRank}` : '#-';
-    }
-    const hudScoreVal = document.getElementById('hudScore');
-    if (hudScoreVal) {
-      hudScoreVal.textContent = me ? (me.score || 0) : 0;
-    }
+    list.innerHTML = players.map((p, idx) => `
+      <div class="winner-row-nb" style="margin-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-weight:900; font-family:var(--font-mono);">${idx + 1}.</span>
+          <div style="width:30px; height:30px; min-width:30px; border-radius:8px; border:1.5px solid #1a1a1a; background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;"><img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';"></div>
+          <span>${this.formatName(p.name)}</span>
+        </div>
+        <span style="font-family:var(--font-mono); font-weight:900;">${p.score || 0} PTS</span>
+      </div>
+    `).join('');
 
-    // 2. Render In-Game Inline Leaderboard Stream (#gameInGameLeaderboardStream)
-    const inlineStream = document.getElementById('gameInGameLeaderboardStream');
-    if (inlineStream) {
-      if (!players.length) {
-        inlineStream.innerHTML = `
-          <div class="chat-placeholder-msg">
-            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-            <span>No scores recorded yet</span>
-          </div>
-        `;
-      } else {
-        inlineStream.innerHTML = players.map((p, idx) => {
-          const isCurrentPlayer = (p.id === myId);
-          const rankNum = idx + 1;
-          const rankBadgeClass = rankNum === 1 ? 'rank-gold' : (rankNum === 2 ? 'rank-silver' : (rankNum === 3 ? 'rank-bronze' : 'rank-default'));
-          const topClass = rankNum === 1 ? 'top-1' : '';
-          const meClass = isCurrentPlayer ? 'is-me' : '';
-
-          return `
-            <div class="lb-item-inline ${topClass} ${meClass}">
-              <div class="lb-inline-left">
-                <span class="lb-rank-badge ${rankBadgeClass}">#${rankNum}</span>
-                <div class="lb-avatar-frame" style="background:${this.getAvatarBg(p.avatar)};">
-                  <img src="${this.getAvatarSrc(p.avatar)}" alt="${this.formatName(p.name)}" class="lb-avatar-img" style="${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
-                </div>
-                <div class="lb-name-col">
-                  <span class="lb-inline-name">${this.formatName(p.name)}${isCurrentPlayer ? ' <span class="lb-you-tag">YOU</span>' : ''}</span>
-                </div>
-              </div>
-              <div class="lb-inline-right">
-                <span class="lb-inline-pts">${p.score || 0}</span>
-                <span class="lb-pts-label">PTS</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
-    }
-
-    // 3. Render Drawer Full Scoreboard List (#scoreboardList)
-    const drawerList = document.getElementById('scoreboardList');
-    if (drawerList) {
-      if (!players.length) {
-        drawerList.innerHTML = '<div style="text-align:center; padding:24px; color:#94a3b8; font-weight:700;">No players joined yet</div>';
-      } else {
-        drawerList.innerHTML = players.map((p, idx) => {
-          const isCurrentPlayer = (p.id === myId);
-          const rankNum = idx + 1;
-          const rankBadgeClass = rankNum === 1 ? 'rank-gold' : (rankNum === 2 ? 'rank-silver' : (rankNum === 3 ? 'rank-bronze' : 'rank-default'));
-
-          return `
-            <div class="winner-row-nb ${isCurrentPlayer ? 'is-me' : ''}" style="margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:10px; border:2px solid var(--nb-ink); background:${isCurrentPlayer ? '#eff6ff' : '#fff'}; box-shadow:2px 2px 0px var(--nb-ink);">
-              <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-                <span class="lb-rank-badge ${rankBadgeClass}" style="min-width:32px; height:24px; font-size:0.75rem;">#${rankNum}</span>
-                <div style="width:34px; height:34px; min-width:34px; border-radius:8px; border:1.5px solid var(--nb-ink); background:${this.getAvatarBg(p.avatar)}; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-                  <img src="${this.getAvatarSrc(p.avatar)}" style="width:100%; height:100%; ${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
-                </div>
-                <div style="display:flex; flex-direction:column; min-width:0;">
-                  <span style="font-weight:800; font-size:0.92rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${this.formatName(p.name)}</span>
-                  ${isCurrentPlayer ? '<span style="font-size:0.65rem; font-weight:900; color:#2563eb; font-family:var(--font-mono); letter-spacing:0.5px;">YOU</span>' : ''}
-                </div>
-              </div>
-              <div style="text-align:right; flex-shrink:0;">
-                <span style="font-family:var(--font-mono); font-weight:900; font-size:1.05rem; color:var(--nb-ink);">${p.score || 0}</span>
-                <span style="font-family:var(--font-mono); font-size:0.68rem; font-weight:800; color:#64748b; margin-left:2px;">PTS</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-      }
+    // Also keep HUD score pill updated
+    const myScore = document.getElementById('hudScorePill');
+    if (myScore && Array.isArray(GameClient.players)) {
+      const me = GameClient.players.find(p => p.id === GameClient.playerId);
+      if (me) myScore.innerHTML = `${typeof SvgIcons !== 'undefined' ? SvgIcons.star : ''} <span id="hudScore">${me.score || 0}</span> PTS`;
     }
   },
 
@@ -1024,10 +892,6 @@ const UI = {
 
       drawerStream.appendChild(msg);
       drawerStream.scrollTop = drawerStream.scrollHeight;
-    }
-
-    if (chat.isWinner) {
-      this.renderScoreboard();
     }
   },
 
