@@ -28,15 +28,28 @@
         {
           "key": "X-DNS-Prefetch-Control",
           "value": "on"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
         }
       ]
     },
     {
-      "source": "/(css|android/css|android/js)/(.*)",
+      "source": "/(css|android/css|android/js|js)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(avvtar|android/avvtar)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }

@@ -405,6 +405,9 @@ const GameClient = {
         clientInstance.on('connect', () => {
           if (this.mqttClient !== clientInstance) return;
           this.isConnected = true;
+          if (typeof UI !== 'undefined' && UI.hideNetworkStatus) {
+            UI.hideNetworkStatus();
+          }
           console.log('[Realtime] Connected to Cloud MQTT Broker for room:', roomCode);
           clientInstance.subscribe(topic, { qos: 1 });
           this.flushMessageQueue();
@@ -428,6 +431,15 @@ const GameClient = {
 
         clientInstance.on('offline', () => {
           this.isConnected = false;
+          if (typeof UI !== 'undefined' && UI.showNetworkStatus) {
+            UI.showNetworkStatus('Reconnecting to server...');
+          }
+        });
+
+        clientInstance.on('reconnect', () => {
+          if (typeof UI !== 'undefined' && UI.showNetworkStatus) {
+            UI.showNetworkStatus('Reconnecting to server...');
+          }
         });
 
         clientInstance.on('error', (err) => {
@@ -694,6 +706,7 @@ const GameClient = {
         if (msg.playlist) this.currentPlaylist = msg.playlist;
         if (msg.hostSettings) this.hostSettings = msg.hostSettings;
         this.currentPlayIndex = 0;
+        this.preloadUpcomingFrames(-1);
 
         UI.showCountdownOverlay();
         if (typeof SoundEffects !== 'undefined') SoundEffects.playTick();
@@ -933,6 +946,30 @@ const GameClient = {
     this.startTimer(timerDuration);
     if (typeof UI !== 'undefined' && UI.renderRoundNotice) {
       UI.renderRoundNotice(roundIndex + 1, totalRounds);
+    }
+    this.preloadUpcomingFrames(roundIndex);
+  },
+
+  preloadUpcomingFrames(currentIdx) {
+    if (!this.currentPlaylist || !Array.isArray(this.currentPlaylist)) return;
+    const startIndex = currentIdx + 1;
+    for (let i = startIndex; i <= startIndex + 2 && i < this.currentPlaylist.length; i++) {
+      const nextFrame = this.currentPlaylist[i];
+      if (!nextFrame) continue;
+      if (nextFrame.type !== 'dialogue' && nextFrame.content) {
+        const url = typeof resolveMediaPath === 'function' ? resolveMediaPath(nextFrame.content) : nextFrame.content;
+        if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+          const img = new Image();
+          img.src = url;
+        }
+      }
+      if (nextFrame.type === 'eye' && nextFrame.revealContent) {
+        const revealUrl = typeof resolveMediaPath === 'function' ? resolveMediaPath(nextFrame.revealContent) : nextFrame.revealContent;
+        if (revealUrl && (revealUrl.startsWith('http://') || revealUrl.startsWith('https://'))) {
+          const rImg = new Image();
+          rImg.src = revealUrl;
+        }
+      }
     }
   },
 

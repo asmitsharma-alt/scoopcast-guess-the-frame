@@ -64,18 +64,26 @@ const CLOUDINARY_MEDIA_MAP = {
 
 function resolveMediaPath(src) {
   if (!src) return '';
-  if (src.startsWith('http://') || src.startsWith('https://')) {
-    return src;
+  let url = src;
+  if (!src.startsWith('http://') && !src.startsWith('https://')) {
+    const clean = src.startsWith('/') ? src.slice(1) : src;
+    if (CLOUDINARY_MEDIA_MAP[clean]) {
+      url = CLOUDINARY_MEDIA_MAP[clean];
+    } else {
+      try {
+        const decoded = decodeURIComponent(clean);
+        if (CLOUDINARY_MEDIA_MAP[decoded]) url = CLOUDINARY_MEDIA_MAP[decoded];
+        else url = src.startsWith('/') ? src : '/' + src;
+      } catch (e) {
+        url = src.startsWith('/') ? src : '/' + src;
+      }
+    }
   }
-  const clean = src.startsWith('/') ? src.slice(1) : src;
-  if (CLOUDINARY_MEDIA_MAP[clean]) {
-    return CLOUDINARY_MEDIA_MAP[clean];
+  // Cloudinary auto-format and quality compression for non-SVG raster images
+  if (typeof url === 'string' && url.includes('res.cloudinary.com') && url.includes('/upload/') && !url.includes('/upload/f_auto,q_auto/') && !url.endsWith('.svg')) {
+    url = url.replace('/upload/', '/upload/f_auto,q_auto/');
   }
-  try {
-    const decoded = decodeURIComponent(clean);
-    if (CLOUDINARY_MEDIA_MAP[decoded]) return CLOUDINARY_MEDIA_MAP[decoded];
-  } catch (e) {}
-  return src.startsWith('/') ? src : '/' + src;
+  return url;
 }
 
 const UI = {
@@ -685,8 +693,19 @@ const UI = {
     } else {
       if (dialogueBox) dialogueBox.style.display = 'none';
       if (imgEl) {
+        const container = document.getElementById('frameMediaContainer');
+        if (container) container.classList.add('is-loading');
         imgEl.style.display = 'block';
+        imgEl.onload = () => {
+          if (container) container.classList.remove('is-loading');
+        };
+        imgEl.onerror = () => {
+          if (container) container.classList.remove('is-loading');
+        };
         imgEl.src = resolveMediaPath(content);
+        if (imgEl.complete && imgEl.naturalWidth > 0) {
+          if (container) container.classList.remove('is-loading');
+        }
       }
     }
   },
@@ -939,6 +958,9 @@ const UI = {
         `;
       }
       gameStream.appendChild(item);
+      while (gameStream.children.length > 50) {
+        gameStream.firstElementChild.remove();
+      }
       gameStream.scrollTop = gameStream.scrollHeight;
     }
 
@@ -962,6 +984,9 @@ const UI = {
       }
 
       drawerStream.appendChild(msg);
+      while (drawerStream.children.length > 50) {
+        drawerStream.firstElementChild.remove();
+      }
       drawerStream.scrollTop = drawerStream.scrollHeight;
     }
 
@@ -1033,8 +1058,41 @@ const UI = {
   formatName(name) {
     const escaped = this.escapeHtml(name || 'Player');
     return typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(escaped) : escaped;
+  },
+
+  showNetworkStatus(text) {
+    let badge = document.getElementById('networkStatusBadge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'networkStatusBadge';
+      badge.className = 'network-status-badge';
+      badge.setAttribute('role', 'status');
+      badge.setAttribute('aria-live', 'polite');
+      badge.innerHTML = '<span class="network-pulse"></span><span id="networkStatusText">' + this.escapeHtml(text || 'Reconnecting...') + '</span>';
+      document.body.appendChild(badge);
+    } else {
+      const txt = document.getElementById('networkStatusText');
+      if (txt) txt.textContent = text || 'Reconnecting...';
+      badge.classList.remove('hidden');
+    }
+  },
+
+  hideNetworkStatus() {
+    const badge = document.getElementById('networkStatusBadge');
+    if (badge) {
+      badge.classList.add('hidden');
+    }
   }
 };
+
+window.addEventListener('offline', () => {
+  UI.showNetworkStatus('No internet connection');
+});
+
+window.addEventListener('online', () => {
+  UI.showNetworkStatus('Connection restored');
+  setTimeout(() => UI.hideNetworkStatus(), 2000);
+});
 
 window.UI = UI;
 window.resolveMediaPath = resolveMediaPath;
