@@ -1894,7 +1894,7 @@ body.keyboard-open .mobile-action-dock {
   left: 50%;
   transform: translateX(-50%);
   z-index: 10000;
-  display: flex;
+  display: none !important;
   align-items: center;
   gap: 8px;
   background: #18181b;
@@ -1905,14 +1905,17 @@ body.keyboard-open .mobile-action-dock {
   font-size: 0.82rem;
   font-weight: 800;
   box-shadow: 2px 2px 0px #000;
-  transition: opacity 0.25s ease, transform 0.25s ease;
   pointer-events: auto;
 }
 
-.network-status-badge.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -24px);
+.network-status-badge.active {
+  display: flex !important;
+  animation: badgeSlideDown 0.25s ease-out forwards;
+}
+
+@keyframes badgeSlideDown {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 .network-pulse {

@@ -1065,7 +1065,7 @@ const UI = {
     if (!badge) {
       badge = document.createElement('div');
       badge.id = 'networkStatusBadge';
-      badge.className = 'network-status-badge';
+      badge.className = 'network-status-badge active';
       badge.setAttribute('role', 'status');
       badge.setAttribute('aria-live', 'polite');
       badge.innerHTML = '<span class="network-pulse"></span><span id="networkStatusText">' + this.escapeHtml(text || 'Reconnecting...') + '</span>';
@@ -1073,14 +1073,15 @@ const UI = {
     } else {
       const txt = document.getElementById('networkStatusText');
       if (txt) txt.textContent = text || 'Reconnecting...';
-      badge.classList.remove('hidden');
+      badge.classList.add('active');
     }
   },
 
   hideNetworkStatus() {
     const badge = document.getElementById('networkStatusBadge');
     if (badge) {
-      badge.classList.add('hidden');
+      badge.classList.remove('active');
+      badge.remove();
     }
   }
 };
@@ -1090,8 +1091,7 @@ window.addEventListener('offline', () => {
 });
 
 window.addEventListener('online', () => {
-  UI.showNetworkStatus('Connection restored');
-  setTimeout(() => UI.hideNetworkStatus(), 2000);
+  UI.hideNetworkStatus();
 });
 
 window.UI = UI;

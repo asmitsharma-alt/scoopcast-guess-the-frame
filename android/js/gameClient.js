@@ -431,13 +431,13 @@ const GameClient = {
 
         clientInstance.on('offline', () => {
           this.isConnected = false;
-          if (typeof UI !== 'undefined' && UI.showNetworkStatus) {
+          if (this.isMatchActive && typeof UI !== 'undefined' && UI.showNetworkStatus) {
             UI.showNetworkStatus('Reconnecting to server...');
           }
         });
 
         clientInstance.on('reconnect', () => {
-          if (typeof UI !== 'undefined' && UI.showNetworkStatus) {
+          if (this.isMatchActive && typeof UI !== 'undefined' && UI.showNetworkStatus) {
             UI.showNetworkStatus('Reconnecting to server...');
           }
         });
@@ -452,6 +452,9 @@ const GameClient = {
   },
 
   cleanupTransport() {
+    if (typeof UI !== 'undefined' && UI.hideNetworkStatus) {
+      UI.hideNetworkStatus();
+    }
     if (this.mqttClient) {
       try { this.mqttClient.end(true); } catch(e) {}
       this.mqttClient = null;
