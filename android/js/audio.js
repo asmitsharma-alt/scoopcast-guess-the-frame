@@ -147,6 +147,31 @@ const SoundEffects = {
     osc.stop(now + 0.03);
   },
 
+  playCountdown(isFinal = false) {
+    if (this.muted) return;
+    this.init();
+    this.resume();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = isFinal ? 'triangle' : 'sine';
+    const freq = isFinal ? 880 : 540;
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.exponentialRampToValueAtTime(isFinal ? 1100 : 440, now + (isFinal ? 0.16 : 0.08));
+
+    gain.gain.setValueAtTime(isFinal ? 0.22 : 0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + (isFinal ? 0.20 : 0.09));
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + (isFinal ? 0.20 : 0.09));
+  },
+
   playReveal() {
     if (this.muted) return;
     this.init();

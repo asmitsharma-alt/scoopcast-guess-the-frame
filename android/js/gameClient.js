@@ -1289,8 +1289,10 @@ const GameClient = {
   setupRoundUI(frame, timerDuration, roundIndex, totalRounds) {
     totalRounds = totalRounds || (this.currentPlaylist ? this.currentPlaylist.length : 20);
 
-    if (typeof Haptics !== 'undefined') Haptics.roundStart();
-    UI.showScreen('gameScreen');
+    // Preload upcoming frames immediately in background
+    this.preloadUpcomingFrames(roundIndex);
+
+    // Set up media & layout under the intro overlay
     UI.setupRoundMedia({
       type: frame.type,
       content: frame.type === 'dialogue' ? frame.dialogue : frame.content,
@@ -1299,11 +1301,19 @@ const GameClient = {
       totalRounds
     });
 
-    this.startTimer(timerDuration);
-    if (typeof UI !== 'undefined' && UI.renderRoundNotice) {
-      UI.renderRoundNotice(roundIndex + 1, totalRounds);
-    }
-    this.preloadUpcomingFrames(roundIndex);
+    const sectionName = frame.sectionName || (frame.type === 'eye' ? 'Guess the Eyes' : (frame.type === 'dialogue' ? 'Guess the Dialogue' : 'Guess the Frame'));
+
+    // Play synchronized Round Intro Sequence
+    UI.playRoundIntro({
+      roundNum: roundIndex + 1,
+      totalRounds,
+      sectionName,
+      callback: () => {
+        if (typeof Haptics !== 'undefined') Haptics.roundStart();
+        UI.showScreen('gameScreen');
+        this.startTimer(timerDuration);
+      }
+    });
   },
 
   preloadUpcomingFrames(currentIdx) {
@@ -1599,6 +1609,7 @@ const GameClient = {
   finishGame() {
     this.stopTimer();
     this.stopRevealTimer();
+    if (typeof UI !== 'undefined' && UI.dismissRoundIntro) UI.dismissRoundIntro();
     this.isMatchActive = false;
     this.isRoundFinished = true;
     this.clearActiveSession();
@@ -1668,6 +1679,7 @@ const GameClient = {
 
   leaveRoom() {
     this.clearActiveSession();
+    if (typeof UI !== 'undefined' && UI.dismissRoundIntro) UI.dismissRoundIntro();
     if (this.roomCode) {
       this.sendEvent('PLAYER_LEAVE', { playerId: this.playerId });
     }

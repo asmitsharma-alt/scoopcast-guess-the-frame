@@ -31,6 +31,18 @@ const Haptics = {
 
   roundStart() {
     this.vibrate([50, 80, 50, 80, 100]);
+  },
+
+  countdownTick() {
+    this.vibrate(18);
+  },
+
+  countdownFinal() {
+    this.vibrate([30, 40, 70]);
+  },
+
+  reveal() {
+    this.vibrate([35, 45, 80]);
   }
 };
 

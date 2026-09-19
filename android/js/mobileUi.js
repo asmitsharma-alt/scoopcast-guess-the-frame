@@ -837,36 +837,213 @@ const UI = {
     this.showToast(`${bulbIcon} Hint unlocked (-${pointsDeducted} pts)!`);
   },
 
+  playRoundIntro({ roundNum, totalRounds, sectionName, callback }) {
+    this.dismissRoundIntro();
+
+    const overlay = document.getElementById('roundIntroOverlay');
+    const badgeEl = document.getElementById('roundIntroBadge');
+    const numEl = document.getElementById('roundIntroNum');
+    const tagEl = document.getElementById('roundIntroTag');
+    const dot1 = document.getElementById('rioDot1');
+    const dot2 = document.getElementById('rioDot2');
+    const dot3 = document.getElementById('rioDot3');
+
+    if (!overlay) {
+      if (typeof callback === 'function') callback();
+      return;
+    }
+
+    if (badgeEl) {
+      badgeEl.textContent = (sectionName && sectionName.toUpperCase().includes('TIE')) ? 'TIE BREAKER' : 'ROUND';
+    }
+    if (numEl) {
+      numEl.textContent = String(roundNum || 1);
+    }
+    if (tagEl) {
+      const modeLabel = sectionName ? sectionName.toUpperCase() : 'GUESS THE FRAME';
+      tagEl.textContent = totalRounds ? `ROUND ${roundNum} OF ${totalRounds} - GET READY!` : `${modeLabel} - GET READY!`;
+    }
+
+    const dots = [dot1, dot2, dot3].filter(Boolean);
+    dots.forEach(d => d.classList.remove('active', 'final'));
+
+    overlay.classList.remove('exit-anim');
+    overlay.classList.add('visible');
+
+    // Dot 1 at 280ms
+    const t1 = setTimeout(() => {
+      if (dots[0]) dots[0].classList.add('active');
+      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(false);
+      if (typeof Haptics !== 'undefined') Haptics.countdownTick();
+    }, 280);
+
+    // Dot 2 at 580ms
+    const t2 = setTimeout(() => {
+      if (dots[1]) dots[1].classList.add('active');
+      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(false);
+      if (typeof Haptics !== 'undefined') Haptics.countdownTick();
+    }, 580);
+
+    // Dot 3 at 880ms
+    const t3 = setTimeout(() => {
+      if (dots[2]) dots[2].classList.add('active', 'final');
+      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(true);
+      if (typeof Haptics !== 'undefined') Haptics.countdownFinal();
+    }, 880);
+
+    // Card exit animation at 1160ms
+    const tExit = setTimeout(() => {
+      overlay.classList.add('exit-anim');
+    }, 1160);
+
+    // Complete and hand off at 1380ms
+    const tDone = setTimeout(() => {
+      overlay.classList.remove('visible', 'exit-anim');
+      dots.forEach(d => d.classList.remove('active', 'final'));
+      if (typeof callback === 'function') callback();
+    }, 1380);
+
+    this._roundIntroTimeouts = [t1, t2, t3, tExit, tDone];
+  },
+
+  dismissRoundIntro() {
+    if (this._roundIntroTimeouts) {
+      this._roundIntroTimeouts.forEach(t => clearTimeout(t));
+      this._roundIntroTimeouts = null;
+    }
+    const overlay = document.getElementById('roundIntroOverlay');
+    if (overlay) {
+      overlay.classList.remove('visible', 'exit-anim');
+    }
+  },
+
+  triggerRevealCelebration() {
+    const existing = document.getElementById('revealCelebrationBurst');
+    if (existing) existing.remove();
+
+    const burstWrap = document.createElement('div');
+    burstWrap.id = 'revealCelebrationBurst';
+    burstWrap.className = 'celebration-burst-wrap';
+    burstWrap.setAttribute('aria-hidden', 'true');
+
+    const colors = ['#FACC15', '#FF6B9D', '#3B82F6', '#10B981', '#FB923C', '#FFFFFF'];
+    const count = 18;
+
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'celebration-piece';
+      piece.style.backgroundColor = colors[i % colors.length];
+
+      const startX = 50 + (Math.random() * 30 - 15);
+      const startY = 18 + (Math.random() * 12);
+      piece.style.left = `${startX}%`;
+      piece.style.top = `${startY}%`;
+
+      const tx = (Math.random() - 0.5) * 220;
+      const ty = -(Math.random() * 60 + 20);
+      const drift = (Math.random() - 0.5) * 80;
+      const rot = Math.floor(Math.random() * 540) - 270;
+      const delay = Math.random() * 0.15;
+
+      piece.style.setProperty('--tx', `${tx}px`);
+      piece.style.setProperty('--ty', `${ty}px`);
+      piece.style.setProperty('--drift', `${drift}px`);
+      piece.style.setProperty('--rot', `${rot}deg`);
+      piece.style.animationDelay = `${delay}s`;
+
+      burstWrap.appendChild(piece);
+    }
+
+    document.body.appendChild(burstWrap);
+    setTimeout(() => {
+      if (burstWrap && burstWrap.parentNode) burstWrap.remove();
+    }, 1600);
+  },
+
   renderRoundReveal({ answer, year, type, content, revealedContent, winners }) {
     const titleEl = document.getElementById('revealTitle');
     const yearEl = document.getElementById('revealYear');
     const imgEl = document.getElementById('revealImage');
+    const frameBox = document.querySelector('.reveal-frame-box');
+    const badgeTag = document.querySelector('.reveal-badge-tag');
     const podiumEl = document.getElementById('revealWinnersRow');
+    const revealScreen = document.getElementById('revealScreen');
+
+    // Trigger procedural reveal audio and haptics
+    if (typeof SoundEffects !== 'undefined') SoundEffects.playReveal();
+    if (typeof Haptics !== 'undefined') Haptics.reveal();
+
+    // Reset animation state classes to trigger CSS keyframe choreography
+    if (revealScreen) {
+      revealScreen.classList.remove('reveal-anim-active');
+      void revealScreen.offsetWidth; // Force reflow
+      revealScreen.classList.add('reveal-anim-active');
+    }
+
+    if (badgeTag) {
+      badgeTag.textContent = (type === 'eye') ? 'CELEBRITY REVEALED' : ((type === 'dialogue') ? 'MOVIE REVEALED' : 'SCENE REVEALED');
+    }
 
     if (titleEl) titleEl.textContent = answer;
     if (yearEl) yearEl.textContent = year ? `(${year})` : '';
-    if (imgEl) {
+
+    if (imgEl && frameBox) {
       const rawSrc = (type === 'eye' && revealedContent) ? revealedContent : content;
       imgEl.src = resolveMediaPath(rawSrc);
+
+      // Celebrity Eye mode: flash shutter and morph from eye to full face
+      if (type === 'eye' && revealedContent && content) {
+        frameBox.classList.add('eye-reveal-mode');
+        const eyeSrc = resolveMediaPath(content);
+        const fullSrc = resolveMediaPath(revealedContent);
+        imgEl.src = eyeSrc;
+        setTimeout(() => {
+          frameBox.classList.add('shutter-flash');
+          imgEl.src = fullSrc;
+          setTimeout(() => frameBox.classList.remove('shutter-flash'), 450);
+        }, 750);
+      } else {
+        frameBox.classList.remove('eye-reveal-mode', 'shutter-flash');
+      }
     }
 
     if (podiumEl) {
       if (!winners || winners.length === 0) {
-        podiumEl.innerHTML = '<div style="color:#666; font-weight:800;">Time ran out! No one guessed it.</div>';
+        podiumEl.innerHTML = `
+          <div class="winner-row-nb empty-reveal-row">
+            <span style="display:flex; align-items:center;">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </span>
+            <span>Time ran out! No correct guesses.</span>
+          </div>
+        `;
       } else {
-        podiumEl.innerHTML = winners.map(w => {
-          const medal = typeof SvgIcons !== 'undefined'
+        podiumEl.innerHTML = winners.map((w, idx) => {
+          const medalSvg = typeof SvgIcons !== 'undefined'
             ? (w.position === 1 ? SvgIcons.medal1 : (w.position === 2 ? SvgIcons.medal2 : SvgIcons.medal3))
             : (w.position === 1 ? '#1' : (w.position === 2 ? '#2' : '#3'));
           const cls = w.position === 1 ? 'gold' : (w.position === 2 ? 'silver' : 'bronze');
+          const delayStyle = `animation-delay: ${0.22 + idx * 0.12}s;`;
           return `
-            <div class="winner-row-nb ${cls}">
-              <span>${medal} ${this.formatName(w.playerName)}</span>
-              <span style="color:var(--nb-ink); font-weight:900;">+${w.points} PTS</span>
+            <div class="winner-row-nb ${cls} winner-cascade-in" style="${delayStyle}">
+              <div class="winner-left-info">
+                <span class="winner-medal-icon">${medalSvg}</span>
+                <span class="winner-player-name">${this.formatName(w.playerName)}</span>
+              </div>
+              <span class="winner-score-tag">+${w.points} PTS</span>
             </div>
           `;
         }).join('');
       }
+    }
+
+    // Trigger celebration confetti burst if there are round winners
+    if (winners && winners.length > 0) {
+      this.triggerRevealCelebration();
     }
 
     // Next Round Host Controls & Non-Host Waiting Notice
