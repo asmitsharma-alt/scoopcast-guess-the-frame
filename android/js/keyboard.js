@@ -14,7 +14,7 @@ const KeyboardManager = {
 
     // Helper: Close all open drawers & backdrops
     const closeDrawers = () => {
-      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open'));
       document.querySelectorAll('.drawer-backdrop').forEach(b => b.classList.remove('active'));
     };
 

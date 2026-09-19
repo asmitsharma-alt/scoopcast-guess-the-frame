@@ -480,17 +480,21 @@ const UI = {
     // Dismiss keyboard on screen shift
     if (document.activeElement) document.activeElement.blur();
 
-    // Close any open drawers when shifting to homeScreen
+    // Close any open drawers or sidebars when shifting to homeScreen
     if (screenId === 'homeScreen') {
-      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open'));
       const backdrop = document.getElementById('sheetBackdrop');
       if (backdrop) backdrop.classList.remove('active');
     }
 
-    // Toggle top-bar chat button: visible only in room/game screens, hidden on home screen
+    // Toggle top-bar buttons: visible only in room/game screens, hidden on home screen
     const chatBtn = document.getElementById('btnChatToggle');
     if (chatBtn) {
       chatBtn.style.display = (screenId !== 'homeScreen') ? 'flex' : 'none';
+    }
+    const lbBtn = document.getElementById('btnLeaderboardToggle');
+    if (lbBtn) {
+      lbBtn.style.display = (screenId !== 'homeScreen') ? 'flex' : 'none';
     }
   },
 
@@ -507,14 +511,79 @@ const UI = {
       drawer.classList.remove('open');
       if (backdrop) backdrop.classList.remove('active');
     } else {
-      document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open'));
       drawer.classList.add('open');
       if (backdrop) backdrop.classList.add('active');
-      const chatInput = document.getElementById('mobileChatInput');
+      const chatInput = document.getElementById('chatInput');
       if (chatInput) {
         setTimeout(() => chatInput.focus(), 150);
       }
     }
+  },
+
+  toggleLeaderboardSidebar(open) {
+    if (typeof Haptics !== 'undefined') Haptics.tap();
+    const sidebar = document.getElementById('leaderboardSidebar');
+    const backdrop = document.getElementById('sheetBackdrop');
+    if (!sidebar) return;
+
+    const shouldOpen = (open !== undefined) ? !!open : !sidebar.classList.contains('open');
+    if (!shouldOpen) {
+      sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('active');
+    } else {
+      // Close other drawers
+      document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open'));
+      this.renderLeaderboardSidebar();
+      sidebar.classList.add('open');
+      if (backdrop) backdrop.classList.add('active');
+    }
+  },
+
+  renderLeaderboardSidebar() {
+    const list = document.getElementById('leaderboardSidebarList');
+    if (!list) return;
+
+    const players = [...(GameClient.players || [])]
+      .sort((a, b) => (b.score || 0) - (a.score || 0));
+    const myId = (typeof GameClient !== 'undefined') ? GameClient.playerId : null;
+
+    if (!players.length) {
+      list.innerHTML = `
+        <div class="sb-empty-state">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;stroke:#94a3b8;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          <span>No players in room yet</span>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = players.map((p, idx) => {
+      const isMe = (p.id === myId);
+      const rankNum = idx + 1;
+      const rankBadgeClass = rankNum === 1 ? 'rank-1' : (rankNum === 2 ? 'rank-2' : (rankNum === 3 ? 'rank-3' : 'rank-other'));
+      const topClass = rankNum === 1 ? 'top-1' : '';
+      const meClass = isMe ? 'is-me' : '';
+
+      return `
+        <div class="sb-player-row ${topClass} ${meClass}">
+          <div class="sb-player-left">
+            <span class="sb-rank-badge ${rankBadgeClass}">#${rankNum}</span>
+            <div class="sb-avatar-box" style="background:${this.getAvatarBg(p.avatar)};">
+              <img src="${this.getAvatarSrc(p.avatar)}" alt="${this.formatName(p.name)}" class="sb-avatar-img" style="${this.getAvatarFit(p.avatar)}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
+            </div>
+            <div class="sb-player-info">
+              <span class="sb-player-name">${this.formatName(p.name)}</span>
+              ${isMe ? '<span class="sb-you-label">YOU</span>' : ''}
+            </div>
+          </div>
+          <div class="sb-player-right">
+            <span class="sb-player-score">${p.score || 0}</span>
+            <span class="sb-player-unit">PTS</span>
+          </div>
+        </div>
+      `;
+    }).join('');
   },
 
   showToast(message) {
@@ -827,6 +896,8 @@ const UI = {
       const me = GameClient.players.find(p => p.id === GameClient.playerId);
       if (me) myScore.innerHTML = `${typeof SvgIcons !== 'undefined' ? SvgIcons.star : ''} <span id="hudScore">${me.score || 0}</span> PTS`;
     }
+
+    this.renderLeaderboardSidebar();
   },
 
   appendChatMessage(chat) {
@@ -892,6 +963,10 @@ const UI = {
 
       drawerStream.appendChild(msg);
       drawerStream.scrollTop = drawerStream.scrollHeight;
+    }
+
+    if (chat.isWinner) {
+      this.renderLeaderboardSidebar();
     }
   },
 

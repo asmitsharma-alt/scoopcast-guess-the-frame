@@ -219,7 +219,7 @@
   </script>
   
   <!-- Neobrutalist Mobile Stylesheet -->
-  <link rel="stylesheet" href="/android/css/android.css">
+  <link rel="stylesheet" href="/android/css/android.css?v=2.2">
   <!-- Vercel Web Analytics & Speed Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -291,6 +291,9 @@
         <span style="display:none; font-family:var(--font-display); font-size:1.25rem;">SCOOPCAST</span>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
+        <button class="icon-btn" id="btnLeaderboardToggle" onclick="UI.toggleLeaderboardSidebar();" aria-label="Open Leaderboard" style="display:none; position:relative;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        </button>
         <button class="icon-btn" id="btnChatToggle" onclick="UI.toggleChatDrawer();" aria-label="Open Chat" style="display:none; position:relative;">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span class="unread-badge-dot" id="chatUnreadDot"></span>
@@ -480,7 +483,7 @@
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="12" y1="14" y2="8"/><circle cx="12" cy="14" r="8"/></svg>
           <span id="hudTimerText">30s</span>
         </div>
-        <span class="hud-score" id="hudScorePill" onclick="document.getElementById('scoreboardDrawer').classList.add('open'); document.getElementById('sheetBackdrop').classList.add('active');"><svg class="ui-icon ui-icon-star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="hudScore">0</span> PTS</span>
+        <span class="hud-score" id="hudScorePill" onclick="UI.toggleLeaderboardSidebar();"><svg class="ui-icon ui-icon-star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="hudScore">0</span> PTS</span>
       </div>
 
       <!-- Active Masked Hint Banner -->
@@ -572,8 +575,22 @@
       </div>
     </main>
 
-    <!-- ═══════════ BOTTOM DRAWERS ═══════════ -->
-    <div class="drawer-backdrop" id="sheetBackdrop" onclick="document.querySelectorAll('.drawer-sheet').forEach(d => d.classList.remove('open')); this.classList.remove('active');"></div>
+    <!-- ═══════════ BOTTOM DRAWERS & SIDEBARS ═══════════ -->
+    <div class="drawer-backdrop" id="sheetBackdrop" onclick="document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open')); this.classList.remove('active');"></div>
+
+    <!-- Leaderboard Sidebar Panel -->
+    <aside class="sidebar-panel" id="leaderboardSidebar" aria-label="Match Leaderboard">
+      <div class="sidebar-header">
+        <div class="sidebar-title-wrap">
+          <svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          <span>LEADERBOARD</span>
+        </div>
+        <button type="button" class="sidebar-close-btn" onclick="UI.toggleLeaderboardSidebar(false);" aria-label="Close Leaderboard">✕</button>
+      </div>
+      <div class="sidebar-body" id="leaderboardSidebarList">
+        <!-- Rendered dynamically by UI.renderLeaderboardSidebar() -->
+      </div>
+    </aside>
 
     <!-- Chat Drawer -->
     <div class="drawer-sheet" id="chatDrawer">
@@ -729,11 +746,11 @@
     </div>
 
   <!-- Mobile Scripts (Absolute Paths to Guarantee Resolution) -->
-  <script src="/android/js/haptics.js"></script>
-  <script src="/android/js/audio.js"></script>
-  <script src="/android/js/keyboard.js"></script>
-  <script src="/android/js/gameClient.js"></script>
-  <script src="/android/js/mobileUi.js"></script>
+  <script src="/android/js/haptics.js?v=2.2"></script>
+  <script src="/android/js/audio.js?v=2.2"></script>
+  <script src="/android/js/keyboard.js?v=2.2"></script>
+  <script src="/android/js/gameClient.js?v=2.2"></script>
+  <script src="/android/js/mobileUi.js?v=2.2"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       UI.init();
