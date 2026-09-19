@@ -101,11 +101,11 @@
           "value": ".*([Aa]ndroid|[Ii][Pp]hone|[Ii][Pp]od|[Ii][Pp]ad|[Mm]obile|[Ww]eb[Oo][Ss]|BlackBerry|IEMobile|Opera Mini).*"
         }
       ],
-      "destination": "/android/index.html"
+      "destination": "/mobile_app.html"
     },
     {
       "source": "/",
-      "destination": "/desktop/index.html"
+      "destination": "/desktop_app.html"
     },
     {
       "source": "/index.html",
@@ -116,11 +116,11 @@
           "value": ".*([Aa]ndroid|[Ii][Pp]hone|[Ii][Pp]od|[Ii][Pp]ad|[Mm]obile|[Ww]eb[Oo][Ss]|BlackBerry|IEMobile|Opera Mini).*"
         }
       ],
-      "destination": "/android/index.html"
+      "destination": "/mobile_app.html"
     },
     {
       "source": "/index.html",
-      "destination": "/desktop/index.html"
+      "destination": "/desktop_app.html"
     },
     {
       "source": "/desktop/css/:match*",

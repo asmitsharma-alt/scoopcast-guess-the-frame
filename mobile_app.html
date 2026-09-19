@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      function cleanUrl() {
+        if (window.location.pathname.startsWith('/android') || window.location.pathname.startsWith('/desktop')) {
+          try {
+            window.history.replaceState(null, '', '/' + window.location.search + window.location.hash);
+          } catch (e) {}
+        }
+      }
+      cleanUrl();
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', cleanUrl);
+      }
+      window.addEventListener('load', cleanUrl);
+      window.addEventListener('pageshow', cleanUrl);
+      let count = 0;
+      const interval = setInterval(function() {
+        cleanUrl();
+        count++;
+        if (count > 10) clearInterval(interval);
+      }, 150);
+    })();
+  </script>
+  <script>
+    // Disable right click / context menu / long-press callout
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Disable dragging of images and elements
+    document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    document.addEventListener('drop', function(e) {
+      e.preventDefault();
+      return false;
+    }, { capture: true });
+
+    // Lock window scroll
+    window.addEventListener('scroll', function() {
+      if (window.scrollX !== 0 || window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+    }, { passive: false });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#FACC15">
+  <link rel="manifest" href="/android/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FACC15' stroke='%23111827' stroke-width='2'%3E%3Cpath d='M20.2 6 3 11l-.9-2.4c-.7-1.1-.3-2.5.7-3.1l9.6-4.5c1.2-.6 2.6-.1 3.1 1l.7 1.6'/%3E%3Cpath d='m5 12 15-5'/%3E%3Cpath d='M3 11v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7'/%3E%3C/svg%3E">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="dns-prefetch" href="//broker.emqx.io">
+  <link rel="dns-prefetch" href="//broker.hivemq.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:wght@400;500;700;800;900&family=JetBrains+Mono:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <meta name="google-site-verification" content="rYhAlaFl9GN3u4z8Aa_-J9CWgheP8Cvp35-hdq2s9FE">
+  <title>Guess The Frame - Play Free Online Movie Frame Guessing Game | Scoopcast</title>
+  <meta name="description" content="Play Guess The Frame online for free! Challenge friends in real-time multiplayer to guess iconic movies from frames, celebrity eyes, and dialogues. No app download needed.">
+  <meta name="keywords" content="guess the frame, guess the movie frame, movie frame quiz, guess the movie from the frame, film frame game, cinema trivia, multiplayer movie quiz, guess the eyes, guess the dialogue, scoopcast, movie guessing game online free">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Asmit Sharma">
+  <link rel="canonical" href="https://scoopcast.me/">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scoopcast.me/">
+  <meta property="og:site_name" content="Scoopcast">
+  <meta property="og:title" content="Guess The Frame - Free Online Movie Frame Guessing Game">
+  <meta property="og:description" content="Challenge your friends in real-time multiplayer! Guess iconic movies from frames, actor eyes, and dialogues free on Scoopcast.">
+  <meta property="og:image" content="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp">
+  <meta property="og:image:secure_url" content="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Scoopcast Guess The Frame - Online Movie Trivia Party Game">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://scoopcast.me/">
+  <meta name="twitter:title" content="Guess The Frame - Online Movie Frame Guessing Game">
+  <meta name="twitter:description" content="Play Guess The Frame free with friends! Guess movies from frames, celebrity eyes & iconic dialogues in real time.">
+  <meta name="twitter:image" content="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp">
+  <meta name="twitter:image:alt" content="Scoopcast Guess The Frame Preview">
+
+  <!-- JSON-LD Structured Data Schema (WebApplication, VideoGame, FAQPage, BreadcrumbList) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["WebApplication", "VideoGame"],
+        "@id": "https://scoopcast.me/#game",
+        "name": "Guess The Frame",
+        "alternateName": [
+          "Scoopcast: Guess The Frame",
+          "Guess The Movie From The Frame",
+          "Movie Frame Quiz",
+          "Scoopcast Guess The Frame",
+          "Guess The Frame Online"
+        ],
+        "url": "https://scoopcast.me/",
+        "applicationCategory": "GameApplication",
+        "gamePlatform": ["Web Browser", "Mobile Browser", "Android", "iOS", "Desktop"],
+        "operatingSystem": "All",
+        "genre": ["Trivia", "Movie Quiz", "Party Game", "Multiplayer Game", "Film Trivia"],
+        "description": "Play Guess The Frame online free! Challenge friends in real-time multiplayer to guess iconic movies from frames, actor eyes, and famous dialogues.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "ratingCount": "1420",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "image": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp",
+        "screenshot": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp",
+        "author": {
+          "@type": "Person",
+          "name": "Asmit Sharma",
+          "url": "https://scoopcast.me/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Scoopcast",
+          "url": "https://scoopcast.me/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png"
+          }
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://scoopcast.me/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Guess The Frame?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Guess The Frame is a free real-time multiplayer movie trivia party game by Scoopcast where players compete to identify iconic movies from cinematic stills, actor closeups, and famous dialogues."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do you play Guess The Frame with friends?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Simply tap 'Create Room' to generate a 4-letter room code or share the WhatsApp invite link. Friends can join immediately from any mobile phone or computer browser without downloading an app or registering."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What game modes are available in Guess The Frame?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Guess The Frame includes three game modes: Guess The Frame (cinema stills), Guess The Eyes (actor and celebrity eyes), and Guess The Dialogue (iconic movie quotes and lines). Hosts can customize round counts and timers."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Guess The Frame free to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, Guess The Frame is 100% free with no paywalls, unlimited rooms, customizable round options, and built-in live chat and scoreboard."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to download an app or sign up to play?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No! Guess The Frame runs directly in any modern mobile or desktop web browser (Chrome, Safari, Firefox, Edge). No downloads, plugins, or account creation required."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://scoopcast.me/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://scoopcast.me/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Games",
+            "item": "https://scoopcast.me/#games"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Guess The Frame",
+            "item": "https://scoopcast.me/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Neobrutalist Mobile Stylesheet -->
+  <link rel="stylesheet" href="/android/css/android.css?v=3.1">
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <!-- Avatar Studio Stylesheet & Catalog Data -->
+  <link rel="stylesheet" href="/android/css/avatar-picker.css">
+  <script defer src="/android/js/avatars-data.js"></script>
+  <script defer src="/android/js/avatar-picker.js"></script>
+  
+  <!-- Lucide Icons Engine (Local Bundle + CDN Fallback: https://lucide.dev/guide/) -->
+  <script src="/android/js/lucide.min.js"></script>
+  <script>
+    if (typeof lucide === 'undefined') {
+      document.write('<script src="https://unpkg.com/lucide@latest"><\/script>');
+    }
+  </script>
+  <!-- SVG Icon Library -->
+  <script src="/android/js/icons.js"></script>
+
+  <!-- MQTT Realtime Engine (Bundled Locally + CDN Fallback) -->
+  <script src="/android/js/mqtt.min.js"></script>
+  <script>
+    if (typeof mqtt === 'undefined') {
+      document.write('<script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"><\/script>');
+    }
+  </script>
+  <!-- Preload Cinema Wallpaper Background -->
+  <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp" type="image/webp">
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;">
+  <!-- SOFT BLURRED CINEMA WALLPAPER BACKDROP & FOCUS SCRIM -->
+  <div id="bgBackdrop" class="bg-backdrop" aria-hidden="true"></div>
+  <div id="bgFocusScrim" class="bg-focus-scrim" aria-hidden="true"></div>
+  <div id="app">
+
+    <!-- ═══════════ MARQUEE FILMSTRIP TICKER ═══════════ -->
+    <div class="filmstrip-ticker" aria-hidden="true">
+      <div class="filmstrip-track">
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.7-1.1-.3-2.5.7-3.1l9.6-4.5c1.2-.6 2.6-.1 3.1 1l.7 1.6"/><path d="m5 12 15-5"/><path d="M3 11v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/></svg> MARVEL</span>
+        <span class="ticker-item"><svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> DC</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 4-2 2 4 4 2-2Z"/><path d="m17 2 5 5"/><path d="M2 22l10-10"/></svg> HARRY POTTER</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></svg> STAR WARS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="14" r="7"/><path d="M9 5l3-3 3 3-3 2z"/></svg> LORD OF THE RINGS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg> FAST &amp; FURIOUS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5h-2v3h-3v3h-1v5h-2v-3h-2v3H9v-7H7v-2H5V8H3V6h3V4h4v2h3V3z"/></svg> JURASSIC PARK</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg> MISSION IMPOSSIBLE</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> JOHN WICK</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" x2="16" y1="22" y2="22"/><line x1="12" x2="12" y1="15" y2="22"/><path d="m19 3-7 8-7-8Z"/></svg> JAMES BOND</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="M16 20a3 3 0 0 0 1.5-5.6 7 7 0 1 0-11 0A3 3 0 0 0 8 20z"/></svg> PIRATES</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M12 2v6"/><circle cx="12" cy="2" r="1"/></svg> TRANSFORMERS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="14" r="4"/><circle cx="12" cy="7" r="2.5"/><path d="M12 18v4"/><path d="M8 14l-5-2"/><path d="M16 14l5-2"/><path d="M8 12L4 7"/><path d="M16 12l4-5"/></svg> SPIDER-MAN</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-1 0-1.5 1.5-2 1.5S9 7 7 8c-3 1.5-5 5-5 7 2 0 4-1.5 5-1 1 .5 1.5 2 2.5 2s1.5-1.5 2.5-2c1-.5 3 1 5 1 0-2-2-5.5-5-7-2-1-2.5.5-3-.5s-1-1.5-2-1.5z"/></svg> BATMAN</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.2 6 3 11l-.9-2.4c-.7-1.1-.3-2.5.7-3.1l9.6-4.5c1.2-.6 2.6-.1 3.1 1l.7 1.6"/><path d="m5 12 15-5"/><path d="M3 11v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7"/></svg> MARVEL</span>
+        <span class="ticker-item"><svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> DC</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 4-2 2 4 4 2-2Z"/><path d="m17 2 5 5"/><path d="M2 22l10-10"/></svg> HARRY POTTER</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></svg> STAR WARS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="14" r="7"/><path d="M9 5l3-3 3 3-3 2z"/></svg> LORD OF THE RINGS</span>
+        <span class="ticker-item"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg> FAST &amp; FURIOUS</span>
+      </div>
+    </div>
+
+    <!-- ═══════════ TOP APP BAR ═══════════ -->
+    <header class="mobile-top-bar">
+      <div class="app-brand">
+        <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png" alt="Scoopcast" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <span style="display:none; font-family:var(--font-display); font-size:1.25rem;">SCOOPCAST</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="icon-btn" id="btnLeaderboardToggle" onclick="UI.toggleLeaderboardSidebar();" aria-label="Open Leaderboard" style="display:none; position:relative;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        </button>
+        <button class="icon-btn" id="btnChatToggle" onclick="UI.toggleChatDrawer();" aria-label="Open Chat" style="display:none; position:relative;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="unread-badge-dot" id="chatUnreadDot"></span>
+        </button>
+        <button class="icon-btn" id="btnSoundToggle" onclick="SoundEffects.toggleMute(); UI.updateSoundBtn();" aria-label="Toggle Sound">
+          <svg class="ui-icon" id="soundIconSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══════════ SCREEN 1: HOME & AVATAR PICKER ═══════════ -->
+    <main class="screen active" id="homeScreen">
+      <div class="home-content">
+        
+        <div class="hero-banner-wrap">
+          <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp" alt="Guess The Frame" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png'">
+        </div>
+        
+        <span class="hero-tagline"><svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> MULTIPLAYER CINEMA TRIVIA <svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+
+        <div class="nb-card">
+          <label class="input-label" for="playerNameInput">Your Nickname</label>
+          <input type="text" id="playerNameInput" class="nb-input" placeholder="e.g. Cinephile" maxlength="16" autocomplete="off" autocorrect="off">
+
+          <label class="input-label">Character Pass (1,800+ Avatars)</label>
+          <div class="mp-mobile-avatar-trigger-card" id="androidAvatarTrigger" onclick="UI.openAvatarStudio()">
+            <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+              <div class="mp-hero-preview-frame" id="mobileTriggerFrame" style="width: 44px; height: 44px; min-width: 44px; border-radius: 12px; border: 2.5px solid #121212; background: #facc15; box-shadow: 2px 2px 0 #121212; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0;">
+                <img id="mobileTriggerImg" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" alt="Aman" class="img-contain-fit" style="width: 100%; height: 100%; object-fit: contain;" />
+                <span class="mp-hero-check-pill" style="position: absolute; bottom: -1px; right: -1px; background: #10b981; color: #000; width: 15px; height: 15px; border-radius: 4px; border: 1px solid #121212; display: flex; align-items: center; justify-content: center;">
+                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+              </div>
+              <div style="text-align: left; overflow: hidden;">
+                <div style="font-size: 14px; font-weight: 900; font-family: var(--font-mono); color: #121212; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" id="mobileTriggerName">Aman</div>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                  <span id="mobileTriggerCat" style="font-size: 10px; font-weight: 900; background: #facc15; color: #121212; border: 1.5px solid #121212; border-radius: 5px; padding: 1px 6px; text-transform: uppercase;">Founders</span>
+                  <span style="font-size: 11px; color: #64748b; font-weight: 700;">Tap to change</span>
+                </div>
+              </div>
+            </div>
+            <div class="mp-mobile-avatar-change-hint">
+              <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+              <span>Explore</span>
+              <span style="font-weight: 900;">→</span>
+            </div>
+          </div>
+
+          <label class="input-label" style="margin-top: 6px;">Quick Picks</label>
+          <div class="avatar-grid-row" id="avatarPicker">
+            <div class="avatar-chip selected" data-avatar="aman">
+              <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" alt="Aman">
+              <span class="avatar-chip-name">Aman</span>
+            </div>
+            <div class="avatar-chip" data-avatar="amish">
+              <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg" alt="Amish">
+              <span class="avatar-chip-name">Amish</span>
+            </div>
+            <div class="avatar-chip" data-avatar="aziz">
+              <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg" alt="Aziz">
+              <span class="avatar-chip-name">Aziz</span>
+            </div>
+            <div class="avatar-chip" data-avatar="vish">
+              <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg" alt="Vish">
+              <span class="avatar-chip-name">Vish</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-action-col">
+          <button class="btn-nb-primary" id="btnHostGame">
+            <svg class="ui-icon ui-icon-crown" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg>
+            <span>CREATE ROOM (HOST)</span>
+          </button>
+          <button class="btn-nb-secondary" id="btnOpenJoin">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15.01" y1="13" y2="13"/><line x1="18" x2="18.01" y1="11" y2="11"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg>
+            <span>JOIN WITH CODE</span>
+          </button>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ═══════════ JOIN MODAL ═══════════ -->
+    <div class="nb-modal-overlay" id="joinModal">
+      <div class="nb-modal-card">
+        <h3 class="nb-modal-title">ENTER ROOM CODE</h3>
+        <input type="text" id="joinCodeInput" class="nb-input code-input-lg" placeholder="ABCD" maxlength="4">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-nb-primary" id="btnConfirmJoin">JOIN GAME <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></button>
+          <button class="pill-btn-sm" style="justify-content:center; height:42px;" onclick="document.getElementById('joinModal').classList.remove('active');">CANCEL</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ REJOIN ACTIVE MATCH MODAL ═══════════ -->
+    <div class="nb-modal-overlay" id="rejoinModal">
+      <div class="nb-modal-card" style="max-width:340px; text-align:center;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px;">
+          <svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px; color:var(--nb-yellow);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <h3 class="nb-modal-title" style="margin-bottom:0; font-size:1.3rem;">ACTIVE MATCH FOUND!</h3>
+        </div>
+        <p style="font-size:0.8rem; font-weight:700; color:#4a4a4a; margin-bottom:14px;">
+          You were in an active cinema trivia match. Rejoin to sync back into the game?
+        </p>
+
+        <!-- Room Code & Player Summary Card -->
+        <div style="background:#fafaf4; border:var(--nb-border-sm); border-radius:12px; padding:10px 12px; margin-bottom:14px; box-shadow:var(--nb-shadow-sm); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+            <div id="rejoinAvatarContainer" style="width:42px; height:42px; min-width:42px; border-radius:10px; border:2px solid var(--nb-ink); overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--nb-pink);">
+              <img id="rejoinAvatarImg" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" style="width:100%; height:100%; object-fit:cover;" alt="Avatar">
+            </div>
+            <div style="text-align:left; overflow:hidden;">
+              <div id="rejoinPlayerName" style="font-size:0.95rem; font-weight:900; font-family:var(--font-mono); color:var(--nb-ink); text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">AMAN</div>
+              <div id="rejoinRoleTag" style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase;">PLAYER</div>
+            </div>
+          </div>
+
+          <div style="background:var(--nb-yellow); border:2px solid var(--nb-ink); border-radius:8px; padding:4px 8px; text-align:center; box-shadow:1px 1px 0 var(--nb-ink); flex-shrink:0;">
+            <div style="font-size:0.6rem; font-weight:800; text-transform:uppercase; color:var(--nb-ink);">ROOM</div>
+            <div id="rejoinRoomCodeText" style="font-size:1.15rem; font-weight:900; font-family:var(--font-mono); color:var(--nb-ink); letter-spacing:1px;">----</div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-nb-primary" id="btnConfirmRejoin" style="height:48px; font-size:1.1rem; background:var(--nb-green);">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+            <span>REJOIN ACTIVE MATCH</span>
+          </button>
+          <button class="pill-btn-sm" id="btnDismissRejoin" style="justify-content:center; height:40px; font-size:0.8rem; font-weight:800; color:#64748b;">
+            START FRESH / NEW GAME
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SCREEN 2: MOBILE LOBBY ═══════════ -->
+    <main class="screen" id="lobbyScreen">
+      <div class="lobby-header">
+        <div class="room-badge-nb">
+          <span class="room-badge-label">ROOM CODE</span>
+          <span class="room-badge-code" id="lobbyRoomCodeText">----</span>
+        </div>
+        <div class="share-row">
+          <button class="pill-btn-sm" id="btnCopyLink"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg> Copy Link</button>
+          <button class="pill-btn-sm" id="btnShareRoom"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg> WhatsApp</button>
+        </div>
+      </div>
+
+      <div class="lobby-players-box">
+        <div class="section-head-sm">PLAYERS IN ROOM</div>
+        <div class="players-grid-2col" id="lobbyPlayersGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Host Controls: 3 Tabs (Frames, Eyes, Dialogue) + Rounds & Timer Steppers -->
+      <div class="lobby-footer-controls" id="lobbyHostControls" style="display:none;">
+        <!-- Mode Tabs -->
+        <div class="lobby-mode-tabs" role="tablist">
+          <button type="button" class="mode-tab-btn active" data-tab="frames" id="tabBtnFrames" role="tab" aria-selected="true">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <span>Frames</span>
+            <span class="tab-count-badge" id="tabPillFrames">10</span>
+          </button>
+          <button type="button" class="mode-tab-btn" data-tab="eyes" id="tabBtnEyes" role="tab" aria-selected="false">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Eyes</span>
+            <span class="tab-count-badge" id="tabPillEyes">10</span>
+          </button>
+          <button type="button" class="mode-tab-btn" data-tab="dialogue" id="tabBtnDialogue" role="tab" aria-selected="false">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            <span>Dialogue</span>
+            <span class="tab-count-badge" id="tabPillDialogue">10</span>
+          </button>
+        </div>
+
+        <!-- Steppers Row: Rounds (Active Tab) & Timer -->
+        <div class="lobby-steppers-row">
+          <!-- Active Tab Rounds Stepper -->
+          <div class="stepper-card">
+            <div class="stepper-header">
+              <span class="stepper-title" id="currentTabRoundsTitle">FRAMES ROUNDS</span>
+              <span class="stepper-sub" id="totalRoundsSummary">Total: 30</span>
+            </div>
+            <div class="stepper-ctrl">
+              <button type="button" class="step-btn step-minus" id="btnRoundMinus" aria-label="Decrease rounds">−</button>
+              <div class="step-value-box">
+                <span class="step-value-num" id="currentRoundValue">10</span>
+                <span class="step-value-unit">rounds</span>
+              </div>
+              <button type="button" class="step-btn step-plus" id="btnRoundPlus" aria-label="Increase rounds">+</button>
+            </div>
+          </div>
+
+          <!-- Timer Stepper -->
+          <div class="stepper-card">
+            <div class="stepper-header">
+              <span class="stepper-title">ROUND TIMER</span>
+              <span class="stepper-sub">Per Frame</span>
+            </div>
+            <div class="stepper-ctrl">
+              <button type="button" class="step-btn step-minus" id="btnTimerMinus" aria-label="Decrease timer">−</button>
+              <div class="step-value-box">
+                <span class="step-value-num" id="currentTimerValue">30</span>
+                <span class="step-value-unit">seconds</span>
+              </div>
+              <button type="button" class="step-btn step-plus" id="btnTimerPlus" aria-label="Increase timer">+</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-nb-primary" id="btnStartMatch">START MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></button>
+      </div>
+
+      <!-- Waiting Notice for non-hosts -->
+      <div id="lobbyWaitingNotice" style="display:none; padding:18px; text-align:center; font-weight:800; color:#666;">
+        <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for Host to start the match...
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 3: ACTIVE GAME SCREEN ═══════════ -->
+    <main class="screen" id="gameScreen">
+      <!-- Mini-HUD Top Bar -->
+      <div class="game-hud">
+        <span class="hud-pill" id="hudRoundPill">ROUND 1/20</span>
+        <div class="hud-timer" id="hudTimerBadge">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="12" y1="14" y2="8"/><circle cx="12" cy="14" r="8"/></svg>
+          <span id="hudTimerText">30s</span>
+        </div>
+        <span class="hud-score" id="hudScorePill" onclick="UI.toggleLeaderboardSidebar();"><svg class="ui-icon ui-icon-star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="hudScore">0</span> PTS</span>
+      </div>
+
+      <!-- In-Game Host Floating Action Bar (Only visible when isHost is true) -->
+      <div class="in-game-host-bar" id="inGameHostBar" style="display:none;">
+        <span class="igh-label"><svg class="ui-icon ui-icon-crown" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST</span>
+        <button type="button" class="igh-btn" id="btnHostSkipFrame" onclick="GameClient.skipRound()">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg> Skip Frame
+        </button>
+        <button type="button" class="igh-btn igh-btn-danger" id="btnHostEndMatch" onclick="UI.confirmHostEndGame()">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> End Match
+        </button>
+      </div>
+
+      <!-- Active Masked Hint Banner -->
+      <div class="hint-banner-row" id="activeHintBanner">
+        <svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> <span id="activeHintText">M _ _ _ _ N</span>
+      </div>
+
+      <!-- Center Stage: The Frame Container (Resizes smoothly when keyboard opens) -->
+      <div class="stage-area dismiss-kb" id="frameStage">
+        <div class="frame-card-nb" id="frameMediaContainer">
+          <img id="gameFrameImage" src="" alt="Frame Scene" style="display:none;">
+          <div id="gameDialogueBox" class="dialogue-card-nb" style="display:none;">
+            <p id="gameDialogueText"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE IN-GAME CHAT & GUESS FEED (Occupies empty space in games screen) -->
+      <div class="game-chat-feed" id="gameChatFeed">
+        <div class="game-chat-head">
+          <div class="game-chat-head-left">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="game-chat-title">ROOM CHAT</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="game-chat-live-badge"><span class="live-pulsing-dot"></span> LIVE</span>
+            <button type="button" class="game-chat-drawer-btn" onclick="UI.toggleChatDrawer();" aria-label="Open full chat">
+              <span>CHAT</span>
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="game-chat-messages" id="gameInGameChatStream">
+          <div class="chat-placeholder-msg" id="gameChatPlaceholder">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Guesses and chat will appear here live</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE TYPING MIRROR PILL (Visible above Android keyboard while typing) -->
+      <div class="live-typing-mirror" id="liveTypingMirror">
+        <span class="mirror-label">TYPING:</span>
+        <span class="mirror-text" id="liveTypingMirrorText"></span>
+        <span class="mirror-clear-btn" onclick="KeyboardManager.clearInput();" aria-label="Clear input"><svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg></span>
+      </div>
+
+      <!-- Floating Action Dock (Pinned at thumb level above keyboard) -->
+      <div class="mobile-action-dock" id="mobileActionDock">
+        <div class="action-dock-row">
+          <button class="dock-hint-btn" id="mobileHintBtn"><svg class="ui-icon ui-icon-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg> -2</button>
+          <input type="text" id="mobileGuessInput" class="dock-guess-input" placeholder="TYPE YOUR GUESS..." autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+          <button class="dock-submit-btn" id="mobileSubmitGuessBtn" aria-label="Submit guess"><svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 4: ROUND REVEAL ═══════════ -->
+    <main class="screen" id="revealScreen">
+      <div class="reveal-content">
+        <span class="reveal-badge-tag">ANSWER REVEALED</span>
+        <h2 class="reveal-movie-title" id="revealTitle">12TH FAIL</h2>
+        <div class="reveal-movie-year" id="revealYear">(2023)</div>
+
+        <div class="reveal-frame-box">
+          <img id="revealImage" src="" alt="Revealed Scene">
+        </div>
+
+        <div class="winners-list-col" id="revealWinnersRow">
+          <!-- Populated dynamically -->
+        </div>
+
+        <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none; background:var(--nb-green); color:var(--nb-ink); font-weight:900;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+        <div class="reveal-waiting-host" id="revealWaitingNotice" style="display:none; color:#64748b; font-size:0.85rem; font-weight:900; margin-top:8px; text-align:center;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for host to start next round...
+        </div>
+      </div>
+    </main>
+
+    <!-- ═══════════ SCREEN 5: GAME OVER ═══════════ -->
+    <main class="screen" id="gameOverScreen">
+      <div class="reveal-content">
+        <h1 class="reveal-movie-title" style="font-size:2.2rem;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> MATCH OVER</h1>
+        <p style="font-weight:800; color:#666; margin-bottom:16px;">Final Standings</p>
+
+        <div class="winners-list-col" id="finalPodiumRow"></div>
+
+        <button class="btn-nb-primary" onclick="GameClient.leaveRoom();" style="max-width:340px;">RETURN TO LOBBY <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
+      </div>
+    </main>
+
+    <!-- ═══════════ BOTTOM DRAWERS & SIDEBARS ═══════════ -->
+    <div class="drawer-backdrop" id="sheetBackdrop" onclick="document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open')); this.classList.remove('active');"></div>
+
+    <!-- Leaderboard Sidebar Panel -->
+    <aside class="sidebar-panel" id="leaderboardSidebar" aria-label="Match Leaderboard">
+      <div class="sidebar-header">
+        <div class="sidebar-title-wrap">
+          <svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          <span>LEADERBOARD</span>
+        </div>
+        <button type="button" class="sidebar-close-btn" onclick="UI.toggleLeaderboardSidebar(false);" aria-label="Close Leaderboard">✕</button>
+      </div>
+      <div class="sidebar-body" id="leaderboardSidebarList">
+        <!-- Rendered dynamically by UI.renderLeaderboardSidebar() -->
+      </div>
+    </aside>
+
+    <!-- Chat Drawer -->
+    <div class="drawer-sheet" id="chatDrawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-header"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Live Room Chat</div>
+      <div class="drawer-body" id="chatMessagesStream" style="height:240px;"></div>
+      <div style="padding:8px 14px; display:flex; gap:8px; border-top:var(--nb-border-sm);">
+        <input type="text" id="chatInput" class="dock-guess-input" placeholder="Say something (no spoilers)..." style="height:44px; text-transform:none;">
+        <button class="dock-submit-btn" style="height:44px; padding:0 14px;" onclick="
+          const ci = document.getElementById('chatInput');
+          if (ci && ci.value.trim()) { GameClient.sendChat(ci.value); ci.value = ''; }
+        ">Send</button>
+      </div>
+    </div>
+
+    <!-- Scoreboard Drawer -->
+    <div class="drawer-sheet" id="scoreboardDrawer">
+      <div class="drawer-handle"></div>
+      <div class="drawer-header"><svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Match Standings</div>
+      <div class="drawer-body" id="scoreboardList" style="max-height:340px;"></div>
+    </div>
+
+    <!-- ═══════════ FLOATING TOAST NOTIFICATION ═══════════ -->
+    <div id="mobileToast"></div>
+
+    <!-- ═══════════ COUNTDOWN OVERLAY (3.. 2.. 1..) ═══════════ -->
+    <div id="countdownOverlay" style="
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 253, 245, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 600;
+    ">
+      <div id="countdownNumber" style="
+        font-family: var(--font-display);
+        font-size: 7rem;
+        color: var(--nb-pink);
+        text-shadow: 4px 4px 0px var(--nb-ink);
+        animation: scaleNum 1s infinite;
+      ">3</div>
+    </div>
+    <style>
+      #countdownOverlay.active { display: flex; }
+      @keyframes scaleNum {
+        0% { transform: scale(1.4); opacity: 0; }
+        30% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0.85); opacity: 0.8; }
+      }
+    </style>
+
+    <!-- ═══════════ LOADING OVERLAY ═══════════ -->
+    <div id="loadingOverlay" style="
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 253, 245, 0.9);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 700;
+    ">
+      <div style="width:44px; height:44px; border:4px solid var(--nb-ink); border-top-color:var(--nb-yellow); border-radius:50%; animation:spin 0.7s linear infinite;"></div>
+      <span id="loadingText" style="font-family:var(--font-mono); font-weight:800; color:var(--nb-ink); font-size:1rem;">Connecting...</span>
+    </div>
+    <style>
+      #loadingOverlay.active { display: flex; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+  </div>
+
+  
+    <!-- ═══════════ ANDROID DEDICATED AVATAR STUDIO MODAL ═══════════ -->
+    <div class="mp-android-avatar-modal" id="androidAvatarModal">
+      <div class="mp-android-avatar-sheet">
+        <!-- Top Header -->
+        <div class="mp-android-sheet-header">
+          <button type="button" class="mp-back-btn" onclick="UI.closeAvatarStudio()">
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="m15 18-6-6 6-6"/></svg>
+            <span>Back</span>
+          </button>
+          <div class="mp-android-sheet-title">
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>AVATAR STUDIO (1,800+)</span>
+          </div>
+          <button type="button" class="mp-done-btn" onclick="UI.closeAvatarStudio()">
+            <span>Done</span>
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Search Bar & Reshuffle / Upload -->
+        <div class="mp-avatar-search-bar">
+          <div class="mp-avatar-search-input-wrap">
+            <span class="search-icon-slot">
+              <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+            </span>
+            <input
+              type="text"
+              id="androidAvatarSearchInput"
+              class="mp-avatar-search-input"
+              placeholder="Search 1,800+ avatars (e.g. 'naruto', 'goku', 'walter', 'batman')..."
+              autocomplete="off"
+              autocorrect="off"
+              oninput="AvatarPicker.handleSearch(this.value, 'androidSearchClearBtn')"
+            />
+            <button
+              type="button"
+              id="androidSearchClearBtn"
+              class="mp-avatar-search-clear"
+              style="display: none;"
+              onclick="AvatarPicker.clearSearch('androidAvatarSearchInput', 'androidSearchClearBtn')"
+            >
+              <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            </button>
+          </div>
+
+          <button type="button" class="mp-shuffle-btn" onclick="AvatarPicker.handleShuffle('androidAvatarScrollArea')">
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="16 3 21 3 21 8"/><line x1="4" x2="21" y1="20" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" x2="21" y1="15" y2="21"/><line x1="4" x2="9" y1="4" y2="9"/></svg>
+            <span>Shuffle</span>
+          </button>
+
+          <button type="button" class="mp-custom-upload-btn" onclick="document.getElementById('androidFileUploadInput').click()">
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            <span>Upload</span>
+          </button>
+          <input
+            type="file"
+            id="androidFileUploadInput"
+            accept=".svg,.gif,.png,.jpg,.jpeg,.webp,image/*"
+            style="display: none;"
+            onchange="AvatarPicker.handleFileUpload(event, (url) => { UI.selectAvatar(url); })"
+          />
+        </div>
+
+        <!-- Category Horizontal Pills -->
+        <div class="mp-avatar-category-bar" id="androidCategoryBar"></div>
+
+        <!-- Infinite Scroll Grid -->
+        <div class="mp-avatar-scroll-area" id="androidAvatarScrollArea" onscroll="AvatarPicker.handleInfiniteScroll('androidAvatarScrollArea')">
+          <div class="mp-infinite-avatar-grid" id="androidAvatarGrid"></div>
+          <div class="mp-infinite-loading-indicator" id="androidLoadingIndicator">
+            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Scroll for more avatars...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Mobile Scripts (Absolute Paths to Guarantee Resolution) -->
+  <script src="/android/js/haptics.js?v=3.1"></script>
+  <script src="/android/js/audio.js?v=3.1"></script>
+  <script src="/android/js/keyboard.js?v=3.1"></script>
+  <script src="/android/js/gameClient.js?v=3.1"></script>
+  <script src="/android/js/mobileUi.js?v=3.1"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      UI.init();
+      KeyboardManager.init();
+      GameClient.init();
+
+      // Check for active recent session to prompt Rejoin modal or process URL room param
+      GameClient.checkActiveSession();
+    });
+  </script>
+</body>
+</html>
