@@ -69,6 +69,26 @@
       "source": "/desktop/logo.png",
       "destination": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
       "permanent": false
+    },
+    {
+      "source": "/android",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/android/",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/desktop",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/desktop/",
+      "destination": "/",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -78,7 +98,7 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": ".*(Android|iPhone|iPod|Mobile).*"
+          "value": ".*([Aa]ndroid|[Ii][Pp]hone|[Ii][Pp]od|[Ii][Pp]ad|[Mm]obile|[Ww]eb[Oo][Ss]|BlackBerry|IEMobile|Opera Mini).*"
         }
       ],
       "destination": "/android/index.html"
@@ -93,7 +113,7 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": ".*(Android|iPhone|iPod|Mobile).*"
+          "value": ".*([Aa]ndroid|[Ii][Pp]hone|[Ii][Pp]od|[Ii][Pp]ad|[Mm]obile|[Ww]eb[Oo][Ss]|BlackBerry|IEMobile|Opera Mini).*"
         }
       ],
       "destination": "/android/index.html"

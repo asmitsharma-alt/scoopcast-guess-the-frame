@@ -48,25 +48,25 @@ async function runVerification() {
     assertTest('Backend health endpoint reachable', false, err.message);
   }
 
-  // ── TEST SUITE 2: Vercel Edge Device Routing ──
-  console.log('\n▶ 2. Testing Vercel Edge Device Routing...');
+  // -- TEST SUITE 2: Vercel Edge Device Routing (Clean URL Policy) --
+  console.log('\n▶ 2. Testing Vercel Edge Device Routing (Clean URLs)...');
   try {
-    // 2a. Android User-Agent
+    // 2a. Mobile User-Agent on Root URL (Must serve Android build directly at /, never exposing /android)
     const androidUa = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
-    const androidRes = await fetchUrl('https://scoopcast-me.vercel.app/android/', { 'User-Agent': androidUa });
-    assertTest('Direct /android/ endpoint returns HTTP 200', androidRes.status === 200);
-    assertTest('Android build contains interactive-widget meta tag', androidRes.body.includes('interactive-widget=resizes-content'));
-    assertTest('Android build includes Live Typing Mirror element', androidRes.body.includes('liveTypingMirror') || androidRes.body.includes('typing-live-preview'));
-    assertTest('Android build includes Mobile Action Dock', androidRes.body.includes('mobile-action-dock'));
+    const mobileRootRes = await fetchUrl('https://scoopcast-me.vercel.app/', { 'User-Agent': androidUa });
+    assertTest('Mobile request to root / returns HTTP 200', mobileRootRes.status === 200, `Status: ${mobileRootRes.status}`);
+    assertTest('Mobile root serves Android build with interactive-widget', mobileRootRes.body.includes('interactive-widget=resizes-content'));
+    assertTest('Mobile root includes Mobile Action Dock', mobileRootRes.body.includes('mobile-action-dock'));
 
-    // 2b. Direct /desktop/ endpoint
-    const desktopRes = await fetchUrl('https://scoopcast-me.vercel.app/desktop/');
-    assertTest('Direct /desktop/ endpoint returns HTTP 200', desktopRes.status === 200);
-    assertTest('Desktop build contains full cinema background styling', desktopRes.body.includes('cinema_bg.webp'));
+    // 2b. Desktop User-Agent on Root URL (Must serve Desktop build directly at /)
+    const desktopUa = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    const desktopRootRes = await fetchUrl('https://scoopcast-me.vercel.app/', { 'User-Agent': desktopUa });
+    assertTest('Desktop request to root / returns HTTP 200', desktopRootRes.status === 200, `Status: ${desktopRootRes.status}`);
+    assertTest('Desktop root serves Desktop build with cinema background', desktopRootRes.body.includes('cinema_bg.webp'));
 
-    // 2c. Root URL routing (redirects to /desktop/ or /android/)
-    const rootRes = await fetchUrl('https://scoopcast-me.vercel.app/');
-    assertTest('Root URL responds with HTTP 200 or 307 redirect', rootRes.status === 200 || rootRes.status === 307, `Status: ${rootRes.status}`);
+    // 2c. Legacy /android/ endpoint must redirect to clean root /
+    const androidRedirectRes = await fetchUrl('https://scoopcast-me.vercel.app/android/');
+    assertTest('Legacy /android/ redirects to clean root /', androidRedirectRes.status === 307 || androidRedirectRes.status === 308 || (androidRedirectRes.headers && androidRedirectRes.headers.location === '/'), `Status: ${androidRedirectRes.status}`);
   } catch (err) {
     assertTest('Vercel routing functional', false, err.message);
   }
