@@ -14883,6 +14883,79 @@
       }
     };
 
+    const FOUNDER_AVATAR_URLS = {
+      'aman': 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+      'amish': 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg',
+      'aziz': 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg',
+      'vish': 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg'
+    };
+
+    function resolvePlayerAvatar(p, fallbackKey = 'aman') {
+      if (p && typeof p.avatarImg === 'string' && !p.avatarImg.startsWith('avvtar/') && !p.avatarImg.startsWith('/avvtar/') && (p.avatarImg.startsWith('http') || p.avatarImg.startsWith('data:'))) {
+        return p.avatarImg;
+      }
+
+      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
+      const av = raw || fallbackKey || 'aman';
+      const clean = String(av).trim().toLowerCase();
+      const key = clean.replace(/[^a-z0-9]/g, '');
+
+      if (FOUNDER_AVATAR_URLS[key]) return FOUNDER_AVATAR_URLS[key];
+      for (const [fKey, fUrl] of Object.entries(FOUNDER_AVATAR_URLS)) {
+        if (clean === fKey || clean.endsWith('/' + fKey + '.svg') || clean === fKey + '.svg') {
+          return fUrl;
+        }
+      }
+
+      if (typeof av === 'string' && (av.startsWith('http://') || av.startsWith('https://') || av.startsWith('data:'))) {
+        return av;
+      }
+
+      if (typeof AvatarPicker !== 'undefined') {
+        const meta = AvatarPicker.getAvatarMeta(av);
+        if (meta && meta.url && !meta.url.startsWith('/avvtar/') && !meta.url.startsWith('avvtar/')) {
+          for (const [fKey, fUrl] of Object.entries(FOUNDER_AVATAR_URLS)) {
+            if (meta.url.toLowerCase().endsWith('/' + fKey + '.svg') || meta.id === 'av_' + (fKey === 'aman' ? 0 : fKey === 'amish' ? 1 : fKey === 'aziz' ? 2 : 3)) {
+              return fUrl;
+            }
+          }
+          return meta.url;
+        }
+      }
+
+      const valid = ['aman', 'amish', 'aziz', 'vish'];
+      const safeKey = valid.includes(key) ? key : (valid.includes(fallbackKey) ? fallbackKey : 'aman');
+      return (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || FOUNDER_AVATAR_URLS[safeKey] || FOUNDER_AVATAR_URLS['aman'];
+    }
+
+    function getPlayerAvatarMeta(p) {
+      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
+      if (typeof AvatarPicker !== 'undefined' && raw) {
+        return AvatarPicker.getAvatarMeta(raw);
+      }
+      return null;
+    }
+
+    function getPlayerAvatarBg(p, defaultColor = '#facc15') {
+      const meta = getPlayerAvatarMeta(p);
+      if (meta) {
+        return meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'));
+      }
+      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
+      const key = String(raw || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const valid = ['aman', 'amish', 'aziz', 'vish'];
+      const safeKey = valid.includes(key) ? key : 'aman';
+      return (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].color) || defaultColor;
+    }
+
+    function getPlayerAvatarFit(p) {
+      const meta = getPlayerAvatarMeta(p);
+      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
+      const key = String(raw || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const isTrans = meta ? AvatarPicker.isAvatarTransparent(meta) : ['aman', 'amish', 'aziz', 'vish'].includes(key);
+      return isTrans ? 'object-contain p-1.5' : (meta && meta.isKnownPortrait ? 'object-cover object-[center_12%]' : 'object-cover');
+    }
+
     /* ════ HOW TO ANSWER GUIDE CONTROLLER (Bypassed) ════ */
     const HowToAnswerGuide = {
       _timerId: null,
@@ -14950,13 +15023,9 @@
         if (list) {
           const playersHtml = GS.players.map((p, i) => {
             const isH = GameController._onlineMode ? !!p.isHost : (p.isHost || i === 0);
-            const meta = (typeof AvatarPicker !== 'undefined') ? AvatarPicker.getAvatarMeta(p.avatar) : null;
-            const avKey = (p.avatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
-            const safeAvKey = ['aman', 'amish', 'aziz', 'vish'].includes(avKey) ? avKey : 'aman';
-            const avColor = meta ? (meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'))) : (AVATAR_MAP[safeAvKey] ? AVATAR_MAP[safeAvKey].color : '#facc15');
-            const avSrc = (meta && meta.url && !meta.url.startsWith('/avvtar/') && !meta.url.startsWith('avvtar/')) ? meta.url : ((AVATAR_MAP[safeAvKey] && AVATAR_MAP[safeAvKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
-            const isTrans = meta ? AvatarPicker.isAvatarTransparent(meta) : ['aman', 'amish', 'aziz', 'vish'].includes(safeAvKey);
-            const avFit = isTrans ? 'object-contain p-1.5' : (meta && meta.isKnownPortrait ? 'object-cover object-[center_12%]' : 'object-cover');
+            const avColor = getPlayerAvatarBg(p, '#facc15');
+            const avSrc = resolvePlayerAvatar(p, 'aman');
+            const avFit = getPlayerAvatarFit(p);
             const avConfig = { color: avColor, img: avSrc };
             const safeName = SecurityUtil.escapeHtml(p.name || ('Player ' + (i+1)));
             const isMe = !GameController._onlineMode ||
@@ -15952,14 +16021,11 @@
     /* ═══ AVATAR HELPER ═══ */
     function renderAvatar(p, type) {
       const safeName = SecurityUtil.escapeHtml(p && p.name || '');
-      const rawAv = (p && (p.avatar || (p.name && p.name.toLowerCase())) || 'aman');
-      const avKey = String(rawAv).toLowerCase().replace(/[^a-z0-9]/g, '');
-      const validAvatars = ['aman', 'amish', 'aziz', 'vish'];
-      const safeAv = validAvatars.includes(avKey) ? avKey : 'aman';
-      const defaultImg = (AVATAR_MAP[safeAv] && AVATAR_MAP[safeAv].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
-      const avSrc = (p && p.avatarImg && !p.avatarImg.startsWith('avvtar/') && !p.avatarImg.startsWith('/avvtar/')) ? p.avatarImg : defaultImg;
+      const avSrc = resolvePlayerAvatar(p, 'aman');
+      const avFit = getPlayerAvatarFit(p);
+      const defaultImg = (typeof FOUNDER_AVATAR_URLS !== 'undefined' && FOUNDER_AVATAR_URLS['aman']) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
 
-      return `<img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" class="av-img-elem" style="width:100%;height:100%;max-width:100%;max-height:100%;object-fit:cover;object-position:center;border-radius:8px;display:block;" onerror="this.onerror=null;this.src='${defaultImg}';">`;
+      return `<img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" class="av-img-elem" style="width:100%;height:100%;max-width:100%;max-height:100%;${avFit};border-radius:8px;display:block;" onerror="this.onerror=null;this.src='${defaultImg}';">`;
     }
 
     function playerKey(p) {
@@ -16939,8 +17005,9 @@
         msgEl.className = 'chat-msg';
         msgEl.id = 'chatMsg_' + safeMsgId;
 
-        const avKey = String(msg.senderAvatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
-        const safeAvatar = ['aman', 'amish', 'aziz', 'vish'].includes(avKey) ? avKey : 'aman';
+        const chatAvUrl = resolvePlayerAvatar(msg.senderAvatar || 'aman');
+        const chatAvBg = getPlayerAvatarBg(msg.senderAvatar || 'aman', '#facc15');
+        const chatAvFit = getPlayerAvatarFit(msg.senderAvatar || 'aman');
 
         const reactionButtonsHtml = isMe ?
           ('<span class="chat-reaction-btn chat-self-disabled" title="You cannot vote on your own answer">' +
@@ -16960,9 +17027,8 @@
             '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
           '</button>');
 
-        const chatAvUrl = (AVATAR_MAP[safeAvatar] && AVATAR_MAP[safeAvatar].img) || (msg.senderAvatar && (msg.senderAvatar.startsWith('http') || msg.senderAvatar.startsWith('data:')) ? msg.senderAvatar : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
-        msgEl.innerHTML = '<div class="chat-avatar">' +
-          '<img src="' + SecurityUtil.escapeHtml(chatAvUrl) + '" alt="' + SecurityUtil.escapeHtml(msg.senderName) + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
+        msgEl.innerHTML = '<div class="chat-avatar" style="background:' + chatAvBg + ';">' +
+          '<img src="' + SecurityUtil.escapeHtml(chatAvUrl) + '" alt="' + SecurityUtil.escapeHtml(msg.senderName) + '" style="width:100%;height:100%;' + chatAvFit + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
           '</div>' +
           '<div class="chat-msg-body">' +
           '<div class="chat-msg-header">' +
@@ -17104,7 +17170,14 @@
 
         const banner = document.createElement('div');
         banner.className = 'chat-msg-winner';
-        banner.innerHTML = '<div style="font-size:24px;">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.party : '') + '</div>' +
+        const winAv = (winRecord && winRecord.avatar) || (GS.players && GS.players.find(p => p.id === winRecord.playerId)) || 'aman';
+        const avSrc = resolvePlayerAvatar(winAv, 'aman');
+        const avBg = getPlayerAvatarBg(winAv, '#facc15');
+        const avFit = getPlayerAvatarFit(winAv);
+
+        banner.innerHTML = '<div style="width:28px;height:28px;min-width:28px;border-radius:8px;border:1.5px solid #1a1a1a;background:' + avBg + ';overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;">' +
+          '<img src="' + SecurityUtil.escapeHtml(avSrc) + '" alt="' + SecurityUtil.escapeHtml(winRecord.playerName) + '" style="width:100%;height:100%;' + avFit + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
+          '</div>' +
           '<div class="chat-winner-text">' +
           '<strong>' + SecurityUtil.escapeHtml(winRecord.playerName) + '</strong> guessed the answer! ' +
           '<span style="color:#b45309; font-weight:900;">(+' + winRecord.points + ' pts - ' + (winRecord.position === 1 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st') : winRecord.position === 2 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd')) + ')</span>' +
@@ -19990,21 +20063,7 @@
       },
 
       resolveAvatar(p, fallbackKey = 'aman') {
-        if (p && p.avatarImg && !p.avatarImg.startsWith('avvtar/') && !p.avatarImg.startsWith('/avvtar/')) {
-          return p.avatarImg;
-        }
-        if (typeof AvatarPicker !== 'undefined' && p && p.avatar) {
-          const meta = AvatarPicker.getAvatarMeta(p.avatar);
-          if (meta && meta.url && !meta.url.startsWith('/avvtar/') && !meta.url.startsWith('avvtar/')) return meta.url;
-        }
-        if (p && p.avatar && (p.avatar.startsWith('http://') || p.avatar.startsWith('https://') || p.avatar.startsWith('data:'))) {
-          return p.avatar;
-        }
-        const valid = ['aman', 'amish', 'aziz', 'vish'];
-        const rawAv = (p && (p.avatar || (p.name && p.name.toLowerCase()))) || fallbackKey;
-        const avKey = String(rawAv).toLowerCase().replace(/[^a-z0-9]/g, '');
-        const safeKey = valid.includes(avKey) ? avKey : (valid.includes(fallbackKey) ? fallbackKey : 'aman');
-        return (AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+        return resolvePlayerAvatar(p, fallbackKey);
       },
 
       renderScoreboard(players) {
@@ -20020,6 +20079,8 @@
           const isChamp = i === 0 && (p.score || 0) > 0;
           const defaultKey = i === 0 ? 'aman' : i === 1 ? 'aziz' : i === 2 ? 'amish' : 'vish';
           const avSrc = this.resolveAvatar(p, defaultKey);
+          const avBg = getPlayerAvatarBg(p, '#cae6ff');
+          const avFit = getPlayerAvatarFit(p);
           const escapeFn = (typeof SecurityUtil !== 'undefined' && SecurityUtil.escapeHtml) ? SecurityUtil.escapeHtml : (s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
           const safeName = escapeFn(p.name || ('Player ' + rank));
           const score = p.score != null ? p.score : 0;
@@ -20027,7 +20088,7 @@
             <div class="sb-row ${isChamp ? 'sb-champ' : ''}">
               <div class="sb-left">
                 <span class="sb-rank">${rank}</span>
-                <div class="sb-avatar-mini"><img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" onerror="this.onerror=null;this.src='${(AVATAR_MAP[defaultKey] && AVATAR_MAP[defaultKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg'}'" /></div>
+                <div class="sb-avatar-mini" style="background:${avBg};"><img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" style="${avFit};" onerror="this.onerror=null;this.src='${(AVATAR_MAP[defaultKey] && AVATAR_MAP[defaultKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg'}'" /></div>
                 <span class="sb-name">${safeName.toUpperCase()}</span>
               </div>
               <span class="sb-score">${score} PTS</span>
@@ -20266,7 +20327,8 @@
         c.innerHTML = sorted.map((p, i) => {
           if (i > 0 && p.score < sorted[i - 1].score) rank = i + 1;
           const isJ = p.name === cj, ja = isJ && isJP;
-          const color = colors[i % colors.length];
+          const fallbackColor = colors[i % colors.length];
+          const color = getPlayerAvatarBg(p, fallbackColor);
           const av = renderAvatar(p, 'lb');
           const rankDisplay = (i === 0 && p.score > 0) ? (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '#1') : `${rank}`;
           const realIdx = GS.players.findIndex(x => x.name === p.name && (x.avatar === p.avatar || x.avatarImg === p.avatarImg));
@@ -20301,7 +20363,7 @@
           const isJ = !tieActive && p.name === cj;
           const pts = isJ ? GS.settings.judgePoints : GS.settings.pointsPerAnswer;
           const av = renderAvatar(p, 'sp');
-          const color = colors[i % colors.length];
+          const color = getPlayerAvatarBg(p, colors[i % colors.length]);
           const keyBadge = i < 8 ? `<span class="sp-key" aria-hidden="true">${i + 1}</span>` : '';
           const safeName = SecurityUtil.escapeHtml(p.name);
           return `<div class="sp-wrap ${isJ ? 'is-j' : ''} ${tieActive ? 'tie-eligible' : ''}">
@@ -20352,13 +20414,12 @@
         let rank = 1;
         c.innerHTML = sorted.map((p, i) => {
           if (i > 0 && p.score < sorted[i - 1].score) rank = i + 1;
-          const av = p.avatarImg
-            ? `<img src="${p.avatarImg}" alt="${p.name}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;">`
-            : `<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;">${p.avatar ? `<svg class="svg-icon" style="width:1.5em;height:1.5em"><use href="#icon-${p.avatar}" /></svg>` : ''}</span>`;
+          const av = renderAvatar(p, 'lb');
+          const color = getPlayerAvatarBg(p, '#cae6ff');
           const safeName = SecurityUtil.escapeHtml(p.name);
           return `<div class="lb-item ${i === 0 ? 'top' : ''}">
             <span class="lb-rank">${rank}</span>
-            <div class="lb-av-wrap">${av}</div>
+            <div class="lb-av-wrap" style="background:${color};">${av}</div>
             <span class="lb-name">${safeName}</span>
             <span class="lb-score">${Number(p.score) || 0}</span>
           </div>`;
@@ -20422,11 +20483,7 @@
 
         // Player assets: avatars + winner trophy images (priority)
         GS.players.forEach(p => {
-          const avKey = (p.avatar || (p.avatarImg ? p.avatarImg.replace(/^.*\/([^./]+)\..*$/, '$1') : 'aman')).toLowerCase().replace(/[^a-z0-9]/g, '');
-          const validAvatars = ['aman', 'amish', 'aziz', 'vish'];
-          const safeKey = validAvatars.includes(avKey) ? avKey : 'aman';
-
-          priorityImages.push((AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
+          priorityImages.push(resolvePlayerAvatar(p, 'aman'));
         });
 
         let loaded = 0;
@@ -20858,12 +20915,11 @@
         const box = document.getElementById('tieVsPlayers');
         if (!box) return;
         box.innerHTML = players.map((p, i) => {
-          const avatar = p.avatarImg
-            ? `<img src="${p.avatarImg}" alt="${p.name}" onerror="this.remove()">`
-            : `${p.avatar ? `<svg class="svg-icon"><use href="#icon-${p.avatar}" /></svg>` : '?'}`;
+          const avatar = renderAvatar(p, 'tie');
+          const bg = getPlayerAvatarBg(p, '#cae6ff');
           const mark = i < players.length - 1 ? '<div class="tie-vs-mark">VS</div>' : '';
           return `<div class="tie-vs-card" style="animation-delay:${i * 90}ms">
-            <div class="tie-vs-avatar">${avatar}</div>
+            <div class="tie-vs-avatar" style="background:${bg};">${avatar}</div>
             <div class="tie-vs-name">${p.name}</div>
             <div class="tie-vs-score">${p.score} pts</div>
           </div>${mark}`;
@@ -21305,20 +21361,16 @@
         const buildCircles = (players) => {
           const count = players.length;
           return `<div class="podium-avatar" data-count="${count}">${players.map(p => {
-            const inner = p.avatarImg
-              ? `<img src="${p.avatarImg}" alt="${p.name}" onerror="this.remove()">`
-              : `<span>${p.avatar ? `<svg class="svg-icon"><use href="#icon-${p.avatar}" /></svg>` : '?'}</span>`;
-            return `<div class="p-circle">${inner}</div>`;
+            const inner = renderAvatar(p, 'podium');
+            const bg = getPlayerAvatarBg(p, '#cae6ff');
+            return `<div class="p-circle" style="background:${bg};">${inner}</div>`;
           }).join('')
             }</div>`;
         };
 
         // winner-only: full-body trophy image (supporting svg, png, webp)
         const trophyImg = (p) => {
-          const avKey = (p.avatar || (p.avatarImg ? p.avatarImg.replace(/^.*\/([^./]+)\..*$/, '$1') : 'aman')).toLowerCase().replace(/[^a-z0-9]/g, '');
-          const valid = ['aman', 'amish', 'aziz', 'vish'];
-          const safeKey = valid.includes(avKey) ? avKey : 'aman';
-          return (AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+          return resolvePlayerAvatar(p, 'aman');
         };
         const buildTrophies = (players) => {
           const count = players.length;
@@ -21326,13 +21378,8 @@
           if (count === 1) {
             const p = players[0];
             const tp = trophyImg(p);
-            const fallback = tp
-              ? `<img class='trophy-fig' src='${tp}' alt='${p.name}' onerror="this.onerror=null;${p.avatarImg ? `this.src='${p.avatarImg}';this.classList.add('is-fallback')` : `this.remove()`}">`
-              : (p.avatarImg
-                ? `<img class='trophy-fig is-fallback' src='${p.avatarImg}' alt='${p.name}' onerror="this.remove()">`
-                : `<span class='trophy-fig is-fallback'><svg class='svg-icon'><use href='#icon-${p.avatar || 'user'}' /></svg></span>`);
-            // Derive player-specific frame folder from avatarImg (e.g. avvtar/aman.png → avvtar/aman)
-            const champFolder = p.avatarImg ? p.avatarImg.replace(/\.[a-z0-9]+$/i, '') : 'avvtar/aman';
+            const fallback = `<img class='trophy-fig' src='${tp}' alt='${SecurityUtil.escapeHtml(p.name)}' onerror="this.onerror=null;this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">`;
+            const champFolder = 'avvtar/aman';
             setTimeout(() => this._playChampionFrames(champFolder, fallback), 30);
             return `<div class="podium-avatar podium-trophy" data-count="1">
               <canvas class="trophy-vid" id="championFrames"></canvas>
@@ -21340,9 +21387,7 @@
           }
           return `<div class="podium-avatar podium-trophy" data-count="${count}">${players.map(p => {
             const tp = trophyImg(p);
-            if (tp) return `<img class="trophy-fig" src="${tp}" alt="${p.name}" onerror="this.onerror=null;${p.avatarImg ? `this.src='${p.avatarImg}';this.classList.add('is-fallback')` : `this.remove()`}">`;
-            if (p.avatarImg) return `<img class="trophy-fig is-fallback" src="${p.avatarImg}" alt="${p.name}" onerror="this.remove()">`;
-            return `<span class="trophy-fig is-fallback"><svg class="svg-icon"><use href="#icon-${p.avatar || 'user'}" /></svg></span>`;
+            return `<img class="trophy-fig" src="${tp}" alt="${SecurityUtil.escapeHtml(p.name)}" onerror="this.onerror=null;this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">`;
           }).join('')}</div>`;
         };
 

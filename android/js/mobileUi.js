@@ -857,8 +857,10 @@ const UI = {
       } else {
         item.className = `chat-row-item ${isMe ? 'chat-me' : ''}`;
         const avatarSrc = this.getAvatarSrc(chat.senderAvatar);
+        const avBg = this.getAvatarBg(chat.senderAvatar);
+        const avFit = this.getAvatarFit(chat.senderAvatar);
         item.innerHTML = `
-          <img class="chat-row-avatar" src="${avatarSrc}" alt="${parsedName}">
+          <img class="chat-row-avatar" src="${avatarSrc}" alt="${parsedName}" style="background:${avBg}; ${avFit}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
           <div class="chat-row-body">
             <span class="chat-row-name">${parsedName}${isMe ? ' (You)' : ''}</span>
             <span class="chat-row-text">${parsedText}</span>
