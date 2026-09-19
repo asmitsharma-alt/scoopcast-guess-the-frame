@@ -222,7 +222,7 @@
   </script>
   
   <!-- Neobrutalist Mobile Stylesheet -->
-  <link rel="stylesheet" href="/android/css/android.css?v=3.0">
+  <link rel="stylesheet" href="/android/css/android.css?v=3.1">
   <!-- Vercel Web Analytics & Speed Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -392,6 +392,47 @@
       </div>
     </div>
 
+    <!-- ═══════════ REJOIN ACTIVE MATCH MODAL ═══════════ -->
+    <div class="nb-modal-overlay" id="rejoinModal">
+      <div class="nb-modal-card" style="max-width:340px; text-align:center;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px;">
+          <svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor" style="width:20px; height:20px; color:var(--nb-yellow);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <h3 class="nb-modal-title" style="margin-bottom:0; font-size:1.3rem;">ACTIVE MATCH FOUND!</h3>
+        </div>
+        <p style="font-size:0.8rem; font-weight:700; color:#4a4a4a; margin-bottom:14px;">
+          You were in an active cinema trivia match. Rejoin to sync back into the game?
+        </p>
+
+        <!-- Room Code & Player Summary Card -->
+        <div style="background:#fafaf4; border:var(--nb-border-sm); border-radius:12px; padding:10px 12px; margin-bottom:14px; box-shadow:var(--nb-shadow-sm); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+            <div id="rejoinAvatarContainer" style="width:42px; height:42px; min-width:42px; border-radius:10px; border:2px solid var(--nb-ink); overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--nb-pink);">
+              <img id="rejoinAvatarImg" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" style="width:100%; height:100%; object-fit:cover;" alt="Avatar">
+            </div>
+            <div style="text-align:left; overflow:hidden;">
+              <div id="rejoinPlayerName" style="font-size:0.95rem; font-weight:900; font-family:var(--font-mono); color:var(--nb-ink); text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">AMAN</div>
+              <div id="rejoinRoleTag" style="font-size:0.7rem; font-weight:800; color:#64748b; text-transform:uppercase;">PLAYER</div>
+            </div>
+          </div>
+
+          <div style="background:var(--nb-yellow); border:2px solid var(--nb-ink); border-radius:8px; padding:4px 8px; text-align:center; box-shadow:1px 1px 0 var(--nb-ink); flex-shrink:0;">
+            <div style="font-size:0.6rem; font-weight:800; text-transform:uppercase; color:var(--nb-ink);">ROOM</div>
+            <div id="rejoinRoomCodeText" style="font-size:1.15rem; font-weight:900; font-family:var(--font-mono); color:var(--nb-ink); letter-spacing:1px;">----</div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-nb-primary" id="btnConfirmRejoin" style="height:48px; font-size:1.1rem; background:var(--nb-green);">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+            <span>REJOIN ACTIVE MATCH</span>
+          </button>
+          <button class="pill-btn-sm" id="btnDismissRejoin" style="justify-content:center; height:40px; font-size:0.8rem; font-weight:800; color:#64748b;">
+            START FRESH / NEW GAME
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ═══════════ SCREEN 2: MOBILE LOBBY ═══════════ -->
     <main class="screen" id="lobbyScreen">
       <div class="lobby-header">
@@ -487,6 +528,17 @@
           <span id="hudTimerText">30s</span>
         </div>
         <span class="hud-score" id="hudScorePill" onclick="UI.toggleLeaderboardSidebar();"><svg class="ui-icon ui-icon-star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> <span id="hudScore">0</span> PTS</span>
+      </div>
+
+      <!-- In-Game Host Floating Action Bar (Only visible when isHost is true) -->
+      <div class="in-game-host-bar" id="inGameHostBar" style="display:none;">
+        <span class="igh-label"><svg class="ui-icon ui-icon-crown" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST</span>
+        <button type="button" class="igh-btn" id="btnHostSkipFrame" onclick="GameClient.skipRound()">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg> Skip Frame
+        </button>
+        <button type="button" class="igh-btn igh-btn-danger" id="btnHostEndMatch" onclick="UI.confirmHostEndGame()">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> End Match
+        </button>
       </div>
 
       <!-- Active Masked Hint Banner -->
@@ -749,23 +801,19 @@
     </div>
 
   <!-- Mobile Scripts (Absolute Paths to Guarantee Resolution) -->
-  <script src="/android/js/haptics.js?v=3.0"></script>
-  <script src="/android/js/audio.js?v=3.0"></script>
-  <script src="/android/js/keyboard.js?v=3.0"></script>
-  <script src="/android/js/gameClient.js?v=3.0"></script>
-  <script src="/android/js/mobileUi.js?v=3.0"></script>
+  <script src="/android/js/haptics.js?v=3.1"></script>
+  <script src="/android/js/audio.js?v=3.1"></script>
+  <script src="/android/js/keyboard.js?v=3.1"></script>
+  <script src="/android/js/gameClient.js?v=3.1"></script>
+  <script src="/android/js/mobileUi.js?v=3.1"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       UI.init();
       KeyboardManager.init();
       GameClient.init();
 
-      // Check if URL has room param (e.g. ?room=ABCD)
-      const params = new URLSearchParams(window.location.search);
-      const roomParam = params.get('room');
-      if (roomParam && roomParam.length === 4) {
-        GameClient.joinGame(roomParam);
-      }
+      // Check for active recent session to prompt Rejoin modal or process URL room param
+      GameClient.checkActiveSession();
     });
   </script>
 </body>

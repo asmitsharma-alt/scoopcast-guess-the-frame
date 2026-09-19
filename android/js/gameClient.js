@@ -321,6 +321,9 @@ const GameClient = {
   joinRetryTimer: null,
   joinTimeoutTimer: null,
   heartbeatTimer: null,
+  pendingRejoinSession: null,
+  rejoinRetryTimer: null,
+  playerScoresArchive: {},
   messageQueue: [],
 
   init() {
@@ -501,6 +504,194 @@ const GameClient = {
     }
   },
 
+  saveActiveSession() {
+    try {
+      if (!this.roomCode) return;
+      const session = {
+        roomCode: this.roomCode,
+        playerId: this.playerId,
+        playerName: this.playerName,
+        playerAvatar: this.playerAvatar,
+        isHost: !!this.isHost,
+        isMatchActive: !!this.isMatchActive,
+        gameState: this.isMatchActive ? (this.isRoundFinished ? 'round_end' : 'playing') : 'lobby',
+        currentPlayIndex: this.currentPlayIndex || 0,
+        currentPlaylist: (this.currentPlaylist && this.currentPlaylist.length > 0) ? this.currentPlaylist : [],
+        hostSettings: this.hostSettings || null,
+        players: (Array.isArray(this.players)) ? this.players : [],
+        playerScoresArchive: this.playerScoresArchive || {},
+        timestamp: Date.now()
+      };
+      localStorage.setItem('gtf_active_session', JSON.stringify(session));
+    } catch(e) {}
+  },
+
+  clearActiveSession() {
+    try {
+      localStorage.removeItem('gtf_active_session');
+    } catch(e) {}
+  },
+
+  checkActiveSession() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+
+    let savedSession = null;
+    try {
+      const raw = localStorage.getItem('gtf_active_session');
+      if (raw) savedSession = JSON.parse(raw);
+    } catch(e) {}
+
+    const isRecent = savedSession && savedSession.roomCode && (Date.now() - (savedSession.timestamp || 0) < 15 * 60 * 1000);
+
+    if (roomParam) {
+      const upperCode = roomParam.trim().toUpperCase();
+      if (isRecent && savedSession.roomCode === upperCode) {
+        this.promptRejoinModal(savedSession);
+        return;
+      }
+      this.joinGame(upperCode);
+    } else if (isRecent) {
+      this.promptRejoinModal(savedSession);
+    } else if (savedSession) {
+      this.clearActiveSession();
+    }
+  },
+
+  promptRejoinModal(session) {
+    this.pendingRejoinSession = session;
+    if (typeof UI !== 'undefined' && UI.promptRejoinModal) {
+      UI.promptRejoinModal(session);
+    }
+  },
+
+  confirmRejoinRoom() {
+    const session = this.pendingRejoinSession;
+    if (!session) return;
+    if (typeof UI !== 'undefined' && UI.closeRejoinModal) {
+      UI.closeRejoinModal();
+    }
+
+    this.playerId = session.playerId;
+    this.playerName = session.playerName;
+    this.playerAvatar = session.playerAvatar;
+    this.roomCode = session.roomCode;
+    this.roomId = 'room_' + this.roomCode;
+    this.hasJoinedAck = false;
+    this.isJoining = false;
+    this.isRejoining = true;
+
+    if (session.playerScoresArchive) {
+      this.playerScoresArchive = session.playerScoresArchive;
+    }
+    if (session.hostSettings) {
+      this.hostSettings = session.hostSettings;
+      if (typeof UI !== 'undefined' && UI.hostSettings && session.hostSettings.roundsByMode) {
+        UI.hostSettings.roundsByMode = { ...session.hostSettings.roundsByMode };
+        UI.hostSettings.timer = session.hostSettings.timer || 30;
+      }
+    }
+    if (session.players && Array.isArray(session.players) && session.players.length > 0) {
+      this.players = session.players;
+    } else {
+      this.players = [{
+        id: this.playerId,
+        name: this.playerName,
+        avatar: this.playerAvatar,
+        score: 0,
+        isHost: !!session.isHost,
+        loaded: true
+      }];
+    }
+
+    if (session.currentPlaylist && session.currentPlaylist.length > 0) {
+      this.currentPlaylist = session.currentPlaylist;
+      this.currentPlayIndex = session.currentPlayIndex || 0;
+    }
+
+    this.isHost = !!session.isHost;
+
+    const isMatch = !!(session.isMatchActive || session.gameState === 'playing' || session.gameState === 'round_end');
+    if (isMatch) {
+      this.isMatchActive = true;
+      this.isRoundFinished = (session.gameState === 'round_end');
+      UI.showScreen(this.isRoundFinished ? 'revealScreen' : 'gameScreen');
+      if (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) {
+        const curFrame = this.currentPlaylist[this.currentPlayIndex];
+        if (this.isRoundFinished) {
+          UI.renderRoundReveal({
+            answer: curFrame.answer,
+            year: curFrame.year,
+            type: curFrame.type,
+            content: curFrame.type === 'dialogue' ? curFrame.dialogue : curFrame.content,
+            revealedContent: curFrame.revealContent || curFrame.content,
+            winners: this.currentRoundWinners || []
+          });
+        } else {
+          UI.setupRoundMedia({
+            type: curFrame.type || 'image',
+            content: curFrame.type === 'dialogue' ? curFrame.dialogue : curFrame.content,
+            year: curFrame.year || '',
+            round: this.currentPlayIndex + 1,
+            totalRounds: this.currentPlaylist.length
+          });
+        }
+      }
+      UI.renderScoreboard();
+    } else {
+      UI.showScreen('lobbyScreen');
+      UI.setRoomCode(this.roomCode);
+      UI.setHostControlsVisible(this.isHost);
+      UI.renderLobbyPlayers();
+      UI.renderScoreboard();
+    }
+
+    this.setupTransport(this.roomCode);
+    this.startHeartbeat();
+    this.sendRejoinWithRetry();
+  },
+
+  dismissRejoinAndStartNew() {
+    this.clearActiveSession();
+    this.pendingRejoinSession = null;
+    if (typeof UI !== 'undefined' && UI.closeRejoinModal) {
+      UI.closeRejoinModal();
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+    if (roomParam) {
+      this.joinGame(roomParam.trim().toUpperCase());
+    }
+  },
+
+  sendRejoinWithRetry() {
+    if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
+    const attemptRejoin = () => {
+      if (this.hasJoinedAck) {
+        if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
+        return;
+      }
+      let mySavedScore = 0;
+      const session = this.pendingRejoinSession;
+      if (session && Array.isArray(session.players)) {
+        const me = session.players.find(p => p.id === this.playerId);
+        if (me && typeof me.score === 'number') mySavedScore = me.score;
+      } else if (Array.isArray(this.players)) {
+        const me = this.players.find(p => p.id === this.playerId);
+        if (me && typeof me.score === 'number') mySavedScore = me.score;
+      }
+      this.sendEvent('REQUEST_REJOIN_SYNC', {
+        playerId: this.playerId,
+        name: this.playerName,
+        avatar: this.playerAvatar,
+        lastKnownScore: mySavedScore,
+        timestamp: Date.now()
+      });
+    };
+    attemptRejoin();
+    this.rejoinRetryTimer = setInterval(attemptRejoin, 1500);
+  },
+
   hostGame(options = {}) {
     this.init();
     this.isHost = true;
@@ -511,9 +702,17 @@ const GameClient = {
 
     this.hostSettings = {
       category: options.category || 'all',
-      rounds: options.rounds || 20,
+      roundsByMode: (options.roundsByMode && typeof options.roundsByMode === 'object')
+        ? { ...options.roundsByMode }
+        : { frames: 10, eyes: 10, dialogue: 10 },
+      rounds: options.rounds || 30,
       timer: options.timer || 30
     };
+
+    if (typeof UI !== 'undefined' && UI.hostSettings) {
+      UI.hostSettings.roundsByMode = { ...this.hostSettings.roundsByMode };
+      UI.hostSettings.timer = this.hostSettings.timer;
+    }
 
     this.players = [{
       id: this.playerId,
@@ -526,6 +725,7 @@ const GameClient = {
 
     this.setupTransport(this.roomCode);
     this.startHeartbeat();
+    this.saveActiveSession();
 
     UI.setRoomCode(this.roomCode);
     UI.setHostControlsVisible(true);
@@ -611,7 +811,7 @@ const GameClient = {
     const incomingRoom = String(msg.roomCode || '').trim().toUpperCase();
     const currentRoom = String(this.roomCode || '').trim().toUpperCase();
     if (!incomingRoom || !currentRoom || incomingRoom !== currentRoom) return;
-    if (msg.senderId === this.playerId && msg.type !== 'SYNC_ROOM_STATE') return;
+    if (msg.senderId === this.playerId) return;
 
     if (!NetworkSecurity.validateIncomingMessage(msg, this.roomCode)) return;
 
@@ -643,7 +843,157 @@ const GameClient = {
           UI.renderLobbyPlayers();
           UI.renderScoreboard();
           this.broadcastState('PLAYER_JOINED');
+          this.saveActiveSession();
         }
+        break;
+      }
+
+      case 'REQUEST_REJOIN_SYNC': {
+        if (this.isHost) {
+          let restoredScore = 0;
+          if (this.playerScoresArchive && typeof this.playerScoresArchive[msg.playerId] === 'number') {
+            restoredScore = this.playerScoresArchive[msg.playerId];
+          } else if (typeof msg.lastKnownScore === 'number' && msg.lastKnownScore > 0) {
+            restoredScore = msg.lastKnownScore;
+          }
+
+          const existingPlayer = this.players.find(p => p.id === msg.playerId);
+          if (existingPlayer) {
+            existingPlayer.name = msg.name || existingPlayer.name;
+            existingPlayer.avatar = msg.avatar || existingPlayer.avatar;
+            existingPlayer.loaded = true;
+            if ((existingPlayer.score === undefined || existingPlayer.score === 0) && restoredScore > 0) {
+              existingPlayer.score = restoredScore;
+            }
+          } else {
+            this.players.push({
+              id: msg.playerId,
+              name: msg.name || 'Player',
+              avatar: msg.avatar || 'aman',
+              score: restoredScore,
+              isHost: false,
+              loaded: true
+            });
+          }
+
+          if (!this.playerScoresArchive) this.playerScoresArchive = {};
+          const finalPlayer = this.players.find(p => p.id === msg.playerId);
+          if (finalPlayer && typeof finalPlayer.score === 'number') {
+            this.playerScoresArchive[msg.playerId] = finalPlayer.score;
+          }
+
+          UI.renderLobbyPlayers();
+          UI.renderScoreboard();
+          this.saveActiveSession();
+
+          const totalTimer = (this.hostSettings && this.hostSettings.timer) || 30;
+          const remainingSeconds = this.timerRemaining !== undefined ? this.timerRemaining : totalTimer;
+
+          this.sendEvent('REJOIN_SYNC_STATE', {
+            targetPlayerId: msg.playerId,
+            gameState: this.isMatchActive ? (this.isRoundFinished ? 'round_end' : 'playing') : 'lobby',
+            roomCode: this.roomCode,
+            hostSettings: this.hostSettings,
+            players: this.players,
+            currentPlaylist: this.currentPlaylist,
+            currentPlayIndex: this.currentPlayIndex,
+            currentFrame: (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) || this.currentFrame,
+            currentRoundWinners: this.currentRoundWinners,
+            timerDuration: totalTimer,
+            remainingSeconds: remainingSeconds,
+            roundIndex: this.currentPlayIndex,
+            maskedHint: this.currentMaskedHint
+          });
+          this.broadcastState('PLAYER_REJOINED');
+        }
+        break;
+      }
+
+      case 'REJOIN_SYNC_STATE': {
+        if (msg.targetPlayerId && msg.targetPlayerId !== this.playerId) break;
+        this.hasJoinedAck = true;
+        this.isRejoining = false;
+        if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
+        if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
+
+        if (Array.isArray(msg.players)) {
+          this.players = msg.players;
+          if (!this.playerScoresArchive) this.playerScoresArchive = {};
+          for (const p of msg.players) {
+            if (p && p.id && typeof p.score === 'number') {
+              this.playerScoresArchive[p.id] = p.score;
+            }
+          }
+          UI.renderScoreboard();
+        }
+
+        // Check if there is already an active host in the room who is not me
+        const existingHost = this.players.find(p => p.isHost && p.id !== this.playerId);
+        if (existingHost) {
+          this.isHost = false;
+        } else if (this.pendingRejoinSession && this.pendingRejoinSession.isHost) {
+          this.isHost = true;
+        }
+
+        if (msg.hostSettings) {
+          this.hostSettings = Object.assign(this.hostSettings || {}, msg.hostSettings);
+          if (msg.hostSettings.roundsByMode && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.roundsByMode = { ...msg.hostSettings.roundsByMode };
+          }
+          if (msg.hostSettings.timer && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.timer = msg.hostSettings.timer;
+          }
+        }
+        if (msg.currentPlaylist && msg.currentPlaylist.length > 0) this.currentPlaylist = msg.currentPlaylist;
+        if (msg.currentPlayIndex !== undefined) this.currentPlayIndex = msg.currentPlayIndex;
+        if (msg.currentRoundWinners) this.currentRoundWinners = msg.currentRoundWinners;
+        if (msg.maskedHint) this.currentMaskedHint = msg.maskedHint;
+
+        const isMatchState = (msg.gameState === 'playing' || msg.gameState === 'round_end');
+        if (isMatchState) {
+          this.isMatchActive = true;
+          this.isRoundFinished = (msg.gameState === 'round_end');
+          UI.showScreen(this.isRoundFinished ? 'revealScreen' : 'gameScreen');
+          const curFrame = msg.currentFrame || (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) || this.currentFrame;
+          if (curFrame) {
+            if (this.isRoundFinished) {
+              UI.renderRoundReveal({
+                answer: curFrame.answer,
+                year: curFrame.year,
+                type: curFrame.type,
+                content: curFrame.type === 'dialogue' ? curFrame.dialogue : curFrame.content,
+                revealedContent: curFrame.revealContent || curFrame.content,
+                winners: this.currentRoundWinners || []
+              });
+            } else {
+              UI.setupRoundMedia({
+                type: curFrame.type || 'image',
+                content: curFrame.type === 'dialogue' ? curFrame.dialogue : curFrame.content,
+                year: curFrame.year || '',
+                round: this.currentPlayIndex + 1,
+                totalRounds: this.currentPlaylist ? this.currentPlaylist.length : 20
+              });
+              if (this.currentMaskedHint) {
+                UI.displayHintBanner(this.currentMaskedHint, 0);
+              }
+            }
+          }
+          if (typeof msg.remainingSeconds === 'number' && msg.remainingSeconds > 0 && !this.isRoundFinished) {
+            this.timerRemaining = msg.remainingSeconds;
+            UI.updateTimer(this.timerRemaining);
+            this.startTimer(this.timerRemaining);
+          }
+          UI.renderScoreboard();
+        } else {
+          UI.showScreen('lobbyScreen');
+          UI.setRoomCode(this.roomCode);
+          UI.setHostControlsVisible(this.isHost);
+          UI.renderLobbyPlayers();
+          UI.renderScoreboard();
+        }
+
+        this.saveActiveSession();
+        UI.showToast((typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ' Reconnected to match!');
         break;
       }
 
@@ -685,6 +1035,7 @@ const GameClient = {
           UI.showToast(`${rocketIcon} Connected to room ${this.roomCode}!`);
           this.startHeartbeat();
         }
+        this.saveActiveSession();
         break;
       }
 
@@ -916,6 +1267,7 @@ const GameClient = {
     });
 
     this.setupRoundUI(clientFrame, timerDuration, roundIndex);
+    this.saveActiveSession();
   },
 
   handleRemoteRoundStart(msg) {
@@ -931,6 +1283,7 @@ const GameClient = {
 
     const timerDuration = msg.timerDuration || 30;
     this.setupRoundUI(msg.frame, timerDuration, msg.roundIndex, msg.totalRounds);
+    this.saveActiveSession();
   },
 
   setupRoundUI(frame, timerDuration, roundIndex, totalRounds) {
@@ -1201,6 +1554,7 @@ const GameClient = {
       revealedContent: currentFrame.revealContent || currentFrame.content,
       winners: this.currentRoundWinners
     });
+    this.saveActiveSession();
   },
 
   handleRemoteRoundFinish(msg) {
@@ -1222,6 +1576,7 @@ const GameClient = {
       revealedContent: msg.revealedContent || currentFrame.revealContent || currentFrame.content,
       winners: this.currentRoundWinners
     });
+    this.saveActiveSession();
   },
 
   nextRound() {
@@ -1246,6 +1601,7 @@ const GameClient = {
     this.stopRevealTimer();
     this.isMatchActive = false;
     this.isRoundFinished = true;
+    this.clearActiveSession();
 
     if (this.isHost) {
       this.sendEvent('GAME_OVER_BROADCAST', {
@@ -1311,6 +1667,7 @@ const GameClient = {
   },
 
   leaveRoom() {
+    this.clearActiveSession();
     if (this.roomCode) {
       this.sendEvent('PLAYER_LEAVE', { playerId: this.playerId });
     }
@@ -1319,6 +1676,7 @@ const GameClient = {
     this.stopHeartbeat();
     if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
     if (this.joinTimeoutTimer) clearTimeout(this.joinTimeoutTimer);
+    if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
     this.cleanupTransport();
 
     this.roomCode = '';

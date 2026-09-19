@@ -263,6 +263,39 @@ const UI = {
       });
     }
 
+    // 3b. Rejoin Modal Buttons
+    const confirmRejoinBtn = document.getElementById('btnConfirmRejoin');
+    if (confirmRejoinBtn) {
+      confirmRejoinBtn.addEventListener('click', () => {
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+        if (typeof GameClient !== 'undefined') GameClient.confirmRejoinRoom();
+      });
+    }
+
+    const dismissRejoinBtn = document.getElementById('btnDismissRejoin');
+    if (dismissRejoinBtn) {
+      dismissRejoinBtn.addEventListener('click', () => {
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+        if (typeof GameClient !== 'undefined') GameClient.dismissRejoinAndStartNew();
+      });
+    }
+
+    // 3c. In-Game Host Control Buttons
+    const hostSkipBtn = document.getElementById('btnHostSkipFrame');
+    if (hostSkipBtn) {
+      hostSkipBtn.addEventListener('click', () => {
+        if (typeof Haptics !== 'undefined') Haptics.tap();
+        if (typeof GameClient !== 'undefined') GameClient.skipRound();
+      });
+    }
+
+    const hostEndBtn = document.getElementById('btnHostEndMatch');
+    if (hostEndBtn) {
+      hostEndBtn.addEventListener('click', () => {
+        UI.confirmHostEndGame();
+      });
+    }
+
     // 4. Start Match Button (Host in Lobby)
     const startMatchBtn = document.getElementById('btnStartMatch');
     if (startMatchBtn) {
@@ -504,6 +537,53 @@ const UI = {
     if (lbBtn) {
       lbBtn.style.display = (screenId !== 'homeScreen') ? 'flex' : 'none';
     }
+
+    // In-Game Host Floating Action Bar (Only visible on gameScreen when isHost is true)
+    const hostBar = document.getElementById('inGameHostBar');
+    if (hostBar) {
+      const isHost = (typeof GameClient !== 'undefined' && GameClient.isHost);
+      hostBar.style.display = (screenId === 'gameScreen' && isHost) ? 'flex' : 'none';
+    }
+  },
+
+  promptRejoinModal(session) {
+    const modal = document.getElementById('rejoinModal');
+    if (!modal || !session) return;
+
+    const codeEl = document.getElementById('rejoinRoomCodeText');
+    const nameEl = document.getElementById('rejoinPlayerName');
+    const roleEl = document.getElementById('rejoinRoleTag');
+    const avImg = document.getElementById('rejoinAvatarImg');
+    const avContainer = document.getElementById('rejoinAvatarContainer');
+
+    const av = (session.playerAvatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const avSrc = this.getAvatarSrc(av);
+
+    if (codeEl) codeEl.textContent = session.roomCode || '----';
+    if (nameEl) nameEl.textContent = session.playerName || (av ? (av.charAt(0).toUpperCase() + av.slice(1)) : 'Aman');
+    if (roleEl) {
+      const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
+      roleEl.innerHTML = session.isHost ? `HOST ${crownIcon}` : 'PLAYER';
+      roleEl.style.color = session.isHost ? 'var(--nb-pink)' : '#64748b';
+    }
+    if (avImg) avImg.src = avSrc;
+    if (avContainer) avContainer.style.backgroundColor = session.isHost ? 'var(--nb-yellow)' : 'var(--nb-pink)';
+
+    modal.classList.add('active');
+  },
+
+  closeRejoinModal() {
+    const modal = document.getElementById('rejoinModal');
+    if (modal) modal.classList.remove('active');
+  },
+
+  confirmHostEndGame() {
+    if (typeof Haptics !== 'undefined') Haptics.tap();
+    if (confirm('Are you sure you want to end the match early?')) {
+      if (typeof GameClient !== 'undefined') {
+        GameClient.finishGame();
+      }
+    }
   },
 
   toggleChatDrawer() {
@@ -635,6 +715,11 @@ const UI = {
       }
     }
     if (hostNextBtn) hostNextBtn.style.display = isHost ? 'flex' : 'none';
+
+    const hostBar = document.getElementById('inGameHostBar');
+    if (hostBar) {
+      hostBar.style.display = (this.currentScreen === 'gameScreen' && isHost) ? 'flex' : 'none';
+    }
 
     if (isHost) {
       this.renderLobbyControls();

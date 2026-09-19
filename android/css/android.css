@@ -454,6 +454,10 @@ input, textarea {
   text-align: center;
 }
 
+#rejoinModal {
+  z-index: 800;
+}
+
 .nb-modal-title {
   font-family: var(--font-display);
   font-size: 1.4rem;
@@ -476,9 +480,9 @@ input, textarea {
   display: none;
   width: 100%;
   height: calc(100dvh - 80px);
-  max-height: calc(100dvh - 80px);
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   position: relative;
 }
 
@@ -614,7 +618,9 @@ input, textarea {
   flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
-  z-index: 20;
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
 }
 
 #lobbyWaitingNotice {
@@ -869,6 +875,61 @@ input, textarea {
   color: #fff;
   box-shadow: 1.5px 1.5px 0px var(--nb-ink);
   cursor: pointer;
+}
+
+/* In-Game Host Floating Action Bar */
+.in-game-host-bar {
+  width: 100%;
+  background: #FFFDF0;
+  border-bottom: var(--nb-border-sm);
+  padding: 5px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 25;
+}
+
+.igh-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: var(--nb-ink);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: auto;
+}
+
+.igh-btn {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1.5px solid var(--nb-ink);
+  background: #fff;
+  box-shadow: 1.5px 1.5px 0 var(--nb-ink);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--nb-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.igh-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 transparent;
+}
+
+.igh-btn-danger {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 /* Hint Banner */
