@@ -294,7 +294,11 @@ const UI = {
     if (nextRoundBtn) {
       nextRoundBtn.addEventListener('click', () => {
         if (typeof Haptics !== 'undefined') Haptics.tap();
-        GameClient.nextRound();
+        nextRoundBtn.disabled = true;
+        if (typeof GameClient !== 'undefined') {
+          GameClient.stopRevealTimer();
+          GameClient.nextRound();
+        }
       });
     }
 
@@ -669,6 +673,63 @@ const UI = {
             </div>
           `;
         }).join('');
+      }
+    }
+
+    // Next Round Host Controls & Non-Host Waiting Notice
+    const nextBtn = document.getElementById('btnNextRound');
+    const waitNotice = document.getElementById('revealWaitingNotice');
+    const isHost = (typeof GameClient !== 'undefined' && GameClient.isHost);
+    const isLast = (typeof GameClient !== 'undefined' && GameClient.currentPlaylist && (GameClient.currentPlayIndex + 1 >= GameClient.currentPlaylist.length));
+
+    if (isHost) {
+      if (waitNotice) waitNotice.style.display = 'none';
+      if (nextBtn) {
+        nextBtn.style.display = 'flex';
+        nextBtn.disabled = false;
+        const iconSvg = isLast
+          ? '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>'
+          : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>';
+        const baseText = isLast ? 'FINISH MATCH' : 'NEXT ROUND';
+        let countdown = 15;
+        nextBtn.innerHTML = `${baseText} (${countdown}s) ${iconSvg}`;
+
+        if (typeof GameClient !== 'undefined') {
+          GameClient.stopRevealTimer();
+          GameClient.revealTimerInterval = setInterval(() => {
+            countdown--;
+            if (nextBtn && nextBtn.style.display !== 'none') {
+              nextBtn.innerHTML = `${baseText} (${countdown}s) ${iconSvg}`;
+            }
+            if (countdown <= 0) {
+              GameClient.stopRevealTimer();
+              if (GameClient.isHost && UI.currentScreen === 'revealScreen') {
+                GameClient.nextRound();
+              }
+            }
+          }, 1000);
+        }
+      }
+    } else {
+      if (nextBtn) nextBtn.style.display = 'none';
+      if (waitNotice) {
+        waitNotice.style.display = 'flex';
+        const hourglassIcon = '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>';
+        let clientWait = 15;
+        waitNotice.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; gap:6px;">${hourglassIcon} <span>Waiting for host to start next round... (${clientWait}s)</span></div>`;
+
+        if (typeof GameClient !== 'undefined') {
+          GameClient.stopRevealTimer();
+          GameClient.revealTimerInterval = setInterval(() => {
+            clientWait--;
+            if (waitNotice && waitNotice.style.display !== 'none') {
+              waitNotice.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; gap:6px;">${hourglassIcon} <span>Waiting for host to start next round... (${clientWait}s)</span></div>`;
+            }
+            if (clientWait <= 0) {
+              GameClient.stopRevealTimer();
+            }
+          }, 1000);
+        }
       }
     }
   },

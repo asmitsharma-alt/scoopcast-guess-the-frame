@@ -317,6 +317,7 @@ const GameClient = {
 
   timerRemaining: 30,
   timerInterval: null,
+  revealTimerInterval: null,
   joinRetryTimer: null,
   joinTimeoutTimer: null,
   heartbeatTimer: null,
@@ -862,6 +863,7 @@ const GameClient = {
   },
 
   startRound(roundIndex) {
+    this.stopRevealTimer();
     if (!this.isHost) return;
     if (!this.currentPlaylist || roundIndex >= this.currentPlaylist.length) {
       this.finishGame();
@@ -901,6 +903,7 @@ const GameClient = {
   },
 
   handleRemoteRoundStart(msg) {
+    this.stopRevealTimer();
     this.isMatchActive = true;
     this.isRoundFinished = false;
     this.currentPlayIndex = msg.roundIndex;
@@ -955,6 +958,13 @@ const GameClient = {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
+    }
+  },
+
+  stopRevealTimer() {
+    if (this.revealTimerInterval) {
+      clearInterval(this.revealTimerInterval);
+      this.revealTimerInterval = null;
     }
   },
 
@@ -1175,6 +1185,7 @@ const GameClient = {
   },
 
   nextRound() {
+    this.stopRevealTimer();
     if (!this.isHost) return;
     const nextIdx = this.currentPlayIndex + 1;
     if (nextIdx < this.currentPlaylist.length) {
@@ -1192,6 +1203,7 @@ const GameClient = {
 
   finishGame() {
     this.stopTimer();
+    this.stopRevealTimer();
     this.isMatchActive = false;
     this.isRoundFinished = true;
 
@@ -1263,6 +1275,7 @@ const GameClient = {
       this.sendEvent('PLAYER_LEAVE', { playerId: this.playerId });
     }
     this.stopTimer();
+    this.stopRevealTimer();
     this.stopHeartbeat();
     if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
     if (this.joinTimeoutTimer) clearTimeout(this.joinTimeoutTimer);

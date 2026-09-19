@@ -553,7 +553,10 @@
           <!-- Populated dynamically -->
         </div>
 
-        <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+        <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none; background:var(--nb-green); color:var(--nb-ink); font-weight:900;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+        <div class="reveal-waiting-host" id="revealWaitingNotice" style="display:none; color:#64748b; font-size:0.85rem; font-weight:900; margin-top:8px; text-align:center;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for host to start next round...
+        </div>
       </div>
     </main>
 

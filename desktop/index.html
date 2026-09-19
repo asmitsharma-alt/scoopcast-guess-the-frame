@@ -19146,7 +19146,7 @@
         FrameDisplay.showFrame(msg.frame);
         ChatEngine.renderRoundSeparator(msg.roundIndex);
         const ansOvElRemote = document.getElementById('answerOverlay');
-        if (ansOvElRemote) ansOvElRemote.classList.remove('active', 'eye-answer');
+        if (ansOvElRemote) ansOvElRemote.classList.remove('visible', 'active', 'eye-answer');
         document.getElementById('scoringOv').classList.remove('active');
 
         this.playRoundIntroAnimation(msg.roundIndex + 1, totalR, () => {
@@ -19423,10 +19423,14 @@
           const nextBtn = document.getElementById('ansNextRoundBtn');
           const waitPill = document.getElementById('ansWaitingHostPill');
           const isLast = (this.currentPlayIndex + 1 >= this.currentPlaylist.length);
-          const baseLabel = isLast ? ('FINISH MATCH ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.flag : '')) : ('NEXT ROUND ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : ''));
+          const iconHtml = isLast
+            ? (typeof SvgIcons !== 'undefined' ? SvgIcons.flag : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>')
+            : (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>');
+          const baseLabel = isLast ? 'FINISH MATCH' : 'NEXT ROUND';
           if (nextBtn) {
             nextBtn.style.display = 'inline-flex';
-            nextBtn.textContent = baseLabel + ' (20s)';
+            nextBtn.disabled = false;
+            nextBtn.innerHTML = `${baseLabel} (20s) ${iconHtml}`;
           }
           if (waitPill) waitPill.style.display = 'none';
 
@@ -19435,7 +19439,7 @@
           this._hostAutoAdvanceTimer = setInterval(() => {
             hostCountdown--;
             if (nextBtn && nextBtn.style.display !== 'none') {
-              nextBtn.textContent = baseLabel + ' (' + hostCountdown + 's)';
+              nextBtn.innerHTML = `${baseLabel} (${hostCountdown}s) ${iconHtml}`;
             }
             if (hostCountdown <= 0) {
               clearInterval(this._hostAutoAdvanceTimer);
@@ -19545,6 +19549,8 @@
       hostNextRound() {
         if (this._hostAutoAdvanceTimer) clearInterval(this._hostAutoAdvanceTimer);
         if (this._clientWaitTimer) clearInterval(this._clientWaitTimer);
+        const nextBtn = document.getElementById('ansNextRoundBtn');
+        if (nextBtn) nextBtn.disabled = true;
         if (!this.isHost) return;
         const ansOv = document.getElementById('answerOverlay');
         if (ansOv) ansOv.classList.remove('visible', 'active', 'eye-answer');
