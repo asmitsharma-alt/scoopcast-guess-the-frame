@@ -94,6 +94,14 @@
       "destination": "/css/:match*"
     },
     {
+      "source": "/desktop/avvtar/:match*",
+      "destination": "/avvtar/:match*"
+    },
+    {
+      "source": "/android/avvtar/:match*",
+      "destination": "/avvtar/:match*"
+    },
+    {
       "source": "/css/android.css",
       "destination": "/android/css/android.css"
     },

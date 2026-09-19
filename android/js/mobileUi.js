@@ -124,15 +124,35 @@ const UI = {
   },
 
   getAvatarSrc(av) {
-    if (!av) return 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+    const FOUNDER_URLS = {
+      aman: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+      amish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg',
+      aziz: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg',
+      vish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg'
+    };
+    if (!av) return FOUNDER_URLS.aman;
+    const clean = String(av).trim().toLowerCase();
+    for (const [key, url] of Object.entries(FOUNDER_URLS)) {
+      if (clean === key || clean.endsWith('/' + key + '.svg') || clean === key + '.svg') {
+        return url;
+      }
+    }
     if (typeof AvatarPicker !== 'undefined') {
       const meta = AvatarPicker.getAvatarMeta(av);
-      if (meta && meta.url) return meta.url;
+      if (meta && meta.url) {
+        for (const [key, url] of Object.entries(FOUNDER_URLS)) {
+          if (meta.url.toLowerCase().endsWith('/' + key + '.svg') || meta.id === 'av_' + (key === 'aman' ? 0 : key === 'amish' ? 1 : key === 'aziz' ? 2 : 3)) {
+            return url;
+          }
+        }
+        return meta.url;
+      }
     }
-    if (av.startsWith('http://') || av.startsWith('https://') || av.startsWith('data:') || av.startsWith('/')) {
+    if (av.startsWith('http://') || av.startsWith('https://') || av.startsWith('data:')) {
       return av;
     }
-    return '/avvtar/' + av + '.svg';
+    if (FOUNDER_URLS[clean]) return FOUNDER_URLS[clean];
+    return FOUNDER_URLS.aman;
   },
 
   getAvatarBg(av) {

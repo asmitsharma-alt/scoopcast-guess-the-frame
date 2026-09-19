@@ -14954,7 +14954,7 @@
             const avKey = (p.avatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
             const safeAvKey = ['aman', 'amish', 'aziz', 'vish'].includes(avKey) ? avKey : 'aman';
             const avColor = meta ? (meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'))) : (AVATAR_MAP[safeAvKey] ? AVATAR_MAP[safeAvKey].color : '#facc15');
-            const avSrc = meta ? meta.url : (p.avatar && (p.avatar.includes('/') || p.avatar.includes('.')) ? p.avatar : ('avvtar/' + safeAvKey + '.svg'));
+            const avSrc = (meta && meta.url && !meta.url.startsWith('/avvtar/') && !meta.url.startsWith('avvtar/')) ? meta.url : ((AVATAR_MAP[safeAvKey] && AVATAR_MAP[safeAvKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
             const isTrans = meta ? AvatarPicker.isAvatarTransparent(meta) : ['aman', 'amish', 'aziz', 'vish'].includes(safeAvKey);
             const avFit = isTrans ? 'object-contain p-1.5' : (meta && meta.isKnownPortrait ? 'object-cover object-[center_12%]' : 'object-cover');
             const avConfig = { color: avColor, img: avSrc };
@@ -15355,7 +15355,7 @@
           name: `Player ${GS.players.length + 1}`,
           score: 0,
           avatar: nextAv,
-          avatarImg: `avvtar/${nextAv}.svg`,
+          avatarImg: (AVATAR_MAP[nextAv] && AVATAR_MAP[nextAv].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
           loaded: true,
           loadProgress: 100,
           color: nextColor
@@ -15956,9 +15956,10 @@
       const avKey = String(rawAv).toLowerCase().replace(/[^a-z0-9]/g, '');
       const validAvatars = ['aman', 'amish', 'aziz', 'vish'];
       const safeAv = validAvatars.includes(avKey) ? avKey : 'aman';
-      const avSrc = (p && p.avatarImg) || `avvtar/${safeAv}.svg`;
+      const defaultImg = (AVATAR_MAP[safeAv] && AVATAR_MAP[safeAv].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+      const avSrc = (p && p.avatarImg && !p.avatarImg.startsWith('avvtar/') && !p.avatarImg.startsWith('/avvtar/')) ? p.avatarImg : defaultImg;
 
-      return `<img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" class="av-img-elem" style="width:100%;height:100%;max-width:100%;max-height:100%;object-fit:cover;object-position:center;border-radius:8px;display:block;" onerror="this.onerror=null;this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">`;
+      return `<img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" class="av-img-elem" style="width:100%;height:100%;max-width:100%;max-height:100%;object-fit:cover;object-position:center;border-radius:8px;display:block;" onerror="this.onerror=null;this.src='${defaultImg}';">`;
     }
 
     function playerKey(p) {
@@ -16959,8 +16960,9 @@
             '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
           '</button>');
 
+        const chatAvUrl = (AVATAR_MAP[safeAvatar] && AVATAR_MAP[safeAvatar].img) || (msg.senderAvatar && (msg.senderAvatar.startsWith('http') || msg.senderAvatar.startsWith('data:')) ? msg.senderAvatar : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
         msgEl.innerHTML = '<div class="chat-avatar">' +
-          '<img src="avvtar/' + safeAvatar + '.svg" alt="' + SecurityUtil.escapeHtml(msg.senderName) + '" />' +
+          '<img src="' + SecurityUtil.escapeHtml(chatAvUrl) + '" alt="' + SecurityUtil.escapeHtml(msg.senderName) + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
           '</div>' +
           '<div class="chat-msg-body">' +
           '<div class="chat-msg-header">' +
@@ -17365,12 +17367,12 @@
         const avContainer = document.getElementById('rejoinAvatarContainer');
 
         const av = (session.playerAvatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
-        const avConfig = (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[av]) ? AVATAR_MAP[av] : { color: '#FF6B9D', img: `avvtar/${av}.svg` };
+        const avConfig = (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[av]) ? AVATAR_MAP[av] : { color: '#FF6B9D', img: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg' };
 
         if (codeEl) codeEl.textContent = session.roomCode;
         if (nameEl) nameEl.textContent = session.playerName || this.getAvatarDisplayName(av);
         if (roleEl) roleEl.innerHTML = session.isHost ? ('Host ' + (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '')) : 'Player';
-        if (avImg) avImg.src = `avvtar/${av}.svg`;
+        if (avImg) avImg.src = avConfig.img;
         if (avContainer) avContainer.style.backgroundColor = avConfig.color;
 
         if (modal) modal.classList.add('active');
@@ -19988,21 +19990,21 @@
       },
 
       resolveAvatar(p, fallbackKey = 'aman') {
-        if (p && p.avatarImg) {
+        if (p && p.avatarImg && !p.avatarImg.startsWith('avvtar/') && !p.avatarImg.startsWith('/avvtar/')) {
           return p.avatarImg;
         }
         if (typeof AvatarPicker !== 'undefined' && p && p.avatar) {
           const meta = AvatarPicker.getAvatarMeta(p.avatar);
-          if (meta && meta.url) return meta.url;
+          if (meta && meta.url && !meta.url.startsWith('/avvtar/') && !meta.url.startsWith('avvtar/')) return meta.url;
         }
-        if (p && p.avatar && (p.avatar.includes('/') || p.avatar.includes('.'))) {
+        if (p && p.avatar && (p.avatar.startsWith('http://') || p.avatar.startsWith('https://') || p.avatar.startsWith('data:'))) {
           return p.avatar;
         }
         const valid = ['aman', 'amish', 'aziz', 'vish'];
         const rawAv = (p && (p.avatar || (p.name && p.name.toLowerCase()))) || fallbackKey;
         const avKey = String(rawAv).toLowerCase().replace(/[^a-z0-9]/g, '');
         const safeKey = valid.includes(avKey) ? avKey : (valid.includes(fallbackKey) ? fallbackKey : 'aman');
-        return 'avvtar/' + safeKey + '.svg';
+        return (AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
       },
 
       renderScoreboard(players) {
@@ -20025,7 +20027,7 @@
             <div class="sb-row ${isChamp ? 'sb-champ' : ''}">
               <div class="sb-left">
                 <span class="sb-rank">${rank}</span>
-                <div class="sb-avatar-mini"><img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" onerror="this.onerror=null;this.src='avvtar/${defaultKey}.svg'" /></div>
+                <div class="sb-avatar-mini"><img src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" onerror="this.onerror=null;this.src='${(AVATAR_MAP[defaultKey] && AVATAR_MAP[defaultKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg'}'" /></div>
                 <span class="sb-name">${safeName.toUpperCase()}</span>
               </div>
               <span class="sb-score">${score} PTS</span>
@@ -20424,8 +20426,7 @@
           const validAvatars = ['aman', 'amish', 'aziz', 'vish'];
           const safeKey = validAvatars.includes(avKey) ? avKey : 'aman';
 
-          priorityImages.push('avvtar/' + safeKey + '.svg');
-          priorityImages.push('avvtar/' + safeKey + ' trophy.png');
+          priorityImages.push((AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
         });
 
         let loaded = 0;
@@ -21317,7 +21318,7 @@
           const avKey = (p.avatar || (p.avatarImg ? p.avatarImg.replace(/^.*\/([^./]+)\..*$/, '$1') : 'aman')).toLowerCase().replace(/[^a-z0-9]/g, '');
           const valid = ['aman', 'amish', 'aziz', 'vish'];
           const safeKey = valid.includes(avKey) ? avKey : 'aman';
-          return 'avvtar/' + safeKey + ' trophy.png';
+          return (AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].img) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
         };
         const buildTrophies = (players) => {
           const count = players.length;

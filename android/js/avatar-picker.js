@@ -82,6 +82,34 @@
       const clean = String(urlOrId).trim();
       const lower = clean.toLowerCase();
 
+      const FOUNDER_URLS = {
+        aman: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+        amish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg',
+        aziz: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg',
+        vish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg'
+      };
+
+      for (const [key, fUrl] of Object.entries(FOUNDER_URLS)) {
+        if (lower === key || lower.endsWith('/' + key + '.svg') || lower === key + '.svg' || clean === fUrl) {
+          const founderItem = catalog.find(a => a.category === 'founders' && a.name.toLowerCase() === key);
+          if (founderItem) {
+            founderItem.url = fUrl;
+            return founderItem;
+          }
+          return {
+            id: 'av_' + (key === 'aman' ? 0 : key === 'amish' ? 1 : key === 'aziz' ? 2 : 3),
+            name: key.charAt(0).toUpperCase() + key.slice(1),
+            category: 'founders',
+            categoryLabel: 'Founders',
+            url: fUrl,
+            format: 'SVG',
+            color: key === 'aman' ? 'facc15' : key === 'amish' ? 'ff6b9d' : key === 'aziz' ? '38bdf8' : '84cc16',
+            isVector: true,
+            isTransparent: true
+          };
+        }
+      }
+
       let found = catalog.find(a => a.url === clean || a.id === clean);
       if (found) return found;
 
@@ -386,6 +414,18 @@
     handleImgError(img) {
       img.onerror = null;
       const seed = img.getAttribute('alt') || 'Hero';
+      const seedLower = seed.toLowerCase().trim();
+      const FOUNDER_FALLBACKS = {
+        aman: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+        amish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg',
+        aziz: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg',
+        vish: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg'
+      };
+      if (FOUNDER_FALLBACKS[seedLower]) {
+        img.src = FOUNDER_FALLBACKS[seedLower];
+        img.className = 'img-contain-fit';
+        return;
+      }
       img.src = `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(seed)}&backgroundColor=facc15`;
       img.className = 'img-contain-fit';
     },
