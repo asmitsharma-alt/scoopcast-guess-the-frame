@@ -252,6 +252,13 @@
       document.write('<script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"><\/script>');
     }
   </script>
+  <!-- Colyseus Game Engine (Bundled Locally + CDN Fallback) -->
+  <script src="/android/js/colyseus.js"></script>
+  <script>
+    if (typeof Colyseus === 'undefined') {
+      document.write('<script src="https://unpkg.com/colyseus.js@^0.15.0/dist/colyseus.js"><\/script>');
+    }
+  </script>
   <!-- Preload Cinema Wallpaper Background -->
   <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp" type="image/webp">
 </head>
@@ -507,6 +514,21 @@
               <button type="button" class="step-btn step-plus" id="btnTimerPlus" aria-label="Increase timer">+</button>
             </div>
           </div>
+        </div>
+
+        <!-- New Weekly Drops Toggle (Default ON) -->
+        <div class="lobby-weekly-toggle-card" style="display:flex; align-items:center; justify-content:space-between; background:var(--nb-yellow); border:2px solid var(--nb-ink); border-radius:10px; padding:8px 12px; margin-bottom:10px; box-shadow:var(--nb-shadow-sm);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;color:var(--nb-ink);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div style="text-align:left;">
+              <div style="font-size:0.75rem; font-weight:900; color:var(--nb-ink); text-transform:uppercase;">New Weekly Drops</div>
+              <div id="weeklySubtextMobile" style="font-size:0.65rem; font-weight:700; color:#4a4a4a;">Playing this week's fresh frames</div>
+            </div>
+          </div>
+          <label class="nb-switch" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+            <input type="checkbox" id="toggleWeeklyDropsMobile" checked style="opacity:0; width:0; height:0;">
+            <span class="nb-slider" style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#16A34A; border:2px solid var(--nb-ink); border-radius:24px; transition:.2s;"></span>
+          </label>
         </div>
 
         <button class="btn-nb-primary" id="btnStartMatch">START MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></button>

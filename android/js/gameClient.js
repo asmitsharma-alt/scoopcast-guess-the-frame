@@ -231,58 +231,58 @@ const GAME_SECTIONS = [
     id: 1,
     name: 'Guess the Frame',
     frames: [
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799679/scoopcast/GUESSTHEFRAME/12th_Fail_2023.webp', answer: '12TH FAIL', year: '2023' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800272/scoopcast/GUESSTHEFRAME/After_Hours_1985.webp', answer: 'AFTER HOURS', year: '1985' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800275/scoopcast/GUESSTHEFRAME/Bramayugam_2024.webp', answer: 'BRAMAYUGAM', year: '2024' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800286/scoopcast/GUESSTHEFRAME/Brothers_2009.webp', answer: 'BROTHERS', year: '2009' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800296/scoopcast/GUESSTHEFRAME/Cocktail_2_2026.webp', answer: 'COCKTAIL 2', year: '2026' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800306/scoopcast/GUESSTHEFRAME/Detective_Byomkesh_Bakshy_2015.webp', answer: 'DETECTIVE BYOMKESH BAKSHY', year: '2015' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800340/scoopcast/GUESSTHEFRAME/Ghanchakkar_2013.webp', answer: 'GHANCHAKKAR', year: '2013' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800363/scoopcast/GUESSTHEFRAME/Lapata_Ladies_2023.webp', answer: 'LAPATA LADIES', year: '2023' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800367/scoopcast/GUESSTHEFRAME/Lars_and_the_Real_Girl_2007.webp', answer: 'LARS AND THE REAL GIRL', year: '2007' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800389/scoopcast/GUESSTHEFRAME/Mahaan_2022.webp', answer: 'MAHAAN', year: '2022' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800404/scoopcast/GUESSTHEFRAME/One_Night_Only_2026.webp', answer: 'ONE NIGHT ONLY', year: '2026' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800411/scoopcast/GUESSTHEFRAME/Piku_2015.webp', answer: 'PIKU', year: '2015' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800420/scoopcast/GUESSTHEFRAME/Satluj_2026.webp', answer: 'SATLUJ', year: '2026' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800428/scoopcast/GUESSTHEFRAME/The_End_of_Oak_Street_2026.webp', answer: 'THE END OF OAK STREET', year: '2026' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800435/scoopcast/GUESSTHEFRAME/The_French_Dispatch_2021.webp', answer: 'THE FRENCH DISPATCH', year: '2021' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800643/scoopcast/GUESSTHEFRAME/The_Menu_2022.webp', answer: 'THE MENU', year: '2022' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800471/scoopcast/GUESSTHEFRAME/The_Revenant_2015.webp', answer: 'THE REVENANT', year: '2022' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800476/scoopcast/GUESSTHEFRAME/The_Rivals_of_Amziah_King_2026.webp', answer: 'THE RIVALS OF AMZIAH KING', year: '2026' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800357/scoopcast/GUESSTHEFRAME/khosla_ka_gholsa_2006.webp', answer: 'KHOSLA KA GHOSLA', year: '2006' },
-      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800482/scoopcast/GUESSTHEFRAME/tony_2026.webp', answer: 'TONY', year: '2026' }
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799679/scoopcast/GUESSTHEFRAME/12th_Fail_2023.webp', answer: '12TH FAIL', year: '2023', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800272/scoopcast/GUESSTHEFRAME/After_Hours_1985.webp', answer: 'AFTER HOURS', year: '1985', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800275/scoopcast/GUESSTHEFRAME/Bramayugam_2024.webp', answer: 'BRAMAYUGAM', year: '2024', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800286/scoopcast/GUESSTHEFRAME/Brothers_2009.webp', answer: 'BROTHERS', year: '2009', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800296/scoopcast/GUESSTHEFRAME/Cocktail_2_2026.webp', answer: 'COCKTAIL 2', year: '2026', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800306/scoopcast/GUESSTHEFRAME/Detective_Byomkesh_Bakshy_2015.webp', answer: 'DETECTIVE BYOMKESH BAKSHY', year: '2015', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800340/scoopcast/GUESSTHEFRAME/Ghanchakkar_2013.webp', answer: 'GHANCHAKKAR', year: '2013', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800363/scoopcast/GUESSTHEFRAME/Lapata_Ladies_2023.webp', answer: 'LAPATA LADIES', year: '2023', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800367/scoopcast/GUESSTHEFRAME/Lars_and_the_Real_Girl_2007.webp', answer: 'LARS AND THE REAL GIRL', year: '2007', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800389/scoopcast/GUESSTHEFRAME/Mahaan_2022.webp', answer: 'MAHAAN', year: '2022', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800404/scoopcast/GUESSTHEFRAME/One_Night_Only_2026.webp', answer: 'ONE NIGHT ONLY', year: '2026', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800411/scoopcast/GUESSTHEFRAME/Piku_2015.webp', answer: 'PIKU', year: '2015', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800420/scoopcast/GUESSTHEFRAME/Satluj_2026.webp', answer: 'SATLUJ', year: '2026', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800428/scoopcast/GUESSTHEFRAME/The_End_of_Oak_Street_2026.webp', answer: 'THE END OF OAK STREET', year: '2026', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800435/scoopcast/GUESSTHEFRAME/The_French_Dispatch_2021.webp', answer: 'THE FRENCH DISPATCH', year: '2021', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800643/scoopcast/GUESSTHEFRAME/The_Menu_2022.webp', answer: 'THE MENU', year: '2022', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800471/scoopcast/GUESSTHEFRAME/The_Revenant_2015.webp', answer: 'THE REVENANT', year: '2022', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800476/scoopcast/GUESSTHEFRAME/The_Rivals_of_Amziah_King_2026.webp', answer: 'THE RIVALS OF AMZIAH KING', year: '2026', tag: 'new' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800357/scoopcast/GUESSTHEFRAME/khosla_ka_gholsa_2006.webp', answer: 'KHOSLA KA GHOSLA', year: '2006', tag: 'classic' },
+      { type: 'image', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800482/scoopcast/GUESSTHEFRAME/tony_2026.webp', answer: 'TONY', year: '2026', tag: 'new' }
     ]
   },
   {
     id: 2,
     name: 'Guess the Dialogue',
     frames: [
-      { type: 'dialogue', dialogue: "Dur Chale Gaye ho kya Ram. Main wahi khad hu jaha tum mujhe chor kar gayi thi", answer: "96", year: "2018" },
-      { type: 'dialogue', dialogue: "That haircut should be against your vows", answer: "SUPERMAN", year: "2025" },
-      { type: 'dialogue', dialogue: "They replace me. They'll replace you.", answer: "LANTERNS", year: "2026" },
-      { type: 'dialogue', dialogue: "Rohit kuch piyoge Tea, Coffee. Bournvita", answer: "KOI MIL GAYA", year: "2003" },
-      { type: 'dialogue', dialogue: "1 baat yaad rakhna beta is duniya mein bas 2 kism ke insaan hai, ache insaan jo acha kaam karte hai aur bure jo bura, bas yahi 1 farq hai insaano mein aur koi nahi", answer: "MY NAME IS KHAN", year: "2010" },
-      { type: 'dialogue', dialogue: "The Hardest Choices Requires The Strongest wills", answer: "AVENGERS INFINITY WAR", year: "2018" },
-      { type: 'dialogue', dialogue: "Look how they massacred my boy.", answer: "THE GODFATHER", year: "1972" },
-      { type: 'dialogue', dialogue: "You can't handle the truth", answer: "A FEW GOOD MEN", year: "1992" },
-      { type: 'dialogue', dialogue: "Why do we Fall sir", answer: "BATMAN BEGINS", year: "2005" },
-      { type: 'dialogue', dialogue: "Saalo se muh cheepata hua phir raha hu aur ye gala faad ke Gafoor, Gafoor, Gafoor chilla raha hai", answer: "THE BADS OF BOLLYWOOD", year: "2025" }
+      { type: 'dialogue', dialogue: "Dur Chale Gaye ho kya Ram. Main wahi khad hu jaha tum mujhe chor kar gayi thi", answer: "96", year: "2018", tag: 'classic' },
+      { type: 'dialogue', dialogue: "That haircut should be against your vows", answer: "SUPERMAN", year: "2025", tag: 'new' },
+      { type: 'dialogue', dialogue: "They replace me. They'll replace you.", answer: "LANTERNS", year: "2026", tag: 'new' },
+      { type: 'dialogue', dialogue: "Rohit kuch piyoge Tea, Coffee. Bournvita", answer: "KOI MIL GAYA", year: "2003", tag: 'classic' },
+      { type: 'dialogue', dialogue: "1 baat yaad rakhna beta is duniya mein bas 2 kism ke insaan hai, ache insaan jo acha kaam karte hai aur bure jo bura, bas yahi 1 farq hai insaano mein aur koi nahi", answer: "MY NAME IS KHAN", year: "2010", tag: 'classic' },
+      { type: 'dialogue', dialogue: "The Hardest Choices Requires The Strongest wills", answer: "AVENGERS INFINITY WAR", year: "2018", tag: 'classic' },
+      { type: 'dialogue', dialogue: "Look how they massacred my boy.", answer: "THE GODFATHER", year: "1972", tag: 'classic' },
+      { type: 'dialogue', dialogue: "You can't handle the truth", answer: "A FEW GOOD MEN", year: "1992", tag: 'classic' },
+      { type: 'dialogue', dialogue: "Why do we Fall sir", answer: "BATMAN BEGINS", year: "2005", tag: 'classic' },
+      { type: 'dialogue', dialogue: "Saalo se muh cheepata hua phir raha hu aur ye gala faad ke Gafoor, Gafoor, Gafoor chilla raha hai", answer: "THE BADS OF BOLLYWOOD", year: "2025", tag: 'new' }
     ]
   },
   {
     id: 3,
     name: 'Guess the Eye',
     frames: [
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799983/scoopcast/GUESSTHEEYES/Aaron_Pierre_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799988/scoopcast/GUESSTHEEYES/Aaron_Pierre.webp', answer: 'AARON PIERRE', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799996/scoopcast/GUESSTHEEYES/Alexandra_Daddario_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800005/scoopcast/GUESSTHEEYES/Alexandra_Daddario.webp', answer: 'ALEXANDRA DADDARIO', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800049/scoopcast/GUESSTHEEYES/Angelina_Jolie_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800061/scoopcast/GUESSTHEEYES/Angelina_Jolie.webp', answer: 'ANGELINA JOLIE', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800066/scoopcast/GUESSTHEEYES/Disha_Patani_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800071/scoopcast/GUESSTHEEYES/Disha_Patani.webp', answer: 'DISHA PATANI', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800077/scoopcast/GUESSTHEEYES/Hunter_Schafer_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800104/scoopcast/GUESSTHEEYES/Hunter_Schafer.webp', answer: 'HUNTER SCHAFER', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800148/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800159/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio.webp', answer: 'LEONARDO DICAPRIO', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800163/scoopcast/GUESSTHEEYES/Meryl_Streep_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800172/scoopcast/GUESSTHEEYES/Meryl_Streep.webp', answer: 'MERYL STREEP', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800182/scoopcast/GUESSTHEEYES/Nicole_Kidman_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800638/scoopcast/GUESSTHEEYES/Nicole_Kidman.webp', answer: 'NICOLE KIDMAN', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800245/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800254/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi.webp', answer: 'WAMIQA GABBI', year: '' },
-      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800260/scoopcast/GUESSTHEEYES/Yash_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800266/scoopcast/GUESSTHEEYES/Yash.webp', answer: 'YASH', year: '' }
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799983/scoopcast/GUESSTHEEYES/Aaron_Pierre_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799988/scoopcast/GUESSTHEEYES/Aaron_Pierre.webp', answer: 'AARON PIERRE', year: '', tag: 'new' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799996/scoopcast/GUESSTHEEYES/Alexandra_Daddario_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800005/scoopcast/GUESSTHEEYES/Alexandra_Daddario.webp', answer: 'ALEXANDRA DADDARIO', year: '', tag: 'classic' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800049/scoopcast/GUESSTHEEYES/Angelina_Jolie_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800061/scoopcast/GUESSTHEEYES/Angelina_Jolie.webp', answer: 'ANGELINA JOLIE', year: '', tag: 'classic' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800066/scoopcast/GUESSTHEEYES/Disha_Patani_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800071/scoopcast/GUESSTHEEYES/Disha_Patani.webp', answer: 'DISHA PATANI', year: '', tag: 'new' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800077/scoopcast/GUESSTHEEYES/Hunter_Schafer_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800104/scoopcast/GUESSTHEEYES/Hunter_Schafer.webp', answer: 'HUNTER SCHAFER', year: '', tag: 'new' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800148/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800159/scoopcast/GUESSTHEEYES/Leonardo_DiCaprio.webp', answer: 'LEONARDO DICAPRIO', year: '', tag: 'classic' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800163/scoopcast/GUESSTHEEYES/Meryl_Streep_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800172/scoopcast/GUESSTHEEYES/Meryl_Streep.webp', answer: 'MERYL STREEP', year: '', tag: 'classic' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800182/scoopcast/GUESSTHEEYES/Nicole_Kidman_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800638/scoopcast/GUESSTHEEYES/Nicole_Kidman.webp', answer: 'NICOLE KIDMAN', year: '', tag: 'classic' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800245/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800254/scoopcast/GUESSTHEEYES/Wamiqa_Gabbi.webp', answer: 'WAMIQA GABBI', year: '', tag: 'new' },
+      { type: 'eye', content: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800260/scoopcast/GUESSTHEEYES/Yash_copy.webp', revealContent: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800266/scoopcast/GUESSTHEEYES/Yash.webp', answer: 'YASH', year: '', tag: 'new' }
     ]
   }
 ];
@@ -452,6 +452,15 @@ const GameClient = {
         console.warn('[Realtime] Connect exception:', err);
       }
     }
+
+    // Pre-warm Colyseus backend when room is created or joined
+    try {
+      fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
+      if (this.colyseusPingInterval) clearInterval(this.colyseusPingInterval);
+      this.colyseusPingInterval = setInterval(() => {
+        fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
+      }, 240000); // 4 minutes lobby keep-alive
+    } catch(e) {}
   },
 
   cleanupTransport() {
@@ -465,6 +474,14 @@ const GameClient = {
     if (this.broadcastChannel) {
       try { this.broadcastChannel.close(); } catch(e) {}
       this.broadcastChannel = null;
+    }
+    if (this.colyseusPingInterval) {
+      clearInterval(this.colyseusPingInterval);
+      this.colyseusPingInterval = null;
+    }
+    if (this.colyseusRoom) {
+      try { this.colyseusRoom.leave(); } catch(e) {}
+      this.colyseusRoom = null;
     }
     this.isConnected = false;
   },
@@ -1039,16 +1056,60 @@ const GameClient = {
         break;
       }
 
-      case 'UPDATE_HOST_SETTINGS': {
-        if (msg.settings) {
-          this.hostSettings = Object.assign(this.hostSettings || {}, msg.settings);
-          if (msg.settings.roundsByMode && typeof UI !== 'undefined' && UI.hostSettings) {
-            UI.hostSettings.roundsByMode = { ...msg.settings.roundsByMode };
+      case 'UPDATE_HOST_SETTINGS':
+      case 'SETTINGS_UPDATE': {
+        const settings = msg.settings || msg.hostSettings;
+        if (settings) {
+          this.hostSettings = Object.assign(this.hostSettings || {}, settings);
+          if (settings.roundsByMode && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.roundsByMode = { ...settings.roundsByMode };
           }
-          if (msg.settings.timer && typeof UI !== 'undefined' && UI.hostSettings) {
-            UI.hostSettings.timer = msg.settings.timer;
+          if (settings.timer && typeof UI !== 'undefined' && UI.hostSettings) {
+            UI.hostSettings.timer = settings.timer;
           }
-          if (typeof UI !== 'undefined') UI.renderLobbyControls();
+          const weeklyToggle = document.getElementById('toggleWeeklyDropsMobile') || document.getElementById('toggleWeeklyDropsDesktop');
+          if (weeklyToggle && settings.weeklyOnly !== undefined) {
+            weeklyToggle.checked = Boolean(settings.weeklyOnly);
+          }
+          const weeklySubtext = document.getElementById('weeklySubtextMobile') || document.getElementById('weeklySubtextDesktop');
+          if (weeklySubtext && settings.weeklyOnly !== undefined) {
+            weeklySubtext.textContent = settings.weeklyOnly ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+          }
+          if (typeof UI !== 'undefined' && UI.renderLobbyControls) UI.renderLobbyControls();
+        }
+        break;
+      }
+
+      case 'COLYSEUS_GAME_START': {
+        this.isMatchActive = true;
+        this.isRoundFinished = false;
+        if (msg.colyseusRoomId && typeof Colyseus !== 'undefined') {
+          try {
+            const client = new Colyseus.Client('wss://guess-the-frame-colyseus.onrender.com');
+            client.joinById(msg.colyseusRoomId, {
+              name: this.playerName,
+              avatar: this.playerAvatar
+            }).then(room => {
+              this.bindColyseusGame(room);
+            }).catch(err => {
+              console.warn('[Colyseus] Failed to join room:', err);
+            });
+          } catch(err) {
+            console.warn('[Colyseus] Connection error:', err);
+          }
+        }
+        break;
+      }
+
+      case 'RETURN_TO_LOBBY': {
+        if (this.colyseusRoom) {
+          try { this.colyseusRoom.leave(); } catch(e) {}
+          this.colyseusRoom = null;
+        }
+        this.isMatchActive = false;
+        this.isRoundFinished = false;
+        if (typeof UI !== 'undefined' && UI.showScreen) {
+          UI.showScreen('lobbyScreen');
         }
         break;
       }
@@ -1162,7 +1223,21 @@ const GameClient = {
     const totalRounds = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : (Number(options.rounds) || this.hostSettings.rounds || 20);
     const timer = Number(options.timer) || this.hostSettings.timer || 30;
 
-    this.hostSettings = { category: cat, rounds: totalRounds, timer, roundsByMode: counts };
+    const weeklyOnly = options.weeklyOnly !== undefined ? Boolean(options.weeklyOnly) : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : true);
+
+    this.hostSettings = { category: cat, rounds: totalRounds, timer, roundsByMode: counts, weeklyOnly };
+
+    const selectFrames = (section, count) => {
+      if (!section || !section.frames || count <= 0) return [];
+      if (weeklyOnly) {
+        const newFrames = section.frames.filter(f => f.tag === 'new').sort(() => 0.5 - Math.random());
+        if (newFrames.length >= count) return newFrames.slice(0, count);
+        const remaining = count - newFrames.length;
+        const classicFrames = section.frames.filter(f => f.tag !== 'new').sort(() => 0.5 - Math.random()).slice(0, remaining);
+        return [...newFrames, ...classicFrames];
+      }
+      return [...section.frames].sort(() => 0.5 - Math.random()).slice(0, count);
+    };
 
     // Build playlist from sections
     let pool = [];
@@ -1175,58 +1250,120 @@ const GameClient = {
       const numEyes = counts.eyes !== undefined ? Number(counts.eyes) : 10;
       const numDial = counts.dialogue !== undefined ? Number(counts.dialogue) : 10;
 
-      const fFrames = (s1 && numFrames > 0) ? [...s1.frames].sort(() => 0.5 - Math.random()).slice(0, numFrames) : [];
-      const fEyes = (s3 && numEyes > 0) ? [...s3.frames].sort(() => 0.5 - Math.random()).slice(0, numEyes) : [];
-      const fDial = (s2 && numDial > 0) ? [...s2.frames].sort(() => 0.5 - Math.random()).slice(0, numDial) : [];
+      const fFrames = selectFrames(s1, numFrames);
+      const fEyes = selectFrames(s3, numEyes);
+      const fDial = selectFrames(s2, numDial);
 
       pool = [...fFrames, ...fEyes, ...fDial];
     } else if (cat === 'frames') {
       const s1 = GAME_SECTIONS.find(s => s.id === 1);
-      if (s1) pool = [...s1.frames].sort(() => 0.5 - Math.random()).slice(0, totalRounds);
+      if (s1) pool = selectFrames(s1, totalRounds);
     } else if (cat === 'dialogue') {
       const s2 = GAME_SECTIONS.find(s => s.id === 2);
-      if (s2) pool = [...s2.frames].sort(() => 0.5 - Math.random()).slice(0, totalRounds);
+      if (s2) pool = selectFrames(s2, totalRounds);
     } else if (cat === 'eyes') {
       const s3 = GAME_SECTIONS.find(s => s.id === 3);
-      if (s3) pool = [...s3.frames].sort(() => 0.5 - Math.random()).slice(0, totalRounds);
+      if (s3) pool = selectFrames(s3, totalRounds);
     } else {
       // 'all' category: balanced mix
       const s1 = GAME_SECTIONS.find(s => s.id === 1);
       const s2 = GAME_SECTIONS.find(s => s.id === 2);
       const s3 = GAME_SECTIONS.find(s => s.id === 3);
 
-      const fFrames = s1 ? [...s1.frames].sort(() => 0.5 - Math.random()).slice(0, 20) : [];
-      const fDial = s2 ? [...s2.frames].sort(() => 0.5 - Math.random()).slice(0, 10) : [];
-      const fEyes = s3 ? [...s3.frames].sort(() => 0.5 - Math.random()).slice(0, 10) : [];
+      const fFrames = selectFrames(s1, 20);
+      const fDial = selectFrames(s2, 10);
+      const fEyes = selectFrames(s3, 10);
       pool = [...fFrames, ...fDial, ...fEyes].slice(0, totalRounds);
     }
 
     if (pool.length === 0) {
       const s1 = GAME_SECTIONS.find(s => s.id === 1);
-      pool = s1 ? [...s1.frames] : [];
+      pool = s1 ? selectFrames(s1, totalRounds) : [];
     }
 
     this.currentPlaylist = pool;
-    this.currentPlayIndex = 0;
-    this.isMatchActive = true;
-    this.isRoundFinished = false;
 
-    this.players.forEach(p => p.score = 0);
+    const startMqttMatch = () => {
+      this.currentPlayIndex = 0;
+      this.isMatchActive = true;
+      this.isRoundFinished = false;
 
-    // Broadcast countdown to all clients
-    this.sendEvent('GAME_START_COUNTDOWN', {
-      totalRounds: this.currentPlaylist.length,
-      hostSettings: this.hostSettings,
-      players: this.players,
-      playlist: this.currentPlaylist
-    });
+      this.players.forEach(p => p.score = 0);
 
-    UI.showCountdownOverlay();
-    if (typeof SoundEffects !== 'undefined') SoundEffects.playTick();
+      // Broadcast countdown to all clients
+      this.sendEvent('GAME_START_COUNTDOWN', {
+        totalRounds: this.currentPlaylist.length,
+        hostSettings: this.hostSettings,
+        players: this.players,
+        playlist: this.currentPlaylist
+      });
 
-    setTimeout(() => {
-      this.startRound(0);
-    }, 3200);
+      UI.showCountdownOverlay();
+      if (typeof SoundEffects !== 'undefined') SoundEffects.playTick();
+
+      setTimeout(() => {
+        this.startRound(0);
+      }, 3200);
+    };
+
+    if (typeof Colyseus !== 'undefined') {
+      let handedOff = false;
+      const timeoutTimer = setTimeout(() => {
+        if (!handedOff) {
+          console.warn('[Colyseus] Connection timeout (4s). Falling back to MQTT mesh.');
+          handedOff = true;
+          startMqttMatch();
+        }
+      }, 4000);
+
+      try {
+        const client = new Colyseus.Client('wss://guess-the-frame-colyseus.onrender.com');
+        client.joinOrCreate('trivia_room', {
+          roomCode: this.roomCode,
+          name: this.playerName,
+          avatar: this.playerAvatar,
+          timer,
+          rounds: totalRounds,
+          category: cat,
+          weeklyOnly
+        }).then(room => {
+          if (handedOff) {
+            try { room.leave(); } catch(e) {}
+            return;
+          }
+          handedOff = true;
+          clearTimeout(timeoutTimer);
+
+          this.bindColyseusGame(room);
+          this.sendEvent('COLYSEUS_GAME_START', {
+            colyseusRoomId: room.id,
+            roomCode: this.roomCode,
+            weeklyOnly
+          });
+          room.send('start_game', {
+            category: cat,
+            rounds: totalRounds,
+            timer,
+            weeklyOnly
+          });
+        }).catch(err => {
+          if (!handedOff) {
+            handedOff = true;
+            clearTimeout(timeoutTimer);
+            console.warn('[Colyseus] Join failed:', err, 'Falling back to MQTT mesh.');
+            startMqttMatch();
+          }
+        });
+      } catch(err) {
+        if (!handedOff) {
+          handedOff = true;
+          clearTimeout(timeoutTimer);
+          startMqttMatch();
+        }
+      }
+    } else {
+      startMqttMatch();
+    }
   },
 
   startRound(roundIndex) {
@@ -1388,6 +1525,11 @@ const GameClient = {
       }
     }
 
+    if (this.colyseusRoom) {
+      this.colyseusRoom.send("submit_guess", { text: clean });
+      return;
+    }
+
     if (this.isHost) {
       this.validateAndProcessGuess({
         playerId: this.playerId,
@@ -1508,6 +1650,13 @@ const GameClient = {
     if (this.hasUsedHintThisRound || this.hasGuessedThisRound) return;
     this.hasUsedHintThisRound = true;
 
+    if (this.colyseusRoom) {
+      this.colyseusRoom.send("request_hint");
+      if (typeof Haptics !== 'undefined') Haptics.hint();
+      if (typeof SoundEffects !== 'undefined') SoundEffects.playHint();
+      return;
+    }
+
     // Deduct 2 points
     const me = this.players.find(p => p.id === this.playerId);
     if (me) {
@@ -1592,6 +1741,10 @@ const GameClient = {
   nextRound() {
     this.stopRevealTimer();
     if (!this.isHost) return;
+    if (this.colyseusRoom) {
+      this.colyseusRoom.send("next_round");
+      return;
+    }
     const nextIdx = this.currentPlayIndex + 1;
     if (nextIdx < this.currentPlaylist.length) {
       this.startRound(nextIdx);
@@ -1602,6 +1755,10 @@ const GameClient = {
 
   skipRound() {
     if (!this.isHost) return;
+    if (this.colyseusRoom) {
+      this.colyseusRoom.send("skip_round");
+      return;
+    }
     this.sendEvent('HOST_SKIP_BROADCAST');
     this.endRound();
   },
@@ -1645,6 +1802,10 @@ const GameClient = {
       }
     }
 
+    if (this.colyseusRoom) {
+      this.colyseusRoom.send("send_chat", { text: clean });
+    }
+
     const msg = {
       id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
       senderId: this.playerId,
@@ -1656,6 +1817,145 @@ const GameClient = {
 
     UI.appendChatMessage(msg);
     this.sendEvent('CHAT_MESSAGE', { msg });
+  },
+
+  bindColyseusGame(room) {
+    this.colyseusRoom = room;
+
+    room.onMessage("guess_result", (res) => {
+      if (res && res.isCorrect) {
+        this.hasGuessedThisRound = true;
+        if (typeof Haptics !== 'undefined') Haptics.correct();
+        if (typeof SoundEffects !== 'undefined') SoundEffects.playSuccess();
+        const me = this.players.find(p => p.id === this.playerId);
+        if (me) me.score = (me.score || 0) + (res.points || 0);
+        if (typeof UI !== 'undefined') {
+          if (UI.showGuessSuccess) UI.showGuessSuccess(res.position, res.points);
+          else if (UI.showToast) UI.showToast(`🎉 Correct! +${res.points} pts!`);
+          if (UI.renderScoreboard) UI.renderScoreboard();
+        }
+      } else {
+        if (typeof Haptics !== 'undefined') Haptics.wrong();
+        if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+        if (typeof UI !== 'undefined' && UI.shakeGuessInput) UI.shakeGuessInput();
+      }
+    });
+
+    room.onMessage("hint_response", (res) => {
+      if (res && res.maskedHint) {
+        this.currentMaskedHint = res.maskedHint;
+        if (typeof UI !== 'undefined' && UI.displayHintBanner) {
+          UI.displayHintBanner(res.maskedHint, res.pointsDeducted || 2);
+        }
+      }
+    });
+
+    room.onMessage("chat_warning", (res) => {
+      if (res && res.message && typeof UI !== 'undefined' && UI.showToast) {
+        UI.showToast(res.message);
+      }
+    });
+
+    room.onStateChange((state) => {
+      if (!state) return;
+
+      // Sync players and scores
+      if (state.players) {
+        state.players.forEach((p, sessionId) => {
+          let localP = this.players.find(lp => lp.id === sessionId || lp.name === p.name);
+          if (!localP) {
+            localP = { id: sessionId, name: p.name, avatar: p.avatar, score: p.score, isHost: p.isHost };
+            this.players.push(localP);
+          } else {
+            localP.score = p.score;
+            localP.isHost = p.isHost;
+          }
+        });
+        if (typeof UI !== 'undefined' && UI.renderScoreboard) {
+          UI.renderScoreboard();
+        }
+      }
+
+      if (state.phase === "countdown") {
+        if (typeof UI !== 'undefined' && UI.showCountdownOverlay) {
+          UI.showCountdownOverlay();
+        }
+        if (typeof SoundEffects !== 'undefined') SoundEffects.playTick();
+      } else if (state.phase === "playing") {
+        const roundNum = state.currentRound || 1;
+        const roundIndex = roundNum - 1;
+        if (roundIndex !== this.currentPlayIndex || !this.isMatchActive || this.isRoundFinished) {
+          this.isMatchActive = true;
+          this.isRoundFinished = false;
+          this.currentPlayIndex = roundIndex;
+          this.hasGuessedThisRound = false;
+          this.hasUsedHintThisRound = false;
+          this.currentRoundWinners = [];
+
+          const clientFrame = {
+            type: state.currentMediaType || 'image',
+            content: state.currentMediaContent || '',
+            year: state.currentYear || '',
+            dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
+            revealContent: '',
+            sectionName: state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame')
+          };
+
+          this.setupRoundUI(clientFrame, state.timeRemaining || 30, roundIndex, state.totalRounds || 20);
+        }
+
+        if (typeof UI !== 'undefined' && UI.updateTimer) {
+          UI.updateTimer(state.timeRemaining);
+        }
+      } else if (state.phase === "round_reveal") {
+        if (!this.isRoundFinished) {
+          this.isRoundFinished = true;
+          const winners = [];
+          if (state.currentRoundWinners) {
+            state.currentRoundWinners.forEach(w => winners.push({
+              playerId: w.playerId,
+              playerName: w.playerName,
+              position: w.position,
+              points: w.points
+            }));
+          }
+          this.currentRoundWinners = winners;
+          const revealFrame = {
+            answer: state.revealedAnswer,
+            revealContent: state.revealedContent,
+            year: state.currentYear,
+            type: state.currentMediaType || 'image',
+            content: state.currentMediaContent || ''
+          };
+          if (typeof SoundEffects !== 'undefined') SoundEffects.playReveal();
+          if (typeof Haptics !== 'undefined') Haptics.correct();
+          if (typeof UI !== 'undefined') {
+            UI.showScreen('revealScreen');
+            UI.renderRoundReveal({
+              answer: revealFrame.answer,
+              year: revealFrame.year,
+              type: revealFrame.type,
+              content: revealFrame.type === 'dialogue' ? revealFrame.content : revealFrame.content,
+              revealedContent: revealFrame.revealContent || revealFrame.content,
+              winners: this.currentRoundWinners
+            });
+          }
+        }
+      } else if (state.phase === "game_over") {
+        if (this.isMatchActive) {
+          this.finishGame();
+        }
+      }
+    });
+
+    room.onError((code, message) => {
+      console.warn(`[Colyseus] Room error (${code}): ${message}`);
+    });
+
+    room.onLeave((code) => {
+      console.log(`[Colyseus] Disconnected from room with code ${code}`);
+      this.colyseusRoom = null;
+    });
   },
 
   startHeartbeat() {

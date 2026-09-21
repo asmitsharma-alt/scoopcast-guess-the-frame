@@ -98,18 +98,19 @@ export class TriviaRoom extends Room<GameState> {
 
   private setupMessageHandlers() {
     // ── Host starts the game ──
-    this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number }) => {
+    this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number; weeklyOnly?: boolean }) => {
       const player = this.state.players.get(client.sessionId);
       if (!player || !player.isHost) return;
       if (this.state.phase !== "lobby" && this.state.phase !== "game_over") return;
 
       const category = message?.category || 'all';
       const requestedRounds = Number(message?.rounds) || GAME_CONFIG.defaultRounds;
+      const weeklyOnly = message?.weeklyOnly !== undefined ? Boolean(message.weeklyOnly) : true;
       if (message?.timer) {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
       }
 
-      this.buildPlaylist(category, requestedRounds);
+      this.buildPlaylist(category, requestedRounds, weeklyOnly);
       if (this.currentPlaylist.length === 0) return;
 
       this.state.totalRounds = this.currentPlaylist.length;
@@ -392,7 +393,7 @@ export class TriviaRoom extends Room<GameState> {
     }
   }
 
-  private buildPlaylist(category: string, count: number) {
+  private buildPlaylist(category: string, count: number, weeklyOnly: boolean = false) {
     let pool: CatalogItem[] = [];
     if (category === 'frames') {
       pool = CATALOG.filter(c => c.category === 'frames');
@@ -403,6 +404,24 @@ export class TriviaRoom extends Room<GameState> {
     } else {
       // 'all' includes frames, dialogues, and eyes
       pool = CATALOG.filter(c => c.category !== 'tie_breaker');
+    }
+
+    if (weeklyOnly) {
+      const weeklyItems = pool.filter(c => c.tag === 'new');
+      if (weeklyItems.length > 0) {
+        const shuffledWeekly = [...weeklyItems].sort(() => Math.random() - 0.5);
+        if (shuffledWeekly.length >= count) {
+          this.currentPlaylist = shuffledWeekly.slice(0, count);
+          return;
+        } else {
+          // If fewer weekly items than requested count, use all weekly items,
+          // then fill remaining slots with classic items so match doesn't fall short
+          const remainingCount = count - shuffledWeekly.length;
+          const classicPool = pool.filter(c => c.tag !== 'new').sort(() => Math.random() - 0.5);
+          this.currentPlaylist = [...shuffledWeekly, ...classicPool.slice(0, remainingCount)];
+          return;
+        }
+      }
     }
 
     // Shuffle pool

@@ -10,6 +10,7 @@ export interface CatalogItem {
   answer: string;             // Authoritative answer (kept secret on server!)
   year?: string;
   aliases?: string[];
+  tag?: 'new' | 'classic';
 }
 
 export const CATALOG: CatalogItem[] = [

@@ -316,7 +316,27 @@ const UI = {
         const timer = UI.hostSettings.timer || 30;
         const activeModes = Object.keys(counts).filter(k => counts[k] > 0);
         const category = activeModes.length === 1 ? activeModes[0] : (activeModes.length === 3 ? 'all' : 'mixed');
-        GameClient.startGame({ roundsByMode: counts, rounds: totalRounds, timer, category });
+        const weeklyToggle = document.getElementById('toggleWeeklyDropsMobile');
+        const weeklyOnly = weeklyToggle ? weeklyToggle.checked : true;
+        GameClient.startGame({ roundsByMode: counts, rounds: totalRounds, timer, category, weeklyOnly });
+      });
+    }
+
+    // Weekly Drops Toggle Listener
+    const weeklyToggle = document.getElementById('toggleWeeklyDropsMobile');
+    if (weeklyToggle) {
+      weeklyToggle.addEventListener('change', (e) => {
+        const subtext = document.getElementById('weeklySubtextMobile');
+        const isChecked = e.target.checked;
+        if (subtext) {
+          subtext.textContent = isChecked ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        }
+        if (typeof GameClient !== 'undefined' && GameClient.isHost) {
+          if (!GameClient.hostSettings) GameClient.hostSettings = {};
+          GameClient.hostSettings.weeklyOnly = isChecked;
+          GameClient.broadcastState('SETTINGS_UPDATE');
+        }
+        if (typeof Haptics !== 'undefined') Haptics.tap();
       });
     }
 
