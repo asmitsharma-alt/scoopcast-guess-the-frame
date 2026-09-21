@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Scoopcast Weekly Movie Drops",
+  "description": "Weekly movie frames, dialogues, and eye closeups for Scoopcast Guess The Frame",
+  "version": "1.0.0",
+  "lastUpdated": "2026-09-21",
+  "activeWeek": "2026-W38",
+  "drops": [
+    {
+      "id": "wf_2026_01",
+      "category": "frames",
+      "type": "image",
+      "content": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800275/scoopcast/GUESSTHEFRAME/Bramayugam_2024.webp",
+      "answer": "BRAMAYUGAM",
+      "year": "2024",
+      "tag": "new",
+      "hints": ["B _ A M _ Y _ G _ M", "2024 Malayalam dark horror"]
+    },
+    {
+      "id": "wf_2026_02",
+      "category": "frames",
+      "type": "image",
+      "content": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800296/scoopcast/GUESSTHEFRAME/Cocktail_2_2026.webp",
+      "answer": "COCKTAIL 2",
+      "year": "2026",
+      "tag": "new",
+      "hints": ["C _ C K _ A I _  2", "2026 romantic comedy sequel"]
+    },
+    {
+      "id": "wd_2026_01",
+      "category": "dialogue",
+      "type": "dialogue",
+      "content": "Tum agar mujhse baat nahi karogi toh main mar jaunga.",
+      "dialogue": "Tum agar mujhse baat nahi karogi toh main mar jaunga.",
+      "answer": "ROCKSTAR",
+      "year": "2011",
+      "tag": "new",
+      "hints": ["R _ C K _ T A R", "Ranbir Kapoor & Imtiaz Ali musical drama"]
+    },
+    {
+      "id": "we_2026_01",
+      "category": "eyes",
+      "type": "eye",
+      "content": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800688/scoopcast/GUESSTHEEYE/Ranbir_Kapoor.webp",
+      "revealContent": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789800688/scoopcast/GUESSTHEEYE/Ranbir_Kapoor_Full.webp",
+      "answer": "RANBIR KAPOOR",
+      "year": "",
+      "tag": "new",
+      "hints": ["R _ N B _ R  K _ P _ O R", "Bollywood star of Animal and Barfi!"]
+    }
+  ]
+}

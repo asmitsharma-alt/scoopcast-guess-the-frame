@@ -148,11 +148,18 @@ export class TriviaRoom extends Room<GameState> {
       if (isMatch) {
         player.hasGuessedCorrectly = true;
         const pos = this.state.currentRoundWinners.length + 1;
-        let points = 0;
-        if (pos === 1) points = GAME_CONFIG.scoring.firstPlace;
-        else if (pos === 2) points = GAME_CONFIG.scoring.secondPlace;
-        else if (pos === 3) points = GAME_CONFIG.scoring.thirdPlace;
+        let basePoints = 0;
+        if (pos === 1) basePoints = GAME_CONFIG.scoring.firstPlace;
+        else if (pos === 2) basePoints = GAME_CONFIG.scoring.secondPlace;
+        else if (pos === 3) basePoints = GAME_CONFIG.scoring.thirdPlace;
 
+        // Streak multiplier: 2 in a row = 1.5x, 3+ in a row = 2.0x!
+        player.streak = (player.streak || 0) + 1;
+        let multiplier = 1.0;
+        if (player.streak >= 3) multiplier = 2.0;
+        else if (player.streak === 2) multiplier = 1.5;
+
+        const points = Math.round(basePoints * multiplier);
         player.score += points;
 
         const winner = new RoundWinner();
@@ -161,23 +168,36 @@ export class TriviaRoom extends Room<GameState> {
         winner.avatar = player.avatar;
         winner.position = pos;
         winner.points = points;
+        winner.streak = player.streak;
         this.state.currentRoundWinners.push(winner);
 
         // Notify client of success
         client.send("guess_result", {
           isCorrect: true,
           points: points,
-          position: pos
+          position: pos,
+          streak: player.streak,
+          multiplier
         });
 
         const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : '🥉';
-        this.addSystemChatMessage(`${medal} <strong>${player.name}</strong> guessed correctly! (+${points} pts)`);
+        const streakTag = player.streak >= 2 ? ` 🔥 ${player.streak}x STREAK (${multiplier}x pts)!` : '';
+        this.addSystemChatMessage(`${medal} <strong>${player.name}</strong> guessed correctly! (+${points} pts)${streakTag}`);
 
         this.checkRoundCompletion();
       } else {
-        client.send("guess_result", {
-          isCorrect: false
-        });
+        const isClose = FuzzyMatcher.isCloseMatch(guessText, this.currentSecretAnswer);
+        if (isClose) {
+          client.send("guess_result", {
+            isCorrect: false,
+            isClose: true,
+            message: "⚠️ Almost! Check your spelling!"
+          });
+        } else {
+          client.send("guess_result", {
+            isCorrect: false
+          });
+        }
       }
     });
 
@@ -313,6 +333,13 @@ export class TriviaRoom extends Room<GameState> {
     if (this.currentSecretItem && this.currentSecretItem.type === "eye") {
       this.state.revealedContent = this.currentSecretItem.revealContent || "";
     }
+
+    // Reset streaks for players who did not guess correctly in this round
+    this.state.players.forEach((p) => {
+      if (!p.hasGuessedCorrectly) {
+        p.streak = 0;
+      }
+    });
 
     // Safety auto-advance timer (20 seconds)
     if (this.autoAdvanceTimer) clearTimeout(this.autoAdvanceTimer);

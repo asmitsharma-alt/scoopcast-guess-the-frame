@@ -9163,8 +9163,23 @@
       color: #fff;
       box-shadow: 3px 3px 0 #1a1a1a;
     }
+    .guess-feedback-warning {
+      display: inline-flex;
+      background: #FFE066;
+      color: #1a1a1a;
+      box-shadow: 3px 3px 0 #1a1a1a;
+    }
     .shake-input {
       animation: shakeAnim 0.35s ease;
+    }
+    .warning-pulse {
+      animation: warnPulseAnim 0.45s ease;
+      border-color: #F59E0B !important;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4) !important;
+    }
+    @keyframes warnPulseAnim {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
     }
     @keyframes shakeAnim {
       0%, 100% { transform: translateX(0); }
@@ -14308,8 +14323,12 @@
         </div>
       </div>
 
-      <!-- ── BOTTOM BUTTONS DECK (3 BUTTONS) ── -->
+      <!-- ── BOTTOM BUTTONS DECK (4 BUTTONS) ── -->
       <div class="cw-buttons-deck">
+        <button type="button" class="cw-btn btn-share-whatsapp" onclick="WinnerScreen.shareWhatsAppScorecard()" style="background:#25D366; color:#000;" title="Share scorecard on WhatsApp">
+          <span class="cw-btn-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.979-.276-.1-.476-.15-.677.15-.201.301-.777.979-.953 1.179-.176.201-.351.226-.652.075s-1.272-.469-2.423-1.496c-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.677-1.632-.928-2.235-.244-.588-.493-.508-.677-.518-.176-.008-.376-.01-.577-.01s-.527.075-.803.376c-.276.301-1.054 1.029-1.054 2.509 0 1.48 1.079 2.909 1.229 3.11s2.124 3.243 5.145 4.549c.718.311 1.279.497 1.716.636.721.23 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.12 1.528 5.86L.055 23.545a.75.75 0 00.93.93l5.807-1.498A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.948 9.948 0 01-5.115-1.411l-.367-.22-3.805.981.998-3.71-.24-.38A9.957 9.957 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg></span>
+          <span class="cw-btn-text">SHARE SCORECARD</span>
+        </button>
         <button type="button" class="cw-btn btn-play-again" onclick="MultiplayerEngine.rematch()">
           <span class="cw-btn-icon"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
           <span class="cw-btn-text">PLAY AGAIN</span>
@@ -16626,6 +16645,27 @@
         }
 
         return false;
+      },
+
+      isCloseMatch(guess, answer) {
+        if (!guess || !answer) return false;
+        if (this.isMatch(guess, answer)) return false;
+
+        const nGuess = this.normalize(guess);
+        const nAns = this.normalize(answer);
+        if (!nGuess || !nAns) return false;
+
+        const compactGuess = nGuess.replace(/\s+/g, '');
+        const compactAns = nAns.replace(/\s+/g, '');
+
+        const distCompact = this.levenshtein(compactGuess, compactAns);
+        const distNorm = this.levenshtein(nGuess, nAns);
+        const dist = Math.min(distCompact, distNorm);
+
+        if (compactAns.length >= 4 && dist === 1) return true;
+        if (compactAns.length >= 9 && dist === 2) return true;
+
+        return false;
       }
     };
 
@@ -18503,11 +18543,20 @@
             if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
             if (msg.targetPlayerId === this.playerId && !msg.isCorrect) {
               SoundManager.play('wrong');
-              this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
-              const input = document.getElementById('onlineGuessInput');
-              if (input) {
-                input.classList.add('shake-input');
-                setTimeout(() => input.classList.remove('shake-input'), 400);
+              if (msg.isClose) {
+                this.showGuessFeedback(false, msg.message || '⚠️ Almost! Check your spelling!', true);
+                const input = document.getElementById('onlineGuessInput');
+                if (input) {
+                  input.classList.add('warning-pulse');
+                  setTimeout(() => input.classList.remove('warning-pulse'), 500);
+                }
+              } else {
+                this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
+                const input = document.getElementById('onlineGuessInput');
+                if (input) {
+                  input.classList.add('shake-input');
+                  setTimeout(() => input.classList.remove('shake-input'), 400);
+                }
               }
             }
             break;
@@ -19386,28 +19435,48 @@
             }
           }
         } else {
-          if (data.playerId === this.playerId) {
-            SoundManager.play('wrong');
-            this.showGuessFeedback(false, 'Not quite, try again!');
-            const input = document.getElementById('onlineGuessInput');
-            if (input) {
-              input.classList.add('shake-input');
-              setTimeout(() => input.classList.remove('shake-input'), 400);
+          const isClose = FuzzyMatcher.isCloseMatch && FuzzyMatcher.isCloseMatch(data.guess, currentFrame.answer);
+          if (isClose) {
+            if (data.playerId === this.playerId) {
+              SoundManager.play('wrong');
+              this.showGuessFeedback(false, '⚠️ Almost! Check your spelling!', true);
+              const input = document.getElementById('onlineGuessInput');
+              if (input) {
+                input.classList.add('warning-pulse');
+                setTimeout(() => input.classList.remove('warning-pulse'), 500);
+              }
+            } else {
+              this.sendEvent('GUESS_RESULT', {
+                targetPlayerId: data.playerId,
+                isCorrect: false,
+                isClose: true,
+                message: '⚠️ Almost! Check your spelling!'
+              });
             }
           } else {
-            this.sendEvent('GUESS_RESULT', {
-              targetPlayerId: data.playerId,
-              isCorrect: false
-            });
+            if (data.playerId === this.playerId) {
+              SoundManager.play('wrong');
+              this.showGuessFeedback(false, 'Not quite, try again!');
+              const input = document.getElementById('onlineGuessInput');
+              if (input) {
+                input.classList.add('shake-input');
+                setTimeout(() => input.classList.remove('shake-input'), 400);
+              }
+            } else {
+              this.sendEvent('GUESS_RESULT', {
+                targetPlayerId: data.playerId,
+                isCorrect: false
+              });
+            }
           }
         }
       },
 
-      showGuessFeedback(isCorrect, text) {
+      showGuessFeedback(isCorrect, text, isWarning = false) {
         const pill = document.getElementById('guessFeedbackPill');
         if (!pill) return;
-        pill.textContent = text;
-        pill.className = 'guess-feedback-pill ' + (isCorrect ? 'guess-feedback-correct' : 'guess-feedback-wrong');
+        pill.innerHTML = text;
+        pill.className = 'guess-feedback-pill ' + (isWarning ? 'guess-feedback-warning' : (isCorrect ? 'guess-feedback-correct' : 'guess-feedback-wrong'));
         pill.style.display = 'inline-flex';
       },
 
@@ -20028,6 +20097,7 @@
         }
 
         const playerList = players || GS.players || [];
+        this._lastPlayers = playerList;
         this.renderStage(playerList);
         this.renderScoreboard(playerList);
         this.renderMatchSummary(playerList);
@@ -20259,6 +20329,19 @@
             'opacity:' + (0.7 + Math.random() * 0.3) + ';';
           box.appendChild(el);
         }
+      },
+
+      shareWhatsAppScorecard() {
+        const sorted = [...(this._lastPlayers || GS.players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+        let text = '🎬 *Guess The Frame - Match Scorecard* 🍿\n\n';
+        const medals = ['🥇', '🥈', '🥉'];
+        sorted.slice(0, 5).forEach((p, i) => {
+          const medal = medals[i] || `${i + 1}.`;
+          text += `${medal} *${p.name || 'Player'}*: ${p.score || 0} pts\n`;
+        });
+        text += '\nThink you know your movies? Play now at: https://scoopcast.me';
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
       }
     };
 
@@ -20558,9 +20641,23 @@
 
       /* Preload next few frames */
       async preloadUpcoming() {
+        if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.currentPlaylist && MultiplayerEngine.currentPlaylist.length > 0) {
+          const nextIdx = (MultiplayerEngine.currentPlayIndex || 0) + 1;
+          for (let i = nextIdx; i < Math.min(nextIdx + 3, MultiplayerEngine.currentPlaylist.length); i++) {
+            const f = MultiplayerEngine.currentPlaylist[i];
+            if (f && (f.type === 'image' || f.type === 'eye') && f.content) {
+              this.preloadImage(f.content).catch(() => {});
+            }
+            if (f && f.type === 'eye' && f.revealContent) {
+              this.preloadImage(f.revealContent).catch(() => {});
+            }
+          }
+        }
+
         let count = 0;
         for (let s = GS.currentSection; s < GS.sections.length && count < 3; s++) {
           const sec = GS.sections[s];
+          if (!sec || !sec.frames) continue;
           const startRound = (s === GS.currentSection) ? GS.currentSectionRound + 1 : 0;
           const valid = sec.frames.filter(f => (f.content && f.answer) || (f.type === 'dialogue' && f.dialogue && f.answer));
           for (let r = startRound; r < valid.length && count < 3; r++) {
@@ -20831,15 +20928,27 @@
         room.onMessage("guess_result", (res) => {
           if (res && res.isCorrect) {
             SoundManager.play('correct');
-            this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ` Correct! (+${res.points} pts)`);
+            const streakBonus = res.streak && res.streak > 1 ? ` 🔥 ${res.streak}x STREAK!` : '';
+            this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ` Correct! (+${res.points} pts)` + streakBonus);
             const me = GS.players.find(p => (this.playerId && p.id === this.playerId) || (this.playerName && p.name.toLowerCase() === this.playerName.toLowerCase()));
             if (me) me.score = (me.score || 0) + (res.points || 0);
             UI.renderLB();
+          } else if (res && res.isClose) {
+            SoundManager.play('wrong');
+            this.showGuessFeedback(false, res.message || '⚠️ Almost! Check your spelling!', true);
+            const input = document.getElementById('onlineGuessInput');
+            if (input) {
+              input.classList.add('warning-pulse');
+              setTimeout(() => input.classList.remove('warning-pulse'), 500);
+            }
           } else {
             SoundManager.play('wrong');
             this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
             const input = document.getElementById('onlineGuessInput');
-            if (input) input.classList.add('shake-input');
+            if (input) {
+              input.classList.add('shake-input');
+              setTimeout(() => input.classList.remove('shake-input'), 400);
+            }
           }
         });
 

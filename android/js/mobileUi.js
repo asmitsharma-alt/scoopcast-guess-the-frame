@@ -815,7 +815,7 @@ const UI = {
     }
   },
 
-  showGuessSuccess(position, points) {
+  showGuessSuccess(position, points, streakBonus = '') {
     const input = document.getElementById('mobileGuessInput');
     const medalIcon = typeof SvgIcons !== 'undefined'
       ? (position === 1 ? SvgIcons.medal1 : (position === 2 ? SvgIcons.medal2 : SvgIcons.medal3))
@@ -827,7 +827,19 @@ const UI = {
       input.placeholder = 'YOU GUESSED IT! CHAT FREELY...';
     }
     const partyIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.party : '';
-    this.showToast(`${partyIcon} Correct! ${medalIcon} ${posLabel} (+${points} pts)`);
+    this.showToast(`${partyIcon} Correct! ${medalIcon} ${posLabel} (+${points} pts)${streakBonus}`);
+  },
+
+  showGuessWarning(message) {
+    this.showToast(message || '⚠️ Almost! Check your spelling!');
+  },
+
+  pulseGuessInput() {
+    const dock = document.getElementById('mobileActionDock');
+    if (dock) {
+      dock.classList.add('pulse-warn-anim');
+      setTimeout(() => dock.classList.remove('pulse-warn-anim'), 450);
+    }
   },
 
   shakeGuessInput() {
@@ -1147,6 +1159,19 @@ const UI = {
         </div>
       `;
     }).join('');
+  },
+
+  shareWhatsAppScorecard() {
+    const players = [...(GameClient.players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+    let text = '🎬 *Guess The Frame - Match Scorecard* 🍿\n\n';
+    const medals = ['🥇', '🥈', '🥉'];
+    players.slice(0, 5).forEach((p, i) => {
+      const medal = medals[i] || `${i + 1}.`;
+      text += `${medal} *${p.name || 'Player'}*: ${p.score || 0} pts\n`;
+    });
+    text += '\nThink you know your movies? Play now at: https://scoopcast.me';
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
   },
 
   renderLobbyPlayers() {

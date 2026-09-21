@@ -1520,6 +1520,18 @@ body.keyboard-open .mobile-action-dock {
   50% { transform: translateX(-5px); }
 }
 
+/* Warning Pulse Animation on Close Typo Guess */
+.pulse-warn-anim {
+  animation: pulseWarnDock 0.45s ease both;
+  border-color: #F59E0B !important;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4) !important;
+}
+
+@keyframes pulseWarnDock {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
 /* ══════════════════════════════════════════════════════════════
    SCREEN 4: ROUND REVEAL SCREEN
    ══════════════════════════════════════════════════════════════ */

@@ -226,4 +226,25 @@ export class FuzzyMatcher {
 
     return false;
   }
+
+  public static isCloseMatch(guess: string, answer: string): boolean {
+    if (!guess || !answer) return false;
+    if (this.isMatch(guess, answer)) return false;
+
+    const nGuess = this.normalize(guess);
+    const nAns = this.normalize(answer);
+    if (!nGuess || !nAns) return false;
+
+    const compactGuess = nGuess.replace(/\s+/g, '');
+    const compactAns = nAns.replace(/\s+/g, '');
+
+    const distCompact = this.levenshtein(compactGuess, compactAns);
+    const distNorm = this.levenshtein(nGuess, nAns);
+    const dist = Math.min(distCompact, distNorm);
+
+    if (compactAns.length >= 4 && dist === 1) return true;
+    if (compactAns.length >= 9 && dist === 2) return true;
+
+    return false;
+  }
 }

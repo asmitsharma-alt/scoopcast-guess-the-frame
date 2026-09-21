@@ -9,6 +9,7 @@ export class Player extends Schema {
   @type("boolean") hasGuessedCorrectly: boolean = false;
   @type("boolean") hasUsedHint: boolean = false;
   @type("boolean") connected: boolean = true;
+  @type("number") streak: number = 0;
 }
 
 export class RoundWinner extends Schema {
@@ -17,6 +18,7 @@ export class RoundWinner extends Schema {
   @type("string") avatar: string = "aman";
   @type("number") position: number = 1; // 1 = 1st, 2 = 2nd, 3 = 3rd
   @type("number") points: number = 0;   // 10, 7, or 5
+  @type("number") streak: number = 0;
 }
 
 export class ChatMessage extends Schema {

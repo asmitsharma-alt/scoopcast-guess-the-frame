@@ -220,6 +220,27 @@ const FuzzyMatcher = {
     }
 
     return false;
+  },
+
+  isCloseMatch(guess, answer) {
+    if (!guess || !answer) return false;
+    if (this.isMatch(guess, answer)) return false;
+
+    const nGuess = this.normalize(guess);
+    const nAns = this.normalize(answer);
+    if (!nGuess || !nAns) return false;
+
+    const compactGuess = nGuess.replace(/\s+/g, '');
+    const compactAns = nAns.replace(/\s+/g, '');
+
+    const distCompact = this.levenshtein(compactGuess, compactAns);
+    const distNorm = this.levenshtein(nGuess, nAns);
+    const dist = Math.min(distCompact, distNorm);
+
+    if (compactAns.length >= 4 && dist === 1) return true;
+    if (compactAns.length >= 9 && dist === 2) return true;
+
+    return false;
   }
 };
 
@@ -1142,9 +1163,19 @@ const GameClient = {
 
       case 'GUESS_RESULT': {
         if (msg.targetPlayerId === this.playerId && !msg.isCorrect) {
-          if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
-          if (typeof Haptics !== 'undefined') Haptics.wrong();
-          UI.shakeGuessInput();
+          if (msg.isClose) {
+            if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+            if (typeof Haptics !== 'undefined') (Haptics.warning ? Haptics.warning() : Haptics.wrong());
+            if (typeof UI !== 'undefined') {
+              if (UI.showGuessWarning) UI.showGuessWarning(msg.message || '⚠️ Almost! Check your spelling!');
+              else if (UI.showToast) UI.showToast(msg.message || '⚠️ Almost! Check your spelling!');
+              if (UI.pulseGuessInput) UI.pulseGuessInput();
+            }
+          } else {
+            if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+            if (typeof Haptics !== 'undefined') Haptics.wrong();
+            UI.shakeGuessInput();
+          }
         }
         break;
       }
@@ -1605,15 +1636,35 @@ const GameClient = {
         setTimeout(() => this.endRound(), 600);
       }
     } else {
-      if (data.playerId === this.playerId) {
-        if (typeof Haptics !== 'undefined') Haptics.wrong();
-        if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
-        UI.shakeGuessInput();
+      const isClose = FuzzyMatcher.isCloseMatch && FuzzyMatcher.isCloseMatch(data.guess, currentFrame.answer);
+      if (isClose) {
+        if (data.playerId === this.playerId) {
+          if (typeof Haptics !== 'undefined') (Haptics.warning ? Haptics.warning() : Haptics.wrong());
+          if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+          if (typeof UI !== 'undefined') {
+            if (UI.showGuessWarning) UI.showGuessWarning('⚠️ Almost! Check your spelling!');
+            else if (UI.showToast) UI.showToast('⚠️ Almost! Check your spelling!');
+            if (UI.pulseGuessInput) UI.pulseGuessInput();
+          }
+        } else {
+          this.sendEvent('GUESS_RESULT', {
+            targetPlayerId: data.playerId,
+            isCorrect: false,
+            isClose: true,
+            message: '⚠️ Almost! Check your spelling!'
+          });
+        }
       } else {
-        this.sendEvent('GUESS_RESULT', {
-          targetPlayerId: data.playerId,
-          isCorrect: false
-        });
+        if (data.playerId === this.playerId) {
+          if (typeof Haptics !== 'undefined') Haptics.wrong();
+          if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+          UI.shakeGuessInput();
+        } else {
+          this.sendEvent('GUESS_RESULT', {
+            targetPlayerId: data.playerId,
+            isCorrect: false
+          });
+        }
       }
     }
   },
@@ -1830,9 +1881,18 @@ const GameClient = {
         const me = this.players.find(p => p.id === this.playerId);
         if (me) me.score = (me.score || 0) + (res.points || 0);
         if (typeof UI !== 'undefined') {
-          if (UI.showGuessSuccess) UI.showGuessSuccess(res.position, res.points);
-          else if (UI.showToast) UI.showToast(`🎉 Correct! +${res.points} pts!`);
+          const streakBonus = res.streak && res.streak > 1 ? ` 🔥 ${res.streak}x STREAK!` : '';
+          if (UI.showGuessSuccess) UI.showGuessSuccess(res.position, res.points, streakBonus);
+          else if (UI.showToast) UI.showToast(`🎉 Correct! +${res.points} pts!${streakBonus}`);
           if (UI.renderScoreboard) UI.renderScoreboard();
+        }
+      } else if (res && res.isClose) {
+        if (typeof Haptics !== 'undefined') (Haptics.warning ? Haptics.warning() : Haptics.wrong());
+        if (typeof SoundEffects !== 'undefined') SoundEffects.playWrong();
+        if (typeof UI !== 'undefined') {
+          if (UI.showGuessWarning) UI.showGuessWarning(res.message || '⚠️ Almost! Check your spelling!');
+          else if (UI.showToast) UI.showToast(res.message || '⚠️ Almost! Check your spelling!');
+          if (UI.pulseGuessInput) UI.pulseGuessInput();
         }
       } else {
         if (typeof Haptics !== 'undefined') Haptics.wrong();
