@@ -2445,3 +2445,163 @@ body.keyboard-open .mobile-action-dock {
 /* ══════════════════════════════════════════════════════════════
    SEO GAME GUIDE & FAQ ACCORDION (Neobrutalist Styling)
    ══════════════════════════════════════════════════════════════ */
+
+/* ── WINNER SHARE MODAL (NEO-BRUTALIST POPUP) ── */
+.btn-share-result {
+  background: #8B5CF6 !important;
+  color: #FFFFFF !important;
+}
+
+.share-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: fadeInModal 0.2s ease-out;
+}
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.share-modal-card {
+  background: #FFFDF0;
+  border: 3.5px solid #111827;
+  border-radius: 20px;
+  box-shadow: 8px 8px 0px #111827;
+  max-width: 440px;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: popUpModal 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popUpModal {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.share-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 3px solid #111827;
+  background: #FEF08A;
+  box-sizing: border-box;
+}
+.share-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #111827;
+}
+.share-modal-close {
+  background: #FFFFFF;
+  border: 2px solid #111827;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #111827;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #111827;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.share-modal-close:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #111827;
+  background: #FEE2E2;
+}
+.share-modal-close:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #111827;
+}
+.share-modal-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.share-preview-wrap {
+  width: 100%;
+  border: 2.5px solid #111827;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 4px 4px 0px #111827;
+  background: #1E293B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+.share-preview-img {
+  width: 100%;
+  height: auto;
+  max-height: 270px;
+  object-fit: contain;
+  display: block;
+}
+.share-modal-hint {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #4B5563;
+  text-align: center;
+}
+.share-modal-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.share-action-btn {
+  flex: 1;
+  height: 48px;
+  border: 3px solid #111827;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0px #111827;
+  font-weight: 900;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.1s, box-shadow 0.1s;
+  letter-spacing: 0.5px;
+}
+.share-action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px #111827;
+}
+.share-action-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #111827;
+}
+.btn-action-share {
+  background: #8B5CF6;
+  color: #FFFFFF;
+}
+.btn-action-download {
+  background: #10B981;
+  color: #FFFFFF;
+}

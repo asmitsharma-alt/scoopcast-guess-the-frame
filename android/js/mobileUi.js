@@ -1161,17 +1161,13 @@ const UI = {
     }).join('');
   },
 
-  shareWhatsAppScorecard() {
+  openShareModal() {
     const players = [...(GameClient.players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-    let text = '🎬 *Guess The Frame - Match Scorecard* 🍿\n\n';
-    const medals = ['🥇', '🥈', '🥉'];
-    players.slice(0, 5).forEach((p, i) => {
-      const medal = medals[i] || `${i + 1}.`;
-      text += `${medal} *${p.name || 'Player'}*: ${p.score || 0} pts\n`;
-    });
-    text += '\nThink you know your movies? Play now at: https://scoopcast.me';
-    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    ScorecardShare.openModal(players);
+  },
+
+  shareWhatsAppScorecard() {
+    this.openShareModal();
   },
 
   renderLobbyPlayers() {
@@ -1403,3 +1399,316 @@ window.addEventListener('online', () => {
 
 window.UI = UI;
 window.resolveMediaPath = resolveMediaPath;
+
+/* ═══ AAA SCORECARD CANVAS GENERATOR & SHARE CONTROLLER (MOBILE) ═══ */
+const ScorecardShare = {
+  _currentCanvas: null,
+  _currentBlob: null,
+  _currentDataUrl: null,
+  _currentPlayers: [],
+
+  roundRect(ctx, x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  },
+
+  generateCanvas(players) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 800;
+    canvas.height = 1020;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Background
+    ctx.fillStyle = '#FFFDF0';
+    ctx.fillRect(0, 0, 800, 1020);
+
+    // Retro halftone comic dots
+    ctx.fillStyle = '#FDE68A';
+    for (let x = 35; x < 770; x += 32) {
+      for (let y = 35; y < 990; y += 32) {
+        ctx.beginPath();
+        ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Outer Frame
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#111827';
+    ctx.strokeRect(18, 18, 764, 984);
+
+    // Inner Border
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = '#F59E0B';
+    ctx.strokeRect(30, 30, 740, 960);
+
+    // 2. Header
+    ctx.fillStyle = '#EC4899';
+    this.roundRect(ctx, 230, 48, 340, 38, 10);
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 16px "Impact", "Arial Black", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🏆 OFFICIAL MATCH SCORECARD', 400, 73);
+
+    // Title: GUESS THE FRAME
+    ctx.fillStyle = '#111827';
+    ctx.font = '900 44px "Impact", "Arial Black", sans-serif';
+    ctx.fillText('GUESS THE FRAME', 404, 138);
+    ctx.fillStyle = '#FACC15';
+    ctx.fillText('GUESS THE FRAME', 400, 135);
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = '#111827';
+    ctx.strokeText('GUESS THE FRAME', 400, 135);
+
+    // Subtitle
+    ctx.fillStyle = '#4B5563';
+    ctx.font = '800 14px "Segoe UI", sans-serif';
+    ctx.fillText('SCOOPCAST CINEMA TRIVIA CHALLENGE', 400, 166);
+
+    // Divider
+    ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#111827';
+    ctx.moveTo(65, 188);
+    ctx.lineTo(735, 188);
+    ctx.stroke();
+
+    // 3. 1st Place (Champion) Box
+    const sorted = [...(players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+    const champ = sorted[0] || { name: 'Player 1', score: 0 };
+
+    ctx.fillStyle = '#FEF08A';
+    this.roundRect(ctx, 65, 205, 670, 215, 16);
+    ctx.fill();
+    ctx.lineWidth = 4.5;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.fillStyle = '#F59E0B';
+    this.roundRect(ctx, 220, 222, 360, 36, 8);
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.fillStyle = '#111827';
+    ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+    ctx.fillText('🥇 1ST PLACE • CHAMPION 🥇', 400, 247);
+
+    // Winner Name
+    ctx.fillStyle = '#111827';
+    ctx.font = '900 38px "Impact", "Arial Black", sans-serif';
+    const champName = (champ.name || 'PLAYER 1').toUpperCase();
+    ctx.fillText(champName.length > 20 ? champName.slice(0, 19) + '...' : champName, 400, 315);
+
+    // Winner Score Pill
+    ctx.fillStyle = '#10B981';
+    this.roundRect(ctx, 275, 345, 250, 50, 12);
+    ctx.fill();
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
+    ctx.fillText(`${champ.score || 0} POINTS`, 400, 379);
+
+    // 4. Standings Section
+    ctx.fillStyle = '#111827';
+    ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('FINAL STANDINGS', 68, 452);
+
+    const runners = sorted.slice(1, 5);
+    const rowYStarts = [465, 535, 605, 675];
+    const medals = ['🥈 2ND', '🥉 3RD', '4TH', '5TH'];
+    const rowBgs = ['#FFFFFF', '#FFFFFF', '#F8FAFC', '#F8FAFC'];
+
+    if (runners.length === 0) {
+      ctx.fillStyle = '#FFFFFF';
+      this.roundRect(ctx, 65, 465, 670, 95, 12);
+      ctx.fill();
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = '#111827';
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#64748B';
+      ctx.font = '800 18px "Segoe UI", sans-serif';
+      ctx.fillText('⭐ SOLO CHAMPION RUN • FLAWLESS CINEMA MASTER ⭐', 400, 520);
+    } else {
+      runners.forEach((p, idx) => {
+        const y = rowYStarts[idx];
+        ctx.fillStyle = rowBgs[idx];
+        this.roundRect(ctx, 65, y, 670, 58, 10);
+        ctx.fill();
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = idx === 0 ? '#475569' : idx === 1 ? '#92400E' : '#64748B';
+        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(medals[idx] || `${idx + 2}TH`, 85, y + 36);
+
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 20px "Segoe UI", sans-serif';
+        const pName = (p.name || `Player ${idx + 2}`).toUpperCase();
+        ctx.fillText(pName.length > 22 ? pName.slice(0, 21) + '...' : pName, 195, y + 36);
+
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 20px "Impact", "Arial Black", sans-serif';
+        ctx.fillText(`${p.score || 0} PTS`, 715, y + 37);
+      });
+    }
+
+    // 5. Website CTA Banner
+    ctx.fillStyle = '#3B82F6';
+    this.roundRect(ctx, 65, 755, 670, 130, 16);
+    ctx.fill();
+    ctx.lineWidth = 4.5;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+    ctx.fillText('THINK YOU KNOW YOUR MOVIES? PLAY FREE NOW!', 400, 792);
+
+    ctx.fillStyle = '#FFFFFF';
+    this.roundRect(ctx, 175, 810, 450, 52, 12);
+    ctx.fill();
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = '#111827';
+    ctx.stroke();
+
+    ctx.fillStyle = '#111827';
+    ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
+    ctx.fillText('👉 https://scoopcast.me 👈', 400, 845);
+
+    // 6. Footer
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '700 13px "Segoe UI", sans-serif';
+    ctx.fillText('Guess The Frame • Multiplayer Movie Trivia Game by Asmit', 400, 925);
+    ctx.fillText('Free to play on any phone or laptop browser • No app download needed', 400, 946);
+
+    this._currentCanvas = canvas;
+    this._currentDataUrl = canvas.toDataURL('image/png');
+    this._currentPlayers = players;
+    return canvas;
+  },
+
+  openModal(players) {
+    this.generateCanvas(players);
+    const modal = document.getElementById('winnerShareModal');
+    const previewImg = document.getElementById('shareModalPreviewImg');
+    if (previewImg && this._currentDataUrl) {
+      previewImg.src = this._currentDataUrl;
+    }
+    if (modal) {
+      modal.style.display = 'flex';
+    }
+  },
+
+  closeModal() {
+    const modal = document.getElementById('winnerShareModal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  },
+
+  async share() {
+    if (!this._currentCanvas) {
+      this.generateCanvas(this._currentPlayers);
+    }
+    const canvas = this._currentCanvas;
+    if (!canvas) return;
+
+    try {
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          this.fallbackShare();
+          return;
+        }
+
+        const file = new File([blob], 'scoopcast-winner-scorecard.png', { type: 'image/png' });
+        const shareData = {
+          title: 'Guess The Frame - Match Result 🎬🍿',
+          text: 'Check out who won Guess The Frame! 🎬🍿 Think you know your movies? Play free online at: https://scoopcast.me',
+          url: 'https://scoopcast.me'
+        };
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              ...shareData,
+              files: [file]
+            });
+            if (typeof UI !== 'undefined' && UI.showToast) UI.showToast('🎉 Shared successfully!');
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+            this.download();
+            return;
+          } catch (err) {
+            if (err.name === 'AbortError') return;
+          }
+        }
+
+        this.fallbackShare();
+      }, 'image/png');
+    } catch (err) {
+      this.fallbackShare();
+    }
+  },
+
+  download() {
+    if (!this._currentCanvas && !this._currentDataUrl) {
+      this.generateCanvas(this._currentPlayers);
+    }
+    const dataUrl = this._currentDataUrl || (this._currentCanvas ? this._currentCanvas.toDataURL('image/png') : null);
+    if (!dataUrl) return;
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `scoopcast-winner-scorecard-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    if (typeof UI !== 'undefined' && UI.showToast) {
+      UI.showToast('✅ Scorecard image saved directly!');
+    }
+  },
+
+  fallbackShare() {
+    const shareText = '🎬 Guess The Frame - Match Scorecard 🍿\nPlay free online: https://scoopcast.me';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareText);
+    }
+    this.download();
+    if (typeof UI !== 'undefined' && UI.showToast) {
+      UI.showToast('📋 Link copied & scorecard image downloaded!');
+    }
+  }
+};
+window.ScorecardShare = ScorecardShare;

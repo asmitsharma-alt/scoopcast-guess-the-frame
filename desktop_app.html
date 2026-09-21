@@ -12107,6 +12107,165 @@
       background: #FFFFFF;
       color: #000000;
     }
+    .btn-share-result {
+      background: #8B5CF6;
+      color: #FFFFFF;
+    }
+
+    /* ── WINNER SHARE MODAL (NEO-BRUTALIST POPUP) ── */
+    .share-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      box-sizing: border-box;
+      animation: fadeInModal 0.2s ease-out;
+    }
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .share-modal-card {
+      background: #FFFDF0;
+      border: 3.5px solid #111827;
+      border-radius: 20px;
+      box-shadow: 8px 8px 0px #111827;
+      max-width: 440px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-sizing: border-box;
+      animation: popUpModal 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popUpModal {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .share-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 3px solid #111827;
+      background: #FEF08A;
+      box-sizing: border-box;
+    }
+    .share-modal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: #111827;
+    }
+    .share-modal-close {
+      background: #FFFFFF;
+      border: 2px solid #111827;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #111827;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px #111827;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .share-modal-close:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0px #111827;
+      background: #FEE2E2;
+    }
+    .share-modal-close:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #111827;
+    }
+    .share-modal-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+    .share-preview-wrap {
+      width: 100%;
+      border: 2.5px solid #111827;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 4px 4px 0px #111827;
+      background: #1E293B;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    .share-preview-img {
+      width: 100%;
+      height: auto;
+      max-height: 270px;
+      object-fit: contain;
+      display: block;
+    }
+    .share-modal-hint {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: #4B5563;
+      text-align: center;
+    }
+    .share-modal-actions {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .share-action-btn {
+      flex: 1;
+      height: 48px;
+      border: 3px solid #111827;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #111827;
+      font-weight: 900;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s, box-shadow 0.1s;
+      letter-spacing: 0.5px;
+    }
+    .share-action-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0px #111827;
+    }
+    .share-action-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #111827;
+    }
+    .btn-action-share {
+      background: #8B5CF6;
+      color: #FFFFFF;
+    }
+    .btn-action-download {
+      background: #10B981;
+      color: #FFFFFF;
+    }
     .cw-btn-icon {
       font-size: 15px;
       line-height: 1;
@@ -14325,9 +14484,9 @@
 
       <!-- ── BOTTOM BUTTONS DECK (4 BUTTONS) ── -->
       <div class="cw-buttons-deck">
-        <button type="button" class="cw-btn btn-share-whatsapp" onclick="WinnerScreen.shareWhatsAppScorecard()" style="background:#25D366; color:#000;" title="Share scorecard on WhatsApp">
-          <span class="cw-btn-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.979-.276-.1-.476-.15-.677.15-.201.301-.777.979-.953 1.179-.176.201-.351.226-.652.075s-1.272-.469-2.423-1.496c-.896-.799-1.501-1.786-1.677-2.087-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.527-.075-.15-.677-1.632-.928-2.235-.244-.588-.493-.508-.677-.518-.176-.008-.376-.01-.577-.01s-.527.075-.803.376c-.276.301-1.054 1.029-1.054 2.509 0 1.48 1.079 2.909 1.229 3.11s2.124 3.243 5.145 4.549c.718.311 1.279.497 1.716.636.721.23 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.126-.276-.201-.577-.351z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.12 1.528 5.86L.055 23.545a.75.75 0 00.93.93l5.807-1.498A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.948 9.948 0 01-5.115-1.411l-.367-.22-3.805.981.998-3.71-.24-.38A9.957 9.957 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg></span>
-          <span class="cw-btn-text">SHARE SCORECARD</span>
+        <button type="button" class="cw-btn btn-share-result" onclick="WinnerScreen.openShareModal()" style="background:#8B5CF6; color:#FFFFFF;" title="Share or Download Scorecard">
+          <span class="cw-btn-icon"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></span>
+          <span class="cw-btn-text">SHARE</span>
         </button>
         <button type="button" class="cw-btn btn-play-again" onclick="MultiplayerEngine.rematch()">
           <span class="cw-btn-icon"><svg class="ui-icon ui-icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg></span>
@@ -14346,6 +14505,38 @@
     </div><!-- /.comic-winner-card -->
   
   </div><!-- /#winnerScreen -->
+
+  <!-- ═══════════ WINNER SHARE POPUP MODAL ═══════════ -->
+  <div id="winnerShareModal" class="share-modal-backdrop" style="display:none;" onclick="if(event.target===this) ScorecardShare.closeModal();">
+    <div class="share-modal-card">
+      <div class="share-modal-header">
+        <div class="share-modal-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+          <span>SHARE MATCH RESULT</span>
+        </div>
+        <button type="button" class="share-modal-close" onclick="ScorecardShare.closeModal();" title="Close" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="share-modal-body">
+        <div class="share-preview-wrap">
+          <img id="shareModalPreviewImg" class="share-preview-img" alt="Scorecard Preview" />
+        </div>
+
+        <p class="share-modal-hint">Choose how you want to share your match result:</p>
+
+        <div class="share-modal-actions">
+          <button type="button" id="btnModalShare" class="share-action-btn btn-action-share" onclick="ScorecardShare.share();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+            <span>SHARE</span>
+          </button>
+          <button type="button" id="btnModalDownload" class="share-action-btn btn-action-download" onclick="ScorecardShare.download();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span>DOWNLOAD</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- ADMIN -->
     <div class="modal-overlay" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
@@ -20283,19 +20474,346 @@
         }
       },
 
-      shareWhatsAppScorecard() {
+      openShareModal() {
         const sorted = [...(this._lastPlayers || GS.players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-        let text = '🎬 *Guess The Frame - Match Scorecard* 🍿\n\n';
-        const medals = ['🥇', '🥈', '🥉'];
-        sorted.slice(0, 5).forEach((p, i) => {
-          const medal = medals[i] || `${i + 1}.`;
-          text += `${medal} *${p.name || 'Player'}*: ${p.score || 0} pts\n`;
-        });
-        text += '\nThink you know your movies? Play now at: https://scoopcast.me';
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        ScorecardShare.openModal(sorted);
+      },
+
+      shareWhatsAppScorecard() {
+        this.openShareModal();
       }
     };
+
+    /* ═══ AAA SCORECARD CANVAS GENERATOR & SHARE CONTROLLER ═══ */
+    const ScorecardShare = {
+      _currentCanvas: null,
+      _currentBlob: null,
+      _currentDataUrl: null,
+      _currentPlayers: [],
+
+      roundRect(ctx, x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+      },
+
+      generateCanvas(players) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 1020;
+        const ctx = canvas.getContext('2d');
+
+        // 1. Background
+        ctx.fillStyle = '#FFFDF0';
+        ctx.fillRect(0, 0, 800, 1020);
+
+        // Retro halftone comic dots
+        ctx.fillStyle = '#FDE68A';
+        for (let x = 35; x < 770; x += 32) {
+          for (let y = 35; y < 990; y += 32) {
+            ctx.beginPath();
+            ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Outer Frame
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = '#111827';
+        ctx.strokeRect(18, 18, 764, 984);
+
+        // Inner Border
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#F59E0B';
+        ctx.strokeRect(30, 30, 740, 960);
+
+        // 2. Header
+        ctx.fillStyle = '#EC4899';
+        this.roundRect(ctx, 230, 48, 340, 38, 10);
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '900 16px "Impact", "Arial Black", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏆 OFFICIAL MATCH SCORECARD', 400, 73);
+
+        // Title: GUESS THE FRAME
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 44px "Impact", "Arial Black", sans-serif';
+        ctx.fillText('GUESS THE FRAME', 404, 138);
+        ctx.fillStyle = '#FACC15';
+        ctx.fillText('GUESS THE FRAME', 400, 135);
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#111827';
+        ctx.strokeText('GUESS THE FRAME', 400, 135);
+
+        // Subtitle
+        ctx.fillStyle = '#4B5563';
+        ctx.font = '800 14px "Segoe UI", sans-serif';
+        ctx.fillText('SCOOPCAST CINEMA TRIVIA CHALLENGE', 400, 166);
+
+        // Divider
+        ctx.beginPath();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#111827';
+        ctx.moveTo(65, 188);
+        ctx.lineTo(735, 188);
+        ctx.stroke();
+
+        // 3. 1st Place (Champion) Box
+        const sorted = [...(players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+        const champ = sorted[0] || { name: 'Player 1', score: 0 };
+
+        ctx.fillStyle = '#FEF08A';
+        this.roundRect(ctx, 65, 205, 670, 215, 16);
+        ctx.fill();
+        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = '#F59E0B';
+        this.roundRect(ctx, 220, 222, 360, 36, 8);
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+        ctx.fillText('🥇 1ST PLACE • CHAMPION 🥇', 400, 247);
+
+        // Winner Name
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 38px "Impact", "Arial Black", sans-serif';
+        const champName = (champ.name || 'PLAYER 1').toUpperCase();
+        ctx.fillText(champName.length > 20 ? champName.slice(0, 19) + '...' : champName, 400, 315);
+
+        // Winner Score Pill
+        ctx.fillStyle = '#10B981';
+        this.roundRect(ctx, 275, 345, 250, 50, 12);
+        ctx.fill();
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
+        ctx.fillText(`${champ.score || 0} POINTS`, 400, 379);
+
+        // 4. Standings Section
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('FINAL STANDINGS', 68, 452);
+
+        const runners = sorted.slice(1, 5);
+        const rowYStarts = [465, 535, 605, 675];
+        const medals = ['🥈 2ND', '🥉 3RD', '4TH', '5TH'];
+        const rowBgs = ['#FFFFFF', '#FFFFFF', '#F8FAFC', '#F8FAFC'];
+
+        if (runners.length === 0) {
+          ctx.fillStyle = '#FFFFFF';
+          this.roundRect(ctx, 65, 465, 670, 95, 12);
+          ctx.fill();
+          ctx.lineWidth = 3.5;
+          ctx.strokeStyle = '#111827';
+          ctx.stroke();
+
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#64748B';
+          ctx.font = '800 18px "Segoe UI", sans-serif';
+          ctx.fillText('⭐ SOLO CHAMPION RUN • FLAWLESS CINEMA MASTER ⭐', 400, 520);
+        } else {
+          runners.forEach((p, idx) => {
+            const y = rowYStarts[idx];
+            ctx.fillStyle = rowBgs[idx];
+            this.roundRect(ctx, 65, y, 670, 58, 10);
+            ctx.fill();
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = '#111827';
+            ctx.stroke();
+
+            ctx.fillStyle = idx === 0 ? '#475569' : idx === 1 ? '#92400E' : '#64748B';
+            ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(medals[idx] || `${idx + 2}TH`, 85, y + 36);
+
+            ctx.fillStyle = '#111827';
+            ctx.font = '900 20px "Segoe UI", sans-serif';
+            const pName = (p.name || `Player ${idx + 2}`).toUpperCase();
+            ctx.fillText(pName.length > 22 ? pName.slice(0, 21) + '...' : pName, 195, y + 36);
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#111827';
+            ctx.font = '900 20px "Impact", "Arial Black", sans-serif';
+            ctx.fillText(`${p.score || 0} PTS`, 715, y + 37);
+          });
+        }
+
+        // 5. Website CTA Banner
+        ctx.fillStyle = '#3B82F6';
+        this.roundRect(ctx, 65, 755, 670, 130, 16);
+        ctx.fill();
+        ctx.lineWidth = 4.5;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+        ctx.fillText('THINK YOU KNOW YOUR MOVIES? PLAY FREE NOW!', 400, 792);
+
+        ctx.fillStyle = '#FFFFFF';
+        this.roundRect(ctx, 175, 810, 450, 52, 12);
+        ctx.fill();
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
+        ctx.fillText('👉 https://scoopcast.me 👈', 400, 845);
+
+        // 6. Footer
+        ctx.fillStyle = '#6B7280';
+        ctx.font = '700 13px "Segoe UI", sans-serif';
+        ctx.fillText('Guess The Frame • Multiplayer Movie Trivia Game by Asmit', 400, 925);
+        ctx.fillText('Free to play on any phone or laptop browser • No app download needed', 400, 946);
+
+        this._currentCanvas = canvas;
+        this._currentDataUrl = canvas.toDataURL('image/png');
+        this._currentPlayers = players;
+        return canvas;
+      },
+
+      openModal(players) {
+        this.generateCanvas(players);
+        const modal = document.getElementById('winnerShareModal');
+        const previewImg = document.getElementById('shareModalPreviewImg');
+        if (previewImg && this._currentDataUrl) {
+          previewImg.src = this._currentDataUrl;
+        }
+        if (modal) {
+          modal.style.display = 'flex';
+        }
+      },
+
+      closeModal() {
+        const modal = document.getElementById('winnerShareModal');
+        if (modal) {
+          modal.style.display = 'none';
+        }
+      },
+
+      async share() {
+        if (!this._currentCanvas) {
+          this.generateCanvas(this._currentPlayers);
+        }
+        const canvas = this._currentCanvas;
+        if (!canvas) return;
+
+        try {
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              this.fallbackShare();
+              return;
+            }
+
+            const file = new File([blob], 'scoopcast-winner-scorecard.png', { type: 'image/png' });
+            const shareData = {
+              title: 'Guess The Frame - Match Result 🎬🍿',
+              text: 'Check out who won Guess The Frame! 🎬🍿 Think you know your movies? Play free online at: https://scoopcast.me',
+              url: 'https://scoopcast.me'
+            };
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({
+                  ...shareData,
+                  files: [file]
+                });
+                this.showToast('🎉 Shared successfully!');
+                return;
+              } catch (err) {
+                if (err.name === 'AbortError') return;
+              }
+            }
+
+            if (navigator.share) {
+              try {
+                await navigator.share(shareData);
+                this.download();
+                return;
+              } catch (err) {
+                if (err.name === 'AbortError') return;
+              }
+            }
+
+            this.fallbackShare();
+          }, 'image/png');
+        } catch (err) {
+          this.fallbackShare();
+        }
+      },
+
+      download() {
+        if (!this._currentCanvas && !this._currentDataUrl) {
+          this.generateCanvas(this._currentPlayers);
+        }
+        const dataUrl = this._currentDataUrl || (this._currentCanvas ? this._currentCanvas.toDataURL('image/png') : null);
+        if (!dataUrl) return;
+
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `scoopcast-winner-scorecard-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        this.showToast('✅ Scorecard image saved directly!');
+      },
+
+      fallbackShare() {
+        const shareText = '🎬 Guess The Frame - Match Scorecard 🍿\nPlay free online: https://scoopcast.me';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareText);
+        }
+        this.download();
+        this.showToast('📋 Link copied & scorecard image downloaded!');
+      },
+
+      showToast(msg) {
+        if (typeof UI !== 'undefined' && UI.showToast) {
+          UI.showToast(msg);
+          return;
+        }
+        let toast = document.getElementById('scorecardToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'scorecardToast';
+          toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#111827;color:#FFF;padding:12px 24px;border-radius:12px;font-weight:900;font-size:14px;border:2.5px solid #FACC15;box-shadow:4px 4px 0 #000;z-index:999999;transition:all 0.25s ease;opacity:0;pointer-events:none;letter-spacing:0.5px;';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        clearTimeout(toast._tid);
+        toast._tid = setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateX(-50%) translateY(10px)';
+        }, 2800);
+      }
+    };
+    window.ScorecardShare = ScorecardShare;
 
     const UI = {
       showScreen(id) {
