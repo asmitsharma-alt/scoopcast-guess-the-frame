@@ -16438,6 +16438,7 @@
        ══════════════════════════════════════════════════════════════════ */
     const FuzzyMatcher = {
       STOP_WORDS: new Set([
+        // English articles, prepositions, pronouns, auxiliaries
         'the', 'a', 'an', 'and', 'or', 'but', 'nor', 'for', 'yet', 'so',
         'in', 'on', 'at', 'to', 'by', 'of', 'off', 'up', 'out', 'over', 'into', 'with', 'from', 'as', 'down', 'about', 'under', 'between', 'through', 'after', 'before', 'without', 'against', 'during', 'around', 'among',
         'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
@@ -16447,7 +16448,14 @@
         'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such',
         'can', 'could', 'will', 'would', 'shall', 'should', 'may', 'might', 'must',
         'not', 'no', 'yes', 'just', 'too', 'very', 'really',
-        'movie', 'film', 'cinema', 'frame', 'guess', 'scene'
+        // Media, cinema, and game fillers
+        'movie', 'film', 'cinema', 'frame', 'guess', 'scene', 'part', 'chapter', 'season', 'episode', 'show', 'series', 'star', 'actor', 'actress',
+        // Common conversational fillers
+        'think', 'know', 'maybe', 'probably', 'sure', 'name',
+        // Common Hindi / Hinglish connectives & particles
+        'ka', 'ki', 'ke', 'ko', 'se', 'me', 'mein', 'par', 'aur', 'ya', 'ek', 'do', 'hai', 'hain', 'tha', 'thi', 'the', 'ye', 'yeh', 'woh', 'hum', 'tum', 'aap', 'wala', 'wali', 'wale',
+        // Standalone numbers & numerals
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'i', 'ii', 'iii', 'iv', 'v'
       ]),
 
       normalize(text) {
@@ -16461,15 +16469,6 @@
         t = t.replace(/&/g, ' and ');
         // Remove all punctuation except alphanumeric and whitespace
         t = t.replace(/[^\w\s]/g, ' ');
-        // Normalize word numbers and roman numerals to digits for consistent matching
-        t = t.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten)\b/g, m => {
-          const map = { 'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'ten': '10' };
-          return map[m] || m;
-        });
-        t = t.replace(/\b(ii|iii|iv|v)\b/g, m => {
-          const map = { 'ii': '2', 'iii': '3', 'iv': '4', 'v': '5' };
-          return map[m] || m;
-        });
         // Strip leading common articles
         t = t.replace(/^(the|a|an|el|la|le|les)\s+/i, '').trim();
         // Collapse multiple spaces
@@ -16504,6 +16503,13 @@
         return w;
       },
 
+      /**
+       * Lenient word matcher with adaptive typo tolerance:
+       * - Length 3: exact or canonical match only
+       * - Length 4-5: allows distance <= 1 (e.g. "feil" for "fail", "falll" for "fall")
+       * - Length 6-8: allows distance <= 2 (e.g. "rockstr" for "rockstar", "byomkes" for "byomkesh")
+       * - Length 9+: allows distance <= 3 (e.g. "bramyugam" for "bramayugam", "ghanchakar" for "ghanchakkar")
+       */
       isWordMatch(w1, w2) {
         if (!w1 || !w2) return false;
         if (w1 === w2) return true;
@@ -16511,24 +16517,31 @@
         const c2 = this.canonicalWord(w2);
         if (c1 === c2) return true;
 
-        // Length check: genuine typos don't differ drastically in length
+        const minLen = Math.min(c1.length, c2.length);
+        const maxLen = Math.max(c1.length, c2.length);
         const lenDiff = Math.abs(c1.length - c2.length);
-        if (lenDiff > 2) return false;
 
-        // Words must be at least 4 characters to allow typos
-        if (Math.min(c1.length, c2.length) >= 4) {
-          const dist = this.levenshtein(c1, c2);
-          if (Math.max(c1.length, c2.length) <= 6 && dist <= 1) return true;
-          if (Math.max(c1.length, c2.length) > 6 && dist <= 2) return true;
+        if (minLen < 4) return false;
+
+        if (maxLen <= 5) {
+          if (lenDiff > 1) return false;
+          return this.levenshtein(c1, c2) <= 1;
         }
-        return false;
+
+        if (maxLen <= 8) {
+          if (lenDiff > 2) return false;
+          return this.levenshtein(c1, c2) <= 2;
+        }
+
+        if (lenDiff > 3) return false;
+        return this.levenshtein(c1, c2) <= 3;
       },
 
       getSignificantWords(normalizedStr) {
         if (!normalizedStr) return [];
         return normalizedStr.split(' ')
           .map(w => w.trim())
-          .filter(w => w.length >= 3 && !this.STOP_WORDS.has(w));
+          .filter(w => w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w));
       },
 
       isMatch(guess, answer) {
@@ -16540,7 +16553,7 @@
         // 1. Exact normalized match
         if (nGuess === nAns) return true;
 
-        // Direct compact comparison without spaces (e.g. "spiderman" vs "spider man", "wall e" vs "walle", "d c" vs "dc", "book smart" vs "booksmart")
+        // Direct compact comparison without spaces
         const compactGuess = nGuess.replace(/\s+/g, '');
         const compactAns = nAns.replace(/\s+/g, '');
         if (compactGuess === compactAns) return true;
@@ -16550,7 +16563,7 @@
           if (compactAns.length > 6 && cDist <= 2) return true;
         }
 
-        // 2. Whole-string Levenshtein distance (for full phrase typos)
+        // 2. Whole-string Levenshtein distance
         const lenDiff = Math.abs(nGuess.length - nAns.length);
         if (lenDiff <= 3) {
           const dist = this.levenshtein(nGuess, nAns);
@@ -16565,8 +16578,7 @@
           }
         }
 
-        // 3. Subtitle handling (e.g. "Bhavesh Joshi: Superhero" -> "Bhavesh Joshi" or "Superhero",
-        //    "Spider-Man: No Way Home" -> "Spider-Man" or "No Way Home")
+        // 3. Subtitle handling
         if (answer.includes(':') || answer.includes(' - ') || answer.includes('–')) {
           const parts = answer.split(/[:–]|\s-\s/).map(p => this.normalize(p)).filter(Boolean);
           for (const part of parts) {
@@ -16580,17 +16592,15 @@
           }
         }
 
-        // Extract significant words from both answer and guess
+        // Extract significant words
         const ansSigWords = this.getSignificantWords(nAns);
         const guessSigWords = this.getSignificantWords(nGuess);
 
-        // Also include compact compound words if hyphenated/multi-word (e.g. "spider-man" -> ansSigWords includes "spiderman")
         if (answer.includes('-') || answer.includes(' ')) {
-          const rawAnsWords = String(answer).toLowerCase().split(/[\s\-:]+/).filter(w => w.length >= 3 && !this.STOP_WORDS.has(w));
+          const rawAnsWords = String(answer).toLowerCase().split(/[\s\-:]+/).filter(w => w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w));
           for (const rw of rawAnsWords) {
             if (!ansSigWords.includes(rw)) ansSigWords.push(rw);
           }
-          // Add joined prefix pairs (e.g. "spiderman" from "spider" + "man")
           for (let i = 0; i < rawAnsWords.length - 1; i++) {
             const joined = rawAnsWords[i] + rawAnsWords[i + 1];
             if (joined.length >= 5 && !ansSigWords.includes(joined)) {
@@ -16599,46 +16609,32 @@
           }
         }
 
-        // If answer has no significant words (e.g. title is very short like "DC" or "Up" or all stop words)
         if (ansSigWords.length === 0) {
           return nGuess === nAns || compactGuess === compactAns || this.levenshtein(nGuess, nAns) <= 1;
         }
 
-        // 4. Multi-word guess matching:
-        if (guessSigWords.length > 1) {
-          let matchedCount = 0;
-          for (const gw of guessSigWords) {
-            if (ansSigWords.some(aw => this.isWordMatch(gw, aw))) {
-              matchedCount++;
+        // 4. ANY-WORD MATCH: If any word in player's guess matches any significant word in the answer (even with typos)
+        for (const gw of guessSigWords) {
+          for (const aw of ansSigWords) {
+            if (this.isWordMatch(gw, aw)) {
+              return true;
             }
           }
-          // If ALL words in guess match answer words (e.g. "grand hotel", "top gun", "silver lake", "mad max")
-          if (matchedCount === guessSigWords.length) {
-            return true;
-          }
-          // If guess has 3+ words and at least 2/3 (>=66%) match (e.g. "taarzan fast car" matching "Taarzan The Wonder Car")
-          if (guessSigWords.length >= 3 && (matchedCount / guessSigWords.length) >= 0.66) {
-            return true;
-          }
-          // If 50% or fewer matched and there are foreign words (e.g. "star wars" vs "star trek"), do NOT match
-          return false;
         }
 
-        // 5. Single significant word guess:
-        // "even the player give one word from the anser it should be accepted as right answer"
-        const singleWord = guessSigWords.length === 1 ? guessSigWords[0] : (nGuess.split(' ').length === 1 ? nGuess : null);
-        if (singleWord) {
-          // Must not be a stop word
-          if (!this.STOP_WORDS.has(singleWord) && singleWord.length >= 3) {
+        // 5. Check raw single-word guess (e.g. player typed "byomkes" or "fail" or "war")
+        const words = nGuess.split(' ').map(w => w.trim()).filter(Boolean);
+        for (const w of words) {
+          if (w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w)) {
             for (const aw of ansSigWords) {
-              if (this.isWordMatch(singleWord, aw)) {
+              if (this.isWordMatch(w, aw)) {
                 return true;
               }
             }
           }
         }
 
-        // 6. Substring inclusion check (e.g. "I think it is Inception" or "watch Inception")
+        // 6. Substring inclusion check
         if (nAns.length >= 4) {
           const ansBoundaryRegex = new RegExp('(?:^|\\s)' + nAns + '(?:$|\\s)', 'i');
           if (ansBoundaryRegex.test(nGuess)) return true;
@@ -16647,24 +16643,8 @@
         return false;
       },
 
+      // Deprecated: Warning mechanism removed per user directive. Always returns false.
       isCloseMatch(guess, answer) {
-        if (!guess || !answer) return false;
-        if (this.isMatch(guess, answer)) return false;
-
-        const nGuess = this.normalize(guess);
-        const nAns = this.normalize(answer);
-        if (!nGuess || !nAns) return false;
-
-        const compactGuess = nGuess.replace(/\s+/g, '');
-        const compactAns = nAns.replace(/\s+/g, '');
-
-        const distCompact = this.levenshtein(compactGuess, compactAns);
-        const distNorm = this.levenshtein(nGuess, nAns);
-        const dist = Math.min(distCompact, distNorm);
-
-        if (compactAns.length >= 4 && dist === 1) return true;
-        if (compactAns.length >= 9 && dist === 2) return true;
-
         return false;
       }
     };
@@ -18543,20 +18523,11 @@
             if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
             if (msg.targetPlayerId === this.playerId && !msg.isCorrect) {
               SoundManager.play('wrong');
-              if (msg.isClose) {
-                this.showGuessFeedback(false, msg.message || '⚠️ Almost! Check your spelling!', true);
-                const input = document.getElementById('onlineGuessInput');
-                if (input) {
-                  input.classList.add('warning-pulse');
-                  setTimeout(() => input.classList.remove('warning-pulse'), 500);
-                }
-              } else {
-                this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
-                const input = document.getElementById('onlineGuessInput');
-                if (input) {
-                  input.classList.add('shake-input');
-                  setTimeout(() => input.classList.remove('shake-input'), 400);
-                }
+              this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
+              const input = document.getElementById('onlineGuessInput');
+              if (input) {
+                input.classList.add('shake-input');
+                setTimeout(() => input.classList.remove('shake-input'), 400);
               }
             }
             break;
@@ -19435,39 +19406,19 @@
             }
           }
         } else {
-          const isClose = FuzzyMatcher.isCloseMatch && FuzzyMatcher.isCloseMatch(data.guess, currentFrame.answer);
-          if (isClose) {
-            if (data.playerId === this.playerId) {
-              SoundManager.play('wrong');
-              this.showGuessFeedback(false, '⚠️ Almost! Check your spelling!', true);
-              const input = document.getElementById('onlineGuessInput');
-              if (input) {
-                input.classList.add('warning-pulse');
-                setTimeout(() => input.classList.remove('warning-pulse'), 500);
-              }
-            } else {
-              this.sendEvent('GUESS_RESULT', {
-                targetPlayerId: data.playerId,
-                isCorrect: false,
-                isClose: true,
-                message: '⚠️ Almost! Check your spelling!'
-              });
+          if (data.playerId === this.playerId) {
+            SoundManager.play('wrong');
+            this.showGuessFeedback(false, 'Not quite, try again!');
+            const input = document.getElementById('onlineGuessInput');
+            if (input) {
+              input.classList.add('shake-input');
+              setTimeout(() => input.classList.remove('shake-input'), 400);
             }
           } else {
-            if (data.playerId === this.playerId) {
-              SoundManager.play('wrong');
-              this.showGuessFeedback(false, 'Not quite, try again!');
-              const input = document.getElementById('onlineGuessInput');
-              if (input) {
-                input.classList.add('shake-input');
-                setTimeout(() => input.classList.remove('shake-input'), 400);
-              }
-            } else {
-              this.sendEvent('GUESS_RESULT', {
-                targetPlayerId: data.playerId,
-                isCorrect: false
-              });
-            }
+            this.sendEvent('GUESS_RESULT', {
+              targetPlayerId: data.playerId,
+              isCorrect: false
+            });
           }
         }
       },
@@ -20933,14 +20884,6 @@
             const me = GS.players.find(p => (this.playerId && p.id === this.playerId) || (this.playerName && p.name.toLowerCase() === this.playerName.toLowerCase()));
             if (me) me.score = (me.score || 0) + (res.points || 0);
             UI.renderLB();
-          } else if (res && res.isClose) {
-            SoundManager.play('wrong');
-            this.showGuessFeedback(false, res.message || '⚠️ Almost! Check your spelling!', true);
-            const input = document.getElementById('onlineGuessInput');
-            if (input) {
-              input.classList.add('warning-pulse');
-              setTimeout(() => input.classList.remove('warning-pulse'), 500);
-            }
           } else {
             SoundManager.play('wrong');
             this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');

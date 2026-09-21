@@ -186,18 +186,9 @@ export class TriviaRoom extends Room<GameState> {
 
         this.checkRoundCompletion();
       } else {
-        const isClose = FuzzyMatcher.isCloseMatch(guessText, this.currentSecretAnswer);
-        if (isClose) {
-          client.send("guess_result", {
-            isCorrect: false,
-            isClose: true,
-            message: "⚠️ Almost! Check your spelling!"
-          });
-        } else {
-          client.send("guess_result", {
-            isCorrect: false
-          });
-        }
+        client.send("guess_result", {
+          isCorrect: false
+        });
       }
     });
 
