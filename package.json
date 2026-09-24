@@ -1,0 +1,16 @@
+{
+  "name": "scoopcast-guess-the-frame",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scoopcast Guess The Frame - Fullstack Monorepo",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "node scripts/start.js",
+    "test": "node --version"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Asmit Sharma",
+  "license": "MIT"
+}
