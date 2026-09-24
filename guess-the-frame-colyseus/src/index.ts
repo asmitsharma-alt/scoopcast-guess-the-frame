@@ -46,8 +46,8 @@ const gameServer = new Server({
   })
 });
 
-// Register the main trivia room
-gameServer.define("trivia_room", TriviaRoom);
+// Register the main trivia room (joinable/matchable by roomCode)
+gameServer.define("trivia_room", TriviaRoom).filterBy(["roomCode"]);
 
 gameServer.listen(port).then(() => {
   console.log(`🎬 [GTF-Server] Guess The Frame server running on http://localhost:${port}`);

@@ -98,7 +98,7 @@ export class TriviaRoom extends Room<GameState> {
 
   private setupMessageHandlers() {
     // ── Host starts the game ──
-    this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number; weeklyOnly?: boolean }) => {
+    this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number; weeklyOnly?: boolean; roundsByMode?: { frames?: number; eyes?: number; dialogue?: number } }) => {
       const player = this.state.players.get(client.sessionId);
       if (!player || !player.isHost) return;
       if (this.state.phase !== "lobby" && this.state.phase !== "game_over") return;
@@ -110,7 +110,7 @@ export class TriviaRoom extends Room<GameState> {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
       }
 
-      this.buildPlaylist(category, requestedRounds, weeklyOnly);
+      this.buildPlaylist(category, requestedRounds, weeklyOnly, message?.roundsByMode);
       if (this.currentPlaylist.length === 0) return;
 
       this.state.totalRounds = this.currentPlaylist.length;
@@ -132,6 +132,87 @@ export class TriviaRoom extends Room<GameState> {
           this.startRound(0);
         }
       }, 1000);
+    });
+
+    // ── Update settings in lobby ──
+    this.onMessage("update_settings", (client, message?: {
+      category?: string;
+      categories?: string[];
+      roundsByMode?: { frames?: number; eyes?: number; dialogue?: number };
+      rounds?: number;
+      timer?: number;
+      weeklyOnly?: boolean;
+    }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player || !player.isHost) return;
+      if (this.state.phase !== "lobby") return;
+
+      if (message?.timer) {
+        this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
+        this.state.timeRemaining = this.roundTimerDuration;
+      }
+      this.broadcast("settings_updated", {
+        hostSettings: message,
+        timer: this.roundTimerDuration
+      });
+    });
+
+    // ── Update player profile (name / avatar) ──
+    this.onMessage("update_profile", (client, message?: { name?: string; avatar?: string }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player) return;
+      if (message?.name) player.name = String(message.name).trim().slice(0, 18);
+      if (message?.avatar) player.avatar = this.validateAvatar(message.avatar);
+    });
+
+    // ── Host kicks player ──
+    this.onMessage("kick_player", (client, message?: { targetPlayerId: string }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player || !player.isHost) return;
+      if (!message?.targetPlayerId || message.targetPlayerId === client.sessionId) return;
+
+      const targetClient = this.clients.find(c => c.sessionId === message.targetPlayerId);
+      if (targetClient) {
+        targetClient.send("kicked", { message: "You were kicked by the host." });
+        targetClient.leave();
+      }
+    });
+
+    // ── Host ends match early ──
+    this.onMessage("host_end_game", (client) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player || !player.isHost) return;
+      if (this.state.phase === "game_over") return;
+
+      if (this.autoAdvanceTimer) {
+        clearTimeout(this.autoAdvanceTimer);
+        this.autoAdvanceTimer = null;
+      }
+      this.state.phase = "game_over";
+      this.addSystemChatMessage("🏁 Match ended early by Host.");
+    });
+
+    // ── Rematch / return to lobby ──
+    this.onMessage("rematch", (client) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player || !player.isHost) return;
+
+      if (this.autoAdvanceTimer) {
+        clearTimeout(this.autoAdvanceTimer);
+        this.autoAdvanceTimer = null;
+      }
+      this.state.phase = "lobby";
+      this.state.currentRound = 0;
+      this.state.revealedAnswer = "";
+      this.state.revealedContent = "";
+      this.state.currentRoundWinners.clear();
+      this.state.players.forEach(p => {
+        p.score = 0;
+        p.hasGuessedCorrectly = false;
+        p.hasUsedHint = false;
+        p.streak = 0;
+      });
+      this.broadcast("return_to_lobby", {});
     });
 
     // ── Player submits a guess ──
@@ -411,7 +492,33 @@ export class TriviaRoom extends Room<GameState> {
     }
   }
 
-  private buildPlaylist(category: string, count: number, weeklyOnly: boolean = false) {
+  private buildPlaylist(category: string, count: number, weeklyOnly: boolean = false, roundsByMode?: { frames?: number; eyes?: number; dialogue?: number }) {
+    if (roundsByMode && (roundsByMode.frames || roundsByMode.dialogue || roundsByMode.eyes)) {
+      const fCount = Number(roundsByMode.frames) || 0;
+      const dCount = Number(roundsByMode.dialogue) || 0;
+      const eCount = Number(roundsByMode.eyes) || 0;
+      const selectItems = (items: CatalogItem[], cnt: number) => {
+        if (!Array.isArray(items) || cnt <= 0) return [];
+        if (weeklyOnly) {
+          const newItems = items.filter(i => i.tag === 'new').sort(() => 0.5 - Math.random());
+          if (newItems.length >= cnt) return newItems.slice(0, cnt);
+          const remaining = cnt - newItems.length;
+          const classic = items.filter(i => i.tag !== 'new').sort(() => 0.5 - Math.random()).slice(0, remaining);
+          return [...newItems, ...classic];
+        }
+        return [...items].sort(() => 0.5 - Math.random()).slice(0, cnt);
+      };
+
+      const frames = selectItems(CATALOG.filter(c => c.category === 'frames'), fCount);
+      const dialogues = selectItems(CATALOG.filter(c => c.category === 'dialogue'), dCount);
+      const eyes = selectItems(CATALOG.filter(c => c.category === 'eyes'), eCount);
+      const combined = [...frames, ...dialogues, ...eyes];
+      if (combined.length > 0) {
+        this.currentPlaylist = combined;
+        return;
+      }
+    }
+
     let pool: CatalogItem[] = [];
     if (category === 'frames') {
       pool = CATALOG.filter(c => c.category === 'frames');
