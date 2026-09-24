@@ -18,12 +18,23 @@ const KeyboardManager = {
       document.querySelectorAll('.drawer-backdrop').forEach(b => b.classList.remove('active'));
     };
 
+    // Helper: Dynamic font sizing for long titles to ensure full visibility while typing
+    const updateMirrorText = (rawVal) => {
+      if (!mirrorText) return;
+      const val = (rawVal || '').toUpperCase();
+      mirrorText.textContent = val || 'TYPE YOUR GUESS...';
+      if (val.length > 22) {
+        mirrorText.style.fontSize = '0.86rem';
+      } else if (val.length > 15) {
+        mirrorText.style.fontSize = '1.02rem';
+      } else {
+        mirrorText.style.fontSize = '';
+      }
+    };
+
     // 1. Mirror keystrokes in real time into the high-contrast mirror bar
     input.addEventListener('input', () => {
-      const val = input.value.toUpperCase();
-      if (mirrorText) {
-        mirrorText.textContent = val || 'TYPE YOUR GUESS...';
-      }
+      updateMirrorText(input.value);
       if (mirror) {
         mirror.style.display = 'flex';
       }
@@ -37,7 +48,7 @@ const KeyboardManager = {
       if (typeof Haptics !== 'undefined') Haptics.tap();
       if (mirror) {
         mirror.style.display = 'flex';
-        if (mirrorText) mirrorText.textContent = input.value.toUpperCase() || 'TYPE YOUR GUESS...';
+        updateMirrorText(input.value);
       }
       this.updateViewportLayout();
     });
@@ -126,7 +137,10 @@ const KeyboardManager = {
 
     if (input) {
       input.value = '';
-      if (mirrorText) mirrorText.textContent = 'TYPE YOUR GUESS...';
+      if (mirrorText) {
+        mirrorText.textContent = 'TYPE YOUR GUESS...';
+        mirrorText.style.fontSize = '';
+      }
       input.focus();
       if (typeof Haptics !== 'undefined') Haptics.tap();
     }
