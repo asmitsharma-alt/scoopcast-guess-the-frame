@@ -83,7 +83,7 @@ export class TriviaRoom extends Room<GameState> {
       playerCount: this.state.players.size
     });
 
-    this.addSystemChatMessage(`👋 ${player.name} joined the room!`);
+    this.addSystemChatMessage(`👋 ${player.name} joined the game`);
   }
 
   async onLeave(client: Client, consented: boolean) {
@@ -102,7 +102,7 @@ export class TriviaRoom extends Room<GameState> {
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
     } catch (e) {
       this.state.players.delete(client.sessionId);
-      this.addSystemChatMessage(`🚪 ${player.name} left the room.`);
+      this.addSystemChatMessage(`🚪 ${player.name} left the game`);
 
       // Host Migration
       if (player.isHost && this.state.players.size > 0) {
@@ -339,7 +339,7 @@ export class TriviaRoom extends Room<GameState> {
       if (!player || !player.isHost) return;
       if (this.state.phase !== "playing") return;
 
-      this.addSystemChatMessage(`⏭ Host skipped the round.`);
+      this.addSystemChatMessage(`⏭ Host skipped the frame`);
       this.finishRound();
     });
 
@@ -350,7 +350,7 @@ export class TriviaRoom extends Room<GameState> {
       if (this.state.phase !== "playing") return;
 
       this.state.isPaused = !this.state.isPaused;
-      this.addSystemChatMessage(this.state.isPaused ? `⏸ Game paused by Host.` : `▶ Game resumed.`);
+      this.addSystemChatMessage(this.state.isPaused ? `⏸ Host paused the game` : `▶ Host resumed the game`);
     });
 
     // ── Host actions: Advance to Next Round early ──

@@ -1378,13 +1378,37 @@ input, textarea {
 }
 
 .chat-row-event.system {
-  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
   color: #64748b;
   font-size: 0.70rem;
   font-weight: 500;
   font-style: italic;
+  padding: 2px 0;
+  margin: 2px 0;
+  width: 100%;
+  text-align: center;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.chat-row-drawer-system {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  border: none;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-style: italic;
+  padding: 2px 0;
+  margin: 3px 0;
+  width: 100%;
+  text-align: center;
 }
 
 .chat-round-divider {

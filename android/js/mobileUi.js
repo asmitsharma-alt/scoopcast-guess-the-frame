@@ -1221,7 +1221,9 @@ const UI = {
     if (!chat) return;
 
     const isMe = (typeof GameClient !== 'undefined' && chat.senderId === GameClient.playerId);
-    const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.text || '')) : this.escapeHtml(chat.text || '');
+    const isSystem = Boolean(chat.isSystem || chat.senderId === 'system' || chat.senderName === 'System');
+    const rawText = isSystem ? this.formatSystemText(chat.text || '') : (chat.text || '');
+    const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(rawText)) : this.escapeHtml(rawText);
     const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName || 'Player')) : this.escapeHtml(chat.senderName || 'Player');
 
     if (chat.isWinner) {
@@ -1252,7 +1254,7 @@ const UI = {
         item.className = 'chat-row-event hint';
         const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>';
         item.innerHTML = `${hintSvg} <span>${parsedText}</span>`;
-      } else if (chat.isSystem) {
+      } else if (isSystem) {
         item.className = 'chat-row-event system';
         item.innerHTML = `<span>${parsedText}</span>`;
       } else {
@@ -1279,10 +1281,10 @@ const UI = {
     const drawerStream = document.getElementById('chatMessagesStream');
     if (drawerStream) {
       const msg = document.createElement('div');
-      msg.style.marginBottom = '8px';
-      msg.style.fontSize = '0.9rem';
 
       if (chat.isWinner) {
+        msg.style.marginBottom = '8px';
+        msg.style.fontSize = '0.9rem';
         const pos = Number(chat.position) || (chat.points >= 10 ? 1 : (chat.points >= 7 ? 2 : 3));
         const colorClass = pos === 1 ? 'winner-gold' : (pos === 2 ? 'winner-blue' : 'winner-green');
         const medal = pos === 1 ? '🥇' : (pos === 2 ? '🥈' : '🥉');
@@ -1293,11 +1295,16 @@ const UI = {
         msg.className = `chat-row-drawer-winner ${colorClass}`;
         msg.innerHTML = `<span>${medal} <strong>${parsedName}</strong> guessed the answer! <span class="winner-pts" style="font-weight:800;">(+${pts} pts • ${posLabel}${streakTag})</span></span>`;
       } else if (chat.isHint) {
+        msg.style.marginBottom = '8px';
+        msg.style.fontSize = '0.9rem';
         const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '';
         msg.innerHTML = `<span style="font-weight:500; color:#64748b; font-size:0.82rem; font-style:italic;">${hintSvg} ${parsedText}</span>`;
-      } else if (chat.isSystem) {
-        msg.innerHTML = `<span style="font-weight:500; color:#64748b; font-size:0.82rem; font-style:italic;">${parsedText}</span>`;
+      } else if (isSystem) {
+        msg.className = 'chat-row-drawer-system';
+        msg.innerHTML = `<span>${parsedText}</span>`;
       } else {
+        msg.style.marginBottom = '8px';
+        msg.style.fontSize = '0.9rem';
         msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
       }
 
@@ -1377,6 +1384,17 @@ const UI = {
   formatName(name) {
     const escaped = this.escapeHtml(name || 'Player');
     return typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(escaped) : escaped;
+  },
+
+  formatSystemText(text) {
+    if (!text) return '';
+    let clean = String(text);
+    clean = clean.replace(/joined the room!?/gi, 'joined the game');
+    clean = clean.replace(/left the room\.?/gi, 'left the game');
+    clean = clean.replace(/Host skipped the round\.?/gi, 'Host skipped the frame');
+    clean = clean.replace(/Game paused by Host\.?/gi, 'Host paused the game');
+    clean = clean.replace(/Game resumed\.?/gi, 'Host resumed the game');
+    return clean;
   },
 
   showNetworkStatus(text) {

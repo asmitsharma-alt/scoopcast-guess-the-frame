@@ -10637,28 +10637,37 @@
       font-family: var(--font-mono, monospace);
     }
 
-    /* Subtle non-highlighted notice */
+    /* Subtle non-highlighted notice - minimal, small, and completely box-free */
     .chat-notice-subtle {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 5px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 500;
       color: #64748b;
-      padding: 3px 8px;
+      padding: 2px 0;
       margin: 2px auto;
-      width: fit-content;
+      width: 100%;
+      text-align: center;
       user-select: none;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
       animation: chatMsgIn 0.15s ease-out;
     }
     .chat-notice-subtle .cns-icon {
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1;
     }
     .chat-notice-subtle .cns-text {
       font-style: italic;
       color: #64748b;
+      font-size: 11px;
+    }
+    .chat-notice-subtle .cns-text strong {
+      font-weight: 600;
+      color: #475569;
     }
 
     .chat-reaction-btn.chat-self-disabled {
@@ -16860,12 +16869,23 @@
         return false;
       },
 
+      formatSystemText(text) {
+        if (!text) return '';
+        let clean = String(text);
+        clean = clean.replace(/joined the room!?/gi, 'joined the game');
+        clean = clean.replace(/left the room\.?/gi, 'left the game');
+        clean = clean.replace(/Host skipped the round\.?/gi, 'Host skipped the frame');
+        clean = clean.replace(/Game paused by Host\.?/gi, 'Host paused the game');
+        clean = clean.replace(/Game resumed\.?/gi, 'Host resumed the game');
+        return clean;
+      },
+
       renderSystemMessage(htmlOrText) {
         const stream = document.getElementById('liveChatStream');
-        if (!stream) return;
+        if (!stream || !htmlOrText) return;
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-notice-subtle';
-        msgEl.innerHTML = '<span class="cns-text">' + htmlOrText + '</span>';
+        msgEl.innerHTML = '<span class="cns-text">' + this.formatSystemText(htmlOrText) + '</span>';
         stream.appendChild(msgEl);
         stream.scrollTop = stream.scrollHeight;
       },
@@ -16976,6 +16996,12 @@
       renderMessage(msg) {
         const stream = document.getElementById('liveChatStream');
         if (!stream || !msg) return;
+
+        // Render system notices in minimal non-highlighted way without box
+        if (msg.isSystem || msg.senderId === 'system') {
+          this.renderSystemMessage(msg.text);
+          return;
+        }
 
         // Defense-in-depth: Never render the answer into live chat stream during an active round
         const currentAns = this.getCurrentRoundAnswer();
@@ -18985,7 +19011,8 @@
 
       handleRemoteSkip() {
         if (typeof SoundManager !== 'undefined' && SoundManager.play) SoundManager.play('wrong');
-        if (typeof UI !== 'undefined' && UI.showNotification) UI.showNotification('Host skipped the round', 'warning');
+        if (typeof UI !== 'undefined' && UI.showNotification) UI.showNotification('Host skipped the frame', 'warning');
+        if (typeof ChatEngine !== 'undefined') ChatEngine.renderSystemMessage('⏭ Host skipped the frame');
       },
 
       handleRemotePause(isPaused) {
@@ -18993,6 +19020,7 @@
           if (isPaused) TC.pause();
           else TC.resume();
         }
+        if (typeof ChatEngine !== 'undefined') ChatEngine.renderSystemMessage(isPaused ? '⏸ Host paused the game' : '▶ Host resumed the game');
       },
 
       handleRemoteHint(msg) {
@@ -19289,13 +19317,18 @@
               if (chat.isSystem && typeof chat.text === 'string' && (chat.text.includes('guessed correctly! (+') || chat.text.includes('guessed the answer!'))) {
                 return;
               }
+              if (chat.isSystem || chat.senderId === 'system') {
+                ChatEngine.renderSystemMessage(chat.text);
+                return;
+              }
               ChatEngine.renderMessage({
                 id: chat.id,
                 senderId: chat.senderId,
                 senderName: chat.senderName,
                 senderAvatar: chat.avatar,
                 text: chat.text,
-                timestamp: chat.timestamp
+                timestamp: chat.timestamp,
+                isSystem: chat.isSystem
               });
             }
           });
