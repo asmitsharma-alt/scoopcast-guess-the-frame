@@ -1365,61 +1365,70 @@ body.keyboard-open .frame-card-nb img {
 
 body.keyboard-open .mobile-action-dock {
   width: 100% !important;
-  padding: 6px 10px calc(6px + var(--safe-bottom)) 10px !important;
+  padding: 6px 10px calc(6px + var(--safe-bottom, 0px)) 10px !important;
   border-top: var(--nb-border) !important;
   background: #fff !important;
   flex-shrink: 0 !important;
   z-index: 100 !important;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.18) !important;
 }
 
 /* LIVE TYPING MIRROR PILL (Positioned directly above keyboard dock) */
 .live-typing-mirror {
   display: none;
   width: 100%;
-  max-width: 480px;
-  background: #1a1a1a;
-  border: 2px solid var(--nb-yellow);
+  max-width: 100%;
+  background: #111827;
+  border: 2.5px solid var(--nb-yellow);
   box-shadow: 0 4px 14px rgba(0,0,0,0.3);
   border-radius: 10px;
-  padding: 7px 12px;
-  margin-bottom: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  box-sizing: border-box;
   animation: mirrorPulse 1.2s infinite alternate;
 }
 
 @keyframes mirrorPulse {
-  from { border-color: var(--nb-yellow); }
-  to { border-color: var(--nb-pink); }
+  from { border-color: var(--nb-yellow); box-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
+  to { border-color: var(--nb-pink); box-shadow: 0 0 10px rgba(244, 114, 182, 0.4); }
 }
 
 .mirror-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 1px;
   color: var(--nb-yellow);
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .mirror-text {
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 900;
   color: #fff;
   letter-spacing: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 260px;
+  flex: 1;
+  margin: 0 10px;
+  text-align: center;
 }
 
 .mirror-clear-btn {
   color: #bbb;
   font-size: 1.1rem;
   font-weight: 800;
-  padding: 2px 6px;
+  padding: 4px 8px;
   cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Floating Action Dock (Pinned at bottom / top of keyboard) */

@@ -25,7 +25,7 @@ const KeyboardManager = {
         mirrorText.textContent = val || 'TYPE YOUR GUESS...';
       }
       if (mirror) {
-        mirror.style.display = val ? 'flex' : 'none';
+        mirror.style.display = 'flex';
       }
     });
 
@@ -35,8 +35,9 @@ const KeyboardManager = {
       document.body.classList.add('keyboard-open');
       this.isKeyboardOpen = true;
       if (typeof Haptics !== 'undefined') Haptics.tap();
-      if (input.value && mirror) {
+      if (mirror) {
         mirror.style.display = 'flex';
+        if (mirrorText) mirrorText.textContent = input.value.toUpperCase() || 'TYPE YOUR GUESS...';
       }
       this.updateViewportLayout();
     });
@@ -101,19 +102,20 @@ const KeyboardManager = {
   },
 
   updateViewportLayout() {
-    if (!window.visualViewport) return;
     const dock = document.getElementById('mobileActionDock');
     if (!dock) return;
 
-    const vv = window.visualViewport;
-    const vpH = document.documentElement.clientHeight || window.innerHeight;
-    const heightDiff = vpH - (vv.height + vv.offsetTop);
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      const vpH = window.innerHeight;
+      const heightDiff = vpH - (vv.height + vv.offsetTop);
 
-    if (heightDiff > 120) {
-      document.body.classList.add('keyboard-open');
-      dock.style.bottom = `${Math.max(0, heightDiff)}px`;
-    } else {
-      dock.style.bottom = '0px';
+      if (heightDiff > 80) {
+        document.body.classList.add('keyboard-open');
+        dock.style.bottom = `${Math.max(0, heightDiff)}px`;
+      } else {
+        dock.style.bottom = '0px';
+      }
     }
   },
 
@@ -124,8 +126,7 @@ const KeyboardManager = {
 
     if (input) {
       input.value = '';
-      if (mirrorText) mirrorText.textContent = '';
-      if (mirror) mirror.style.display = 'none';
+      if (mirrorText) mirrorText.textContent = 'TYPE YOUR GUESS...';
       input.focus();
       if (typeof Haptics !== 'undefined') Haptics.tap();
     }

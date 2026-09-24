@@ -18754,7 +18754,9 @@
           // Show Next Round button for host with safety auto-advance
           const nextBtn = document.getElementById('ansNextRoundBtn');
           const waitPill = document.getElementById('ansWaitingHostPill');
-          const isLast = (this.currentPlayIndex + 1 >= this.currentPlaylist.length);
+          const currentRound = (this.colyseusRoom && this.colyseusRoom.state) ? (this.colyseusRoom.state.currentRound || 1) : (this.currentPlayIndex + 1);
+          const totalRounds = (this.colyseusRoom && this.colyseusRoom.state) ? (this.colyseusRoom.state.totalRounds || 20) : ((this.currentPlaylist && this.currentPlaylist.length) || 20);
+          const isLast = currentRound >= totalRounds;
           const iconHtml = isLast
             ? (typeof SvgIcons !== 'undefined' ? SvgIcons.flag : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>')
             : (typeof SvgIcons !== 'undefined' ? SvgIcons.skip : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg>');
@@ -18882,7 +18884,10 @@
         if (this._hostAutoAdvanceTimer) clearInterval(this._hostAutoAdvanceTimer);
         if (this._clientWaitTimer) clearInterval(this._clientWaitTimer);
         const nextBtn = document.getElementById('ansNextRoundBtn');
-        if (nextBtn) nextBtn.disabled = true;
+        if (nextBtn) {
+          nextBtn.disabled = true;
+          nextBtn.textContent = 'STARTING NEXT ROUND...';
+        }
         if (!this.isHost) return;
 
         if (this.colyseusRoom) {

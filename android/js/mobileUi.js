@@ -1082,12 +1082,18 @@ const UI = {
     const nextBtn = document.getElementById('btnNextRound');
     const waitNotice = document.getElementById('revealWaitingNotice');
     const isHost = (typeof GameClient !== 'undefined' && GameClient.isHost);
-    const isLast = (typeof GameClient !== 'undefined' && GameClient.currentPlaylist && (GameClient.currentPlayIndex + 1 >= GameClient.currentPlaylist.length));
+    const currentRound = (typeof GameClient !== 'undefined' && GameClient.colyseusRoom && GameClient.colyseusRoom.state)
+      ? (GameClient.colyseusRoom.state.currentRound || 1)
+      : ((typeof GameClient !== 'undefined' && GameClient.currentPlayIndex != null) ? GameClient.currentPlayIndex + 1 : 1);
+    const totalRounds = (typeof GameClient !== 'undefined' && GameClient.colyseusRoom && GameClient.colyseusRoom.state)
+      ? (GameClient.colyseusRoom.state.totalRounds || 20)
+      : ((typeof GameClient !== 'undefined' && GameClient.currentPlaylist && GameClient.currentPlaylist.length) ? GameClient.currentPlaylist.length : 20);
+    const isLast = currentRound >= totalRounds;
 
     if (isHost) {
       if (waitNotice) waitNotice.style.display = 'none';
       if (nextBtn) {
-        nextBtn.style.display = 'flex';
+        nextBtn.style.display = 'inline-flex';
         nextBtn.disabled = false;
         const iconSvg = isLast
           ? '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>'
@@ -1096,11 +1102,22 @@ const UI = {
         let countdown = 15;
         nextBtn.innerHTML = `${baseText} (${countdown}s) ${iconSvg}`;
 
+        nextBtn.onclick = (e) => {
+          e.preventDefault();
+          if (typeof Haptics !== 'undefined') Haptics.tap();
+          nextBtn.disabled = true;
+          nextBtn.innerHTML = `STARTING NEXT ROUND... ${iconSvg}`;
+          if (typeof GameClient !== 'undefined') {
+            GameClient.stopRevealTimer();
+            GameClient.nextRound();
+          }
+        };
+
         if (typeof GameClient !== 'undefined') {
           GameClient.stopRevealTimer();
           GameClient.revealTimerInterval = setInterval(() => {
             countdown--;
-            if (nextBtn && nextBtn.style.display !== 'none') {
+            if (nextBtn && nextBtn.style.display !== 'none' && !nextBtn.disabled) {
               nextBtn.innerHTML = `${baseText} (${countdown}s) ${iconSvg}`;
             }
             if (countdown <= 0) {

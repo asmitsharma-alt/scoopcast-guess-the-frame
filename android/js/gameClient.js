@@ -862,6 +862,12 @@ const GameClient = {
     if (!this.isHost) return;
     if (this.colyseusRoom) {
       this.colyseusRoom.send("next_round");
+    } else {
+      if (this.currentPlaylist && this.currentPlayIndex + 1 < this.currentPlaylist.length) {
+        this.setupRoundUI(this.currentPlaylist[this.currentPlayIndex + 1], 30, this.currentPlayIndex + 1, this.currentPlaylist.length);
+      } else {
+        this.finishGame();
+      }
     }
   },
 

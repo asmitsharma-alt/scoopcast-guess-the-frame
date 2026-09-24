@@ -356,14 +356,19 @@ export class TriviaRoom extends Room<GameState> {
     // ── Host actions: Advance to Next Round early ──
     this.onMessage("next_round", (client) => {
       const player = this.state.players.get(client.sessionId);
-      if (!player || !player.isHost) return;
-      if (this.state.phase !== "round_reveal") return;
+      const isHost = (player && player.isHost) || this.state.currentHostId === client.sessionId;
+      if (!isHost) return;
 
       if (this.autoAdvanceTimer) {
         clearTimeout(this.autoAdvanceTimer);
         this.autoAdvanceTimer = null;
       }
-      this.advanceNext();
+
+      if (this.state.phase === "round_reveal") {
+        this.advanceNext();
+      } else if (this.state.phase === "playing") {
+        this.finishRound();
+      }
     });
 
     // ── Chat messaging with Anti-Spoiler Shield ──
