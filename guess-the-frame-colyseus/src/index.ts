@@ -25,6 +25,20 @@ app.use(cors({
 app.options("*", cors());
 app.use(express.json());
 
+// ── Root Info Endpoint ──
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    name: "Scoopcast: Guess The Frame — Colyseus Multiplayer Server",
+    status: "online",
+    endpoints: {
+      health: "/health",
+      ping: "/ping",
+      colyseusMonitor: "/colyseus",
+      roomLookup: "/api/room/:code"
+    }
+  });
+});
+
 // ── Health & Uptime Endpoints ──
 app.get("/health", async (req: Request, res: Response) => {
   try {
