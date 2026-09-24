@@ -75,8 +75,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
-  <link rel="dns-prefetch" href="//broker.emqx.io">
-  <link rel="dns-prefetch" href="//broker.hivemq.com">
+  <link rel="preconnect" href="https://guess-the-frame-colyseus.onrender.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp" type="image/webp" fetchpriority="high">
@@ -12848,13 +12847,7 @@
     .ui-medal-bronze { color: #C2410C; }
   
   </style>
-  <!-- MQTT Realtime Engine (Local Bundle + CDN Fallback) -->
-  <script src="/android/js/mqtt.min.js"></script>
-  <script>
-    if (typeof mqtt === 'undefined') {
-      document.write('<script src="https://unpkg.com/mqtt@5.3.5/dist/mqtt.min.js"><\/script>');
-    }
-  </script>
+  <!-- Colyseus Realtime Multiplayer Engine -->
   <!-- Colyseus Game Engine (Local Bundle + CDN Fallback) -->
   <script src="/android/js/colyseus.js"></script>
   <script>
@@ -13536,10 +13529,10 @@
       </div>
     </div>
 
-    <div id="playerLobbyScreen" class="screen flex flex-col font-sans text-on-surface p-4 md:p-6 h-screen max-h-screen overflow-hidden justify-center items-center bg-transparent" style="background: rgba(255, 253, 245, 0.4) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
+    <div id="playerLobbyScreen" class="screen flex flex-col font-sans text-on-surface p-4 md:p-6 min-h-screen overflow-y-auto justify-start items-center bg-transparent" style="background: rgba(255, 253, 245, 0.4) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
       
 
-      <main class="max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col gap-6 w-full">
+      <main class="max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col gap-4 w-full my-auto py-4 pb-12">
         <!-- Room Code Banner -->
         <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 relative">
           <div class="flex items-center gap-6 flex-1 w-full md:w-auto">
@@ -13562,7 +13555,7 @@
             <div class="bg-neo-green border-2 border-on-surface px-4 py-2 flex items-center gap-2 font-label-bold text-label-bold uppercase whitespace-nowrap font-bold" id="lobbyConnectionStatus">
               <span class="material-symbols-outlined text-base">cloud</span>
               <div class="flex flex-col text-left">
-                <span class="text-[10px] leading-tight">Cloud Live</span>
+                <span class="text-[10px] leading-tight">Colyseus Live</span>
                 <span class="text-[8px] leading-tight opacity-75 font-mono">Connected</span>
               </div>
             </div>
@@ -17394,8 +17387,8 @@
     };
 
     const MultiplayerEngine = {
-      mqttClient: null,
-      broadcastChannel: null,
+      colyseusClient: null,
+      colyseusRoom: null,
       roomId: null,
       roomCode: null,
       playerId: null,
@@ -17405,6 +17398,7 @@
       selectedAvatarForModal: 'aman',
       currentMaskedHint: null,
       currentRoundWinners: [],
+      currentRoundNumber: 0,
       currentPlaylist: [],
       currentPlayIndex: 0,
       hostSettings: {
@@ -17412,19 +17406,12 @@
         categories: ['frames', 'eyes', 'dialogue'],
         roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
         rounds: 40,
-        timer: 30
+        timer: 30,
+        weeklyOnly: true
       },
       isPaused: false,
-      joinRetryTimer: null,
-      hasJoinedAck: false,
       isJoining: false,
-      _joinTimeoutTimer: null,
       isConnected: false,
-      _heartbeatInterval: null,
-      _watchdogInterval: null,
-      _hostAutoAdvanceTimer: null,
-      _clientWaitTimer: null,
-      lastHostHeartbeat: 0,
       sessionStats: {
         roundsWon: 0,
         totalGuesses: 0,
@@ -17432,8 +17419,18 @@
         fastestGuessSeconds: null,
         roundStartTime: 0
       },
-      clientHeartbeatTimer: null,
-      presenceWatchdogTimer: null,
+
+      getColyseusEndpoint() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const param = urlParams.get('colyseus');
+        if (param) return param;
+        const saved = localStorage.getItem('gtf_colyseus_url');
+        if (saved) return saved;
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          return 'ws://localhost:2567';
+        }
+        return 'wss://guess-the-frame-colyseus.onrender.com';
+      },
 
       init() {
         const savedName = localStorage.getItem('gtf_player_name');
@@ -17850,47 +17847,88 @@
         return code;
       },
 
-      confirmCreateRoom() {
+      async confirmCreateRoom() {
         const nameInput = document.getElementById('hostPlayerNameInput');
         const typedName = (nameInput ? nameInput.value : '').trim();
         this.playerAvatar = (typeof AvatarPicker !== 'undefined' ? AvatarPicker.selectedAvatar : null) || this.selectedAvatarForModal || this.playerAvatar || 'aman';
         this.playerName = typedName || this.getAvatarDisplayName(this.playerAvatar);
         this.isHost = true;
         this.roomCode = this.generateRoomCode();
-        this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30 };
         this.roomId = 'room_' + this.roomCode;
+        if (!this.hostSettings) {
+          this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30, weeklyOnly: true };
+        }
 
         localStorage.setItem('gtf_player_name', this.playerName);
         localStorage.setItem('gtf_player_avatar', this.playerAvatar);
 
-        this.saveActiveSession();
-        this.closeModals();
-        this.setupCloudTransport();
-        this.startHostHeartbeat();
-        this.startHostPresenceWatchdog();
+        const confirmBtn = document.getElementById('createRoomConfirmBtn');
+        const origText = confirmBtn ? confirmBtn.innerHTML : 'CREATE ROOM &amp; GET CODE →';
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' Creating room on server...';
+        }
 
-        GS.players = [{
-          id: this.playerId,
-          name: this.playerName,
-          avatar: this.playerAvatar,
-          score: 0,
-          isHost: true,
-          loaded: true,
-          color: '#ff7eb6'
-        }];
+        try {
+          const endpoint = this.getColyseusEndpoint();
+          console.log('[Colyseus] Creating room on', endpoint);
+          const client = new Colyseus.Client(endpoint);
+          this.colyseusClient = client;
 
-        GameController._onlineMode = true;
-        GameController._isRemoteSession = false;
+          const counts = this.hostSettings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
+          const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
 
-        UI.showScreen('playerLobbyScreen');
-        this.renderLobbyUI();
-        if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
-          FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
+          const room = await client.create('trivia_room', {
+            roomCode: this.roomCode,
+            name: this.playerName,
+            avatar: this.playerAvatar,
+            timer: this.hostSettings.timer || 30,
+            rounds: totalR,
+            category: this.hostSettings.category || 'all',
+            roundsByMode: counts,
+            weeklyOnly: this.hostSettings.weeklyOnly !== undefined ? this.hostSettings.weeklyOnly : true
+          });
+
+          this.colyseusRoom = room;
+          this.playerId = room.sessionId;
+          this.isHost = true;
+          this.bindColyseusGame(room);
+
+          this.saveActiveSession();
+          this.closeModals();
+
+          GS.players = [{
+            id: room.sessionId,
+            name: this.playerName,
+            avatar: this.playerAvatar,
+            score: 0,
+            isHost: true,
+            loaded: true,
+            color: '#ff7eb6'
+          }];
+
+          GameController._onlineMode = true;
+          GameController._isRemoteSession = false;
+
+          UI.showScreen('playerLobbyScreen');
+          this.renderLobbyUI();
+          this.updateConnectionStatus(true);
+
+          if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
+            FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
+          }
+        } catch (err) {
+          console.error('[Colyseus] Failed to create room:', err);
+          alert('Failed to connect to multiplayer server: ' + (err.message || 'Server offline. Try again in a few moments.'));
+        } finally {
+          if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = origText;
+          }
         }
       },
 
-      confirmJoinRoom() {
-        // FIX: In-flight guard prevents double-click race (Root Cause 3)
+      async confirmJoinRoom() {
         if (this.isJoining) return;
 
         const input = document.getElementById('joinCodeInput');
@@ -17908,202 +17946,55 @@
         this.isHost = false;
         this.roomCode = code;
         this.roomId = 'room_' + this.roomCode;
-        this.hasJoinedAck = false;
         this.isJoining = true;
 
         localStorage.setItem('gtf_player_name', this.playerName);
         localStorage.setItem('gtf_player_avatar', this.playerAvatar);
 
-        // FIX: Show connecting feedback on the join button (Root Cause 1)
         const joinBtn = document.querySelector('#joinRoomModal .mp-btn-primary');
-        const joinBtnOrigHtml = joinBtn ? joinBtn.innerHTML : '';
+        const joinBtnOrigHtml = joinBtn ? joinBtn.innerHTML : 'ENTER ROOM →';
         if (joinBtn) {
           joinBtn.disabled = true;
           joinBtn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ' Connecting to room...';
         }
 
-        // FIX: Do NOT navigate to playerLobbyScreen yet (Root Cause 1)
-        // Navigation will happen ONLY on SYNC_ROOM_STATE ACK from host
-
-        GS.players = [{
-          id: this.playerId,
-          name: this.playerName,
-          avatar: this.playerAvatar,
-          score: 0,
-          isHost: false,
-          loaded: true,
-          color: '#57c3e0'
-        }];
-
-        GameController._onlineMode = true;
-        GameController._isRemoteSession = true;
-
-        this.setupCloudTransport();
-
-        if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
-          FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
-        }
-
-        // Send Join Request with automatic retry until acknowledged by Host
-        this.sendJoinWithRetry();
-        // FIX: Join timeout starts AFTER MQTT connects (see setupCloudTransport connect handler)
-        // This avoids false "Lobby not found" when MQTT broker takes 3-5s to connect
-        this._joinBtnRef = joinBtn;
-        this._joinBtnOrigHtml = joinBtnOrigHtml;
-      },
-
-      setupCloudTransport() {
-        if (this.mqttClient) {
-          try { this.mqttClient.end(true); } catch(e) {}
-        }
-        if (this.broadcastChannel) {
-          try { this.broadcastChannel.close(); } catch(e) {}
-        }
-
-        // Pre-warm Colyseus backend when room is created or joined
         try {
-          fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
-          if (this.colyseusPingInterval) clearInterval(this.colyseusPingInterval);
-          this.colyseusPingInterval = setInterval(() => {
-            fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
-          }, 240000); // 4 minutes lobby keep-alive
-        } catch(e) {}
+          const endpoint = this.getColyseusEndpoint();
+          console.log('[Colyseus] Joining room', code, 'on', endpoint);
+          const client = new Colyseus.Client(endpoint);
+          this.colyseusClient = client;
 
-        const topic = NetworkSecurity.getRoomTopic(this.roomCode);
+          const room = await client.join('trivia_room', {
+            roomCode: this.roomCode,
+            name: this.playerName,
+            avatar: this.playerAvatar
+          });
 
-        // 1. Local BroadcastChannel for instant same-browser sync
-        try {
-          this.broadcastChannel = new BroadcastChannel('gtf_bc_' + NetworkSecurity.getTopicHash(this.roomCode));
-          this.broadcastChannel.onmessage = (event) => {
-            if (event && event.data) this.handleIncomingEvent(event.data);
-          };
-        } catch(e) {}
+          this.colyseusRoom = room;
+          this.playerId = room.sessionId;
+          this.isHost = false;
+          GameController._onlineMode = true;
+          GameController._isRemoteSession = true;
 
-        // 2. Cloud WebSocket for cross-device Internet sync (phones/laptops)
-        if (typeof mqtt !== 'undefined') {
-          const brokerList = [
-            'wss://broker.emqx.io:8084/mqtt',
-            'wss://broker.hivemq.com:8884/mqtt'
-          ];
-          const brokerUrl = brokerList[0];
+          this.bindColyseusGame(room);
+          this.closeModals();
 
-          try {
-            const clientInstance = mqtt.connect(brokerUrl, {
-              keepalive: 30,
-              reconnectPeriod: 2000,
-              connectTimeout: 5000,
-              clientId: 'gtf_' + this.playerId + '_' + Math.random().toString(16).substr(2, 6)
-            });
-            this.mqttClient = clientInstance;
+          UI.showScreen('playerLobbyScreen');
+          this.renderLobbyUI();
+          this.updateConnectionStatus(true);
 
-            clientInstance.on('connect', () => {
-              if (!this.mqttClient || this.mqttClient !== clientInstance) return;
-              this.isConnected = true;
-              console.log('[Realtime] Connected to Cloud WebSocket Broker!');
-              this.updateConnectionStatus(true);
-              clientInstance.subscribe(topic, { qos: 1 });
-              this.flushMessageQueue();
-
-              if (!this.isHost && !this.hasJoinedAck) {
-                if (this.isRejoining) {
-                  this.sendRejoinWithRetry();
-                  const session = this.pendingRejoinSession;
-                  if (session && session.isHost) {
-                    if (this._rejoinHostCheckTimer) clearTimeout(this._rejoinHostCheckTimer);
-                    this._rejoinHostCheckTimer = setTimeout(() => {
-                      if (!this.hasJoinedAck) {
-                        console.log('[Rejoin] No other host responded. Resuming original host authority.');
-                        if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
-                        this.isHost = true;
-                        this.isRejoining = false;
-                        this.hasJoinedAck = true;
-                        GameController._isRemoteSession = false;
-                        this.stopClientHeartbeat();
-                        this.stopHostWatchdog();
-                        this.startHostHeartbeat();
-                        this.startHostPresenceWatchdog();
-                        this.saveActiveSession();
-                        const hfbHostOnly = document.getElementById('hfbHostOnly');
-                        if (hfbHostOnly) hfbHostOnly.style.display = 'inline-flex';
-                        const hfbLabel = document.getElementById('hfbLabel');
-                        if (hfbLabel) hfbLabel.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:';
-                        if (this.isMatchActive) {
-                          UI.showScreen('gameScreen');
-                          this.broadcastState('HOST_RECONNECTED');
-                        } else {
-                          this.renderLobbyUI();
-                          this.broadcastState('HOST_ONLINE');
-                        }
-                        ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> (Host) reconnected!');
-                      }
-                    }, 2500);
-                  }
-                } else {
-                  this.sendJoinWithRetry();
-                  // FIX: Start join timeout AFTER MQTT connects (Root Cause 4)
-                  // Gives 15 seconds for host handshake to accommodate real-world network variations
-                  if (this.isJoining && !this.hasJoinedAck) {
-                    if (this._joinTimeoutTimer) clearTimeout(this._joinTimeoutTimer);
-                    this._joinTimeoutTimer = setTimeout(() => {
-                      if (!this.hasJoinedAck && this.isJoining) {
-                        console.warn('[JoinTimeout] No host responded within 15s after MQTT connect. Aborting join.');
-                        this.isJoining = false;
-                        if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-                        this.joinRetryTimer = null;
-
-                        // Clean up transport
-                        const cToEnd = this.mqttClient;
-                        const chToClose = this.broadcastChannel;
-                        this.mqttClient = null;
-                        this.broadcastChannel = null;
-                        if (cToEnd) { try { cToEnd.end(true); } catch(e) {} }
-                        if (chToClose) { try { chToClose.close(); } catch(e) {} }
-
-                        // Reset state
-                        GameController._onlineMode = false;
-                        GameController._isRemoteSession = false;
-                        this.roomCode = null;
-                        this.roomId = null;
-                        this.isConnected = false;
-
-                        // Restore join button
-                        const jBtn = this._joinBtnRef;
-                        if (jBtn) {
-                          jBtn.disabled = false;
-                          jBtn.innerHTML = this._joinBtnOrigHtml || 'ENTER ROOM →';
-                        }
-
-                        alert('Lobby not found. Please verify your room code and make sure the host is online.');
-                      }
-                    }, 15000);
-                  }
-                }
-              } else if (this.isHost) {
-                this.broadcastState('HOST_ONLINE');
-              }
-            });
-
-            clientInstance.on('message', (t, payload) => {
-              if (!this.mqttClient || this.mqttClient !== clientInstance) return;
-              try {
-                const msg = JSON.parse(payload.toString());
-                this.handleIncomingEvent(msg);
-              } catch(err) {
-                console.error('[Realtime] Error parsing message:', err);
-              }
-            });
-
-            clientInstance.on('offline', () => {
-              if (this.mqttClient !== clientInstance) return;
-              this.isConnected = false;
-              this.updateConnectionStatus(false);
-            });
-
-            clientInstance.on('error', (err) => {
-              console.warn('[Realtime] WebSocket Notice:', err.message);
-            });
-          } catch(err) {
-            console.warn('[Realtime] Transport Notice:', err);
+          if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
+            FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
+          }
+        } catch (err) {
+          console.error('[Colyseus] Failed to join room:', err);
+          const notFound = err.message && (err.message.includes('no rooms') || err.message.includes('not found') || err.message.includes('closed'));
+          alert(notFound ? `Lobby "${code}" not found. Please verify the room code and ensure the host is online.` : `Could not join room: ${err.message || 'Server unreachable'}`);
+        } finally {
+          this.isJoining = false;
+          if (joinBtn) {
+            joinBtn.disabled = false;
+            joinBtn.innerHTML = joinBtnOrigHtml;
           }
         }
       },
@@ -18121,678 +18012,72 @@
             bar.appendChild(dot);
           }
           dot.innerHTML = online 
-            ? '<span style="color:#22c55e;"><svg class="ui-icon" viewBox="0 0 24 24" fill="#22c55e"><circle cx="12" cy="12" r="8"/></svg> Cloud Live</span>' 
+            ? '<span style="color:#22c55e;"><svg class="ui-icon" viewBox="0 0 24 24" fill="#22c55e"><circle cx="12" cy="12" r="8"/></svg> Colyseus Live</span>' 
             : '<span style="color:#f59e0b;"><svg class="ui-icon" viewBox="0 0 24 24" fill="#f59e0b"><circle cx="12" cy="12" r="8"/></svg> Connecting...</span>';
         }
-      },
-
-      sendJoinWithRetry() {
-        if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-
-        const attemptJoin = () => {
-          if (this.hasJoinedAck || this.isHost) {
-            if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-            return;
-          }
-          this.sendEvent('PLAYER_JOIN', {
-            id: this.playerId,
-            name: this.playerName,
-            avatar: this.playerAvatar
-          });
-        };
-
-        attemptJoin();
-        this.joinRetryTimer = setInterval(attemptJoin, 1500);
-      },
-
-      messageQueue: [],
-
-      sendEvent(eventType, payload = {}) {
-        const token = NetworkSecurity.generateToken(this.roomCode, this.playerId, this.isHost);
-        const msg = {
-          token: token,
-          type: eventType,
-          roomId: this.roomId,
-          roomCode: this.roomCode,
-          senderId: this.playerId,
-          timestamp: Date.now(),
-          ...payload
-        };
-
-        const jsonStr = JSON.stringify(msg);
-
-        // Broadcast to local tabs
-        if (this.broadcastChannel) {
-          try { this.broadcastChannel.postMessage(msg); } catch(e) {}
-        }
-
-        // Broadcast to cloud WebSocket
-        if (this.mqttClient && this.mqttClient.connected) {
-          const topic = NetworkSecurity.getRoomTopic(this.roomCode);
-          this.mqttClient.publish(topic, jsonStr, { qos: 1 });
-        } else {
-          // Queue for transmission once socket is connected
-          if (!this.messageQueue) this.messageQueue = [];
-          this.messageQueue.push({ topic: NetworkSecurity.getRoomTopic(this.roomCode), payload: jsonStr });
-        }
-      },
-
-      flushMessageQueue() {
-        if (!this.mqttClient || !this.mqttClient.connected || !this.messageQueue) return;
-        while (this.messageQueue.length > 0) {
-          const item = this.messageQueue.shift();
-          this.mqttClient.publish(item.topic, item.payload, { qos: 1 });
-        }
-      },
-
-      broadcastState(reason = 'UPDATE') {
-        if (!this.isHost) return;
-        this.sendEvent('SYNC_ROOM_STATE', {
-          reason,
-          players: GS.players,
-          hostSettings: this.hostSettings,
-          currentPlaylist: this.currentPlaylist,
-          currentPlayIndex: this.currentPlayIndex,
-          currentPhase: GS.currentPhase,
-          currentRoundWinners: this.currentRoundWinners,
-          timeRemaining: GS.timeRemaining
-        });
-      },
-
-      handleIncomingEvent(msg) {
-        if (!msg) return;
-        const incomingRoom = String(msg.roomCode || '').trim().toUpperCase();
-        const currentRoom = String(this.roomCode || '').trim().toUpperCase();
-        if (!incomingRoom || !currentRoom || incomingRoom !== currentRoom) return;
-        if (msg.senderId === this.playerId && msg.type !== 'SYNC_ROOM_STATE') return;
-
-        // Phase 4: Network Security Validation (host auth, tokens, rate limits)
-        if (typeof NetworkSecurity !== 'undefined' && !NetworkSecurity.validateIncomingMessage(msg, this.roomCode, GS.players, this.isHost)) {
-          return;
-        }
-
-        if (this.isHost && msg.senderId) {
-          const senderPlayer = GS.players.find(p => p.id === msg.senderId);
-          if (senderPlayer) {
-            senderPlayer.lastSeen = Date.now();
-          }
-        }
-
-        switch (msg.type) {
-          case 'CLIENT_HEARTBEAT':
-            if (this.isHost && msg.senderId) {
-              const p = GS.players.find(x => x.id === msg.senderId);
-              if (p) p.lastSeen = Date.now();
-            }
-            break;
-
-          case 'PLAYER_LEAVE': {
-            const leavingPlayerId = msg.playerId || msg.senderId;
-            if (leavingPlayerId) {
-              const idx = GS.players.findIndex(p => p.id === leavingPlayerId);
-              if (idx !== -1) {
-                const [leftPlayer] = GS.players.splice(idx, 1);
-                // Archive player's score so it is NEVER lost upon rejoin
-                if (!this.playerScoresArchive) this.playerScoresArchive = {};
-                if (typeof leftPlayer.score === 'number') {
-                  this.playerScoresArchive[leftPlayer.id] = leftPlayer.score;
-                }
-                this.saveActiveSession();
-                this.renderLobbyUI();
-                UI.renderLB();
-                ChatEngine.renderSystemMessage(`${typeof SvgIcons !== 'undefined' ? SvgIcons.door : ''} <strong>${SecurityUtil.escapeHtml(leftPlayer.name || 'A player')}</strong> left the room.`);
-                if (this.isHost) {
-                  this.broadcastState('PLAYER_LEFT');
-                } else if (leftPlayer.isHost || msg.isHost) {
-                  console.log('[MultiplayerEngine] Host left the room. Promoting next host immediately.');
-                  this.checkHostMigration();
-                }
-              }
-            }
-            break;
-          }
-
-          case 'PLAYER_KICKED': {
-            if (msg.targetPlayerId === this.playerId) {
-              this.leaveRoom();
-              UI.showScreen('homeScreen');
-              alert('You have been removed from the room by the host.');
-            } else if (msg.targetPlayerId) {
-              const idx = GS.players.findIndex(p => p.id === msg.targetPlayerId);
-              if (idx !== -1) {
-                const [kickedPlayer] = GS.players.splice(idx, 1);
-                this.renderLobbyUI();
-                UI.renderLB();
-                ChatEngine.renderSystemMessage(`${typeof SvgIcons !== 'undefined' ? SvgIcons.boot : ''} <strong>${SecurityUtil.escapeHtml(kickedPlayer.name || 'A player')}</strong> was removed by the host.`);
-              }
-            }
-            break;
-          }
-          case 'REQUEST_REJOIN_SYNC':
-            if (this.isHost) {
-              let restoredScore = 0;
-              if (this.playerScoresArchive && typeof this.playerScoresArchive[msg.playerId] === 'number') {
-                restoredScore = this.playerScoresArchive[msg.playerId];
-              } else if (typeof msg.lastKnownScore === 'number' && msg.lastKnownScore > 0) {
-                restoredScore = msg.lastKnownScore;
-              }
-
-              const existingPlayer = GS.players.find(p => p.id === msg.playerId);
-              if (existingPlayer) {
-                existingPlayer.name = msg.name || existingPlayer.name;
-                existingPlayer.avatar = msg.avatar || existingPlayer.avatar;
-                existingPlayer.loaded = true;
-                if ((existingPlayer.score === undefined || existingPlayer.score === 0) && restoredScore > 0) {
-                  existingPlayer.score = restoredScore;
-                }
-              } else {
-                const av = (msg.avatar || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
-                const avConfig = (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[av]) ? AVATAR_MAP[av] : { color: '#57c3e0' };
-                GS.players.push({
-                  id: msg.playerId,
-                  name: msg.name,
-                  avatar: msg.avatar,
-                  score: restoredScore,
-                  isHost: false,
-                  loaded: true,
-                  color: avConfig.color || '#57c3e0'
-                });
-              }
-
-              if (!this.playerScoresArchive) this.playerScoresArchive = {};
-              const finalPlayer = GS.players.find(p => p.id === msg.playerId);
-              if (finalPlayer && typeof finalPlayer.score === 'number') {
-                this.playerScoresArchive[msg.playerId] = finalPlayer.score;
-              }
-
-              this.renderLobbyUI();
-              UI.renderLB();
-              this.saveActiveSession();
-
-              const totalTimer = (this.hostSettings && this.hostSettings.timer) || 30;
-              const elapsed = this.currentRoundStartTime ? Math.max(0, (Date.now() - this.currentRoundStartTime) / 1000) : 0;
-              const remainingSeconds = Math.max(1, Math.round(totalTimer - elapsed));
-
-              this.sendEvent('REJOIN_SYNC_STATE', {
-                targetPlayerId: msg.playerId,
-                gameState: this.isMatchActive ? (this.isRoundFinished ? 'round_end' : 'playing') : 'lobby',
-                roomCode: this.roomCode,
-                hostSettings: this.hostSettings,
-                players: GS.players,
-                currentPlaylist: this.currentPlaylist,
-                currentPlayIndex: this.currentPlayIndex,
-                currentFrame: (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) || this.currentClientFrame,
-                currentRoundWinners: this.currentRoundWinners,
-                timerDuration: totalTimer,
-                remainingSeconds: remainingSeconds,
-                roundIndex: this.currentPlayIndex,
-                maskedHint: this.currentMaskedHint
-              });
-              this.broadcastState('PLAYER_REJOINED');
-            }
-            break;
-
-          case 'REJOIN_SYNC_STATE':
-            if (msg.targetPlayerId && msg.targetPlayerId !== this.playerId) break;
-            this.hasJoinedAck = true;
-            this.isRejoining = false;
-            if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
-            if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-            if (this._rejoinHostCheckTimer) clearTimeout(this._rejoinHostCheckTimer);
-
-            if (msg.players) {
-              GS.players = msg.players;
-              if (!this.playerScoresArchive) this.playerScoresArchive = {};
-              for (const p of msg.players) {
-                if (p && p.id && typeof p.score === 'number') {
-                  this.playerScoresArchive[p.id] = p.score;
-                }
-              }
-              UI.renderLB();
-            }
-
-            // Check if there is already an active host in the room who is not me
-            const existingHost = GS.players.find(p => p.isHost && p.id !== this.playerId);
-            if (existingHost) {
-              this.isHost = false;
-              GameController._isRemoteSession = true;
-              this.stopHostHeartbeat();
-              this.stopHostPresenceWatchdog();
-              this.startClientHeartbeat();
-              this.startHostWatchdog();
-              this.saveActiveSession();
-            } else if (this.pendingRejoinSession && this.pendingRejoinSession.isHost) {
-              this.isHost = true;
-              GameController._isRemoteSession = false;
-              this.startHostHeartbeat();
-              this.startHostPresenceWatchdog();
-              this.stopClientHeartbeat();
-              this.stopHostWatchdog();
-              this.saveActiveSession();
-            }
-
-            if (msg.hostSettings) this.hostSettings = msg.hostSettings;
-            if (msg.currentPlaylist && msg.currentPlaylist.length > 0) this.currentPlaylist = msg.currentPlaylist;
-            if (msg.currentPlayIndex !== undefined) this.currentPlayIndex = msg.currentPlayIndex;
-            if (msg.currentRoundWinners) this.currentRoundWinners = msg.currentRoundWinners;
-            if (msg.maskedHint) this.currentMaskedHint = msg.maskedHint;
-
-            const isMatchState = (msg.gameState === 'playing' || msg.gameState === 'round_end');
-            if (isMatchState) {
-              this.isMatchActive = true;
-              GameController._onlineMode = true;
-              GameController._isMatchActive = true;
-              UI.showScreen('gameScreen');
-
-              const gPanel = document.getElementById('onlineGuessPanel');
-              if (gPanel) gPanel.classList.add('active');
-              const hBar = document.getElementById('hostFloatingBar');
-              if (hBar) hBar.style.display = 'flex';
-              const hfbHostOnly = document.getElementById('hfbHostOnly');
-              if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
-              const hfbLabel = document.getElementById('hfbLabel');
-              if (hfbLabel) hfbLabel.innerHTML = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
-
-              const curFrame = msg.currentFrame || (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) || this.currentClientFrame;
-              if (curFrame) {
-                const roundInfo = document.getElementById('roundInfo');
-                if (roundInfo && this.currentPlaylist) roundInfo.textContent = `Round ${this.currentPlayIndex + 1} / ${this.currentPlaylist.length}`;
-                const secName = document.getElementById('curSecName');
-                if (secName) secName.textContent = curFrame.sectionName || 'Guess the Frame';
-                FrameDisplay.showFrame(curFrame);
-              }
-
-              if (msg.gameState === 'round_end') {
-                this.isRoundFinished = true;
-                const ansOv = document.getElementById('answerOverlay');
-                if (ansOv) ansOv.classList.add('visible', 'active');
-                const ansTitle = document.getElementById('ansTitle');
-                if (ansTitle && curFrame) ansTitle.textContent = curFrame.answer || '';
-                const ansYear = document.getElementById('ansYear');
-                if (ansYear && curFrame) ansYear.textContent = curFrame.year ? `(${curFrame.year})` : '';
-              } else {
-                this.isRoundFinished = false;
-                const ansOv = document.getElementById('answerOverlay');
-                if (ansOv) ansOv.classList.remove('visible', 'active');
-                const scOv = document.getElementById('scoringOv');
-                if (scOv) scOv.classList.remove('active');
-
-                const input = document.getElementById('onlineGuessInput');
-                const submitBtn = document.getElementById('onlineGuessSubmitBtn');
-                const alreadyGuessed = (this.currentRoundWinners || []).some(w => w.playerId === this.playerId);
-                if (input) {
-                  input.value = '';
-                  input.disabled = alreadyGuessed;
-                  if (!alreadyGuessed) input.focus();
-                }
-                if (submitBtn) submitBtn.disabled = alreadyGuessed;
-
-                TC.start(msg.remainingSeconds || msg.timerDuration || 30, () => {
-                  this.endRound();
-                });
-              }
-              UI.renderLB();
-              this.saveActiveSession();
-            } else {
-              this.isMatchActive = false;
-              UI.showScreen('playerLobbyScreen');
-              this.renderLobbyUI();
-            }
-            break;
-
-          case 'CHAT_MESSAGE':
-            if (msg.msg) {
-              const currentAns = ChatEngine.getCurrentRoundAnswer();
-              const isMatch = ChatEngine.isRoundActive() && currentAns && FuzzyMatcher.isMatch(msg.msg.text, currentAns);
-              if (isMatch) {
-                // Incoming message matches the answer during an active round!
-                // Suppress from chat stream. If host and player hasn't won yet, process as a guess.
-                if (this.isHost && !this.currentRoundWinners.some(w => w.playerId === msg.msg.senderId)) {
-                  this.validateAndProcessGuess({
-                    playerId: msg.msg.senderId,
-                    playerName: msg.msg.senderName,
-                    playerAvatar: msg.msg.senderAvatar,
-                    guess: msg.msg.text,
-                    roundIndex: this.currentPlayIndex
-                  });
-                }
-                break;
-              }
-              // If it leaked a spoiler without matching the full answer, suppress from chat
-              if (ChatEngine.isRoundActive() && currentAns && ChatEngine.isAnswerOrSpoiler(msg.msg.text, currentAns)) {
-                break;
-              }
-              ChatEngine.renderMessage(msg.msg);
-            }
-            break;
-
-          case 'CHAT_REACTION_UPDATE':
-            ChatEngine.handleReactionUpdate(msg);
-            break;
-
-          case 'UPDATE_PLAYER_NAME':
-            if (this.isHost && msg.playerId && msg.name) {
-              const p = GS.players.find(x => x.id === msg.playerId);
-              if (p) {
-                p.name = msg.name.trim().slice(0, 16);
-                this.renderLobbyUI();
-                this.broadcastState('PLAYER_NAME_UPDATED');
-              }
-            }
-            break;
-
-          case 'PLAYER_LOAD_STATUS':
-            const pLoaded = GS.players.find(p => p.id === msg.playerId || p.name === msg.playerName || p.avatar === msg.playerAvatar);
-            if (pLoaded) {
-              pLoaded.loaded = !!msg.loaded;
-              pLoaded.loadProgress = Number(msg.progress) || (msg.loaded ? 100 : 0);
-              pLoaded.lastSeen = Date.now();
-              this.renderLobbyUI();
-              if (this.isHost) {
-                this.broadcastState('PLAYER_LOAD_STATUS');
-              }
-            }
-            break;
-
-          case 'PLAYER_JOIN':
-            if (this.isHost) {
-              // FIX: Authoritative host validation (Root Cause 2)
-              const maxPlayers = (this.hostSettings && this.hostSettings.maxPlayers) || 8;
-              const existingIdx = GS.players.findIndex(p => p.id === msg.id);
-
-              // Reject if lobby is full (new player, not reconnecting)
-              if (existingIdx === -1 && GS.players.length >= maxPlayers) {
-                this.sendEvent('JOIN_REJECTED', {
-                  targetPlayerId: msg.id,
-                  reason: 'LOBBY_FULL',
-                  message: 'This lobby is full (' + maxPlayers + '/' + maxPlayers + ' players).'
-                });
-                break;
-              }
-
-              // Reject if match is already in progress (new player, not reconnecting)
-              if (existingIdx === -1 && this.isMatchActive) {
-                this.sendEvent('JOIN_REJECTED', {
-                  targetPlayerId: msg.id,
-                  reason: 'GAME_ALREADY_STARTED',
-                  message: 'A match is already in progress. Please wait for it to end.'
-                });
-                break;
-              }
-
-              if (existingIdx === -1) {
-                const colors = ['#ff7eb6', '#57c3e0', '#f0a828', '#84cc16', '#a06bd6', '#3fb9ad'];
-                const nextColor = colors[GS.players.length % colors.length];
-                GS.players.push({
-                  id: msg.id,
-                  name: msg.name,
-                  avatar: msg.avatar,
-                  score: 0,
-                  isHost: false,
-                  loaded: true,
-                  lastSeen: Date.now(),
-                  color: nextColor
-                });
-              } else {
-                GS.players[existingIdx].name = msg.name;
-                GS.players[existingIdx].avatar = msg.avatar;
-                GS.players[existingIdx].lastSeen = Date.now();
-              }
-              this.renderLobbyUI();
-              this.broadcastState('PLAYER_JOINED');
-            }
-            break;
-
-          case 'JOIN_REJECTED':
-            // FIX: Handle host rejection with specific reason (Root Cause 2 client-side)
-            if (msg.targetPlayerId === this.playerId) {
-              console.warn('[JoinRejected] Host rejected join:', msg.reason, msg.message);
-              this.isJoining = false;
-              if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-              this.joinRetryTimer = null;
-              if (this._joinTimeoutTimer) clearTimeout(this._joinTimeoutTimer);
-              this._joinTimeoutTimer = null;
-
-              // Clean up transport
-              const rClientToEnd = this.mqttClient;
-              const rChannelToClose = this.broadcastChannel;
-              this.mqttClient = null;
-              this.broadcastChannel = null;
-              if (rClientToEnd) { try { rClientToEnd.end(true); } catch(e) {} }
-              if (rChannelToClose) { try { rChannelToClose.close(); } catch(e) {} }
-
-              // Reset state
-              GameController._onlineMode = false;
-              GameController._isRemoteSession = false;
-              this.roomCode = null;
-              this.roomId = null;
-              this.isConnected = false;
-
-              // Restore join button
-              const rJoinBtn = document.querySelector('#joinRoomModal .mp-btn-primary');
-              if (rJoinBtn) {
-                rJoinBtn.disabled = false;
-                rJoinBtn.innerHTML = 'ENTER ROOM →';
-              }
-
-              alert(msg.message || 'Unable to join this room.');
-            }
-            break;
-
-          case 'SYNC_ROOM_STATE':
-            if (msg.players && msg.players.length > 0) {
-              const wasJoining = this.isJoining && !this.hasJoinedAck;
-              const isMeIncluded = msg.players.some(p => p.id === this.playerId || p.name === this.playerName);
-
-              if (wasJoining && !isMeIncluded && !this.isHost) {
-                // Host broadcast received (room is live!), but host hasn't processed our join packet yet.
-                // Immediately re-transmit join packet.
-                this.sendEvent('PLAYER_JOIN', {
-                  id: this.playerId,
-                  name: this.playerName,
-                  avatar: this.playerAvatar
-                });
-                return;
-              }
-
-              this.hasJoinedAck = true;
-              this.isJoining = false;
-              if (this.joinRetryTimer) clearInterval(this.joinRetryTimer);
-              if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
-              if (this._rejoinHostCheckTimer) clearTimeout(this._rejoinHostCheckTimer);
-              if (this._joinTimeoutTimer) clearTimeout(this._joinTimeoutTimer);
-              this._joinTimeoutTimer = null;
-
-              GS.players = msg.players;
-              if (!this.playerScoresArchive) this.playerScoresArchive = {};
-              for (const p of msg.players) {
-                if (p && p.id && typeof p.score === 'number') {
-                  this.playerScoresArchive[p.id] = p.score;
-                }
-              }
-
-              const existingHost = GS.players.find(p => p.isHost && p.id !== this.playerId);
-              if (existingHost) {
-                this.isHost = false;
-                GameController._isRemoteSession = true;
-                this.stopHostHeartbeat();
-                this.stopHostPresenceWatchdog();
-                this.startClientHeartbeat();
-                this.startHostWatchdog();
-                this.saveActiveSession();
-              }
-
-              if (msg.hostSettings) this.hostSettings = msg.hostSettings;
-              if (msg.currentPlaylist && msg.currentPlaylist.length > 0) this.currentPlaylist = msg.currentPlaylist;
-              if (msg.currentPlayIndex !== undefined) this.currentPlayIndex = msg.currentPlayIndex;
-              if (msg.currentRoundWinners) this.currentRoundWinners = msg.currentRoundWinners;
-
-              // FIX: Navigate to lobby ONLY when initially joining room
-              if (wasJoining) {
-                this.saveActiveSession();
-                this.closeModals();
-                this.startClientHeartbeat();
-                this.startHostWatchdog();
-                UI.showScreen('playerLobbyScreen');
-              }
-
-              this.renderLobbyUI();
-              UI.renderLB();
-            }
-            break;
-
-          case 'UPDATE_HOST_SETTINGS':
-          case 'SETTINGS_UPDATE': {
-            const settings = msg.settings || msg.hostSettings;
-            if (settings) {
-              this.hostSettings = Object.assign(this.hostSettings || {}, settings);
-              const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
-              if (weeklyToggle && settings.weeklyOnly !== undefined) {
-                weeklyToggle.checked = Boolean(settings.weeklyOnly);
-              }
-              const weeklySubtext = document.getElementById('weeklySubtextDesktop');
-              if (weeklySubtext && settings.weeklyOnly !== undefined) {
-                weeklySubtext.textContent = settings.weeklyOnly ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
-              }
-              this.renderLobbyUI();
-            }
-            break;
-          }
-
-          case 'COLYSEUS_GAME_START': {
-            this.isMatchActive = true;
-            this.isRoundFinished = false;
-            GameController._onlineMode = true;
-            GameController._isMatchActive = true;
-            if (msg.colyseusRoomId && typeof Colyseus !== 'undefined') {
-              try {
-                const client = new Colyseus.Client('wss://guess-the-frame-colyseus.onrender.com');
-                client.joinById(msg.colyseusRoomId, {
-                  name: this.playerName,
-                  avatar: this.playerAvatar
-                }).then(room => {
-                  this.bindColyseusGame(room);
-                }).catch(err => {
-                  console.warn('[Colyseus] Failed to join room:', err);
-                });
-              } catch(err) {
-                console.warn('[Colyseus] Connection error:', err);
-              }
-            }
-            break;
-          }
-
-          case 'RETURN_TO_LOBBY': {
-            if (this.colyseusRoom) {
-              try { this.colyseusRoom.leave(); } catch(e) {}
-              this.colyseusRoom = null;
-            }
-            this.isMatchActive = false;
-            this.isRoundFinished = false;
-            UI.showScreen('homeScreen');
-            break;
-          }
-
-          case 'SHOW_HOW_TO_ANSWER':
-            this.handleRemoteHowToAnswer(msg);
-            break;
-
-          case 'GAME_START_COUNTDOWN':
-            this.handleRemoteGameStart(msg);
-            break;
-
-          case 'ROUND_START':
-            this.handleRemoteRoundStart(msg);
-            break;
-
-          case 'SUBMIT_GUESS':
-            if (this.isHost) {
-              this.validateAndProcessGuess(msg);
-            }
-            break;
-
-          case 'GUESS_RESULT':
-            if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
-            if (msg.targetPlayerId === this.playerId && !msg.isCorrect) {
-              SoundManager.play('wrong');
-              this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
-              const input = document.getElementById('onlineGuessInput');
-              if (input) {
-                input.classList.add('shake-input');
-                setTimeout(() => input.classList.remove('shake-input'), 400);
-              }
-            }
-            break;
-
-          case 'GUESS_CORRECT_BROADCAST':
-            if (this._guessTimeoutId) clearTimeout(this._guessTimeoutId);
-            this.handleRemoteCorrectGuess(msg);
-            break;
-
-          case 'ROUND_FINISH_BROADCAST':
-            this.handleRemoteRoundFinish(msg);
-            break;
-
-          case 'PLAYER_USED_HINT':
-            this.handleRemoteHint(msg);
-            break;
-
-          case 'HOST_SKIP_BROADCAST':
-            this.handleRemoteSkip();
-            break;
-
-          case 'HOST_PAUSE_BROADCAST':
-            this.handleRemotePause(msg.paused);
-            break;
-
-          case 'TIE_BREAKER_TRIGGER':
-            this.handleRemoteTieBreaker(msg);
-            break;
-
-          case 'GAME_OVER_BROADCAST':
-            this.handleRemoteGameOver(msg);
-            break;
-
-          case 'REMATCH_BROADCAST':
-            this.handleRemoteRematch();
-            break;
-
-          case 'RETURN_LOBBY_BROADCAST':
-            this.handleRemoteReturnLobby();
-            break;
-
-          case 'HOST_HEARTBEAT':
-            this.lastHostHeartbeat = Date.now();
-            this._hostWarnActive = false;
-            break;
-
-          case 'HOST_MIGRATED':
-            this.lastHostHeartbeat = Date.now();
-            if (msg.newHostId === this.playerId) {
-              if (!this.isHost) this.becomeHost();
-            } else {
-              this.isHost = false;
-              this.stopHostHeartbeat();
-              this.startHostWatchdog();
-              if (msg.players) GS.players = msg.players;
-              GS.players.forEach(p => { p.isHost = (p.id === msg.newHostId); });
-              const hfbHostOnly = document.getElementById('hfbHostOnly');
-              if (hfbHostOnly) hfbHostOnly.style.display = 'none';
-              const hfbLabel = document.getElementById('hfbLabel');
-              if (hfbLabel) hfbLabel.innerHTML = ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
-              const waitPill = document.getElementById('ansWaitingHostPill');
-              const nextBtn = document.getElementById('ansNextRoundBtn');
-              if (nextBtn) nextBtn.style.display = 'none';
-              if (waitPill) waitPill.style.display = 'inline-flex';
-              this.renderLobbyUI();
-              ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(msg.newHostName || 'Player') + '</strong> is now the Host!');
-            }
-            break;
+        const lobbyStat = document.getElementById('lobbyConnectionStatus');
+        if (lobbyStat) {
+          lobbyStat.innerHTML = `
+            <span class="material-symbols-outlined text-base">cloud</span>
+            <div class="flex flex-col text-left">
+              <span class="text-[10px] leading-tight">Colyseus Live</span>
+              <span class="text-[8px] leading-tight opacity-75 font-mono">${online ? 'Connected' : 'Connecting...'}</span>
+            </div>
+          `;
         }
       },
 
       renderLobbyUI() {
         PlayerLobby.render();
+      },
+
+      sendEvent(eventType, payload = {}) {
+        if (!this.colyseusRoom) return;
+        switch (eventType) {
+          case 'UPDATE_HOST_SETTINGS':
+          case 'SETTINGS_UPDATE':
+            this.colyseusRoom.send('update_settings', payload.settings || payload.hostSettings || payload);
+            break;
+          case 'PLAYER_KICKED':
+            if (payload.targetPlayerId) {
+              this.colyseusRoom.send('kick_player', { targetPlayerId: payload.targetPlayerId });
+            }
+            break;
+          case 'UPDATE_PLAYER_NAME':
+            if (payload.name) {
+              this.colyseusRoom.send('update_profile', { name: payload.name });
+            }
+            break;
+          case 'CHAT_MESSAGE':
+            if (payload.msg && payload.msg.text) {
+              this.colyseusRoom.send('send_chat', { text: payload.msg.text });
+            }
+            break;
+          case 'SUBMIT_GUESS':
+            if (payload.guess) {
+              this.colyseusRoom.send('submit_guess', { text: payload.guess });
+            }
+            break;
+          case 'PLAYER_USED_HINT':
+            this.colyseusRoom.send('request_hint');
+            break;
+          case 'HOST_SKIP_BROADCAST':
+            this.colyseusRoom.send('skip_round');
+            break;
+          case 'HOST_PAUSE_BROADCAST':
+            this.colyseusRoom.send('pause_game');
+            break;
+          case 'REMATCH_BROADCAST':
+          case 'RETURN_LOBBY_BROADCAST':
+            this.colyseusRoom.send('rematch');
+            break;
+          default:
+            break;
+        }
+      },
+
+      broadcastState(reason = 'UPDATE') {
+        // Authoritative game state is automatically synchronized by Colyseus server
       },
 
       onWeeklyToggleChange(checked) {
@@ -18803,192 +18088,45 @@
         if (this.isHost) {
           if (!this.hostSettings) this.hostSettings = {};
           this.hostSettings.weeklyOnly = checked;
-          this.sendEvent('SETTINGS_UPDATE', { hostSettings: this.hostSettings });
+          if (this.colyseusRoom) {
+            this.colyseusRoom.send('update_settings', { weeklyOnly: checked });
+          }
         }
       },
 
       startMatch() {
         if (!this.isHost) return;
-        let pool = [];
-        if (!this.hostSettings) {
-          this.hostSettings = {
-            category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
-            rounds: 40,
-            timer: 30
-          };
+        if (!this.colyseusRoom) {
+          console.error('[MultiplayerEngine] Cannot start match: not connected to Colyseus room');
+          alert('Multiplayer room is not connected. Please create or rejoin the room.');
+          return;
         }
 
         const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
         const weeklyOnly = weeklyToggle ? weeklyToggle.checked : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : true);
-        this.hostSettings.weeklyOnly = weeklyOnly;
 
-        const counts = this.hostSettings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
+        const category = (this.hostSettings && this.hostSettings.category) || 'all';
+        const rounds = (this.hostSettings && this.hostSettings.rounds) || 20;
+        const timer = (this.hostSettings && this.hostSettings.timer) || 30;
+        const roundsByMode = (this.hostSettings && this.hostSettings.roundsByMode) || { frames: 20, eyes: 10, dialogue: 10 };
 
-        const selectFrames = (frames, count) => {
-          if (!Array.isArray(frames) || count <= 0) return [];
-          if (weeklyOnly) {
-            const newFrames = frames.filter(f => f.tag === 'new').sort(() => 0.5 - Math.random());
-            if (newFrames.length >= count) return newFrames.slice(0, count);
-            const remaining = count - newFrames.length;
-            const classicFrames = frames.filter(f => f.tag !== 'new').sort(() => 0.5 - Math.random()).slice(0, remaining);
-            return [...newFrames, ...classicFrames];
-          }
-          return [...frames].sort(() => 0.5 - Math.random()).slice(0, count);
-        };
-
-        // 1. All Frames first
-        const numFrames = counts.frames !== undefined ? counts.frames : 20;
-        if (numFrames > 0) {
-          const s1 = GS.sections.find(s => s.id === 1);
-          if (s1 && s1.frames) {
-            pool.push(...selectFrames(s1.frames, numFrames).map(f => ({ ...f, sectionName: 'Guess the Frame', sectionId: 1 })));
-          }
-        }
-
-        // 2. All Dialogue second
-        const numDialogue = counts.dialogue !== undefined ? counts.dialogue : 10;
-        if (numDialogue > 0) {
-          const s2 = GS.sections.find(s => s.id === 2);
-          if (s2 && s2.frames) {
-            pool.push(...selectFrames(s2.frames, numDialogue).map(f => ({ ...f, sectionName: 'Guess the Dialogue', sectionId: 2 })));
-          }
-        }
-
-        // 3. All Eyes third
-        const numEyes = counts.eyes !== undefined ? counts.eyes : 10;
-        if (numEyes > 0) {
-          const s3 = GS.sections.find(s => s.id === 3);
-          if (s3 && s3.frames) {
-            pool.push(...selectFrames(s3.frames, numEyes).map(f => ({ ...f, sectionName: 'Guess the Eye', sectionId: 3 })));
-          }
-        }
-
-        if (pool.length === 0) {
-          if (Array.isArray(GS.sections)) {
-            for (const s of GS.sections) {
-              if (s && Array.isArray(s.frames) && s.frames.length > 0) {
-                pool.push(...selectFrames(s.frames, 20).map(f => ({
-                  ...f,
-                  sectionName: s.name || 'Guess the Frame',
-                  sectionId: s.id || 1
-                })));
-                if (pool.length > 0) break;
-              }
-            }
-          }
-        }
-
-        this.currentPlaylist = pool;
-
-        const startMqttMatch = () => {
-          this.currentPlayIndex = 0;
-          this.isMatchActive = true;
-          this.isRoundFinished = false;
-          this.currentRoundStartTime = Date.now();
-
-          GS.players.forEach(p => p.score = 0);
-          this.sessionStats = {
-            roundsWon: 0,
-            totalGuesses: 0,
-            correctGuesses: 0,
-            fastestGuessSeconds: null,
-            roundStartTime: 0
-          };
-          this.saveActiveSession();
-
-          // Directly broadcast GAME_START_COUNTDOWN to all clients, skipping How To Play screen
-          this.sendEvent('GAME_START_COUNTDOWN', {
-            totalRounds: this.currentPlaylist.length,
-            hostSettings: this.hostSettings,
-            players: GS.players,
-            playlist: this.currentPlaylist
-          });
-          this.executeGameStart();
-        };
-
-        if (typeof Colyseus !== 'undefined') {
-          let handedOff = false;
-          const timeoutTimer = setTimeout(() => {
-            if (!handedOff) {
-              console.warn('[Colyseus] Connection timeout (4s). Falling back to MQTT mesh.');
-              handedOff = true;
-              startMqttMatch();
-            }
-          }, 4000);
-
-          try {
-            const client = new Colyseus.Client('wss://guess-the-frame-colyseus.onrender.com');
-            client.joinOrCreate('trivia_room', {
-              roomCode: this.roomCode,
-              name: this.playerName,
-              avatar: this.playerAvatar,
-              timer: this.hostSettings.timer || 30,
-              rounds: this.currentPlaylist.length,
-              category: this.hostSettings.category || 'all',
-              weeklyOnly
-            }).then(room => {
-              if (handedOff) {
-                try { room.leave(); } catch(e) {}
-                return;
-              }
-              handedOff = true;
-              clearTimeout(timeoutTimer);
-
-              this.bindColyseusGame(room);
-              this.sendEvent('COLYSEUS_GAME_START', {
-                colyseusRoomId: room.id,
-                roomCode: this.roomCode,
-                weeklyOnly
-              });
-              room.send('start_game', {
-                category: this.hostSettings.category || 'all',
-                rounds: this.currentPlaylist.length,
-                timer: this.hostSettings.timer || 30,
-                weeklyOnly
-              });
-            }).catch(err => {
-              if (!handedOff) {
-                handedOff = true;
-                clearTimeout(timeoutTimer);
-                console.warn('[Colyseus] Join failed:', err, 'Falling back to MQTT mesh.');
-                startMqttMatch();
-              }
-            });
-          } catch(err) {
-            if (!handedOff) {
-              handedOff = true;
-              clearTimeout(timeoutTimer);
-              startMqttMatch();
-            }
-          }
-        } else {
-          startMqttMatch();
-        }
+        console.log('[Colyseus] Starting match with settings:', { category, rounds, timer, weeklyOnly, roundsByMode });
+        this.colyseusRoom.send('start_game', {
+          category,
+          rounds,
+          timer,
+          weeklyOnly,
+          roundsByMode
+        });
       },
 
-      handleRemoteHowToAnswer(msg) {
-        this.totalMatchRounds = msg.totalRounds || (msg.playlist ? msg.playlist.length : 40);
-        this.hostSettings = msg.hostSettings || this.hostSettings;
-        GS.players = msg.players || GS.players;
-        if (msg.playlist && msg.playlist.length > 0) {
-          this.currentPlaylist = msg.playlist;
-        }
-        this.executeGameStart();
-      },
-
-      handleRemoteGameStart(msg) {
-        HowToAnswerGuide.stop();
+      executeGameStart() {
+        if (typeof HowToAnswerGuide !== 'undefined') HowToAnswerGuide.stop();
         this.isMatchActive = true;
         this.isRoundFinished = false;
-        this.totalMatchRounds = msg.totalRounds || (msg.playlist ? msg.playlist.length : 10);
-        this.hostSettings = msg.hostSettings || this.hostSettings;
-        GS.players = msg.players || GS.players;
-        if (msg.playlist && msg.playlist.length > 0) {
-          this.currentPlaylist = msg.playlist;
-        }
-        this.currentPlayIndex = 0;
         UI.showScreen('gameScreen');
-        const ogp = document.getElementById('onlineGuessPanel'); if (ogp) ogp.classList.add('active');
+        const ogp = document.getElementById('onlineGuessPanel');
+        if (ogp) ogp.classList.add('active');
         const hBar = document.getElementById('hostFloatingBar');
         if (hBar) hBar.style.display = 'flex';
         const hfbHostOnly = document.getElementById('hfbHostOnly');
@@ -18998,234 +18136,22 @@
         this.saveActiveSession();
       },
 
-      executeGameStart() {
-        HowToAnswerGuide.stop();
-        this.isMatchActive = true;
-        this.isRoundFinished = false;
-        UI.showScreen('gameScreen');
-        const ogp = document.getElementById('onlineGuessPanel'); if (ogp) ogp.classList.add('active');
-        if (this.isHost) {
-          document.getElementById('hostFloatingBar').style.display = 'flex';
-          this.startRound(0);
-        } else {
-          document.getElementById('hostFloatingBar').style.display = 'none';
-        }
-        this.saveActiveSession();
-      },
-
-      startHostHeartbeat() {
-        this.stopHostHeartbeat();
-        this._heartbeatInterval = setInterval(() => {
-          if (this.isHost && this.roomCode) {
-            this.sendEvent('HOST_HEARTBEAT', {
-              hostId: this.playerId,
-              timestamp: Date.now()
-            });
-          }
-        }, 3000);
-      },
-
-      stopHostHeartbeat() {
-        if (this._heartbeatInterval) {
-          clearInterval(this._heartbeatInterval);
-          this._heartbeatInterval = null;
-        }
-      },
-
-      startClientHeartbeat() {
-        this.stopClientHeartbeat();
-        if (this.isHost) return;
-        this.clientHeartbeatTimer = setInterval(() => {
-          if (!this.roomCode || this.isHost) {
-            this.stopClientHeartbeat();
-            return;
-          }
-          this.sendEvent('CLIENT_HEARTBEAT', {
-            playerId: this.playerId,
-            name: this.playerName
-          });
-        }, 3000);
-      },
-
-      stopClientHeartbeat() {
-        if (this.clientHeartbeatTimer) {
-          clearInterval(this.clientHeartbeatTimer);
-          this.clientHeartbeatTimer = null;
-        }
-      },
-
-      startHostPresenceWatchdog() {
-        this.stopHostPresenceWatchdog();
-        if (!this.isHost) return;
-        this.presenceWatchdogTimer = setInterval(() => {
-          if (!this.roomCode || !this.isHost) {
-            this.stopHostPresenceWatchdog();
-            return;
-          }
-          const now = Date.now();
-          const initialLen = GS.players.length;
-          GS.players = GS.players.filter(p => {
-            if (p.isHost || p.id === this.playerId) return true;
-            const lastSeen = p.lastSeen || p.joinTime || now;
-            const isAlive = (now - lastSeen) < 9500;
-            if (!isAlive) {
-              console.log('[Presence] Auto-pruning inactive/disconnected player:', p.name, p.id);
-            }
-            return isAlive;
-          });
-
-          if (GS.players.length !== initialLen) {
-            this.renderLobbyUI();
-            UI.renderLB();
-            this.broadcastState('PLAYER_DISCONNECTED');
-          }
-        }, 3000);
-      },
-
-      stopHostPresenceWatchdog() {
-        if (this.presenceWatchdogTimer) {
-          clearInterval(this.presenceWatchdogTimer);
-          this.presenceWatchdogTimer = null;
-        }
-      },
-
-      startHostWatchdog() {
-        this.stopHostWatchdog();
-        this.lastHostHeartbeat = Date.now();
-        this._hostWarnActive = false;
-        this._watchdogInterval = setInterval(() => {
-          if (this.isHost || !this.roomCode || !GameController._onlineMode) return;
-          const now = Date.now();
-          const gap = now - (this.lastHostHeartbeat || now);
-          if (gap > 5500 && !this._hostWarnActive && gap <= 12000) {
-            this._hostWarnActive = true;
-            ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.alert : '') + ' <em>Host disconnected. Electing new host shortly...</em>');
-          }
-          if (this.lastHostHeartbeat && (now - this.lastHostHeartbeat > 12000)) {
-            this._hostWarnActive = false;
-            console.warn('[HostWatchdog] Host heartbeat missing for 12s. Initiating host migration...');
-            this.checkHostMigration();
-          }
-        }, 3000);
-      },
-
-      stopHostWatchdog() {
-        if (this._watchdogInterval) {
-          clearInterval(this._watchdogInterval);
-          this._watchdogInterval = null;
-        }
-      },
-
-      checkHostMigration() {
-        if (this.isHost) return;
-        this.lastHostHeartbeat = Date.now();
-        const currentHost = GS.players.find(p => p.isHost);
-        const currentHostId = currentHost ? currentHost.id : null;
-        const candidates = GS.players.filter(p => p.id !== currentHostId);
-        if (candidates.length === 0) return;
-        const nextHost = candidates[0];
-        if (nextHost.id === this.playerId) {
-          console.log('[HostMigration] Becoming new host!');
-          this.becomeHost();
-        }
-      },
-
-      becomeHost() {
-        this.isHost = true;
-        this._hostWarnActive = false;
-        this.stopHostWatchdog();
-        this.stopClientHeartbeat();
-        if (typeof UI !== 'undefined' && UI.updateSkipButtonVisibility) UI.updateSkipButtonVisibility();
-        GS.players.forEach(p => {
-          p.isHost = (p.id === this.playerId);
-        });
-        const hBar = document.getElementById('hostFloatingBar');
-        if (hBar) hBar.style.display = 'flex';
-        const hfbHostOnly = document.getElementById('hfbHostOnly');
-        if (hfbHostOnly) hfbHostOnly.style.display = 'inline-flex';
-        const hfbLabel = document.getElementById('hfbLabel');
-        if (hfbLabel) hfbLabel.innerHTML = ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:');
-
-        const nextBtn = document.getElementById('ansNextRoundBtn');
-        const waitPill = document.getElementById('ansWaitingHostPill');
-        if (nextBtn && waitPill && waitPill.style.display !== 'none') {
-          nextBtn.style.display = 'inline-flex';
-          waitPill.style.display = 'none';
-        }
-
-        // Support immediate game start if migrating during transition
-        const htaScreen = document.getElementById('howToAnswerScreen');
-        if (htaScreen && htaScreen.classList.contains('active')) {
-          this.sendEvent('GAME_START_COUNTDOWN', {
-            totalRounds: this.currentPlaylist ? this.currentPlaylist.length : 40,
-            hostSettings: this.hostSettings,
-            players: GS.players
-          });
-          this.executeGameStart();
-        }
-
-        this.renderLobbyUI();
-        this.startHostHeartbeat();
-        this.startHostPresenceWatchdog();
-        this.saveActiveSession();
-
-        ChatEngine.renderSystemMessage((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' <strong>' + SecurityUtil.escapeHtml(this.playerName) + '</strong> is now the Host!');
-
-        this.sendEvent('HOST_MIGRATED', {
-          newHostId: this.playerId,
-          newHostName: this.playerName,
-          players: GS.players
-        });
-      },
-
       leaveRoom() {
         if (typeof HowToAnswerGuide !== 'undefined') HowToAnswerGuide.stop();
-        if (this.roomCode) {
-          try {
-            this.sendEvent('PLAYER_LEAVE', {
-              playerId: this.playerId,
-              name: this.playerName,
-              isHost: this.isHost
-            });
-          } catch(e) {}
-        }
-        this.stopClientHeartbeat();
-        this.stopHostPresenceWatchdog();
-        this.stopHostHeartbeat();
-        this.stopHostWatchdog();
-        if (this._hostAutoAdvanceTimer) clearInterval(this._hostAutoAdvanceTimer);
-        if (this._clientWaitTimer) clearInterval(this._clientWaitTimer);
-        if (this._joinTimeoutTimer) clearTimeout(this._joinTimeoutTimer);
-        this._joinTimeoutTimer = null;
-        this.isJoining = false;
-        if (this.colyseusPingInterval) {
-          clearInterval(this.colyseusPingInterval);
-          this.colyseusPingInterval = null;
-        }
         if (this.colyseusRoom) {
           try { this.colyseusRoom.leave(); } catch(e) {}
           this.colyseusRoom = null;
         }
-        const clientToEnd = this.mqttClient;
-        const channelToClose = this.broadcastChannel;
-        this.mqttClient = null;
-        this.broadcastChannel = null;
-
-        if (clientToEnd) {
-          setTimeout(() => {
-            try { clientToEnd.end(false); } catch(e) {}
-          }, 350);
-        }
-        if (channelToClose) {
-          setTimeout(() => {
-            try { channelToClose.close(); } catch(e) {}
-          }, 350);
-        }
+        this.colyseusClient = null;
+        this.isJoining = false;
         GameController._onlineMode = false;
         GameController._isRemoteSession = false;
         this.isHost = false;
         this.roomCode = null;
         this.roomId = null;
+        this.isMatchActive = false;
+        this.isRoundFinished = false;
+        this.clearActiveSession();
         UI.showScreen('homeScreen');
       },
 
@@ -20220,7 +19146,283 @@
         UI.showScreen('playerLobbyScreen');
         this.renderLobbyUI();
       }
+,
+
+      bindColyseusGame(room) {
+        this.colyseusRoom = room;
+
+        room.onMessage("guess_result", (res) => {
+          if (res && res.isCorrect) {
+            SoundManager.play('correct');
+            const streakBonus = res.streak && res.streak > 1 ? ` 🔥 ${res.streak}x STREAK!` : '';
+            this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ` Correct! (+${res.points} pts)` + streakBonus);
+            const input = document.getElementById('onlineGuessInput');
+            const submitBtn = document.getElementById('onlineGuessSubmitBtn');
+            if (input) input.disabled = true;
+            if (submitBtn) submitBtn.disabled = true;
+          } else {
+            SoundManager.play('wrong');
+            this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
+            const input = document.getElementById('onlineGuessInput');
+            if (input) {
+              input.classList.add('shake-input');
+              setTimeout(() => input.classList.remove('shake-input'), 400);
+            }
+          }
+        });
+
+        room.onMessage("hint_response", (res) => {
+          if (res && res.maskedHint) {
+            this.currentMaskedHint = res.maskedHint;
+            const hintPill = document.getElementById('hfbActiveHintPill');
+            const hintText = document.getElementById('hfbActiveHintText');
+            if (hintPill && hintText) {
+              hintText.textContent = res.maskedHint;
+              hintPill.style.display = 'inline-flex';
+            }
+            const chatHint = document.getElementById('chatActiveHint');
+            const chatHintText = document.getElementById('chatActiveHintText');
+            if (chatHint && chatHintText) {
+              chatHintText.textContent = res.maskedHint;
+              chatHint.style.display = 'block';
+            }
+            if (typeof ChatEngine !== 'undefined' && ChatEngine.renderPersonalHintMessage) {
+              ChatEngine.renderPersonalHintMessage(res.maskedHint);
+            }
+          }
+        });
+
+        room.onMessage("chat_warning", (res) => {
+          if (res && res.message && typeof ChatEngine !== 'undefined') {
+            ChatEngine.renderSystemMessage(res.message);
+          }
+        });
+
+        room.onMessage("settings_updated", (data) => {
+          if (data && data.hostSettings) {
+            this.hostSettings = Object.assign(this.hostSettings || {}, data.hostSettings);
+            const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
+            if (weeklyToggle && data.hostSettings.weeklyOnly !== undefined) {
+              weeklyToggle.checked = Boolean(data.hostSettings.weeklyOnly);
+            }
+            const weeklySubtext = document.getElementById('weeklySubtextDesktop');
+            if (weeklySubtext && data.hostSettings.weeklyOnly !== undefined) {
+              weeklySubtext.textContent = data.hostSettings.weeklyOnly ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+            }
+            this.renderLobbyUI();
+          }
+        });
+
+        room.onMessage("kicked", (data) => {
+          alert(data?.message || 'You were removed from the room by the host.');
+          this.leaveRoom();
+        });
+
+        room.onMessage("return_to_lobby", () => {
+          this.isMatchActive = false;
+          this.isRoundFinished = false;
+          UI.showScreen('playerLobbyScreen');
+          this.renderLobbyUI();
+        });
+
+        if (room.state && room.state.chatMessages) {
+          room.state.chatMessages.onAdd((chat) => {
+            if (chat && typeof ChatEngine !== 'undefined') {
+              ChatEngine.renderMessage({
+                id: chat.id,
+                senderId: chat.senderId,
+                senderName: chat.senderName,
+                senderAvatar: chat.avatar,
+                text: chat.text,
+                timestamp: chat.timestamp
+              });
+            }
+          });
+        }
+
+        room.onStateChange((state) => {
+          if (!state) return;
+
+          // 1. Sync players, hosts & scores
+          if (state.players) {
+            const currentIds = new Set();
+            state.players.forEach((p, sessionId) => {
+              currentIds.add(sessionId);
+              let localP = GS.players.find(lp => lp.id === sessionId);
+              if (!localP) {
+                localP = {
+                  id: sessionId,
+                  name: p.name,
+                  avatar: p.avatar,
+                  score: p.score,
+                  isHost: p.isHost,
+                  loaded: true
+                };
+                GS.players.push(localP);
+              } else {
+                localP.name = p.name;
+                localP.avatar = p.avatar;
+                localP.score = p.score;
+                localP.isHost = p.isHost;
+              }
+              if (sessionId === this.playerId) {
+                this.isHost = p.isHost;
+              }
+            });
+            GS.players = GS.players.filter(lp => currentIds.has(lp.id));
+            UI.renderLB();
+            this.renderLobbyUI();
+          }
+
+          // 2. State machine transitions
+          if (state.phase === "lobby") {
+            if (this.isMatchActive) {
+              this.isMatchActive = false;
+              this.isRoundFinished = false;
+              UI.showScreen('playerLobbyScreen');
+              this.renderLobbyUI();
+            }
+          } else if (state.phase === "countdown") {
+            this.executeGameStart();
+          } else if (state.phase === "playing") {
+            const roundNum = state.currentRound || 1;
+            const roundIndex = roundNum - 1;
+
+            if (roundIndex !== this.currentPlayIndex || !this.isMatchActive || this.isRoundFinished) {
+              this.isMatchActive = true;
+              this.isRoundFinished = false;
+              this.currentPlayIndex = roundIndex;
+              this.hasUsedHintThisRound = false;
+              this.currentRoundWinners = [];
+
+              UI.showScreen('gameScreen');
+              const ogp = document.getElementById('onlineGuessPanel');
+              if (ogp) ogp.classList.add('active');
+              const hBar = document.getElementById('hostFloatingBar');
+              if (hBar) hBar.style.display = 'flex';
+              const hfbHostOnly = document.getElementById('hfbHostOnly');
+              if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
+              const hfbLabel = document.getElementById('hfbLabel');
+              if (hfbLabel) hfbLabel.innerHTML = this.isHost ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
+
+              this.setHostSkipButtonState('skip');
+
+              // Reset hint buttons
+              const hintBtns = document.querySelectorAll('#chatHintBtn, #hfbHintBtn, #mobileQuickHintBtn');
+              hintBtns.forEach(b => {
+                b.disabled = false;
+                b.style.opacity = '1';
+                b.innerHTML = b.id === 'mobileQuickHintBtn' ? (typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '') + ' Hint (-2 pts)');
+              });
+              const cah = document.getElementById('chatActiveHint'); if (cah) cah.style.display = 'none';
+              const hfbHintPill = document.getElementById('hfbActiveHintPill'); if (hfbHintPill) hfbHintPill.style.display = 'none';
+
+              // Reset guess input
+              const input = document.getElementById('onlineGuessInput');
+              const submitBtn = document.getElementById('onlineGuessSubmitBtn');
+              const pill = document.getElementById('guessFeedbackPill');
+              if (input) {
+                input.value = '';
+                input.disabled = false;
+                input.placeholder = (state.currentMediaType === 'eye') ? 'Enter celebrity name...' : 'Enter movie name...';
+                input.focus();
+              }
+              if (submitBtn) submitBtn.disabled = false;
+              if (pill) { pill.style.display = 'none'; pill.textContent = ''; }
+
+              const ansOvEl = document.getElementById('answerOverlay');
+              if (ansOvEl) ansOvEl.classList.remove('visible', 'active', 'eye-answer');
+              const scOvEl = document.getElementById('scoringOv');
+              if (scOvEl) scOvEl.classList.remove('active');
+
+              const roundInfo = document.getElementById('roundInfo');
+              if (roundInfo) roundInfo.textContent = `Round ${roundNum} / ${state.totalRounds || 20}`;
+              const secName = document.getElementById('curSecName');
+              const sName = state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame');
+              if (secName) secName.textContent = sName;
+
+              const clientFrame = {
+                type: state.currentMediaType || 'image',
+                content: state.currentMediaContent || '',
+                year: state.currentYear || '',
+                dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
+                revealContent: '',
+                sectionName: sName,
+                sectionId: state.currentMediaType === 'dialogue' ? 2 : (state.currentMediaType === 'eye' ? 3 : 1)
+              };
+              this.currentClientFrame = clientFrame;
+
+              FrameDisplay.showFrame(clientFrame);
+              if (typeof ChatEngine !== 'undefined' && ChatEngine.renderRoundSeparator) {
+                ChatEngine.renderRoundSeparator(roundIndex);
+                const chatPrompt = (state.currentMediaType === 'eye') ? 'Type celebrity guess or chat...' : 'Type movie guess or chat...';
+                ChatEngine.setPlaceholder(chatPrompt);
+              }
+            }
+
+            // Sync authoritative server timer
+            GS.timeRemaining = state.timeRemaining;
+            const maxDuration = (this.hostSettings && this.hostSettings.timer) || 30;
+            let color = '#4ade80', pulse = false;
+            if (state.timeRemaining > maxDuration * .5) color = '#4ade80';
+            else if (state.timeRemaining > maxDuration * .2) color = '#fbbf24';
+            else { color = '#ef4444'; pulse = (state.timeRemaining <= 5 && state.timeRemaining > 0); }
+            if (typeof TC !== 'undefined' && TC.renderTick) {
+              TC.renderTick({
+                val: state.timeRemaining,
+                max: maxDuration,
+                color,
+                pulse,
+                timerType: 'main'
+              });
+            }
+          } else if (state.phase === "round_reveal") {
+            if (!this.isRoundFinished) {
+              this.isRoundFinished = true;
+              const winners = [];
+              if (state.currentRoundWinners) {
+                state.currentRoundWinners.forEach(w => winners.push({
+                  playerId: w.playerId,
+                  playerName: w.playerName,
+                  position: w.position,
+                  points: w.points
+                }));
+              }
+              this.currentRoundWinners = winners;
+
+              this.setHostSkipButtonState('next');
+
+              const currentFrame = this.currentClientFrame || {};
+              currentFrame.answer = state.revealedAnswer;
+              currentFrame.year = state.currentYear;
+              currentFrame.revealContent = state.revealedContent;
+
+              const ansTitle = document.getElementById('ansTitle');
+              if (ansTitle) ansTitle.textContent = state.revealedAnswer || '';
+              const ansYear = document.getElementById('ansYear');
+              if (ansYear) ansYear.textContent = state.currentYear ? `(${state.currentYear})` : '';
+
+              FrameDisplay.revealAnswer(currentFrame);
+            }
+          } else if (state.phase === "game_over") {
+            if (this.isMatchActive) {
+              this.finishGame();
+            }
+          }
+        });
+
+        room.onError((code, message) => {
+          console.warn(`[Colyseus] Room error (${code}): ${message}`);
+        });
+
+        room.onLeave((code) => {
+          console.log(`[Colyseus] Disconnected from room with code ${code}`);
+          this.colyseusRoom = null;
+        });
+      },
     };
+    window.MultiplayerEngine = MultiplayerEngine;
+
 
     
     /* ═══ UNIFIED WINNER SCREEN CONTROLLER ═══ */
@@ -21390,144 +20592,9 @@
         await new Promise(r => setTimeout(r, 180));
         ansOv.classList.add('visible');
         SoundManager.playReveal();
-      },
-
-      bindColyseusGame(room) {
-        this.colyseusRoom = room;
-
-        room.onMessage("guess_result", (res) => {
-          if (res && res.isCorrect) {
-            SoundManager.play('correct');
-            const streakBonus = res.streak && res.streak > 1 ? ` 🔥 ${res.streak}x STREAK!` : '';
-            this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ` Correct! (+${res.points} pts)` + streakBonus);
-            const me = GS.players.find(p => (this.playerId && p.id === this.playerId) || (this.playerName && p.name.toLowerCase() === this.playerName.toLowerCase()));
-            if (me) me.score = (me.score || 0) + (res.points || 0);
-            UI.renderLB();
-          } else {
-            SoundManager.play('wrong');
-            this.showGuessFeedback(false, (typeof SvgIcons !== 'undefined' ? SvgIcons.cross : '') + ' Not quite, try again!');
-            const input = document.getElementById('onlineGuessInput');
-            if (input) {
-              input.classList.add('shake-input');
-              setTimeout(() => input.classList.remove('shake-input'), 400);
-            }
-          }
-        });
-
-        room.onMessage("hint_response", (res) => {
-          if (res && res.maskedHint) {
-            this.currentMaskedHint = res.maskedHint;
-            const hintPill = document.getElementById('hfbActiveHintPill');
-            const hintText = document.getElementById('hfbActiveHintText');
-            if (hintPill && hintText) {
-              hintText.textContent = res.maskedHint;
-              hintPill.style.display = 'inline-flex';
-            }
-            const chatHint = document.getElementById('chatActiveHint');
-            const chatHintText = document.getElementById('chatActiveHintText');
-            if (chatHint && chatHintText) {
-              chatHintText.textContent = res.maskedHint;
-              chatHint.style.display = 'block';
-            }
-          }
-        });
-
-        room.onMessage("chat_warning", (res) => {
-          if (res && res.message && typeof ChatEngine !== 'undefined') {
-            ChatEngine.renderSystemMessage(res.message);
-          }
-        });
-
-        room.onStateChange((state) => {
-          if (!state) return;
-
-          // Sync players & scoreboard
-          if (state.players) {
-            state.players.forEach((p, sessionId) => {
-              let localP = GS.players.find(lp => lp.id === sessionId || lp.name === p.name);
-              if (!localP) {
-                localP = { id: sessionId, name: p.name, avatar: p.avatar, score: p.score, isHost: p.isHost };
-                GS.players.push(localP);
-              } else {
-                localP.score = p.score;
-                localP.isHost = p.isHost;
-              }
-            });
-            UI.renderLB();
-          }
-
-          if (state.phase === "countdown") {
-            this.executeGameStart();
-          } else if (state.phase === "playing") {
-            const roundNum = state.currentRound || 1;
-            const roundIndex = roundNum - 1;
-            if (roundIndex !== this.currentPlayIndex || !this.isMatchActive || this.isRoundFinished) {
-              this.isMatchActive = true;
-              this.isRoundFinished = false;
-              this.currentPlayIndex = roundIndex;
-              this.hasUsedHintThisRound = false;
-              this.currentRoundWinners = [];
-
-              const clientFrame = {
-                type: state.currentMediaType || 'image',
-                content: state.currentMediaContent || '',
-                year: state.currentYear || '',
-                dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
-                revealContent: '',
-                sectionName: state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame'),
-                sectionId: state.currentMediaType === 'dialogue' ? 2 : (state.currentMediaType === 'eye' ? 3 : 1)
-              };
-
-              this.currentClientFrame = clientFrame;
-              this.handleRemoteRoundStart({
-                roundIndex,
-                totalRounds: state.totalRounds || 20,
-                frame: clientFrame,
-                timerDuration: state.timeRemaining || 30
-              });
-            }
-
-            // Sync timer
-            GS.timeRemaining = state.timeRemaining;
-            UI.renderTimeRemaining(state.timeRemaining);
-          } else if (state.phase === "round_reveal") {
-            if (!this.isRoundFinished) {
-              this.isRoundFinished = true;
-              const winners = [];
-              if (state.currentRoundWinners) {
-                state.currentRoundWinners.forEach(w => winners.push({
-                  playerId: w.playerId,
-                  playerName: w.playerName,
-                  position: w.position,
-                  points: w.points
-                }));
-              }
-              this.currentRoundWinners = winners;
-              this.handleRemoteRoundFinish({
-                revealedAnswer: state.revealedAnswer,
-                revealedYear: state.currentYear,
-                revealedContent: state.revealedContent,
-                currentRoundWinners: winners
-              });
-            }
-          } else if (state.phase === "game_over") {
-            if (this.isMatchActive) {
-              this.endMatch();
-            }
-          }
-        });
-
-        room.onError((code, message) => {
-          console.warn(`[Colyseus] Room error (${code}): ${message}`);
-        });
-
-        room.onLeave((code) => {
-          console.log(`[Colyseus] Disconnected from room with code ${code}`);
-          this.colyseusRoom = null;
-        });
-      },
+      }
     };
-    window.MultiplayerEngine = MultiplayerEngine;
+    window.FrameDisplay = FrameDisplay;
 
     /* ═══ GAME CONTROLLER ═══ */
     const GameController = {

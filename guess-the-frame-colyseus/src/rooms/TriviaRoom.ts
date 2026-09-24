@@ -569,9 +569,10 @@ export class TriviaRoom extends Room<GameState> {
   }
 
   private validateAvatar(avatar?: string): string {
-    const valid = ['aman', 'amish', 'vish', 'aziz'];
-    const clean = String(avatar || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    return valid.includes(clean) ? clean : 'aman';
+    if (!avatar || typeof avatar !== "string") return "aman";
+    const trimmed = avatar.trim();
+    if (trimmed.length > 500) return trimmed.slice(0, 500);
+    return trimmed || "aman";
   }
 
   private generateRoomCode(): string {
