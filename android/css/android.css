@@ -1253,22 +1253,114 @@ input, textarea {
 }
 
 .chat-row-event.winner {
-  background: transparent;
-  color: #475569;
-  border: none;
   font-weight: 600;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.chat-row-event.winner strong {
-  color: #0f172a;
-  font-weight: 700;
+.chat-row-event.winner.winner-gold {
+  background: #FEF9C3;
+  border: 1.5px solid #FACC15;
+  color: #854d0e;
+}
+
+.chat-row-event.winner.winner-gold strong {
+  color: #713f12;
+  font-weight: 800;
+}
+
+.chat-row-event.winner.winner-gold .winner-pts {
+  color: #ca8a04;
+  font-weight: 800;
+}
+
+.chat-row-event.winner.winner-blue {
+  background: #EFF6FF;
+  border: 1.5px solid #60A5FA;
+  color: #1e40af;
+}
+
+.chat-row-event.winner.winner-blue strong {
+  color: #1e3a8a;
+  font-weight: 800;
+}
+
+.chat-row-event.winner.winner-blue .winner-pts {
+  color: #2563eb;
+  font-weight: 800;
+}
+
+.chat-row-event.winner.winner-green {
+  background: #F0FDF4;
+  border: 1.5px solid #4ADE80;
+  color: #166534;
+}
+
+.chat-row-event.winner.winner-green strong {
+  color: #14532d;
+  font-weight: 800;
+}
+
+.chat-row-event.winner.winner-green .winner-pts {
+  color: #16a34a;
+  font-weight: 800;
 }
 
 .chat-row-event.winner .ui-icon {
-  width: 13px;
-  height: 13px;
-  color: #94a3b8;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
+}
+
+.chat-row-drawer-winner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.chat-row-drawer-winner.winner-gold {
+  background: #FEF9C3;
+  border: 1.5px solid #FACC15;
+  color: #854d0e;
+}
+
+.chat-row-drawer-winner.winner-gold strong {
+  color: #713f12;
+  font-weight: 800;
+}
+
+.chat-row-drawer-winner.winner-blue {
+  background: #EFF6FF;
+  border: 1.5px solid #60A5FA;
+  color: #1e40af;
+}
+
+.chat-row-drawer-winner.winner-blue strong {
+  color: #1e3a8a;
+  font-weight: 800;
+}
+
+.chat-row-drawer-winner.winner-green {
+  background: #F0FDF4;
+  border: 1.5px solid #4ADE80;
+  color: #166534;
+}
+
+.chat-row-drawer-winner.winner-green strong {
+  color: #14532d;
+  font-weight: 800;
 }
 
 .chat-row-event.hint {

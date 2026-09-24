@@ -9402,24 +9402,64 @@
     }
 
     .chat-msg-winner {
-      background: transparent;
-      border: 1px solid #e2e8f0;
       border-radius: 8px;
       padding: 6px 10px;
       box-shadow: none;
       display: flex;
       align-items: center;
       gap: 8px;
+      margin: 4px 0;
+      animation: chatFadeIn 0.2s ease-out;
+    }
+
+    .chat-msg-winner.winner-gold {
+      background: #FEF9C3;
+      border: 1.5px solid #FACC15;
+      color: #854d0e;
+    }
+
+    .chat-msg-winner.winner-gold .chat-winner-text strong {
+      color: #713f12;
+    }
+
+    .chat-msg-winner.winner-gold .chat-winner-pts {
+      color: #ca8a04;
+      font-weight: 800;
+    }
+
+    .chat-msg-winner.winner-blue {
+      background: #EFF6FF;
+      border: 1.5px solid #60A5FA;
+      color: #1e40af;
+    }
+
+    .chat-msg-winner.winner-blue .chat-winner-text strong {
+      color: #1e3a8a;
+    }
+
+    .chat-msg-winner.winner-blue .chat-winner-pts {
+      color: #2563eb;
+      font-weight: 800;
+    }
+
+    .chat-msg-winner.winner-green {
+      background: #F0FDF4;
+      border: 1.5px solid #4ADE80;
+      color: #166534;
+    }
+
+    .chat-msg-winner.winner-green .chat-winner-text strong {
+      color: #14532d;
+    }
+
+    .chat-msg-winner.winner-green .chat-winner-pts {
+      color: #16a34a;
+      font-weight: 800;
     }
 
     .chat-winner-text {
       font-size: 12px;
       font-weight: 600;
-      color: #475569;
-    }
-
-    .chat-winner-text strong {
-      color: #0f172a;
     }
 
     .chat-msg-round {
@@ -17127,23 +17167,37 @@
         if (dCnt) dCnt.textContent = m.dislikes.size > 0 ? m.dislikes.size : '';
       },
 
+      winnerKeysSeen: new Set(),
+
       renderWinnerBanner(winRecord) {
         const stream = document.getElementById('liveChatStream');
-        if (!stream) return;
+        if (!stream || !winRecord) return;
+
+        if (!this.winnerKeysSeen) this.winnerKeysSeen = new Set();
+        const winKey = `${winRecord.playerId || ''}_${winRecord.position || ''}_${winRecord.points || ''}`;
+        if (this.winnerKeysSeen.has(winKey)) return;
+        this.winnerKeysSeen.add(winKey);
+
+        const pos = Number(winRecord.position) || (winRecord.points >= 10 ? 1 : (winRecord.points >= 7 ? 2 : 3));
+        const colorClass = pos === 1 ? 'winner-gold' : (pos === 2 ? 'winner-blue' : 'winner-green');
+        const medalSvg = pos === 1 ? '🥇' : (pos === 2 ? '🥈' : '🥉');
+        const posLabel = pos === 1 ? '1st' : (pos === 2 ? '2nd' : '3rd');
+        const pts = winRecord.points || (pos === 1 ? 10 : (pos === 2 ? 7 : 5));
+        const streakTag = (winRecord.streak && winRecord.streak > 1) ? ` 🔥 ${winRecord.streak}x` : '';
 
         const banner = document.createElement('div');
-        banner.className = 'chat-msg-winner';
+        banner.className = 'chat-msg-winner ' + colorClass;
         const winAv = (winRecord && winRecord.avatar) || (GS.players && GS.players.find(p => p.id === winRecord.playerId)) || 'aman';
         const avSrc = resolvePlayerAvatar(winAv, 'aman');
-        const avBg = getPlayerAvatarBg(winAv, '#facc15');
+        const avBg = getPlayerAvatarBg(winAv, pos === 1 ? '#facc15' : (pos === 2 ? '#60a5fa' : '#4ade80'));
         const avFit = getPlayerAvatarFit(winAv);
 
-        banner.innerHTML = '<div style="width:24px;height:24px;min-width:24px;border-radius:6px;border:1px solid #e2e8f0;background:' + avBg + ';overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;">' +
-          '<img src="' + SecurityUtil.escapeHtml(avSrc) + '" alt="' + SecurityUtil.escapeHtml(winRecord.playerName) + '" style="width:100%;height:100%;' + avFit + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
+        banner.innerHTML = '<div style="width:24px;height:24px;min-width:24px;border-radius:6px;border:1px solid rgba(0,0,0,0.15);background:' + avBg + ';overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;">' +
+          '<img src="' + SecurityUtil.escapeHtml(avSrc) + '" alt="' + SecurityUtil.escapeHtml(winRecord.playerName) + '" style="width:100%;height:100%;' + avFit + '" onerror="this.onerror=null;this.src=\'/avvtar/aman.svg\';" />' +
           '</div>' +
           '<div class="chat-winner-text">' +
-          '<strong>' + SecurityUtil.escapeHtml(winRecord.playerName) + '</strong> guessed the answer! ' +
-          '<span style="color:#64748b; font-weight:600;">(+' + winRecord.points + ' pts' + (winRecord.position === 1 ? ' • 1st' : winRecord.position === 2 ? ' • 2nd' : winRecord.position === 3 ? ' • 3rd' : '') + ')</span>' +
+          medalSvg + ' <strong>' + SecurityUtil.escapeHtml(winRecord.playerName) + '</strong> guessed the answer! ' +
+          '<span class="chat-winner-pts">(+' + pts + ' pts • ' + posLabel + streakTag + ')</span>' +
           '</div>';
 
         stream.appendChild(banner);
@@ -17151,6 +17205,7 @@
       },
 
       renderRoundSeparator(roundIndex) {
+        if (this.winnerKeysSeen) this.winnerKeysSeen.clear();
         const stream = document.getElementById('liveChatStream');
         if (!stream) return;
 
@@ -19212,9 +19267,28 @@
           this.renderLobbyUI();
         });
 
+        if (room.state && room.state.currentRoundWinners) {
+          room.state.currentRoundWinners.onAdd((winner) => {
+            if (winner && typeof ChatEngine !== 'undefined') {
+              ChatEngine.renderWinnerBanner({
+                playerId: winner.playerId,
+                playerName: winner.playerName,
+                avatar: winner.avatar,
+                position: winner.position,
+                points: winner.points,
+                streak: winner.streak
+              });
+            }
+          });
+        }
+
         if (room.state && room.state.chatMessages) {
           room.state.chatMessages.onAdd((chat) => {
             if (chat && typeof ChatEngine !== 'undefined') {
+              // Suppress raw server system message if it's the duplicate guess notification
+              if (chat.isSystem && typeof chat.text === 'string' && (chat.text.includes('guessed correctly! (+') || chat.text.includes('guessed the answer!'))) {
+                return;
+              }
               ChatEngine.renderMessage({
                 id: chat.id,
                 senderId: chat.senderId,

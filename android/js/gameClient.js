@@ -989,16 +989,42 @@ const GameClient = {
       }
     });
 
+    if (room.state && room.state.currentRoundWinners) {
+      room.state.currentRoundWinners.onAdd((winner) => {
+        if (winner && typeof UI !== 'undefined' && UI.appendChatMessage) {
+          UI.appendChatMessage({
+            isWinner: true,
+            senderId: winner.playerId,
+            senderName: winner.playerName,
+            senderAvatar: winner.avatar,
+            position: winner.position,
+            points: winner.points,
+            streak: winner.streak
+          });
+          const dot = document.getElementById('chatUnreadDot');
+          const drawer = document.getElementById('chatDrawer');
+          if (dot && (!drawer || !drawer.classList.contains('open'))) {
+            dot.style.display = 'block';
+          }
+        }
+      });
+    }
+
     if (room.state && room.state.chatMessages) {
       room.state.chatMessages.onAdd((chat) => {
         if (chat && typeof UI !== 'undefined' && UI.appendChatMessage) {
+          // Suppress raw server system message if it's the duplicate guess notification
+          if (chat.isSystem && typeof chat.text === 'string' && (chat.text.includes('guessed correctly! (+') || chat.text.includes('guessed the answer!'))) {
+            return;
+          }
           UI.appendChatMessage({
             id: chat.id,
             senderId: chat.senderId,
             senderName: chat.senderName,
             senderAvatar: chat.avatar,
             text: chat.text,
-            timestamp: chat.timestamp
+            timestamp: chat.timestamp,
+            isSystem: chat.isSystem
           });
           const dot = document.getElementById('chatUnreadDot');
           const drawer = document.getElementById('chatDrawer');

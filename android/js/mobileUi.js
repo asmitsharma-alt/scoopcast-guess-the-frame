@@ -1224,6 +1224,13 @@ const UI = {
     const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.text || '')) : this.escapeHtml(chat.text || '');
     const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName || 'Player')) : this.escapeHtml(chat.senderName || 'Player');
 
+    if (chat.isWinner) {
+      if (!this.winnerKeysSeen) this.winnerKeysSeen = new Set();
+      const winKey = `${chat.senderId || ''}_${chat.position || ''}_${chat.points || ''}`;
+      if (this.winnerKeysSeen.has(winKey)) return;
+      this.winnerKeysSeen.add(winKey);
+    }
+
     // 1. In-game live chat stream (#gameInGameChatStream in gameScreen empty space)
     const gameStream = document.getElementById('gameInGameChatStream');
     if (gameStream) {
@@ -1232,9 +1239,15 @@ const UI = {
 
       const item = document.createElement('div');
       if (chat.isWinner) {
-        item.className = 'chat-row-event winner';
-        const trophySvg = typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
-        item.innerHTML = `${trophySvg} <span><strong>${parsedName}</strong> guessed the frame! (+${chat.points || 10} pts)</span>`;
+        const pos = Number(chat.position) || (chat.points >= 10 ? 1 : (chat.points >= 7 ? 2 : 3));
+        const colorClass = pos === 1 ? 'winner-gold' : (pos === 2 ? 'winner-blue' : 'winner-green');
+        const medal = pos === 1 ? '🥇' : (pos === 2 ? '🥈' : '🥉');
+        const posLabel = pos === 1 ? '1st' : (pos === 2 ? '2nd' : '3rd');
+        const pts = chat.points || (pos === 1 ? 10 : (pos === 2 ? 7 : 5));
+        const streakTag = (chat.streak && chat.streak > 1) ? ` 🔥 ${chat.streak}x` : '';
+
+        item.className = `chat-row-event winner ${colorClass}`;
+        item.innerHTML = `<span>${medal} <strong>${parsedName}</strong> guessed the answer! <span class="winner-pts">(+${pts} pts • ${posLabel}${streakTag})</span></span>`;
       } else if (chat.isHint) {
         item.className = 'chat-row-event hint';
         const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>';
@@ -1270,8 +1283,15 @@ const UI = {
       msg.style.fontSize = '0.9rem';
 
       if (chat.isWinner) {
-        const trophySvg = typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '';
-        msg.innerHTML = `<span style="font-weight:600; color:#475569; font-size:0.84rem;">${trophySvg} <strong style="color:#0f172a;">${parsedName}</strong> guessed the frame! (+${chat.points || 10} pts)</span>`;
+        const pos = Number(chat.position) || (chat.points >= 10 ? 1 : (chat.points >= 7 ? 2 : 3));
+        const colorClass = pos === 1 ? 'winner-gold' : (pos === 2 ? 'winner-blue' : 'winner-green');
+        const medal = pos === 1 ? '🥇' : (pos === 2 ? '🥈' : '🥉');
+        const posLabel = pos === 1 ? '1st' : (pos === 2 ? '2nd' : '3rd');
+        const pts = chat.points || (pos === 1 ? 10 : (pos === 2 ? 7 : 5));
+        const streakTag = (chat.streak && chat.streak > 1) ? ` 🔥 ${chat.streak}x` : '';
+
+        msg.className = `chat-row-drawer-winner ${colorClass}`;
+        msg.innerHTML = `<span>${medal} <strong>${parsedName}</strong> guessed the answer! <span class="winner-pts" style="font-weight:800;">(+${pts} pts • ${posLabel}${streakTag})</span></span>`;
       } else if (chat.isHint) {
         const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '';
         msg.innerHTML = `<span style="font-weight:500; color:#64748b; font-size:0.82rem; font-style:italic;">${hintSvg} ${parsedText}</span>`;
@@ -1294,6 +1314,7 @@ const UI = {
   },
 
   renderRoundNotice(round, totalRounds) {
+    if (this.winnerKeysSeen) this.winnerKeysSeen.clear();
     const gameStream = document.getElementById('gameInGameChatStream');
     if (gameStream) {
       const placeholder = document.getElementById('gameChatPlaceholder');
