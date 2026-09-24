@@ -9402,41 +9402,39 @@
     }
 
     .chat-msg-winner {
-      background: linear-gradient(135deg, #FEF08A, #FDE047);
-      border: 2.5px solid #1a1a1a;
-      border-radius: 12px;
-      padding: 10px 14px;
-      box-shadow: 3px 3px 0 #1a1a1a;
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      box-shadow: none;
       display: flex;
       align-items: center;
-      gap: 10px;
-      animation: winnerBannerPulse 0.4s ease;
-    }
-
-    @keyframes winnerBannerPulse {
-      0% { transform: scale(0.9); opacity: 0; }
-      50% { transform: scale(1.04); }
-      100% { transform: scale(1); opacity: 1; }
+      gap: 8px;
     }
 
     .chat-winner-text {
-      font-size: 13px;
-      font-weight: 900;
-      color: #1a1a1a;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .chat-winner-text strong {
+      color: #0f172a;
     }
 
     .chat-msg-round {
       text-align: center;
       font-size: 11px;
-      font-weight: 900;
+      font-weight: 600;
       color: #94a3b8;
-      background: #f1f5f9;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1.5px dashed #cbd5e1;
+      background: transparent;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: none;
       margin: 4px auto;
       width: fit-content;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .chat-input-form {
@@ -17140,12 +17138,12 @@
         const avBg = getPlayerAvatarBg(winAv, '#facc15');
         const avFit = getPlayerAvatarFit(winAv);
 
-        banner.innerHTML = '<div style="width:28px;height:28px;min-width:28px;border-radius:8px;border:1.5px solid #1a1a1a;background:' + avBg + ';overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;">' +
+        banner.innerHTML = '<div style="width:24px;height:24px;min-width:24px;border-radius:6px;border:1px solid #e2e8f0;background:' + avBg + ';overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:8px;flex-shrink:0;">' +
           '<img src="' + SecurityUtil.escapeHtml(avSrc) + '" alt="' + SecurityUtil.escapeHtml(winRecord.playerName) + '" style="width:100%;height:100%;' + avFit + '" onerror="this.onerror=null;this.src=\'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg\';" />' +
           '</div>' +
           '<div class="chat-winner-text">' +
           '<strong>' + SecurityUtil.escapeHtml(winRecord.playerName) + '</strong> guessed the answer! ' +
-          '<span style="color:#b45309; font-weight:900;">(+' + winRecord.points + ' pts - ' + (winRecord.position === 1 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal1 : '') + ' 1st') : winRecord.position === 2 ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal2 : '') + ' 2nd') : ((typeof SvgIcons !== 'undefined' ? SvgIcons.medal3 : '') + ' 3rd')) + ')</span>' +
+          '<span style="color:#64748b; font-weight:600;">(+' + winRecord.points + ' pts' + (winRecord.position === 1 ? ' • 1st' : winRecord.position === 2 ? ' • 2nd' : winRecord.position === 3 ? ' • 3rd' : '') + ')</span>' +
           '</div>';
 
         stream.appendChild(banner);
@@ -17290,7 +17288,8 @@
       currentRoundWinners: [],
       currentRoundNumber: 0,
       currentPlaylist: [],
-      currentPlayIndex: 0,
+      currentPlayIndex: -1,
+      currentClientFrame: null,
       hostSettings: {
         category: 'all',
         categories: ['frames', 'eyes', 'dialogue'],
@@ -18096,6 +18095,8 @@
         if (typeof HowToAnswerGuide !== 'undefined') HowToAnswerGuide.stop();
         this.isMatchActive = true;
         this.isRoundFinished = false;
+        this.currentPlayIndex = -1;
+        this.currentClientFrame = null;
         UI.showScreen('gameScreen');
         const ogp = document.getElementById('onlineGuessPanel');
         if (ogp) ogp.classList.add('active');
@@ -18111,6 +18112,8 @@
       leaveRoom() {
         if (typeof HowToAnswerGuide !== 'undefined') HowToAnswerGuide.stop();
         sessionStorage.removeItem('gtf_desktop_reconnection_token');
+        this.currentPlayIndex = -1;
+        this.currentClientFrame = null;
         if (this._heartbeatInterval) {
           clearInterval(this._heartbeatInterval);
           this._heartbeatInterval = null;
@@ -19272,7 +19275,16 @@
             const roundNum = state.currentRound || 1;
             const roundIndex = roundNum - 1;
 
-            if (roundIndex !== this.currentPlayIndex || !this.isMatchActive || this.isRoundFinished) {
+            const needsNewRound = (
+              roundIndex !== this.currentPlayIndex ||
+              !this.isMatchActive ||
+              this.isRoundFinished ||
+              !this.currentClientFrame ||
+              this.currentClientFrame.content !== (state.currentMediaContent || '') ||
+              this.currentClientFrame.roundNum !== roundNum
+            );
+
+            if (needsNewRound && state.currentMediaContent) {
               this.isMatchActive = true;
               this.isRoundFinished = false;
               this.currentPlayIndex = roundIndex;
@@ -19332,7 +19344,8 @@
                 dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
                 revealContent: '',
                 sectionName: sName,
-                sectionId: state.currentMediaType === 'dialogue' ? 2 : (state.currentMediaType === 'eye' ? 3 : 1)
+                sectionId: state.currentMediaType === 'dialogue' ? 2 : (state.currentMediaType === 'eye' ? 3 : 1),
+                roundNum: roundNum
               };
               this.currentClientFrame = clientFrame;
 

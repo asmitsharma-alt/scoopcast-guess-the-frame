@@ -368,7 +368,8 @@ const GameClient = {
     weeklyOnly: true
   },
   currentPlaylist: [],
-  currentPlayIndex: 0,
+  currentPlayIndex: -1,
+  currentClientFrame: null,
   currentRoundWinners: [],
   currentMaskedHint: '',
   currentFrame: null,
@@ -1058,7 +1059,15 @@ const GameClient = {
       } else if (state.phase === "playing") {
         const roundNum = state.currentRound || 1;
         const roundIndex = roundNum - 1;
-        if (roundIndex !== this.currentPlayIndex || !this.isMatchActive || this.isRoundFinished) {
+        const needsNewRound = (
+          roundIndex !== this.currentPlayIndex ||
+          !this.isMatchActive ||
+          this.isRoundFinished ||
+          !this.currentClientFrame ||
+          this.currentClientFrame.content !== (state.currentMediaContent || '') ||
+          this.currentClientFrame.roundNum !== roundNum
+        );
+        if (needsNewRound && state.currentMediaContent) {
           this.isMatchActive = true;
           this.isRoundFinished = false;
           this.currentPlayIndex = roundIndex;
@@ -1072,8 +1081,10 @@ const GameClient = {
             year: state.currentYear || '',
             dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
             revealContent: '',
-            sectionName: state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame')
+            sectionName: state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame'),
+            roundNum: roundNum
           };
+          this.currentClientFrame = clientFrame;
 
           this.setupRoundUI(clientFrame, state.timeRemaining || 30, roundIndex, state.totalRounds || 20);
         }

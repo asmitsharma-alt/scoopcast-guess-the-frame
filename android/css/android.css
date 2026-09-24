@@ -1244,45 +1244,55 @@ input, textarea {
   align-items: center;
   gap: 5px;
   font-size: 0.72rem;
-  font-weight: 800;
-  padding: 3px 8px;
-  border-radius: 6px;
+  font-weight: 500;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
   animation: chatFadeIn 0.15s ease-out;
 }
 
 .chat-row-event.winner {
-  background: #FEF08A;
-  color: #713f12;
-  border: 1px solid #FACC15;
+  background: transparent;
+  color: #475569;
+  border: none;
+  font-weight: 600;
+}
+
+.chat-row-event.winner strong {
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .chat-row-event.winner .ui-icon {
-  width: 14px;
-  height: 14px;
-  color: #ca8a04;
+  width: 13px;
+  height: 13px;
+  color: #94a3b8;
   flex-shrink: 0;
 }
 
 .chat-row-event.hint {
-  background: #FFEDD5;
-  color: #9a3412;
-  border: 1px solid #FDBA74;
+  background: transparent;
+  color: #64748b;
+  border: none;
+  font-style: italic;
 }
 
 .chat-row-event.hint .ui-icon {
-  width: 14px;
-  height: 14px;
-  color: #ea580c;
+  width: 13px;
+  height: 13px;
+  color: #94a3b8;
   flex-shrink: 0;
 }
 
 .chat-row-event.system {
-  background: #F1F5F9;
-  color: #475569;
-  font-size: 0.68rem;
-  font-weight: 700;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.70rem;
+  font-weight: 500;
+  font-style: italic;
   justify-content: center;
-  border: 1px dashed #CBD5E1;
+  border: none;
 }
 
 .chat-round-divider {

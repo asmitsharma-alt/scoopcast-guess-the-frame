@@ -64,26 +64,14 @@ const CLOUDINARY_MEDIA_MAP = {
 
 function resolveMediaPath(src) {
   if (!src) return '';
-  let url = src;
-  if (!src.startsWith('http://') && !src.startsWith('https://')) {
-    const clean = src.startsWith('/') ? src.slice(1) : src;
-    if (CLOUDINARY_MEDIA_MAP[clean]) {
-      url = CLOUDINARY_MEDIA_MAP[clean];
-    } else {
-      try {
-        const decoded = decodeURIComponent(clean);
-        if (CLOUDINARY_MEDIA_MAP[decoded]) url = CLOUDINARY_MEDIA_MAP[decoded];
-        else url = src.startsWith('/') ? src : '/' + src;
-      } catch (e) {
-        url = src.startsWith('/') ? src : '/' + src;
-      }
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    let url = src;
+    if (url.includes('res.cloudinary.com') && url.includes('/upload/') && !url.includes('/upload/f_auto,q_auto/') && !url.endsWith('.svg')) {
+      url = url.replace('/upload/', '/upload/f_auto,q_auto/');
     }
+    return url;
   }
-  // Cloudinary auto-format and quality compression for non-SVG raster images
-  if (typeof url === 'string' && url.includes('res.cloudinary.com') && url.includes('/upload/') && !url.includes('/upload/f_auto,q_auto/') && !url.endsWith('.svg')) {
-    url = url.replace('/upload/', '/upload/f_auto,q_auto/');
-  }
-  return url;
+  return src.startsWith('/') ? src : '/' + src;
 }
 
 const UI = {
@@ -1283,12 +1271,12 @@ const UI = {
 
       if (chat.isWinner) {
         const trophySvg = typeof SvgIcons !== 'undefined' ? SvgIcons.trophy : '';
-        msg.innerHTML = `<span style="font-weight:900; color:#ca8a04;">${trophySvg} ${parsedName} guessed the frame! (+${chat.points || 10} pts)</span>`;
+        msg.innerHTML = `<span style="font-weight:600; color:#475569; font-size:0.84rem;">${trophySvg} <strong style="color:#0f172a;">${parsedName}</strong> guessed the frame! (+${chat.points || 10} pts)</span>`;
       } else if (chat.isHint) {
         const hintSvg = typeof SvgIcons !== 'undefined' ? SvgIcons.lightbulb : '';
-        msg.innerHTML = `<span style="font-weight:800; color:#c2410c;">${hintSvg} ${parsedText}</span>`;
+        msg.innerHTML = `<span style="font-weight:500; color:#64748b; font-size:0.82rem; font-style:italic;">${hintSvg} ${parsedText}</span>`;
       } else if (chat.isSystem) {
-        msg.innerHTML = `<span style="font-weight:900; color:var(--nb-pink);">${parsedText}</span>`;
+        msg.innerHTML = `<span style="font-weight:500; color:#64748b; font-size:0.82rem; font-style:italic;">${parsedText}</span>`;
       } else {
         msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
       }
