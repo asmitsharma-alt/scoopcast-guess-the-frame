@@ -13,6 +13,9 @@ async function runAll() {
   const { runIntegrationTest } = await import("./triviaRoom.test");
   await runIntegrationTest();
 
+  // 4. Cross-Network & Mobile Reconnection Simulation Tests
+  await import("./crossNetworkSimulation.test");
+
   console.log("==================================================");
   console.log("🎉 ALL TESTS COMPLETED & VERIFIED SUCCESSFULLY!");
   console.log("==================================================");

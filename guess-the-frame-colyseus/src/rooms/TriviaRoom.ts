@@ -30,6 +30,13 @@ export class TriviaRoom extends Room<GameState> {
     this.state.roomCode = code;
     this.roomId = code; // Joinable via room code
 
+    // Set matchmaker metadata so /api/room/:code and queries find this room immediately
+    this.setMetadata({
+      roomCode: code,
+      phase: "lobby",
+      playerCount: 0
+    });
+
     if (options.timer && options.timer >= 10 && options.timer <= 120) {
       this.roundTimerDuration = options.timer;
     }
@@ -38,6 +45,19 @@ export class TriviaRoom extends Room<GameState> {
 
     // 1-second authoritative simulation tick
     this.setSimulationInterval(() => this.updateTick(), 1000);
+  }
+
+  onAuth(client: Client, options: any) {
+    if (options && options.roomCode) {
+      const code = String(options.roomCode).toUpperCase().trim();
+      if (this.state.roomCode && code !== this.state.roomCode) {
+        throw new Error(`Invalid room code. Expected ${this.state.roomCode}, received ${code}`);
+      }
+    }
+    if (this.state.players.size >= this.maxClients) {
+      throw new Error(`Room is full (${this.maxClients} players maximum).`);
+    }
+    return true;
   }
 
   onJoin(client: Client, options: { name?: string; avatar?: string }) {
@@ -57,6 +77,12 @@ export class TriviaRoom extends Room<GameState> {
       this.state.currentHostId = client.sessionId;
     }
 
+    this.setMetadata({
+      roomCode: this.state.roomCode,
+      phase: this.state.phase,
+      playerCount: this.state.players.size
+    });
+
     this.addSystemChatMessage(`👋 ${player.name} joined the room!`);
   }
 
@@ -70,8 +96,8 @@ export class TriviaRoom extends Room<GameState> {
       if (consented) {
         throw new Error("consented leave");
       }
-      // Allow 20s for mobile reconnections / page refreshes
-      await this.allowReconnection(client, 20);
+      // Allow 30s for mobile reconnections / page refreshes / cellular tower switches
+      await this.allowReconnection(client, 30);
       player.connected = true;
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
     } catch (e) {
@@ -87,6 +113,12 @@ export class TriviaRoom extends Room<GameState> {
       if (this.state.phase === "playing") {
         this.checkRoundCompletion();
       }
+    } finally {
+      this.setMetadata({
+        roomCode: this.state.roomCode,
+        phase: this.state.phase,
+        playerCount: this.state.players.size
+      });
     }
   }
 
@@ -97,6 +129,11 @@ export class TriviaRoom extends Room<GameState> {
   }
 
   private setupMessageHandlers() {
+    // ── Application-level Heartbeat / Keep-Alive ──
+    this.onMessage("ping", (client) => {
+      client.send("pong", { timestamp: Date.now() });
+    });
+
     // ── Host starts the game ──
     this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number; weeklyOnly?: boolean; roundsByMode?: { frames?: number; eyes?: number; dialogue?: number } }) => {
       const player = this.state.players.get(client.sessionId);
@@ -124,6 +161,7 @@ export class TriviaRoom extends Room<GameState> {
 
       this.state.phase = "countdown";
       this.state.timeRemaining = 3;
+      this.setMetadata({ roomCode: this.state.roomCode, phase: "countdown", playerCount: this.state.players.size });
 
       const countdownInterval = this.clock.setInterval(() => {
         this.state.timeRemaining--;
@@ -189,6 +227,7 @@ export class TriviaRoom extends Room<GameState> {
         this.autoAdvanceTimer = null;
       }
       this.state.phase = "game_over";
+      this.setMetadata({ roomCode: this.state.roomCode, phase: "game_over", playerCount: this.state.players.size });
       this.addSystemChatMessage("🏁 Match ended early by Host.");
     });
 
@@ -212,6 +251,7 @@ export class TriviaRoom extends Room<GameState> {
         p.hasUsedHint = false;
         p.streak = 0;
       });
+      this.setMetadata({ roomCode: this.state.roomCode, phase: "lobby", playerCount: this.state.players.size });
       this.broadcast("return_to_lobby", {});
     });
 
@@ -396,11 +436,13 @@ export class TriviaRoom extends Room<GameState> {
     this.state.timeRemaining = this.roundTimerDuration;
     this.state.isPaused = false;
     this.state.phase = "playing";
+    this.setMetadata({ roomCode: this.state.roomCode, phase: "playing", playerCount: this.state.players.size });
   }
 
   private finishRound() {
     this.state.phase = "round_reveal";
     this.state.revealedAnswer = this.currentSecretAnswer;
+    this.setMetadata({ roomCode: this.state.roomCode, phase: "round_reveal", playerCount: this.state.players.size });
 
     if (this.currentSecretItem && this.currentSecretItem.type === "eye") {
       this.state.revealedContent = this.currentSecretItem.revealContent || "";
@@ -473,6 +515,7 @@ export class TriviaRoom extends Room<GameState> {
         this.state.currentYear = tbItem.year || "";
         this.state.timeRemaining = this.roundTimerDuration;
         this.state.phase = "tie_breaker";
+        this.setMetadata({ roomCode: this.state.roomCode, phase: "tie_breaker", playerCount: this.state.players.size });
 
         this.addSystemChatMessage(`⚔️ TIE BREAKER! Scores are tied between: ${topPlayers.map(p => p.name).join(', ')}!`);
         return;
@@ -480,6 +523,7 @@ export class TriviaRoom extends Room<GameState> {
     }
 
     this.state.phase = "game_over";
+    this.setMetadata({ roomCode: this.state.roomCode, phase: "game_over", playerCount: this.state.players.size });
     this.addSystemChatMessage(`🏁 Game Over! Thanks for playing Scoopcast Guess The Frame!`);
   }
 

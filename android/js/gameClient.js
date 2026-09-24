@@ -367,11 +367,41 @@ const GameClient = {
     this.playerId = savedId;
     this.playerName = localStorage.getItem('gtf_m_name') || 'Cinephile';
     this.playerAvatar = localStorage.getItem('gtf_m_avatar') || 'aman';
+    this.prewarmServer();
   },
 
   getColyseusEndpoint() {
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     return isLocal ? 'ws://localhost:2567' : 'wss://guess-the-frame-colyseus.onrender.com';
+  },
+
+  getHttpEndpoint() {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return isLocal ? 'http://localhost:2567' : 'https://guess-the-frame-colyseus.onrender.com';
+  },
+
+  async wakeServerIfNeeded(onProgress) {
+    const httpEndpoint = this.getHttpEndpoint();
+    const maxRetries = 10;
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(`${httpEndpoint}/ping`, { signal: controller.signal, cache: 'no-store' });
+        clearTimeout(timeoutId);
+        if (res.ok) return true;
+      } catch (e) {
+        if (onProgress) onProgress(i + 1, maxRetries);
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    }
+    return false;
+  },
+
+  prewarmServer() {
+    try {
+      fetch(`${this.getHttpEndpoint()}/ping`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+    } catch (e) {}
   },
 
   generateRoomCode() {
@@ -550,10 +580,16 @@ const GameClient = {
     }
 
     if (typeof UI !== 'undefined' && UI.showLoading) {
-      UI.showLoading('Creating room on server...');
+      UI.showLoading('Connecting to server...');
     }
 
     try {
+      await this.wakeServerIfNeeded((attempt, max) => {
+        if (typeof UI !== 'undefined' && UI.showLoading) {
+          UI.showLoading(`Starting cloud server (${attempt}/${max})...`);
+        }
+      });
+
       const endpoint = this.getColyseusEndpoint();
       console.log('[Colyseus] Creating room on', endpoint);
       const client = new Colyseus.Client(endpoint);
@@ -630,16 +666,57 @@ const GameClient = {
     }
 
     try {
-      const endpoint = this.getColyseusEndpoint();
-      console.log('[Colyseus] Joining room', cleanCode, 'on', endpoint);
-      const client = new Colyseus.Client(endpoint);
+      const httpEndpoint = this.getHttpEndpoint();
+      const wsEndpoint = this.getColyseusEndpoint();
+
+      // 1. Wake server & resolve room metadata via fast HTTP API
+      let resolvedRoomId = null;
+      try {
+        await this.wakeServerIfNeeded((attempt, max) => {
+          if (typeof UI !== 'undefined' && UI.showLoading) {
+            UI.showLoading(`Waking up server (${attempt}/${max})...`);
+          }
+        });
+
+        const roomRes = await fetch(`${httpEndpoint}/api/room/${cleanCode}`);
+        if (roomRes.ok) {
+          const roomData = await roomRes.json();
+          if (roomData && roomData.exists && roomData.roomId) {
+            resolvedRoomId = roomData.roomId;
+          }
+        } else if (roomRes.status === 404) {
+          throw new Error(`Lobby "${cleanCode}" not found. Verify room code with host!`);
+        }
+      } catch (err) {
+        if (err.message && err.message.includes('not found')) {
+          throw err;
+        }
+        console.warn('[Colyseus] Room API lookup fallback:', err);
+      }
+
+      if (typeof UI !== 'undefined' && UI.showLoading) {
+        UI.showLoading(`Entering Room ${cleanCode}...`);
+      }
+
+      console.log('[Colyseus] Joining room', cleanCode, 'resolvedId:', resolvedRoomId, 'on', wsEndpoint);
+      const client = new Colyseus.Client(wsEndpoint);
       this.colyseusClient = client;
 
-      const room = await client.join('trivia_room', {
-        roomCode: this.roomCode,
-        name: this.playerName,
-        avatar: this.playerAvatar
-      });
+      // 2. Direct joinById if resolved, otherwise fallback to join with roomCode option
+      let room;
+      if (resolvedRoomId) {
+        room = await client.joinById(resolvedRoomId, {
+          roomCode: this.roomCode,
+          name: this.playerName,
+          avatar: this.playerAvatar
+        });
+      } else {
+        room = await client.join('trivia_room', {
+          roomCode: this.roomCode,
+          name: this.playerName,
+          avatar: this.playerAvatar
+        });
+      }
 
       this.colyseusRoom = room;
       this.playerId = room.sessionId;
@@ -1011,17 +1088,67 @@ const GameClient = {
       }
     });
 
+    room.onMessage("pong", (data) => {
+      // Heartbeat acknowledged by server
+    });
+
+    if (room.reconnectionToken) {
+      sessionStorage.setItem('gtf_m_reconnection_token', room.reconnectionToken);
+    }
+
+    if (this._heartbeatInterval) clearInterval(this._heartbeatInterval);
+    this._heartbeatInterval = setInterval(() => {
+      if (this.colyseusRoom && this.colyseusRoom.connection && this.colyseusRoom.connection.isOpen) {
+        this.colyseusRoom.send("ping");
+      }
+    }, 15000);
+
     room.onError((code, message) => {
       console.warn(`[Colyseus] Room error (${code}): ${message}`);
     });
 
-    room.onLeave((code) => {
+    room.onLeave(async (code) => {
       console.log(`[Colyseus] Disconnected from room with code ${code}`);
+      if (this._heartbeatInterval) {
+        clearInterval(this._heartbeatInterval);
+        this._heartbeatInterval = null;
+      }
+
+      // If unexpected disconnect (e.g. mobile 4G handover or screen lock), attempt reconnect
+      const token = sessionStorage.getItem('gtf_m_reconnection_token');
+      if (code !== 1000 && token && !this._isReconnecting) {
+        this._isReconnecting = true;
+        if (typeof UI !== 'undefined' && UI.showToast) {
+          UI.showToast('⚠️ Connection interrupted. Reconnecting...');
+        }
+        try {
+          const endpoint = this.getColyseusEndpoint();
+          const client = new Colyseus.Client(endpoint);
+          const reconnectedRoom = await client.reconnect(token);
+          this._isReconnecting = false;
+          this.colyseusRoom = reconnectedRoom;
+          this.playerId = reconnectedRoom.sessionId;
+          this.bindColyseusGame(reconnectedRoom);
+          if (typeof UI !== 'undefined' && UI.showToast) {
+            UI.showToast('✅ Restored connection to game!');
+          }
+          return;
+        } catch (e) {
+          console.warn('[Colyseus] Automatic reconnection failed:', e);
+          this._isReconnecting = false;
+        }
+      }
+
       this.colyseusRoom = null;
     });
   },
 
   leaveRoom() {
+    sessionStorage.removeItem('gtf_m_reconnection_token');
+    if (this._heartbeatInterval) {
+      clearInterval(this._heartbeatInterval);
+      this._heartbeatInterval = null;
+    }
     this.clearActiveSession();
     if (typeof UI !== 'undefined' && UI.dismissRoundIntro) UI.dismissRoundIntro();
     this.stopTimer();
