@@ -254,6 +254,7 @@
     }
   </script>
   <!-- Preload Cinema Wallpaper Background -->
+  <link rel="preload" as="image" href="bg/guess_the_frame.png" type="image/png">
   <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp" type="image/webp">
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;">
@@ -313,7 +314,7 @@
       <div class="home-content">
         
         <div class="hero-banner-wrap">
-          <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp" alt="Guess The Frame" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png'">
+          <img src="bg/guess_the_frame.png" alt="Guess The Frame" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png'">
         </div>
         
         <span class="hero-tagline"><svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> MULTIPLAYER CINEMA TRIVIA <svg class="ui-icon ui-icon-zap" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
@@ -627,7 +628,7 @@
           <!-- Populated dynamically -->
         </div>
 
-        <button class="btn-nb-primary" id="btnNextRound" onclick="if(window.GameClient){GameClient.stopRevealTimer();GameClient.nextRound();}" style="max-width:340px; display:none; background:var(--nb-green); color:var(--nb-ink); font-weight:900;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+        <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none; background:var(--nb-green); color:var(--nb-ink); font-weight:900;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
         <div class="reveal-waiting-host" id="revealWaitingNotice" style="display:none; color:#64748b; font-size:0.85rem; font-weight:900; margin-top:8px; text-align:center;">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for host to start next round...
         </div>

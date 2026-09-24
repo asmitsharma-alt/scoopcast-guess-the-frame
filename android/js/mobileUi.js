@@ -370,18 +370,8 @@ const UI = {
       });
     }
 
-    // 7. Next Round Button (Host in reveal)
-    const nextRoundBtn = document.getElementById('btnNextRound');
-    if (nextRoundBtn) {
-      nextRoundBtn.addEventListener('click', () => {
-        if (typeof Haptics !== 'undefined') Haptics.tap();
-        nextRoundBtn.disabled = true;
-        if (typeof GameClient !== 'undefined') {
-          GameClient.stopRevealTimer();
-          GameClient.nextRound();
-        }
-      });
-    }
+    // 7. Next Round Button — handled dynamically in renderRoundReveal()
+    // Do NOT add a static addEventListener here; renderRoundReveal sets onclick each time.
 
     // 8. Copy Link
     const copyLinkBtn = document.getElementById('btnCopyLink');

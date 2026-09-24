@@ -364,10 +364,8 @@ export class TriviaRoom extends Room<GameState> {
         this.autoAdvanceTimer = null;
       }
 
-      if (this.state.phase === "round_reveal") {
+      if (this.state.phase === "round_reveal" || this.state.phase === "tie_breaker") {
         this.advanceNext();
-      } else if (this.state.phase === "playing") {
-        this.finishRound();
       }
     });
 
