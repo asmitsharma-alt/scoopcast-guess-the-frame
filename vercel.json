@@ -142,6 +142,18 @@
     {
       "source": "/js/:match*",
       "destination": "/android/js/:match*"
+    },
+    {
+      "source": "/(android|desktop)/GUESSTHEFRAME/:match*",
+      "destination": "/GUESSTHEFRAME/:match*"
+    },
+    {
+      "source": "/(android|desktop)/GUESSTHEEYES/:match*",
+      "destination": "/GUESSTHEEYES/:match*"
+    },
+    {
+      "source": "/(android|desktop)/tie_breaker/:match*",
+      "destination": "/tie_breaker/:match*"
     }
   ]
 }
