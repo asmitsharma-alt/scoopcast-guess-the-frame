@@ -71,8 +71,141 @@ function resolveMediaPath(src) {
     }
     return url;
   }
-  return src.startsWith('/') ? src : '/' + src;
+  let path = src.startsWith('/') ? src : '/' + src;
+  if (path.startsWith('/tie breaker/')) {
+    path = path.replace('/tie breaker/', '/tie_breaker/');
+  }
+  return path;
 }
+
+const ALL_GAME_FRAMES = [
+  "/bg/guess_the_frame.webp",
+  "/bg/cinema_bg.webp",
+  "/GUESSTHEFRAME/American History X (1998).webp",
+  "/GUESSTHEFRAME/Avengers Infinity War (2018).webp",
+  "/GUESSTHEFRAME/Baahubali 2 The Conclusion (2017).webp",
+  "/GUESSTHEFRAME/Balan - The Boy (2026).webp",
+  "/GUESSTHEFRAME/Before Sunset (2004).webp",
+  "/GUESSTHEFRAME/Billu (2009).webp",
+  "/GUESSTHEFRAME/Certified Copy (2010).webp",
+  "/GUESSTHEFRAME/Dallas Buyers Club (2013).webp",
+  "/GUESSTHEFRAME/Dune Part Two (2024).webp",
+  "/GUESSTHEFRAME/GO GOA GONE (2013).webp",
+  "/GUESSTHEFRAME/I Saw the Devil (2010).webp",
+  "/GUESSTHEFRAME/Irumudi (2026).webp",
+  "/GUESSTHEFRAME/Karwaan (2018).webp",
+  "/GUESSTHEFRAME/Nirvanna.the.Band.the.Show.the.Movie (2025).webp",
+  "/GUESSTHEFRAME/October (2018).webp",
+  "/GUESSTHEFRAME/premalu (2024).webp",
+  "/GUESSTHEFRAME/Rang De Basanti (2006).webp",
+  "/GUESSTHEFRAME/Requiem for a Dream (2000).webp",
+  "/GUESSTHEFRAME/S_O Satyamurthy (2015).webp",
+  "/GUESSTHEFRAME/Stand by Me (1986).webp",
+  "/GUESSTHEEYES/Bhuvan Bam copy.webp",
+  "/GUESSTHEEYES/Bhuvan Bam.webp",
+  "/GUESSTHEEYES/Daisy Edgar-Jones copy.webp",
+  "/GUESSTHEEYES/Daisy Edgar-Jones.webp",
+  "/GUESSTHEEYES/Dakota Johnson copy.webp",
+  "/GUESSTHEEYES/Dakota Johnson.webp",
+  "/GUESSTHEEYES/Dulquer Salmaan copy.webp",
+  "/GUESSTHEEYES/Dulquer Salmaan.webp",
+  "/GUESSTHEEYES/Elle Fanning copy.webp",
+  "/GUESSTHEEYES/Elle Fanning.webp",
+  "/GUESSTHEEYES/kiccha Sudeep copy.webp",
+  "/GUESSTHEEYES/kiccha Sudeep.webp",
+  "/GUESSTHEEYES/Kyle Chandler copy.webp",
+  "/GUESSTHEEYES/Kyle Chandler.webp",
+  "/GUESSTHEEYES/Robert Pattinson copy.webp",
+  "/GUESSTHEEYES/Robert Pattinson.webp",
+  "/GUESSTHEEYES/Salma Hayek copy.webp",
+  "/GUESSTHEEYES/Salma Hayek.webp",
+  "/GUESSTHEEYES/Sophie Turner copy.webp",
+  "/GUESSTHEEYES/Sophie Turner.webp",
+  "/tie_breaker/Anatomy of a Fall (2023).webp",
+  "/tie_breaker/Eyes Wide Shut (1999).webp",
+  "/tie_breaker/Ghilli (2004).webp",
+  "/tie_breaker/La Haine(1995).webp",
+  "/tie_breaker/Mad Max 2.jpg.webp",
+  "/tie_breaker/Moonrise Kingdom (2012).webp",
+  "/tie_breaker/The Batman (2022).webp",
+  "/tie_breaker/The Holdovers(2023).webp",
+  "/tie_breaker/The Life of Chuck(2024).webp",
+  "/tie_breaker/The Lighthouse (2019).webp",
+  "/tie_breaker/The Wolf of Wall Street (2013).webp",
+  "/tie_breaker/They Call Him OG (2025).webp",
+  "/tie_breaker/Top Gun Maverick (2022).webp",
+  "/tie_breaker/Under the Silver Lake (2018).webp"
+];
+
+const MediaCache = {
+  cache: new Map(),
+  inflight: new Map(),
+
+  preload(rawSrc) {
+    if (!rawSrc) return Promise.resolve(null);
+    const url = resolveMediaPath(rawSrc);
+    if (!url) return Promise.resolve(null);
+
+    if (this.cache.has(url)) {
+      return Promise.resolve(this.cache.get(url));
+    }
+    if (this.inflight.has(url)) {
+      return this.inflight.get(url);
+    }
+
+    const p = new Promise((resolve) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.fetchPriority = 'high';
+      img.src = url;
+      if (typeof img.decode === 'function') {
+        img.decode().then(() => {
+          this.cache.set(url, img);
+          this.inflight.delete(url);
+          resolve(img);
+        }).catch(() => {
+          if (img.complete && img.naturalWidth > 0) {
+            this.cache.set(url, img);
+          }
+          this.inflight.delete(url);
+          resolve(img);
+        });
+      } else {
+        img.onload = () => {
+          this.cache.set(url, img);
+          this.inflight.delete(url);
+          resolve(img);
+        };
+        img.onerror = () => {
+          this.inflight.delete(url);
+          resolve(null);
+        };
+      }
+    });
+
+    this.inflight.set(url, p);
+    return p;
+  },
+
+  async preloadBatch(urls, batchSize = 6) {
+    if (!Array.isArray(urls) || urls.length === 0) return;
+    for (let i = 0; i < urls.length; i += batchSize) {
+      const chunk = urls.slice(i, i + batchSize);
+      await Promise.allSettled(chunk.map(u => this.preload(u)));
+    }
+  },
+
+  preloadCatalog() {
+    this.preloadBatch(ALL_GAME_FRAMES, 6);
+  },
+
+  isCached(rawSrc) {
+    const url = resolveMediaPath(rawSrc);
+    return this.cache.has(url);
+  }
+};
+
+window.MediaCache = MediaCache;
 
 const UI = {
   currentScreen: 'homeScreen',
@@ -87,6 +220,7 @@ const UI = {
     this.bindAvatarPicker();
     this.bindButtons();
     this.loadSavedUser();
+    MediaCache.preloadCatalog();
     if (typeof AvatarPicker !== 'undefined') {
       AvatarPicker.init({
         initialAvatar: this.selectedAvatar,
@@ -762,7 +896,7 @@ const UI = {
     }
   },
 
-  setupRoundMedia({ type, content, year, round, totalRounds }) {
+  setupRoundMedia({ type, content, revealContent, year, round, totalRounds }) {
     const input = document.getElementById('mobileGuessInput');
     const hintBtn = document.getElementById('mobileHintBtn');
     const banner = document.getElementById('activeHintBanner');
@@ -791,9 +925,11 @@ const UI = {
     const imgEl = document.getElementById('gameFrameImage');
     const dialogueBox = document.getElementById('gameDialogueBox');
     const dialogueText = document.getElementById('gameDialogueText');
+    const container = document.getElementById('frameMediaContainer');
 
     if (type === 'dialogue') {
       if (imgEl) imgEl.style.display = 'none';
+      if (container) container.classList.remove('is-loading');
       if (dialogueBox) {
         dialogueBox.style.display = 'flex';
         if (dialogueText) dialogueText.textContent = `"${content}"`;
@@ -801,18 +937,28 @@ const UI = {
     } else {
       if (dialogueBox) dialogueBox.style.display = 'none';
       if (imgEl) {
-        const container = document.getElementById('frameMediaContainer');
-        if (container) container.classList.add('is-loading');
+        const targetUrl = resolveMediaPath(content);
+
+        // Preload reveal image ahead of time if in eye mode
+        if (type === 'eye' && revealContent) {
+          MediaCache.preload(revealContent);
+        }
+
+        const isCached = MediaCache.isCached(targetUrl);
         imgEl.style.display = 'block';
-        imgEl.onload = () => {
+        imgEl.src = targetUrl;
+
+        if (isCached || (imgEl.complete && imgEl.naturalWidth > 0)) {
           if (container) container.classList.remove('is-loading');
-        };
-        imgEl.onerror = () => {
-          if (container) container.classList.remove('is-loading');
-        };
-        imgEl.src = resolveMediaPath(content);
-        if (imgEl.complete && imgEl.naturalWidth > 0) {
-          if (container) container.classList.remove('is-loading');
+        } else {
+          if (container) container.classList.add('is-loading');
+          imgEl.onload = () => {
+            if (container) container.classList.remove('is-loading');
+          };
+          imgEl.onerror = () => {
+            if (container) container.classList.remove('is-loading');
+          };
+          MediaCache.preload(targetUrl);
         }
       }
     }

@@ -53,6 +53,15 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/(GUESSTHEFRAME|GUESSTHEEYES|tie_breaker|tie breaker|tie%20breaker|bg|android/bg|android/GUESSTHEFRAME|android/GUESSTHEEYES|android/tie_breaker|desktop/GUESSTHEFRAME|desktop/GUESSTHEEYES|desktop/tie_breaker)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "redirects": [

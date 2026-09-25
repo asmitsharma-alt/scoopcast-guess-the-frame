@@ -392,6 +392,10 @@ const GameClient = {
     this.playerAvatar = localStorage.getItem('gtf_m_avatar') || 'aman';
     this.prewarmServer();
 
+    if (typeof MediaCache !== 'undefined' && MediaCache.preloadCatalog) {
+      MediaCache.preloadCatalog();
+    }
+
     // Fast Host Migration on tab close / reload / navigate away
     const handleLeave = () => {
       if (this.colyseusRoom && this.isHost) {
@@ -817,10 +821,30 @@ const GameClient = {
   setupRoundUI(frame, timerDuration, roundIndex, totalRounds) {
     totalRounds = totalRounds || 20;
 
+    let revealContent = frame.revealContent || '';
+    if (!revealContent && frame.type === 'eye' && frame.content) {
+      const eyeSec = typeof GAME_SECTIONS !== 'undefined' && GAME_SECTIONS.find(s => s.id === 3 || s.name === 'Guess the Eye');
+      if (eyeSec) {
+        const match = eyeSec.frames.find(f => f.content === frame.content || (frame.answer && f.answer === frame.answer));
+        if (match && match.revealContent) {
+          revealContent = match.revealContent;
+        }
+      }
+    }
+
+    const content = frame.type === 'dialogue' ? frame.dialogue : frame.content;
+
+    // Immediately preload and warm current frame image and reveal image in GPU VRAM
+    if (typeof MediaCache !== 'undefined') {
+      if (content && frame.type !== 'dialogue') MediaCache.preload(content);
+      if (revealContent) MediaCache.preload(revealContent);
+    }
+
     UI.setupRoundMedia({
       type: frame.type,
-      content: frame.type === 'dialogue' ? frame.dialogue : frame.content,
-      year: '',
+      content: content,
+      revealContent: revealContent,
+      year: frame.year || '',
       round: roundIndex + 1,
       totalRounds
     });
@@ -1141,12 +1165,23 @@ const GameClient = {
           this.hasUsedHintThisRound = false;
           this.currentRoundWinners = [];
 
+          let revealContent = '';
+          if (state.currentMediaType === 'eye' && state.currentMediaContent) {
+            const eyeSec = typeof GAME_SECTIONS !== 'undefined' && GAME_SECTIONS.find(s => s.id === 3 || s.name === 'Guess the Eye');
+            if (eyeSec) {
+              const match = eyeSec.frames.find(f => f.content === state.currentMediaContent || (state.revealedAnswer && f.answer === state.revealedAnswer));
+              if (match && match.revealContent) {
+                revealContent = match.revealContent;
+              }
+            }
+          }
+
           const clientFrame = {
             type: state.currentMediaType || 'image',
             content: state.currentMediaContent || '',
             year: state.currentYear || '',
             dialogue: state.currentMediaType === 'dialogue' ? state.currentMediaContent : '',
-            revealContent: '',
+            revealContent: revealContent,
             sectionName: state.currentMediaType === 'dialogue' ? 'Guess the Dialogue' : (state.currentMediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame'),
             roundNum: roundNum
           };

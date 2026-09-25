@@ -566,7 +566,7 @@
       <!-- Center Stage: The Frame Container (Resizes smoothly when keyboard opens) -->
       <div class="stage-area dismiss-kb" id="frameStage">
         <div class="frame-card-nb" id="frameMediaContainer">
-          <img id="gameFrameImage" src="" alt="Frame Scene" style="display:none;">
+          <img id="gameFrameImage" src="" alt="Frame Scene" style="display:none;" decoding="async" fetchpriority="high">
           <div id="gameDialogueBox" class="dialogue-card-nb" style="display:none;">
             <p id="gameDialogueText"></p>
           </div>
@@ -621,7 +621,7 @@
         <div class="reveal-movie-year" id="revealYear">(2023)</div>
 
         <div class="reveal-frame-box">
-          <img id="revealImage" src="" alt="Revealed Scene">
+          <img id="revealImage" src="" alt="Revealed Scene" decoding="async" fetchpriority="high">
         </div>
 
         <div class="winners-list-col" id="revealWinnersRow">
@@ -877,8 +877,8 @@
   <script src="/android/js/haptics.js?v=3.2"></script>
   <script src="/android/js/audio.js?v=3.2"></script>
   <script src="/android/js/keyboard.js?v=3.7"></script>
-  <script src="/android/js/gameClient.js?v=3.5"></script>
-  <script src="/android/js/mobileUi.js?v=3.9"></script>
+  <script src="/android/js/gameClient.js?v=3.6"></script>
+  <script src="/android/js/mobileUi.js?v=4.0"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       UI.init();
