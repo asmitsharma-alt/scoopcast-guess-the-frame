@@ -1445,11 +1445,9 @@ input, textarea {
    CRITICAL REQUIREMENT: ANDROID VIRTUAL KEYBOARD / TYPING MODE
    "JUST SHOW TYPE YOUR GUESS OPTION AND FRAME AND HIDE EVERYTHING ELSE"
    ────────────────────────────────────────────────────────────── */
-/* When keyboard opens: hide chat feed so action dock sits neatly below the locked frame */
+/* When keyboard opens: hide in-page chat feed so action dock sits directly below the movie frame */
 body.keyboard-open .game-chat-feed,
-body.keyboard-open .floating-chat-trigger,
-body.keyboard-open .drawer-backdrop,
-body.keyboard-open .drawer-sheet {
+body.keyboard-open .floating-chat-trigger {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -1459,15 +1457,12 @@ body.keyboard-open .drawer-sheet {
   border: none !important;
 }
 
-/* Lock the app container precisely to the visible visual viewport above the keyboard */
+/* App container height locks to visual viewport without fixed-position touch disruption */
 body.keyboard-open #app {
-  height: var(--visual-viewport-height, 100vh) !important;
-  max-height: var(--visual-viewport-height, 100vh) !important;
+  height: var(--visual-viewport-height, 100dvh) !important;
+  max-height: var(--visual-viewport-height, 100dvh) !important;
   min-height: 0 !important;
-  position: fixed !important;
-  top: var(--visual-viewport-top, 0px) !important;
-  left: 0 !important;
-  right: 0 !important;
+  position: relative !important;
   width: 100% !important;
   overflow: hidden !important;
   display: flex !important;
@@ -1482,7 +1477,7 @@ body.keyboard-open .screen.active {
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Active Game Screen fills 100% of visible space with smooth flex layout & overflow scrolling */
+/* Active Game Screen fills available space: frame at top, action dock at bottom */
 body.keyboard-open #gameScreen.active {
   height: 100% !important;
   max-height: 100% !important;
@@ -1491,7 +1486,7 @@ body.keyboard-open #gameScreen.active {
   margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
@@ -1540,39 +1535,19 @@ body.keyboard-open .mobile-action-dock {
   flex-shrink: 0 !important;
   z-index: 100 !important;
   box-shadow: 0 -4px 14px rgba(0,0,0,0.18) !important;
-  bottom: 0 !important;
   position: relative !important;
   box-sizing: border-box !important;
+  pointer-events: auto !important;
 }
 
-/* Live typing mirror above the input */
+/* Hide redundant typing mirror — user types directly into prominent input box */
+.live-typing-mirror,
 body.keyboard-open .live-typing-mirror {
-  margin-bottom: 5px !important;
-  padding: 5px 10px !important;
-  min-height: 38px !important;
-}
-
-/* LIVE TYPING MIRROR PILL (Positioned directly above keyboard dock) */
-.live-typing-mirror {
-  display: none;
-  width: 100%;
-  max-width: 100%;
-  background: #111827;
-  border: 2.5px solid var(--nb-yellow);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  border-radius: 10px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  animation: mirrorPulse 1.2s infinite alternate;
-}
-
-@keyframes mirrorPulse {
-  from { border-color: var(--nb-yellow); box-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
-  to { border-color: var(--nb-pink); box-shadow: 0 0 10px rgba(244, 114, 182, 0.4); }
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
 }
 
 .mirror-label {
@@ -1668,12 +1643,19 @@ body.keyboard-open .live-typing-mirror {
   outline: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  cursor: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  position: relative;
+  z-index: 10;
 }
 
 .dock-guess-input:focus {
-  background: #FEF9C3;
-  border-color: var(--nb-ink);
-  box-shadow: var(--nb-shadow-sm);
+  background: #FEF9C3 !important;
+  border-color: var(--nb-ink) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
 }
 
 .dock-submit-btn {
@@ -2213,10 +2195,12 @@ body.keyboard-open .live-typing-mirror {
   backdrop-filter: blur(4px);
   z-index: 300;
   display: none;
+  pointer-events: none;
 }
 
 .drawer-backdrop.active {
   display: block;
+  pointer-events: auto;
 }
 
 .drawer-sheet {
@@ -2234,10 +2218,29 @@ body.keyboard-open .live-typing-mirror {
   transform: translateY(100%);
   transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
   padding-bottom: var(--safe-bottom);
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .drawer-sheet.open {
   transform: translateY(0);
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+/* Keep chat drawer fully visible above keyboard when open */
+body.keyboard-open .drawer-sheet.open {
+  bottom: 0 !important;
+  max-height: var(--visual-viewport-height, 100dvh) !important;
+  z-index: 500 !important;
+  transform: translateY(0) !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.keyboard-open .drawer-sheet.open .drawer-body {
+  max-height: calc(var(--visual-viewport-height, 100dvh) - 130px) !important;
+  overflow-y: auto !important;
 }
 
 .drawer-handle {
@@ -2280,10 +2283,14 @@ body.keyboard-open .live-typing-mirror {
   transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
   padding-top: var(--safe-top);
   padding-bottom: var(--safe-bottom);
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .sidebar-panel.open {
   transform: translateX(0);
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .sidebar-header {

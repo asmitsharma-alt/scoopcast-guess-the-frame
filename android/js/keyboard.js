@@ -8,8 +8,6 @@ const KeyboardManager = {
     const input = document.getElementById('mobileGuessInput');
     const chatInput = document.getElementById('chatInput');
     const dock = document.getElementById('mobileActionDock');
-    const mirror = document.getElementById('liveTypingMirror');
-    const mirrorText = document.getElementById('liveTypingMirrorText');
 
     this.baselineHeight = window.innerHeight;
 
@@ -19,28 +17,11 @@ const KeyboardManager = {
       document.querySelectorAll('.drawer-backdrop').forEach(b => b.classList.remove('active'));
     };
 
-    // Helper: Dynamic font sizing for long titles to ensure full visibility while typing
-    const updateMirrorText = (rawVal) => {
-      if (!mirrorText) return;
-      const val = (rawVal || '').toUpperCase();
-      mirrorText.textContent = val || 'TYPE YOUR GUESS...';
-      if (val.length > 22) {
-        mirrorText.style.fontSize = '0.86rem';
-      } else if (val.length > 15) {
-        mirrorText.style.fontSize = '1.02rem';
-      } else {
-        mirrorText.style.fontSize = '';
-      }
-    };
-
-    this._updateMirrorText = updateMirrorText;
-
-    // 1. Mirror keystrokes in real time into the high-contrast mirror bar
-    if (input) {
-      input.addEventListener('input', () => {
-        updateMirrorText(input.value);
-        if (mirror) {
-          mirror.style.display = 'flex';
+    // 1. Tapping anywhere on the action dock (except buttons) focuses the guess input
+    if (dock && input) {
+      dock.addEventListener('click', (e) => {
+        if (!e.target.closest('#mobileHintBtn') && !e.target.closest('#mobileSubmitGuessBtn')) {
+          input.focus();
         }
       });
     }
@@ -56,19 +37,12 @@ const KeyboardManager = {
         this.isKeyboardOpen = true;
 
         if (target === input) {
+          // Guess input focused: close secondary drawers
           closeDrawers();
           if (typeof Haptics !== 'undefined') Haptics.tap();
-          if (mirror) {
-            mirror.style.display = 'flex';
-            updateMirrorText(input.value);
-          }
         } else if (target === chatInput) {
-          const gameScreen = document.getElementById('gameScreen');
-          if (gameScreen && gameScreen.classList.contains('active') && input) {
-            closeDrawers();
-            input.focus();
-            return;
-          }
+          // Chat input focused: DO NOT close chat drawer or hijack! Let user chat freely!
+          if (typeof Haptics !== 'undefined') Haptics.tap();
         } else {
           // For nickname input, search inputs, etc.: smoothly scroll into view
           setTimeout(() => {
@@ -91,8 +65,6 @@ const KeyboardManager = {
         if (!isActiveInput) {
           document.body.classList.remove('keyboard-open');
           this.isKeyboardOpen = false;
-          if (dock) dock.style.bottom = '0px';
-          if (mirror) mirror.style.display = 'none';
           this.updateViewportLayout();
         }
       }, 150);
@@ -119,17 +91,12 @@ const KeyboardManager = {
       }, 250);
     });
 
-    // 4. Tap outside dismisses the soft keyboard and restores UI elements
-    const dismissTriggers = document.querySelectorAll('#frameStage, #frameMediaContainer, #gameFrameImage, #gameDialogueBox, #gameScreen, .dismiss-kb');
+    // 4. Tap on movie frame dismisses keyboard
+    const dismissTriggers = document.querySelectorAll('#gameFrameImage, #gameDialogueBox, .dismiss-kb-backdrop');
     dismissTriggers.forEach(el => {
-      el.addEventListener('click', (e) => {
-        if (e.target.closest('#mobileActionDock') || e.target.closest('#liveTypingMirror')) return;
+      el.addEventListener('click', () => {
         if (input && document.activeElement === input) {
           input.blur();
-          closeDrawers();
-        } else if (chatInput && document.activeElement === chatInput) {
-          chatInput.blur();
-          closeDrawers();
         }
       });
     });
@@ -149,42 +116,27 @@ const KeyboardManager = {
     document.documentElement.style.setProperty('--visual-viewport-top', `${currentTop}px`);
     document.documentElement.style.setProperty('--visual-viewport-width', `${currentW}px`);
 
-    const dock = document.getElementById('mobileActionDock');
-    if (!dock) return;
-
     const activeEl = document.activeElement;
     const isInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
 
-    // Height difference check against baseline
     const vpH = window.innerHeight;
     const heightDiff = vpH - (currentH + currentTop);
 
     if (isInputFocused || heightDiff > 100) {
       document.body.classList.add('keyboard-open');
       this.isKeyboardOpen = true;
-
-      // Ensure dock is anchored at bottom of visual viewport
-      dock.style.bottom = '0px';
     } else {
       if (!isInputFocused) {
         document.body.classList.remove('keyboard-open');
         this.isKeyboardOpen = false;
-        dock.style.bottom = '0px';
       }
     }
   },
 
   clearInput() {
     const input = document.getElementById('mobileGuessInput');
-    const mirror = document.getElementById('liveTypingMirror');
-    const mirrorText = document.getElementById('liveTypingMirrorText');
-
     if (input) {
       input.value = '';
-      if (mirrorText) {
-        mirrorText.textContent = 'TYPE YOUR GUESS...';
-        mirrorText.style.fontSize = '';
-      }
       input.focus();
       if (typeof Haptics !== 'undefined') Haptics.tap();
     }
