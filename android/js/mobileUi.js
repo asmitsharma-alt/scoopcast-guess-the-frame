@@ -847,73 +847,9 @@ const UI = {
     this.showToast(`${bulbIcon} Hint unlocked (-${pointsDeducted} pts)!`);
   },
 
-  playRoundIntro({ roundNum, totalRounds, sectionName, callback }) {
+  playRoundIntro({ roundNum, totalRounds, sectionName, callback } = {}) {
     this.dismissRoundIntro();
-
-    const overlay = document.getElementById('roundIntroOverlay');
-    const badgeEl = document.getElementById('roundIntroBadge');
-    const numEl = document.getElementById('roundIntroNum');
-    const tagEl = document.getElementById('roundIntroTag');
-    const dot1 = document.getElementById('rioDot1');
-    const dot2 = document.getElementById('rioDot2');
-    const dot3 = document.getElementById('rioDot3');
-
-    if (!overlay) {
-      if (typeof callback === 'function') callback();
-      return;
-    }
-
-    if (badgeEl) {
-      badgeEl.textContent = (sectionName && sectionName.toUpperCase().includes('TIE')) ? 'TIE BREAKER' : 'ROUND';
-    }
-    if (numEl) {
-      numEl.textContent = String(roundNum || 1);
-    }
-    if (tagEl) {
-      const modeLabel = sectionName ? sectionName.toUpperCase() : 'GUESS THE FRAME';
-      tagEl.textContent = totalRounds ? `ROUND ${roundNum} OF ${totalRounds} - GET READY!` : `${modeLabel} - GET READY!`;
-    }
-
-    const dots = [dot1, dot2, dot3].filter(Boolean);
-    dots.forEach(d => d.classList.remove('active', 'final'));
-
-    overlay.classList.remove('exit-anim');
-    overlay.classList.add('visible');
-
-    // Dot 1 at 280ms
-    const t1 = setTimeout(() => {
-      if (dots[0]) dots[0].classList.add('active');
-      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(false);
-      if (typeof Haptics !== 'undefined') Haptics.countdownTick();
-    }, 280);
-
-    // Dot 2 at 580ms
-    const t2 = setTimeout(() => {
-      if (dots[1]) dots[1].classList.add('active');
-      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(false);
-      if (typeof Haptics !== 'undefined') Haptics.countdownTick();
-    }, 580);
-
-    // Dot 3 at 880ms
-    const t3 = setTimeout(() => {
-      if (dots[2]) dots[2].classList.add('active', 'final');
-      if (typeof SoundEffects !== 'undefined') SoundEffects.playCountdown(true);
-      if (typeof Haptics !== 'undefined') Haptics.countdownFinal();
-    }, 880);
-
-    // Card exit animation at 1160ms
-    const tExit = setTimeout(() => {
-      overlay.classList.add('exit-anim');
-    }, 1160);
-
-    // Complete and hand off at 1380ms
-    const tDone = setTimeout(() => {
-      overlay.classList.remove('visible', 'exit-anim');
-      dots.forEach(d => d.classList.remove('active', 'final'));
-      if (typeof callback === 'function') callback();
-    }, 1380);
-
-    this._roundIntroTimeouts = [t1, t2, t3, tExit, tDone];
+    if (typeof callback === 'function') callback();
   },
 
   dismissRoundIntro() {

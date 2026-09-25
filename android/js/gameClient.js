@@ -825,17 +825,8 @@ const GameClient = {
       totalRounds
     });
 
-    const sectionName = frame.sectionName || (frame.type === 'eye' ? 'Guess the Eyes' : (frame.type === 'dialogue' ? 'Guess the Dialogue' : 'Guess the Frame'));
-
-    UI.playRoundIntro({
-      roundNum: roundIndex + 1,
-      totalRounds,
-      sectionName,
-      callback: () => {
-        if (typeof Haptics !== 'undefined') Haptics.roundStart();
-        UI.showScreen('gameScreen');
-      }
-    });
+    if (typeof Haptics !== 'undefined') Haptics.roundStart();
+    UI.showScreen('gameScreen');
   },
 
   stopTimer() {
