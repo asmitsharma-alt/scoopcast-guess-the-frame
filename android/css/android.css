@@ -1445,7 +1445,9 @@ input, textarea {
    CRITICAL REQUIREMENT: ANDROID VIRTUAL KEYBOARD / TYPING MODE
    "JUST SHOW TYPE YOUR GUESS OPTION AND FRAME AND HIDE EVERYTHING ELSE"
    ────────────────────────────────────────────────────────────── */
-/* When keyboard opens: hide in-page chat feed so action dock sits directly below the movie frame */
+/* When keyboard opens: hide app header and in-page chat feed so frame and action dock fit 100% above keyboard */
+body.keyboard-open .app-header,
+body.keyboard-open .filmstrip-ticker,
 body.keyboard-open .game-chat-feed,
 body.keyboard-open .floating-chat-trigger {
   display: none !important;
@@ -2230,17 +2232,27 @@ body.keyboard-open .live-typing-mirror {
 
 /* Keep chat drawer fully visible above keyboard when open */
 body.keyboard-open .drawer-sheet.open {
-  bottom: 0 !important;
+  position: fixed !important;
+  top: var(--visual-viewport-top, 0px) !important;
+  height: var(--visual-viewport-height, 100dvh) !important;
   max-height: var(--visual-viewport-height, 100dvh) !important;
+  bottom: auto !important;
   z-index: 500 !important;
-  transform: translateY(0) !important;
+  transform: none !important;
   visibility: visible !important;
   pointer-events: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
 }
 
 body.keyboard-open .drawer-sheet.open .drawer-body {
-  max-height: calc(var(--visual-viewport-height, 100dvh) - 130px) !important;
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: calc(var(--visual-viewport-height, 100dvh) - 110px) !important;
   overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 .drawer-handle {
@@ -2256,6 +2268,9 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   font-size: 1.25rem;
   padding: 0 16px 10px 16px;
   border-bottom: 2px dashed rgba(26,26,26,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .drawer-body {

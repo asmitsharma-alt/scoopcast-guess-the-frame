@@ -40,6 +40,11 @@ const KeyboardManager = {
           // Guess input focused: close secondary drawers
           closeDrawers();
           if (typeof Haptics !== 'undefined') Haptics.tap();
+          setTimeout(() => {
+            try {
+              input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (_) {}
+          }, 100);
         } else if (target === chatInput) {
           // Chat input focused: DO NOT close chat drawer or hijack! Let user chat freely!
           if (typeof Haptics !== 'undefined') Haptics.tap();

@@ -222,7 +222,7 @@
   </script>
   
   <!-- Neobrutalist Mobile Stylesheet -->
-  <link rel="stylesheet" href="/android/css/android.css?v=3.6">
+  <link rel="stylesheet" href="/android/css/android.css?v=3.7">
   <!-- Vercel Web Analytics & Speed Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -720,7 +720,12 @@
     <!-- Chat Drawer -->
     <div class="drawer-sheet" id="chatDrawer">
       <div class="drawer-handle"></div>
-      <div class="drawer-header"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Live Room Chat</div>
+      <div class="drawer-header">
+        <span style="display:flex; align-items:center; gap:8px;">
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Live Room Chat
+        </span>
+        <button type="button" class="sidebar-close-btn" onclick="UI.toggleChatDrawer();" aria-label="Close Chat" style="background:none; border:none; font-size:1.2rem; font-weight:900; cursor:pointer; padding:2px 8px; color:var(--nb-ink);">✕</button>
+      </div>
       <div class="drawer-body" id="chatMessagesStream" style="height:240px;"></div>
       <div style="padding:8px 14px; display:flex; gap:8px; border-top:var(--nb-border-sm);">
         <input type="text" id="chatInput" class="dock-guess-input" placeholder="Say something (no spoilers)..." style="height:44px; text-transform:none;" onkeydown="if (event.key === 'Enter' || event.keyCode === 13) { event.preventDefault(); const ci = this; if (ci && ci.value.trim()) { GameClient.sendChat(ci.value); ci.value = ''; } }">
@@ -734,7 +739,12 @@
     <!-- Scoreboard Drawer -->
     <div class="drawer-sheet" id="scoreboardDrawer">
       <div class="drawer-handle"></div>
-      <div class="drawer-header"><svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Match Standings</div>
+      <div class="drawer-header">
+        <span style="display:flex; align-items:center; gap:8px;">
+          <svg class="ui-icon ui-icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Match Standings
+        </span>
+        <button type="button" class="sidebar-close-btn" onclick="document.getElementById('scoreboardDrawer').classList.remove('open'); document.getElementById('sheetBackdrop').classList.remove('active');" aria-label="Close Standings" style="background:none; border:none; font-size:1.2rem; font-weight:900; cursor:pointer; padding:2px 8px; color:var(--nb-ink);">✕</button>
+      </div>
       <div class="drawer-body" id="scoreboardList" style="max-height:340px;"></div>
     </div>
 
@@ -879,9 +889,9 @@
   </script>
   <script src="/android/js/haptics.js?v=3.2"></script>
   <script src="/android/js/audio.js?v=3.2"></script>
-  <script src="/android/js/keyboard.js?v=3.6"></script>
+  <script src="/android/js/keyboard.js?v=3.7"></script>
   <script src="/android/js/gameClient.js?v=3.3"></script>
-  <script src="/android/js/mobileUi.js?v=3.6"></script>
+  <script src="/android/js/mobileUi.js?v=3.7"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       UI.init();
