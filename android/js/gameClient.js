@@ -362,8 +362,8 @@ const GameClient = {
   players: [],
   hostSettings: {
     category: 'all',
-    roundsByMode: { frames: 10, eyes: 10, dialogue: 10 },
-    rounds: 30,
+    roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
+    rounds: 40,
     timer: 30,
     weeklyOnly: true
   },
@@ -603,12 +603,20 @@ const GameClient = {
     this.hasJoinedAck = false;
     this.isJoining = false;
 
+    const rawCounts = (options.roundsByMode && typeof options.roundsByMode === 'object')
+      ? { ...options.roundsByMode }
+      : { frames: 20, eyes: 10, dialogue: 10 };
+    const counts = {
+      frames: Math.min(20, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
+      dialogue: Math.min(10, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
+      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
+    };
+    const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
+
     this.hostSettings = {
       category: options.category || 'all',
-      roundsByMode: (options.roundsByMode && typeof options.roundsByMode === 'object')
-        ? { ...options.roundsByMode }
-        : { frames: 10, eyes: 10, dialogue: 10 },
-      rounds: options.rounds || 30,
+      roundsByMode: counts,
+      rounds: totalR,
       timer: options.timer || 30,
       weeklyOnly: options.weeklyOnly !== undefined ? options.weeklyOnly : true
     };
@@ -633,9 +641,6 @@ const GameClient = {
       console.log('[Colyseus] Creating room on', endpoint);
       const client = new Colyseus.Client(endpoint);
       this.colyseusClient = client;
-
-      const counts = this.hostSettings.roundsByMode;
-      const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 30;
 
       const room = await client.create('trivia_room', {
         roomCode: this.roomCode,
@@ -801,9 +806,14 @@ const GameClient = {
   startGame(options = {}) {
     if (!this.isHost || !this.colyseusRoom) return;
 
-    const counts = options.roundsByMode || this.hostSettings.roundsByMode;
+    const rawCounts = options.roundsByMode || this.hostSettings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
+    const counts = {
+      frames: Math.min(20, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
+      dialogue: Math.min(10, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
+      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
+    };
     const cat = options.category || this.hostSettings.category || 'all';
-    const totalRounds = counts ? Object.values(counts).reduce((a, b) => a + b, 0) : (Number(options.rounds) || this.hostSettings.rounds || 20);
+    const totalRounds = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
     const timer = Number(options.timer) || this.hostSettings.timer || 30;
     const weeklyOnly = options.weeklyOnly !== undefined ? Boolean(options.weeklyOnly) : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : true);
 

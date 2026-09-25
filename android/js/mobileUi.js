@@ -212,7 +212,7 @@ const UI = {
   selectedAvatar: 'aman',
   hostSettings: {
     activeTab: 'frames',
-    roundsByMode: { frames: 10, eyes: 10, dialogue: 10 },
+    roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
     timer: 30
   },
 
@@ -590,8 +590,10 @@ const UI = {
 
   adjustLobbyRounds(delta) {
     const tab = this.hostSettings.activeTab || 'frames';
-    let current = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : 10;
-    current = Math.max(0, Math.min(30, current + delta));
+    const MAX_ROUNDS_BY_MODE = { frames: 20, dialogue: 10, eyes: 10 };
+    const maxVal = MAX_ROUNDS_BY_MODE[tab] || 10;
+    let current = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : (tab === 'frames' ? 20 : 10);
+    current = Math.max(0, Math.min(maxVal, current + delta));
     this.hostSettings.roundsByMode[tab] = current;
     this.renderLobbyControls();
     this.syncHostSettings();
@@ -607,11 +609,13 @@ const UI = {
 
   renderLobbyControls() {
     const tab = this.hostSettings.activeTab || 'frames';
-    const currentRounds = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : 10;
+    const MAX_ROUNDS_BY_MODE = { frames: 20, dialogue: 10, eyes: 10 };
+    const maxVal = MAX_ROUNDS_BY_MODE[tab] || 10;
+    const currentRounds = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : (tab === 'frames' ? 20 : 10);
 
     // Update tab badges & classes
     ['frames', 'eyes', 'dialogue'].forEach(m => {
-      const count = this.hostSettings.roundsByMode[m] !== undefined ? this.hostSettings.roundsByMode[m] : 10;
+      const count = this.hostSettings.roundsByMode[m] !== undefined ? this.hostSettings.roundsByMode[m] : (m === 'frames' ? 20 : 10);
       const pill = document.getElementById(`tabPill${m.charAt(0).toUpperCase() + m.slice(1)}`);
       if (pill) pill.textContent = count;
       const btn = document.getElementById(`tabBtn${m.charAt(0).toUpperCase() + m.slice(1)}`);
@@ -623,6 +627,20 @@ const UI = {
     if (roundTitle) roundTitle.textContent = `${tab.toUpperCase()} ROUNDS`;
     const roundVal = document.getElementById('currentRoundValue');
     if (roundVal) roundVal.textContent = currentRounds;
+
+    // Enable / disable round stepper buttons based on bounds
+    const btnRoundMinus = document.getElementById('btnRoundMinus');
+    const btnRoundPlus = document.getElementById('btnRoundPlus');
+    if (btnRoundMinus) {
+      btnRoundMinus.disabled = currentRounds <= 0;
+      btnRoundMinus.style.opacity = currentRounds <= 0 ? '0.35' : '1';
+      btnRoundMinus.style.cursor = currentRounds <= 0 ? 'not-allowed' : 'pointer';
+    }
+    if (btnRoundPlus) {
+      btnRoundPlus.disabled = currentRounds >= maxVal;
+      btnRoundPlus.style.opacity = currentRounds >= maxVal ? '0.35' : '1';
+      btnRoundPlus.style.cursor = currentRounds >= maxVal ? 'not-allowed' : 'pointer';
+    }
 
     // Total rounds summary
     const total = Object.values(this.hostSettings.roundsByMode).reduce((a, b) => a + b, 0);
