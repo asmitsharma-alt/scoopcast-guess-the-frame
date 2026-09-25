@@ -986,33 +986,50 @@ input, textarea {
   flex-shrink: 0;
 }
 
-/* Center Stage: Movie Frame Container */
+/* Center Stage: Movie Frame Container - STRICT IMMOBILITY: NEVER MOVES, ZOOMS OR SCALES */
 .stage-area {
-  flex: 0 0 auto;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 12px 2px 12px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.2s ease;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 12px 2px 12px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 .frame-card-nb {
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 16 / 9;
-  height: auto;
-  min-height: 165px;
-  max-height: 270px;
-  border-radius: 14px;
-  border: var(--nb-border);
-  box-shadow: var(--nb-shadow-sm);
-  background: #000;
-  overflow: hidden;
-  position: relative;
-  transition: height 0.2s ease-out;
+  width: 100% !important;
+  max-width: 480px !important;
+  aspect-ratio: 16 / 9 !important;
+  height: auto !important;
+  min-height: 165px !important;
+  max-height: 270px !important;
+  border-radius: 14px !important;
+  border: var(--nb-border) !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  background: #000 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+  margin: 0 auto !important;
+}
+
+.frame-card-nb img {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: contain !important;
+  display: block !important;
+  background: #000 !important;
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 .frame-card-nb.is-loading::after {
@@ -1428,13 +1445,7 @@ input, textarea {
    CRITICAL REQUIREMENT: ANDROID VIRTUAL KEYBOARD / TYPING MODE
    "JUST SHOW TYPE YOUR GUESS OPTION AND FRAME AND HIDE EVERYTHING ELSE"
    ────────────────────────────────────────────────────────────── */
-body.keyboard-open .filmstrip-ticker,
-body.keyboard-open .mobile-top-bar,
-body.keyboard-open .game-hud,
-body.keyboard-open .in-game-host-bar,
-body.keyboard-open #inGameHostBar,
-body.keyboard-open .hint-banner-row,
-body.keyboard-open #activeHintBanner,
+/* When keyboard opens: hide chat feed so action dock sits neatly below the locked frame */
 body.keyboard-open .game-chat-feed,
 body.keyboard-open .floating-chat-trigger,
 body.keyboard-open .drawer-backdrop,
@@ -1471,7 +1482,7 @@ body.keyboard-open .screen.active {
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Active Game Screen fills 100% of visible space with smooth flex layout & overflow scrolling if height is tight */
+/* Active Game Screen fills 100% of visible space with smooth flex layout & overflow scrolling */
 body.keyboard-open #gameScreen.active {
   height: 100% !important;
   max-height: 100% !important;
@@ -1480,7 +1491,7 @@ body.keyboard-open #gameScreen.active {
   margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
+  justify-content: flex-start !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
@@ -1488,43 +1499,21 @@ body.keyboard-open #gameScreen.active {
   box-sizing: border-box !important;
 }
 
-/* Frame stage area flexes smoothly to fit all remaining space above the typing dock */
-body.keyboard-open .stage-area {
-  flex: 1 1 0 !important;
-  height: auto !important;
-  min-height: 100px !important;
-  max-height: 100% !important;
-  padding: 4px 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-}
-
-/* Frame card preserves aspect ratio and stays centered within the available space */
-body.keyboard-open .frame-card-nb {
-  width: 100% !important;
-  max-width: 480px !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  min-height: 0 !important;
-  border-radius: 12px !important;
-  margin: auto !important;
-  background: #000 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: hidden !important;
-  box-shadow: var(--nb-shadow-sm) !important;
-}
-
-body.keyboard-open .frame-card-nb img {
-  width: 100% !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important;
-  background: #000 !important;
+/* STRICT RULE: The movie frame must NEVER move, zoom, scale, or shift at any time */
+.stage-area,
+body.keyboard-open .stage-area,
+.frame-card-nb,
+body.keyboard-open .frame-card-nb,
+.frame-card-nb img,
+body.keyboard-open .frame-card-nb img,
+.reveal-frame-box,
+body.keyboard-open .reveal-frame-box,
+.reveal-frame-box img,
+body.keyboard-open .reveal-frame-box img {
+  transition: none !important;
+  transform: none !important;
+  animation: none !important;
+  -webkit-transform: none !important;
 }
 
 /* Dialogue mode card inside stage */
@@ -2131,12 +2120,10 @@ body.keyboard-open .live-typing-mirror {
 @keyframes revealFrameUnveil {
   0% {
     opacity: 0;
-    transform: scale(0.92);
     box-shadow: 0 0 0 transparent;
   }
   100% {
     opacity: 1;
-    transform: scale(1);
     box-shadow: var(--nb-shadow);
   }
 }
@@ -2144,13 +2131,11 @@ body.keyboard-open .live-typing-mirror {
 @keyframes revealImageSharpen {
   0% {
     opacity: 0.3;
-    transform: scale(1.06);
-    filter: blur(8px) contrast(1.2);
+    filter: blur(4px);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
-    filter: blur(0) contrast(1);
+    filter: blur(0);
   }
 }
 
