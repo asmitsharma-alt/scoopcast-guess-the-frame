@@ -100,10 +100,10 @@ export class TriviaRoom extends Room<GameState> {
     }
 
     try {
-      if (consented || wasHost) {
-        throw new Error(wasHost ? "host disconnected - fast migration" : "consented leave");
+      if (consented) {
+        throw new Error("consented leave");
       }
-      // Non-host players get 15s to reconnect for page refreshes / cellular network switches
+      // Unconsented disconnects (network blip, refresh) get 15s to reconnect
       await this.allowReconnection(client, 15);
       player.connected = true;
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);

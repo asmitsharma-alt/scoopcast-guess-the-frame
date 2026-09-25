@@ -17624,124 +17624,110 @@
         if (modal) modal.classList.add('active');
       },
 
-      sendRejoinWithRetry() {
-        if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
-        const attemptRejoin = () => {
-          if (this.hasJoinedAck) {
-            if (this.rejoinRetryTimer) clearInterval(this.rejoinRetryTimer);
-            return;
-          }
-          let mySavedScore = 0;
-          const session = this.pendingRejoinSession;
-          if (session && Array.isArray(session.players)) {
-            const me = session.players.find(p => p.id === this.playerId);
-            if (me && typeof me.score === 'number') mySavedScore = me.score;
-          } else if (typeof GS !== 'undefined' && Array.isArray(GS.players)) {
-            const me = GS.players.find(p => p.id === this.playerId);
-            if (me && typeof me.score === 'number') mySavedScore = me.score;
-          }
-          this.sendEvent('REQUEST_REJOIN_SYNC', {
-            playerId: this.playerId,
-            name: this.playerName,
-            avatar: this.playerAvatar,
-            lastKnownScore: mySavedScore,
-            timestamp: Date.now()
-          });
-        };
-        attemptRejoin();
-        this.rejoinRetryTimer = setInterval(attemptRejoin, 1500);
-      },
-
-      confirmRejoinRoom() {
+      async confirmRejoinRoom() {
         const session = this.pendingRejoinSession;
-        if (!session) return;
+        if (!session || !session.roomCode) {
+          this.closeModals();
+          return;
+        }
         this.closeModals();
 
-        this.playerId = session.playerId;
-        this.playerName = session.playerName;
-        this.playerAvatar = session.playerAvatar;
-        this.roomCode = session.roomCode;
+        const code = session.roomCode.trim().toUpperCase();
+        this.roomCode = code;
         this.roomId = 'room_' + this.roomCode;
-        this.hasJoinedAck = false;
-        this.isRejoining = true;
+        this.playerName = session.playerName || this.playerName || 'Player';
+        this.playerAvatar = session.playerAvatar || this.playerAvatar || 'aman';
+        this.isJoining = true;
 
-        if (session.playerScoresArchive) {
-          this.playerScoresArchive = session.playerScoresArchive;
-        }
-        if (session.sessionStats) {
-          this.sessionStats = session.sessionStats;
+        if (typeof UI !== 'undefined' && UI.showToast) {
+          UI.showToast('Rejoining room ' + code + '...');
         }
 
-        if (session.hostSettings) {
-          this.hostSettings = session.hostSettings;
-        } else if (!this.hostSettings) {
-          this.hostSettings = {
-            category: 'all',
-            categories: ['frames', 'eyes', 'dialogue'],
-            roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
-            rounds: 40,
-            timer: 30
-          };
-        }
+        try {
+          const wsEndpoint = this.getColyseusEndpoint();
+          const client = new Colyseus.Client(wsEndpoint);
+          this.colyseusClient = client;
 
-        if (session.players && Array.isArray(session.players) && session.players.length > 0) {
-          GS.players = session.players;
-        } else {
-          GS.players = [{
-            id: this.playerId,
-            name: this.playerName,
-            avatar: this.playerAvatar,
-            score: 0,
-            isHost: !!session.isHost,
-            loaded: true,
-            color: '#57c3e0'
-          }];
-        }
-
-        if (session.currentPlaylist && session.currentPlaylist.length > 0) {
-          this.currentPlaylist = session.currentPlaylist;
-          this.currentPlayIndex = session.currentPlayIndex || 0;
-        }
-
-        this.isHost = false;
-        GameController._onlineMode = true;
-        GameController._isRemoteSession = true;
-
-        const isMatch = !!(session.isMatchActive || session.gameState === 'playing' || session.gameState === 'round_end');
-        if (isMatch) {
-          this.isMatchActive = true;
-          this.isRoundFinished = (session.gameState === 'round_end');
-          GameController._isMatchActive = true;
-          UI.showScreen('gameScreen');
-
-          const gPanel = document.getElementById('onlineGuessPanel');
-          if (gPanel) gPanel.classList.add('active');
-          const hBar = document.getElementById('hostFloatingBar');
-          if (hBar) hBar.style.display = 'flex';
-          const hfbHostOnly = document.getElementById('hfbHostOnly');
-          if (hfbHostOnly) hfbHostOnly.style.display = 'none';
-          const hfbLabel = document.getElementById('hfbLabel');
-          if (hfbLabel) hfbLabel.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:';
-
-          if (this.currentPlaylist && this.currentPlaylist[this.currentPlayIndex]) {
-            const curFrame = this.currentPlaylist[this.currentPlayIndex];
-            FrameDisplay.showFrame(curFrame);
-            const roundInfo = document.getElementById('roundInfo');
-            if (roundInfo) roundInfo.textContent = `Round ${this.currentPlayIndex + 1} / ${this.currentPlaylist.length}`;
-            const secName = document.getElementById('curSecName');
-            if (secName) secName.textContent = curFrame.sectionName || 'Guess the Frame';
+          // 1. Try token reconnection first if token exists
+          const token = sessionStorage.getItem('gtf_desktop_reconnection_token');
+          let room = null;
+          if (token) {
+            try {
+              console.log('[Colyseus] Attempting token reconnect for rejoin...');
+              room = await client.reconnect(token);
+              console.log('[Colyseus] Token reconnect successful!');
+            } catch (tokenErr) {
+              console.warn('[Colyseus] Token reconnect failed, will join by code:', tokenErr.message);
+            }
           }
-          UI.renderLB();
-        } else {
-          UI.showScreen('playerLobbyScreen');
-        }
 
-        this.startClientHeartbeat();
-        this.startHostWatchdog();
-        this.setupCloudTransport();
+          // 2. If token reconnect didn't succeed, wake server and join by room code
+          if (!room) {
+            const httpEndpoint = this.getHttpEndpoint();
+            let resolvedRoomId = null;
+            try {
+              await this.wakeServerIfNeeded();
+              const roomRes = await fetch(`${httpEndpoint}/api/room/${code}`);
+              if (roomRes.ok) {
+                const roomData = await roomRes.json();
+                if (roomData && roomData.exists && roomData.roomId) {
+                  resolvedRoomId = roomData.roomId;
+                }
+              }
+            } catch (e) {
+              console.warn('[Colyseus] Room API check failed:', e);
+            }
 
-        if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
-          FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
+            if (resolvedRoomId) {
+              room = await client.joinById(resolvedRoomId, {
+                roomCode: code,
+                name: this.playerName,
+                avatar: this.playerAvatar
+              });
+            } else {
+              room = await client.join('trivia_room', {
+                roomCode: code,
+                name: this.playerName,
+                avatar: this.playerAvatar
+              });
+            }
+          }
+
+          this.colyseusRoom = room;
+          this.playerId = room.sessionId;
+          // Sync isHost from server state
+          const me = room.state && room.state.players ? room.state.players.get(room.sessionId) : null;
+          this.isHost = me ? !!me.isHost : !!session.isHost;
+          GameController._onlineMode = true;
+          GameController._isRemoteSession = !this.isHost;
+
+          this.bindColyseusGame(room);
+          this.saveActiveSession();
+
+          // Navigate to active phase
+          const phase = room.state ? room.state.phase : 'lobby';
+          if (phase === 'playing' || phase === 'round_reveal') {
+            this.isMatchActive = true;
+            this.isRoundFinished = (phase === 'round_reveal');
+            GameController._isMatchActive = true;
+            UI.showScreen('gameScreen');
+            const gPanel = document.getElementById('onlineGuessPanel');
+            if (gPanel) gPanel.classList.add('active');
+            const hBar = document.getElementById('hostFloatingBar');
+            if (hBar) hBar.style.display = 'flex';
+            this.updateHostControls();
+          } else {
+            UI.showScreen('playerLobbyScreen');
+            this.renderLobbyUI();
+          }
+          this.updateConnectionStatus(true);
+        } catch (err) {
+          console.error('[Colyseus] Failed to rejoin room:', err);
+          this.clearActiveSession();
+          alert('Could not rejoin room ' + code + ': ' + (err.message || 'Room is no longer active. Please create or join a new room.'));
+          UI.showScreen('homeScreen');
+        } finally {
+          this.isJoining = false;
         }
       },
 
@@ -19789,6 +19775,21 @@
 
           this.colyseusRoom = null;
           this.updateConnectionStatus(false);
+          if (code !== 1000) {
+            if (typeof UI !== 'undefined' && UI.showToast) {
+              UI.showToast('⚠️ Disconnected from multiplayer server');
+            }
+            setTimeout(() => {
+              if (!this.colyseusRoom && GameController._onlineMode) {
+                const lobby = document.getElementById('playerLobbyScreen');
+                if (lobby && lobby.classList.contains('active')) {
+                  alert('Multiplayer room is disconnected. Returning to home.');
+                  this.clearActiveSession();
+                  UI.showScreen('homeScreen');
+                }
+              }
+            }, 3000);
+          }
         });
       },
     };
@@ -22187,10 +22188,10 @@
             isHost: MultiplayerEngine.isHost
           });
         } catch (e) { }
-        MultiplayerEngine.stopClientHeartbeat();
-        MultiplayerEngine.stopHostPresenceWatchdog();
-        MultiplayerEngine.stopHostHeartbeat();
-        MultiplayerEngine.stopHostWatchdog();
+        if (MultiplayerEngine._heartbeatInterval) {
+          clearInterval(MultiplayerEngine._heartbeatInterval);
+          MultiplayerEngine._heartbeatInterval = null;
+        }
       }
 
       // Clean up RoomLobby connection
