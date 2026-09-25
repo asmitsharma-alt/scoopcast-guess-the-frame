@@ -92,20 +92,27 @@ export class TriviaRoom extends Room<GameState> {
 
     player.connected = false;
 
+    // Fast Host Migration: if leaving player was host, migrate host immediately so room is never frozen!
+    const wasHost = player.isHost;
+    if (wasHost && this.state.players.size > 1) {
+      player.isHost = false;
+      this.migrateHost();
+    }
+
     try {
-      if (consented) {
-        throw new Error("consented leave");
+      if (consented || wasHost) {
+        throw new Error(wasHost ? "host disconnected - fast migration" : "consented leave");
       }
-      // Allow 30s for mobile reconnections / page refreshes / cellular tower switches
-      await this.allowReconnection(client, 30);
+      // Non-host players get 15s to reconnect for page refreshes / cellular network switches
+      await this.allowReconnection(client, 15);
       player.connected = true;
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
     } catch (e) {
       this.state.players.delete(client.sessionId);
       this.addSystemChatMessage(`🚪 ${player.name} left the game`);
 
-      // Host Migration
-      if (player.isHost && this.state.players.size > 0) {
+      // If host wasn't migrated yet (e.g. was only player earlier or edge condition)
+      if (wasHost && this.state.players.size > 0 && !Array.from(this.state.players.values()).some(p => p.isHost)) {
         this.migrateHost();
       }
 
@@ -132,6 +139,15 @@ export class TriviaRoom extends Room<GameState> {
     // ── Application-level Heartbeat / Keep-Alive ──
     this.onMessage("ping", (client) => {
       client.send("pong", { timestamp: Date.now() });
+    });
+
+    // ── Explicit Fast Host Leave ──
+    this.onMessage("host_leaving", (client) => {
+      const player = this.state.players.get(client.sessionId);
+      if (player && player.isHost && this.state.players.size > 1) {
+        player.isHost = false;
+        this.migrateHost();
+      }
     });
 
     // ── Host starts the game ──
@@ -536,6 +552,10 @@ export class TriviaRoom extends Room<GameState> {
       nextPlayer.isHost = true;
       this.state.currentHostId = nextPlayer.id;
       this.addSystemChatMessage(`👑 <strong>${nextPlayer.name}</strong> is now the Host!`);
+      this.broadcast("host_migrated", {
+        hostId: nextPlayer.id,
+        hostName: nextPlayer.name
+      });
     }
   }
 

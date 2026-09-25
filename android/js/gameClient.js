@@ -391,6 +391,18 @@ const GameClient = {
     this.playerName = localStorage.getItem('gtf_m_name') || 'Cinephile';
     this.playerAvatar = localStorage.getItem('gtf_m_avatar') || 'aman';
     this.prewarmServer();
+
+    // Fast Host Migration on tab close / reload / navigate away
+    const handleLeave = () => {
+      if (this.colyseusRoom && this.isHost) {
+        try {
+          this.colyseusRoom.send("host_leaving");
+          this.colyseusRoom.leave(true);
+        } catch (e) {}
+      }
+    };
+    window.addEventListener('beforeunload', handleLeave);
+    window.addEventListener('pagehide', handleLeave);
   },
 
   getColyseusEndpoint() {
@@ -989,6 +1001,27 @@ const GameClient = {
       }
     });
 
+    room.onMessage("host_migrated", (data) => {
+      console.log('[Colyseus] Host migrated to:', data);
+      const wasHost = this.isHost;
+      this.isHost = Boolean(data && data.hostId === this.playerId);
+      if (typeof UI !== 'undefined') {
+        if (UI.setHostControlsVisible) {
+          UI.setHostControlsVisible(this.isHost);
+        }
+        if (UI.renderLobbyPlayers) {
+          UI.renderLobbyPlayers();
+        }
+        if (UI.renderLobbyControls) {
+          UI.renderLobbyControls();
+        }
+        if (this.isHost && !wasHost && UI.showNotification) {
+          UI.showNotification('👑 You are now the Host!', 'success');
+        }
+      }
+      this.saveActiveSession();
+    });
+
     if (room.state && room.state.currentRoundWinners) {
       room.state.currentRoundWinners.onAdd((winner) => {
         if (winner && typeof UI !== 'undefined' && UI.appendChatMessage) {
@@ -1054,9 +1087,13 @@ const GameClient = {
             localP.isHost = p.isHost;
           }
           if (sessionId === this.playerId) {
+            const hostChanged = (this.isHost !== p.isHost);
             this.isHost = p.isHost;
-            if (typeof UI !== 'undefined' && UI.setHostControlsVisible) {
-              UI.setHostControlsVisible(this.isHost);
+            if (typeof UI !== 'undefined') {
+              if (UI.setHostControlsVisible) UI.setHostControlsVisible(this.isHost);
+              if (hostChanged && this.isHost && UI.showNotification) {
+                UI.showNotification('👑 You are now the Host!', 'success');
+              }
             }
           }
         });

@@ -245,6 +245,50 @@
       box-sizing: border-box;
     }
 
+    /* Neobrutalist Switch Component */
+    .nb-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .nb-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .nb-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      border: 2px solid #1a1a1a;
+      border-radius: 24px;
+      transition: .2s;
+    }
+    .nb-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #1a1a1a;
+      border-radius: 50%;
+      transition: .2s;
+    }
+    .nb-switch input:checked + .nb-slider {
+      background-color: #22c55e !important;
+    }
+    .nb-switch input:checked + .nb-slider:before {
+      transform: translateX(20px);
+    }
+    .nb-switch input:disabled + .nb-slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     :root {
       /* ── CLAYMORPHISM PALETTE (light pastel) ── */
       --bg-dark: #e9e4ff;
@@ -13801,6 +13845,21 @@
                   </div>
                 </div>
 
+                <!-- New Weekly Drops Toggle Card (Default ON) -->
+                <div id="weeklyToggleDesktopCard" class="flex items-center justify-between bg-neo-yellow border-2 border-on-surface rounded-xl p-3.5 neo-shadow-sm shrink-0">
+                  <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-xl text-on-surface">bolt</span>
+                    <div class="flex flex-col text-left">
+                      <span class="font-label-bold text-xs uppercase font-black text-on-surface tracking-wide">New Weekly Drops</span>
+                      <span id="weeklySubtextDesktop" class="font-label-sm text-[10px] text-on-surface/80 font-bold">Playing this week's fresh frames</span>
+                    </div>
+                  </div>
+                  <label class="nb-switch" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
+                    <input type="checkbox" id="toggleWeeklyDropsDesktop" checked style="opacity:0; width:0; height:0;" onchange="MultiplayerEngine.onWeeklyToggleChange(this.checked)">
+                    <span class="nb-slider"></span>
+                  </label>
+                </div>
+
               </div>
             </section>
           </div>
@@ -14068,10 +14127,10 @@
           <!-- WEEKLY DROPS TOGGLE -->
           <div class="weekly-toggle-desktop-wrapper" id="weeklyToggleDesktopWrapper" style="margin-bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
             <label class="nb-switch-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; background: #111; padding: 7px 16px; border: 2.5px solid #00ff66; border-radius: 999px; box-shadow: 0 4px 0 #00aa44; user-select: none;">
-              <input type="checkbox" id="toggleWeeklyDropsDesktop" checked style="accent-color: #00ff66; width: 18px; height: 18px; cursor: pointer;" onchange="MultiplayerEngine.onWeeklyToggleChange(this.checked)">
+              <input type="checkbox" id="toggleWeeklyDropsDesktopHta" checked style="accent-color: #00ff66; width: 18px; height: 18px; cursor: pointer;" onchange="MultiplayerEngine.onWeeklyToggleChange(this.checked)">
               <span style="font-family: 'Space Grotesk', -apple-system, sans-serif; font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px;">✨ New Weekly Drops (Default: ON)</span>
             </label>
-            <span id="weeklySubtextDesktop" style="font-size: 11px; color: #888; font-weight: 700;">Playing this week's fresh frames</span>
+            <span id="weeklySubtextDesktopHta" style="font-size: 11px; color: #888; font-weight: 700;">Playing this week's fresh frames</span>
           </div>
 
           <div class="hta-btn-container">
@@ -15193,12 +15252,19 @@
           count.textContent = `${GS.players.length} / 10 Players`;
         }
 
-        // Settings sync
-        const settings = (GameController._onlineMode && MultiplayerEngine.hostSettings) ? MultiplayerEngine.hostSettings : (MultiplayerEngine.hostSettings || {
-          category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
-          rounds: 40,
-          timer: 30
-        });
+        const isHost = !GameController._onlineMode || MultiplayerEngine.isHost;
+
+        if (!MultiplayerEngine.hostSettings) {
+          MultiplayerEngine.hostSettings = {
+            category: 'all',
+            categories: ['frames', 'eyes', 'dialogue'],
+            roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
+            rounds: 40,
+            timer: 30,
+            weeklyOnly: true
+          };
+        }
+        const settings = MultiplayerEngine.hostSettings;
 
         const activeCategories = settings.categories || ['frames', 'eyes', 'dialogue'];
         const counts = settings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
@@ -15264,6 +15330,30 @@
         const timerBtnText = document.getElementById('hostTimerBtnText');
         if (timerBtnText) timerBtnText.textContent = `${settings.timer || 30}s`;
 
+        // Update Weekly Drops Toggle
+        const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
+        if (weeklyToggle) {
+          const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
+          weeklyToggle.checked = wVal;
+          weeklyToggle.disabled = !isHost;
+        }
+        const weeklyToggleHta = document.getElementById('toggleWeeklyDropsDesktopHta');
+        if (weeklyToggleHta) {
+          const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
+          weeklyToggleHta.checked = wVal;
+          weeklyToggleHta.disabled = !isHost;
+        }
+        const weeklySubtext = document.getElementById('weeklySubtextDesktop');
+        if (weeklySubtext) {
+          const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
+          weeklySubtext.textContent = wVal ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        }
+        const weeklySubtextHta = document.getElementById('weeklySubtextDesktopHta');
+        if (weeklySubtextHta) {
+          const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
+          weeklySubtextHta.textContent = wVal ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        }
+
         // Update Match Info
         const infoMode = document.getElementById('matchInfoMode');
         const infoTotal = document.getElementById('matchInfoTotalRounds');
@@ -15295,7 +15385,6 @@
             p.loadProgress = 100;
           });
         }
-        const isHost = !GameController._onlineMode || MultiplayerEngine.isHost;
         const canStart = isHost && GS.players.length >= 1;
 
         [startBtn, mobileStartBtn].forEach(btn => {
@@ -18133,16 +18222,46 @@
       },
 
       onWeeklyToggleChange(checked) {
-        const subtext = document.getElementById('weeklySubtextDesktop');
-        if (subtext) {
-          subtext.textContent = checked ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        if (!this.hostSettings) this.hostSettings = {};
+        this.hostSettings.weeklyOnly = checked;
+
+        const toggleLobby = document.getElementById('toggleWeeklyDropsDesktop');
+        if (toggleLobby && toggleLobby.checked !== checked) toggleLobby.checked = checked;
+        const toggleHta = document.getElementById('toggleWeeklyDropsDesktopHta');
+        if (toggleHta && toggleHta.checked !== checked) toggleHta.checked = checked;
+
+        const subtext1 = document.getElementById('weeklySubtextDesktop');
+        if (subtext1) {
+          subtext1.textContent = checked ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
         }
-        if (this.isHost) {
-          if (!this.hostSettings) this.hostSettings = {};
-          this.hostSettings.weeklyOnly = checked;
-          if (this.colyseusRoom) {
-            this.colyseusRoom.send('update_settings', { weeklyOnly: checked });
-          }
+        const subtext2 = document.getElementById('weeklySubtextDesktopHta');
+        if (subtext2) {
+          subtext2.textContent = checked ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        }
+        if (this.isHost && this.colyseusRoom) {
+          this.colyseusRoom.send('update_settings', { weeklyOnly: checked });
+        }
+      },
+
+      updateHostControls() {
+        const hfbHostOnly = document.getElementById('hfbHostOnly');
+        if (hfbHostOnly) hfbHostOnly.style.display = this.isHost ? 'inline-flex' : 'none';
+        const hfbLabel = document.getElementById('hfbLabel');
+        if (hfbLabel) {
+          hfbLabel.innerHTML = this.isHost 
+            ? ((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' HOST CONTROLS:') 
+            : ((typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : '') + ' CONTROLS:');
+        }
+        const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
+        if (weeklyToggle) {
+          weeklyToggle.disabled = !this.isHost;
+        }
+        const weeklyToggleHta = document.getElementById('toggleWeeklyDropsDesktopHta');
+        if (weeklyToggleHta) {
+          weeklyToggleHta.disabled = !this.isHost;
+        }
+        if (typeof PlayerLobby !== 'undefined' && PlayerLobby.render) {
+          PlayerLobby.render();
         }
       },
 
@@ -18200,7 +18319,12 @@
           this._heartbeatInterval = null;
         }
         if (this.colyseusRoom) {
-          try { this.colyseusRoom.leave(); } catch(e) {}
+          try {
+            if (this.isHost) {
+              this.colyseusRoom.send("host_leaving");
+            }
+            this.colyseusRoom.leave(true);
+          } catch(e) {}
           this.colyseusRoom = null;
         }
         this.colyseusClient = null;
@@ -19271,15 +19395,40 @@
         room.onMessage("settings_updated", (data) => {
           if (data && data.hostSettings) {
             this.hostSettings = Object.assign(this.hostSettings || {}, data.hostSettings);
+            const weeklyOnlyVal = data.hostSettings.weeklyOnly !== undefined ? Boolean(data.hostSettings.weeklyOnly) : true;
             const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
-            if (weeklyToggle && data.hostSettings.weeklyOnly !== undefined) {
-              weeklyToggle.checked = Boolean(data.hostSettings.weeklyOnly);
-            }
+            if (weeklyToggle) weeklyToggle.checked = weeklyOnlyVal;
+            const weeklyToggleHta = document.getElementById('toggleWeeklyDropsDesktopHta');
+            if (weeklyToggleHta) weeklyToggleHta.checked = weeklyOnlyVal;
             const weeklySubtext = document.getElementById('weeklySubtextDesktop');
-            if (weeklySubtext && data.hostSettings.weeklyOnly !== undefined) {
-              weeklySubtext.textContent = data.hostSettings.weeklyOnly ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+            if (weeklySubtext) {
+              weeklySubtext.textContent = weeklyOnlyVal ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+            }
+            const weeklySubtextHta = document.getElementById('weeklySubtextDesktopHta');
+            if (weeklySubtextHta) {
+              weeklySubtextHta.textContent = weeklyOnlyVal ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
             }
             this.renderLobbyUI();
+          }
+        });
+
+        room.onMessage("host_migrated", (data) => {
+          console.log('[MultiplayerEngine] Host migrated to:', data);
+          const wasHost = this.isHost;
+          const becameHost = Boolean(data && data.hostId === this.playerId);
+          this.isHost = becameHost;
+          GS.players.forEach(p => {
+            p.isHost = (p.id === data.hostId);
+          });
+          this.updateHostControls();
+          this.renderLobbyUI();
+          if (typeof UI !== 'undefined' && UI.renderLB) {
+            UI.renderLB();
+          }
+          if (becameHost && !wasHost) {
+            if (typeof ScorecardShare !== 'undefined' && ScorecardShare.showToast) {
+              ScorecardShare.showToast('👑 You are now the Host!');
+            }
           }
         });
 
@@ -19360,7 +19509,14 @@
                 localP.isHost = p.isHost;
               }
               if (sessionId === this.playerId) {
+                const hostChanged = (this.isHost !== p.isHost);
                 this.isHost = p.isHost;
+                if (hostChanged) {
+                  this.updateHostControls();
+                  if (this.isHost && typeof ScorecardShare !== 'undefined' && ScorecardShare.showToast) {
+                    ScorecardShare.showToast('👑 You are now the Host!');
+                  }
+                }
               }
             });
             GS.players = GS.players.filter(lp => currentIds.has(lp.id));
@@ -22008,7 +22164,20 @@
     });
 
     /* Cleanup on page unload - prevent orphaned connections */
+    const handleDesktopLeave = () => {
+      // Clean up Colyseus connection with fast host leaving
+      if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.colyseusRoom) {
+        try {
+          if (MultiplayerEngine.isHost) {
+            MultiplayerEngine.colyseusRoom.send("host_leaving");
+          }
+          MultiplayerEngine.colyseusRoom.leave(true);
+        } catch (e) { }
+      }
+    };
+
     window.addEventListener('beforeunload', () => {
+      handleDesktopLeave();
       // Clean up MultiplayerEngine connection & notify lobby
       if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.roomCode) {
         try {
@@ -22042,6 +22211,8 @@
       // Clean up GameController round intro
       if (GameController._roundIntroIntervalId) { clearInterval(GameController._roundIntroIntervalId); }
     });
+
+    window.addEventListener('pagehide', handleDesktopLeave);
 
     
     
