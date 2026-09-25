@@ -18014,12 +18014,12 @@
         }
       },
 
-      async confirmJoinRoom() {
+      async confirmJoinRoom(forcedCode) {
         if (this.isJoining) return;
 
         const input = document.getElementById('joinCodeInput');
         const urlParams = new URLSearchParams(window.location.search);
-        let code = (input ? input.value : '') || urlParams.get('room') || '';
+        let code = forcedCode || (input ? input.value : '') || urlParams.get('room') || '';
         code = code.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
         if (!code || code.length < 3) {
           alert('Please enter a valid Room Code.');
@@ -19508,6 +19508,19 @@
             GS.players = GS.players.filter(lp => currentIds.has(lp.id));
             UI.renderLB();
             this.renderLobbyUI();
+          }
+
+          // Sync pause state
+          if (state.isPaused !== undefined && state.isPaused !== this.isPaused) {
+            this.isPaused = !!state.isPaused;
+            const btn = document.getElementById('hfbPauseBtn');
+            if (this.isPaused) {
+              TC.pause();
+              if (btn) btn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.play : '') + ' Resume';
+            } else {
+              TC.resume();
+              if (btn) btn.innerHTML = (typeof SvgIcons !== 'undefined' ? SvgIcons.pause : '') + ' Pause';
+            }
           }
 
           // 2. State machine transitions
