@@ -1431,6 +1431,8 @@ input, textarea {
 body.keyboard-open .filmstrip-ticker,
 body.keyboard-open .mobile-top-bar,
 body.keyboard-open .game-hud,
+body.keyboard-open .in-game-host-bar,
+body.keyboard-open #inGameHostBar,
 body.keyboard-open .hint-banner-row,
 body.keyboard-open #activeHintBanner,
 body.keyboard-open .game-chat-feed,
