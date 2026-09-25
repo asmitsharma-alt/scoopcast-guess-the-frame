@@ -897,6 +897,18 @@ const GameClient = {
     }
   },
 
+  endMatch() {
+    if (!this.isHost) return;
+    if (this.colyseusRoom) {
+      try {
+        this.colyseusRoom.send("host_end_game");
+      } catch (err) {
+        console.warn("[GameClient] host_end_game error:", err);
+      }
+    }
+    this.finishGame();
+  },
+
   finishGame() {
     this.stopTimer();
     this.stopRevealTimer();

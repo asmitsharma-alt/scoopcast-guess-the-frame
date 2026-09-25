@@ -19265,6 +19265,13 @@
       hostEndGame() {
         if (!this.isHost) return;
         if (confirm('Are you sure you want to end the match early?')) {
+          if (this.colyseusRoom) {
+            try {
+              this.colyseusRoom.send("host_end_game");
+            } catch (e) {
+              console.warn("[Desktop] Failed to send host_end_game:", e);
+            }
+          }
           this.finishGame();
         }
       },

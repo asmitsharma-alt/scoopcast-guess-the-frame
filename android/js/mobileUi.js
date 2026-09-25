@@ -279,7 +279,18 @@ const UI = {
 
     const hostEndBtn = document.getElementById('btnHostEndMatch');
     if (hostEndBtn) {
-      hostEndBtn.addEventListener('click', () => {
+      hostEndBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        UI.confirmHostEndGame();
+      });
+    }
+
+    const revealEndBtn = document.getElementById('btnRevealEndMatch');
+    if (revealEndBtn) {
+      revealEndBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         UI.confirmHostEndGame();
       });
     }
@@ -538,9 +549,13 @@ const UI = {
 
     // In-Game Host Floating Action Bar (Only visible on gameScreen when isHost is true)
     const hostBar = document.getElementById('inGameHostBar');
+    const isHost = (typeof GameClient !== 'undefined' && Boolean(GameClient.isHost));
     if (hostBar) {
-      const isHost = (typeof GameClient !== 'undefined' && GameClient.isHost);
       hostBar.style.display = (screenId === 'gameScreen' && isHost) ? 'flex' : 'none';
+    }
+    const hostRevealEndBtn = document.getElementById('btnRevealEndMatch');
+    if (hostRevealEndBtn) {
+      hostRevealEndBtn.style.display = (screenId === 'revealScreen' && isHost) ? 'flex' : 'none';
     }
   },
 
@@ -576,10 +591,18 @@ const UI = {
   },
 
   confirmHostEndGame() {
+    if (this._confirmingEndMatch) return;
+    this._confirmingEndMatch = true;
+    setTimeout(() => { this._confirmingEndMatch = false; }, 800);
+
     if (typeof Haptics !== 'undefined') Haptics.tap();
     if (confirm('Are you sure you want to end the match early?')) {
       if (typeof GameClient !== 'undefined') {
-        GameClient.finishGame();
+        if (typeof GameClient.endMatch === 'function') {
+          GameClient.endMatch();
+        } else {
+          GameClient.finishGame();
+        }
       }
     }
   },
@@ -713,6 +736,8 @@ const UI = {
       }
     }
     if (hostNextBtn) hostNextBtn.style.display = isHost ? 'flex' : 'none';
+    const hostRevealEndBtn = document.getElementById('btnRevealEndMatch');
+    if (hostRevealEndBtn) hostRevealEndBtn.style.display = isHost ? 'flex' : 'none';
 
     const hostBar = document.getElementById('inGameHostBar');
     if (hostBar) {

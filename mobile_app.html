@@ -553,7 +553,7 @@
         <button type="button" class="igh-btn" id="btnHostSkipFrame" onclick="GameClient.skipRound()">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg> Skip Frame
         </button>
-        <button type="button" class="igh-btn igh-btn-danger" id="btnHostEndMatch" onclick="UI.confirmHostEndGame()">
+        <button type="button" class="igh-btn igh-btn-danger" id="btnHostEndMatch">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg> End Match
         </button>
       </div>
@@ -629,6 +629,7 @@
         </div>
 
         <button class="btn-nb-primary" id="btnNextRound" style="max-width:340px; display:none; background:var(--nb-green); color:var(--nb-ink); font-weight:900;">NEXT ROUND <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" x2="19" y1="5" y2="19"/></svg></button>
+        <button type="button" class="btn-nb-primary" id="btnRevealEndMatch" style="max-width:340px; display:none; background:#FEE2E2; color:#B91C1C; border:2.5px solid var(--nb-ink); font-weight:900; margin-top:8px;">END MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg></button>
         <div class="reveal-waiting-host" id="revealWaitingNotice" style="display:none; color:#64748b; font-size:0.85rem; font-weight:900; margin-top:8px; text-align:center;">
           <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for host to start next round...
         </div>
@@ -876,8 +877,8 @@
   <script src="/android/js/haptics.js?v=3.2"></script>
   <script src="/android/js/audio.js?v=3.2"></script>
   <script src="/android/js/keyboard.js?v=3.7"></script>
-  <script src="/android/js/gameClient.js?v=3.4"></script>
-  <script src="/android/js/mobileUi.js?v=3.8"></script>
+  <script src="/android/js/gameClient.js?v=3.5"></script>
+  <script src="/android/js/mobileUi.js?v=3.9"></script>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       UI.init();
