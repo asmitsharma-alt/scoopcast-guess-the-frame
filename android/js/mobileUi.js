@@ -343,7 +343,7 @@ const UI = {
     if (submitBtn) submitBtn.addEventListener('click', doSubmit);
     if (guessInput) {
       guessInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
           e.preventDefault();
           doSubmit();
         }
