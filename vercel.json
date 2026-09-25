@@ -55,6 +55,15 @@
       ]
     },
     {
+      "source": "/(favicon.ico|favicon.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|android/favicon.ico|android/favicon.png|android/apple-touch-icon.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
       "source": "/(GUESSTHEFRAME|GUESSTHEEYES|tie_breaker|tie breaker|tie%20breaker|bg|android/bg|android/GUESSTHEFRAME|android/GUESSTHEEYES|android/tie_breaker|desktop/GUESSTHEFRAME|desktop/GUESSTHEEYES|desktop/tie_breaker)/(.*)",
       "headers": [
         {
