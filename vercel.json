@@ -55,7 +55,16 @@
       ]
     },
     {
-      "source": "/(favicon.svg|favicon.ico|favicon.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|android/favicon.svg|android/favicon.ico|android/favicon.png|android/apple-touch-icon.png|images/(.*)|android/images/(.*)|desktop/images/(.*))",
+      "source": "/(favicon.svg|favicon.ico|favicon.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|android/favicon.svg|android/favicon.ico|android/favicon.png|android/apple-touch-icon.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(images|android/images|desktop/images)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
