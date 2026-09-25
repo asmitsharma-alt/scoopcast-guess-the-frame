@@ -55,7 +55,7 @@
       ]
     },
     {
-      "source": "/(favicon.svg|favicon.ico|favicon.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|android/favicon.svg|android/favicon.ico|android/favicon.png|android/apple-touch-icon.png)",
+      "source": "/(favicon.svg|favicon.ico|favicon.png|favicon-192.png|favicon-512.png|apple-touch-icon.png|android/favicon.svg|android/favicon.ico|android/favicon.png|android/apple-touch-icon.png|images/(.*)|android/images/(.*)|desktop/images/(.*))",
       "headers": [
         {
           "key": "Cache-Control",
