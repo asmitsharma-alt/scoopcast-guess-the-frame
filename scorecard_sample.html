@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScoopCast Winner Scorecard — Neo-Brutalism UI & Image Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Space+Grotesk:wght@700;800;900&display=swap" rel="stylesheet">
+  <!-- Local and CDN fallback for html2canvas -->
+  <script src="html2canvas.min.js"></script>
+  <script>
+    if (typeof html2canvas === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    /* ═════════════════════════════════════════════════════════════
+       RESET & BASE STYLING
+    ═════════════════════════════════════════════════════════════ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0A0E17;
+      color: #111827;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 12px 64px;
+      overflow-x: hidden;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       PREVIEW CONTROLS & GENERATOR ACTION BAR
+    ═════════════════════════════════════════════════════════════ */
+    .preview-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+    .preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FACC15;
+      color: #111827;
+      border: 2px solid #111827;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      box-shadow: 2.5px 2.5px 0px #111827;
+    }
+    .preview-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+    }
+    .preview-subtitle {
+      font-size: 13.5px;
+      color: #94A3B8;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      max-width: 420px;
+      line-height: 1.4;
+    }
+    
+    /* Device Width Switcher */
+    .device-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .device-btn {
+      background: #1E293B;
+      color: #CBD5E1;
+      border: 2px solid #334155;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .device-btn:hover, .device-btn.active {
+      background: #38BDF8;
+      color: #111827;
+      border-color: #111827;
+      box-shadow: 2px 2px 0px #111827;
+      transform: translateY(-1px);
+    }
+
+    /* ═══ PRIMARY ACTION BAR: IMAGE GENERATOR BUTTONS ═══ */
+    .generator-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+      width: 100%;
+    }
+    .btn-generate {
+      background: #FACC15;
+      color: #111827;
+      border: 3px solid #111827;
+      padding: 11px 22px;
+      border-radius: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-generate:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111827;
+      background: #FFE033;
+    }
+    .btn-generate:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #111827;
+    }
+
+    .btn-generate-secondary {
+      background: #38BDF8;
+      color: #111827;
+      border: 3px solid #111827;
+      padding: 11px 18px;
+      border-radius: 16px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 13.5px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-generate-secondary:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111827;
+      background: #7DD3FC;
+    }
+    .btn-generate-secondary:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #111827;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       PHONE SCREEN WRAPPER (9:16 VERTICAL STORY POSTER)
+    ═════════════════════════════════════════════════════════════ */
+    .story-wrapper {
+      width: 100%;
+      max-width: 420px;
+      transition: max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      justify-content: center;
+    }
+
+    .story-frame {
+      width: 100%;
+      background: #FFFDF0; /* Cream / Off-White Neo-Brutalist base */
+      border: 4px solid #111827;
+      border-radius: 36px;
+      box-shadow: 10px 10px 0px #111827;
+      padding: 22px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      position: relative;
+      overflow: hidden;
+      animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* Comic Halftone / Dot Grid Background */
+    .story-bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(#FACC15 15%, transparent 16%), radial-gradient(#38BDF8 15%, transparent 16%);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Corner Tape Sticker */
+    .corner-tape {
+      position: absolute;
+      top: 12px;
+      right: -32px;
+      background: #FB7185;
+      color: #111827;
+      font-weight: 900;
+      font-size: 9.5px;
+      padding: 4px 36px;
+      transform: rotate(45deg);
+      border: 2px solid #111827;
+      letter-spacing: 1.2px;
+      box-shadow: 2px 2px 0px rgba(17, 24, 39, 0.3);
+      z-index: 10;
+      user-select: none;
+    }
+
+    /* Floating Hand-Drawn Doodle Stickers */
+    .doodle-star-left {
+      position: absolute;
+      top: 88px;
+      left: 10px;
+      width: 22px;
+      height: 22px;
+      z-index: 3;
+      pointer-events: none;
+      animation: floatDoodle 3.2s ease-in-out infinite alternate;
+    }
+    .doodle-star-right {
+      position: absolute;
+      top: 98px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      z-index: 3;
+      pointer-events: none;
+      animation: floatDoodle 2.8s ease-in-out infinite alternate-reverse;
+    }
+    .doodle-sparkle-bottom {
+      position: absolute;
+      bottom: 84px;
+      right: 14px;
+      width: 18px;
+      height: 18px;
+      z-index: 3;
+      pointer-events: none;
+      animation: floatDoodle 3.5s ease-in-out infinite alternate;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       1. HEADER SECTION (LOGO + OFFICIAL BADGE)
+    ═════════════════════════════════════════════════════════════ */
+    .story-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      padding-right: 18px; /* Safe space from corner tape */
+    }
+    .story-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #FFFFFF;
+      border: 3px solid #111827;
+      padding: 6px 12px;
+      border-radius: 14px;
+      box-shadow: 3.5px 3.5px 0px #111827;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      color: #111827;
+      user-select: none;
+    }
+    .clapper-svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .story-live-pill {
+      background: #EC4899; /* Vibrant Pink Official Badge */
+      color: #FFFFFF;
+      border: 3px solid #111827;
+      padding: 5px 12px;
+      border-radius: 12px;
+      box-shadow: 3.5px 3.5px 0px #111827;
+      font-weight: 900;
+      font-size: 10.5px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transform: rotate(1deg);
+      user-select: none;
+      white-space: nowrap;
+    }
+    .story-live-pill::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #FFF;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulseDot 1.4s ease-in-out infinite;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       2. VICTORY ROYALE HERO BANNER
+    ═════════════════════════════════════════════════════════════ */
+    .story-title-banner {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      margin: 1px 0;
+    }
+    .story-title-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #38BDF8; /* Electric Blue Victory Banner */
+      color: #111827;
+      border: 3.5px solid #111827;
+      padding: 8px 22px;
+      border-radius: 18px;
+      box-shadow: 5px 5px 0px #111827;
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      transform: rotate(-1.5deg);
+      text-transform: uppercase;
+      position: relative;
+    }
+    .banner-sparkle {
+      font-size: 18px;
+      filter: drop-shadow(1px 1px 0px #111827);
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       3. WINNER CHAMPIONSHIP CARD (BRIGHT YELLOW HERO)
+    ═════════════════════════════════════════════════════════════ */
+    .champion-hero-card {
+      background: #FACC15; /* Bright Scoopcast Yellow Winner Card */
+      border: 4px solid #111827;
+      border-radius: 26px;
+      box-shadow: 6px 6px 0px #111827;
+      padding: 18px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .champ-tag {
+      position: absolute;
+      top: -13px;
+      background: #111827;
+      color: #FACC15;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 4px 16px;
+      border-radius: 20px;
+      border: 2px solid #111827;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .champ-avatar-container {
+      position: relative;
+      margin-top: 6px;
+      margin-bottom: 8px;
+    }
+    .champ-crown-sticker {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-6deg);
+      font-size: 34px;
+      filter: drop-shadow(2px 2px 0px #111827);
+      z-index: 4;
+      animation: crownBounce 2.5s ease-in-out infinite;
+    }
+    .champ-avatar-ring {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 4px solid #111827;
+      box-shadow: 5px 5px 0px #111827;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .champ-avatar-ring img {
+      width: 90%;
+      height: 90%;
+      object-fit: cover;
+    }
+    .champ-player-name {
+      font-size: 32px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .champ-score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #111827;
+      color: #FFFDF0;
+      border: 3px solid #111827;
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      box-shadow: 3.5px 3.5px 0px rgba(0,0,0,0.25);
+    }
+    .champ-score-badge span {
+      color: #FACC15;
+      font-size: 16px;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       4. RUNNER-UP LEADERBOARD (GLASS NEOBRUTALISM)
+    ═════════════════════════════════════════════════════════════ */
+    .story-standings {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3.5px solid #111827;
+      border-radius: 22px;
+      box-shadow: 5px 5px 0px #111827;
+      padding: 12px 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .standings-head-tag {
+      font-size: 11px;
+      font-weight: 900;
+      color: #64748B;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 4px;
+    }
+    .standings-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .player-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFDF5;
+      border: 2.5px solid #111827;
+      border-radius: 14px;
+      padding: 7px 12px;
+      box-shadow: 3px 3px 0px #111827;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .player-row:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px #111827;
+    }
+    .row-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .row-rank-badge {
+      padding: 3px 8px;
+      min-width: 42px;
+      height: 26px;
+      border-radius: 8px;
+      background: #F1F5F9;
+      border: 2px solid #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-weight: 900;
+      font-size: 12px;
+      color: #111827;
+      flex-shrink: 0;
+      box-shadow: 1.5px 1.5px 0px #111827;
+    }
+    .rank-silver {
+      background: #E2E8F0;
+    }
+    .rank-bronze {
+      background: #FED7AA;
+    }
+    
+    .row-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #FEF08A;
+      border: 2px solid #111827;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .row-avatar img {
+      width: 92%;
+      height: 92%;
+      object-fit: cover;
+    }
+    .row-player-name {
+      font-weight: 900;
+      font-size: 15px;
+      color: #111827;
+      letter-spacing: -0.2px;
+    }
+    .row-points-pill {
+      background: #FFFFFF;
+      border: 2px solid #111827;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      color: #111827;
+      box-shadow: 2px 2px 0px #111827;
+      white-space: nowrap;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       5. CTA SECTION (MINT CHALLENGE STICKER)
+    ═════════════════════════════════════════════════════════════ */
+    .story-challenge-pill {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .challenge-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #A7F3D0; /* Vibrant Mint CTA Section */
+      border: 3px solid #111827;
+      color: #064E3B;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 7px 18px;
+      border-radius: 30px;
+      box-shadow: 4px 4px 0px #111827;
+      transform: rotate(1deg);
+      user-select: none;
+      animation: stickerPulse 3s ease-in-out infinite;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       6. DARK NAVY FOOTER (SCOOPCAST.ME BRANDING BANNER)
+    ═════════════════════════════════════════════════════════════ */
+    .story-footer-banner {
+      background: #111827; /* Dark Navy Footer */
+      color: #FFFDF0;
+      border: 3.5px solid #111827;
+      border-radius: 22px;
+      box-shadow: 5px 5px 0px #FACC15; /* Vibrant Yellow Offset Shadow */
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .footer-action-call {
+      font-size: 10px;
+      font-weight: 900;
+      color: #94A3B8;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .footer-domain {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 23px;
+      font-weight: 900;
+      color: #FACC15;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .footer-cta-pill {
+      background: #FACC15;
+      color: #111827;
+      border: 2.5px solid #111827;
+      padding: 8px 16px;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 12px;
+      box-shadow: 3px 3px 0px #000000;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .footer-cta-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px #000000;
+      background: #FFE033;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       IMAGE GENERATOR MODAL (PREVIEW & DOWNLOAD)
+    ═════════════════════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFDF0;
+      border: 4px solid #111827;
+      border-radius: 30px;
+      box-shadow: 12px 12px 0px #111827;
+      max-width: 480px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: #FACC15;
+      border-bottom: 3.5px solid #111827;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .modal-close-btn {
+      background: #111827;
+      color: #FFF;
+      border: 2px solid #111827;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .modal-close-btn:hover {
+      background: #FB7185;
+      color: #111827;
+      transform: rotate(90deg);
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      gap: 14px;
+    }
+
+    .preview-img-container {
+      width: 100%;
+      max-width: 320px;
+      background: #0A0E17;
+      border: 3.5px solid #111827;
+      border-radius: 20px;
+      box-shadow: 5px 5px 0px #111827;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+    }
+    .preview-img-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      display: block;
+    }
+
+    .modal-specs-badge {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #475569;
+      background: #E2E8F0;
+      border: 2px solid #111827;
+      padding: 4px 12px;
+      border-radius: 12px;
+      box-shadow: 2px 2px 0px #111827;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-modal-action {
+      flex: 1;
+      min-width: 130px;
+      background: #111827;
+      color: #FFFDF0;
+      border: 2.5px solid #111827;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 3px 3px 0px #FACC15;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-modal-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px #FACC15;
+      background: #1E293B;
+    }
+    .btn-modal-action.primary {
+      background: #FACC15;
+      color: #111827;
+      box-shadow: 3px 3px 0px #111827;
+    }
+    .btn-modal-action.primary:hover {
+      background: #FFE033;
+      box-shadow: 4px 4px 0px #111827;
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       KEYFRAME ANIMATIONS
+    ═════════════════════════════════════════════════════════════ */
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0px) scale(1);
+      }
+    }
+    @keyframes floatDoodle {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-6px) rotate(12deg); }
+    }
+    @keyframes crownBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0) rotate(-6deg); }
+      50% { transform: translateX(-50%) translateY(-5px) rotate(-2deg); }
+    }
+    @keyframes stickerPulse {
+      0%, 100% { transform: rotate(1deg) scale(1); }
+      50% { transform: rotate(-0.5deg) scale(1.02); }
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ═════════════════════════════════════════════════════════════
+       MOBILE & ANDROID OPTIMIZATIONS (360px, 390px, 412px)
+    ═════════════════════════════════════════════════════════════ */
+    @media (max-width: 440px) {
+      body {
+        padding: 14px 10px 48px;
+      }
+      .story-frame {
+        border-radius: 28px;
+        padding: 18px 14px 18px;
+        gap: 12px;
+        box-shadow: 6px 6px 0px #111827;
+      }
+      .story-title-badge {
+        font-size: 22px;
+        padding: 6px 18px;
+      }
+      .champ-player-name {
+        font-size: 28px;
+      }
+      .champ-avatar-ring {
+        width: 82px;
+        height: 82px;
+      }
+      .champ-score-badge {
+        font-size: 13.5px;
+        padding: 6px 16px;
+      }
+      .footer-domain {
+        font-size: 20px;
+      }
+      .footer-cta-pill {
+        padding: 7px 13px;
+        font-size: 11px;
+      }
+      .btn-generate {
+        width: 100%;
+        justify-content: center;
+      }
+      .btn-generate-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       HEADER & PREVIEW CONTROLS
+  ═════════════════════════════════════════════════════════════ -->
+  <div class="preview-controls">
+    <div class="preview-badge">✨ Neo-Brutalism Instagram Story UI</div>
+    <h1 class="preview-title">ScoopCast Result Card</h1>
+    <p class="preview-subtitle">Optimized for Android viewports (360px–412px) & 9:16 Instagram Share stories</p>
+    
+    <!-- Viewport Switcher -->
+    <div class="device-pills">
+      <button class="device-btn active" onclick="setDeviceWidth(420, this)">Story Mode (420px)</button>
+      <button class="device-btn" onclick="setDeviceWidth(360, this)">Galaxy S (360px)</button>
+      <button class="device-btn" onclick="setDeviceWidth(390, this)">iPhone (390px)</button>
+      <button class="device-btn" onclick="setDeviceWidth(412, this)">Pixel 8 (412px)</button>
+    </div>
+
+    <!-- PRIMARY GENERATOR BUTTONS -->
+    <div class="generator-actions">
+      <button class="btn-generate" onclick="generateStoryPoster()">
+        <span>📸</span> GENERATE STORY IMAGE (SAME TO SAME)
+      </button>
+      <button class="btn-generate-secondary" onclick="captureDomSnapshot()">
+        <span>⚡</span> SNAPSHOT VIEW (html2canvas)
+      </button>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       INSTAGRAM STORY (9:16) NEO-BRUTALISM SCOREBOARD
+  ═════════════════════════════════════════════════════════════ -->
+  <div class="story-wrapper" id="storyWrapper">
+    <div class="story-frame" id="storyCard">
+      <!-- Halftone Comic Pattern -->
+      <div class="story-bg-pattern"></div>
+      
+      <!-- Top Right Corner Tape -->
+      <div class="corner-tape">CINEMA QUIZ</div>
+
+      <!-- Playful Hand-Drawn Doodle Stickers -->
+      <svg class="doodle-star-left" viewBox="0 0 24 24" fill="#FACC15" stroke="#111827" stroke-width="2.5" stroke-linejoin="round">
+        <polygon points="12,2 15,9 22,12 15,15 12,22 9,15 2,12 9,9"/>
+      </svg>
+      <svg class="doodle-star-right" viewBox="0 0 24 24" fill="#38BDF8" stroke="#111827" stroke-width="2.5" stroke-linejoin="round">
+        <polygon points="12,2 15,9 22,12 15,15 12,22 9,15 2,12 9,9"/>
+      </svg>
+      <svg class="doodle-sparkle-bottom" viewBox="0 0 24 24" fill="#EC4899" stroke="#111827" stroke-width="2.5" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="6"/>
+      </svg>
+
+      <!-- 1. TOP HEADER BAR -->
+      <div class="story-header">
+        <div class="story-logo-badge">
+          <svg class="clapper-svg" viewBox="0 0 32 32">
+            <rect x="4" y="12" width="24" height="16" rx="3" fill="#FACC15" stroke="#111827" stroke-width="2.5"/>
+            <polygon points="18,20 18,24 22,22" fill="#111827"/>
+            <rect x="4" y="6" width="24" height="5.5" rx="1.5" fill="#111827"/>
+            <polygon points="8,6 12,6 8,11.5 4,11.5" fill="#FFF"/>
+            <polygon points="15,6 19,6 15,11.5 11,11.5" fill="#FFF"/>
+          </svg>
+          <span>GUESS THE FRAME</span>
+        </div>
+        <div class="story-live-pill">OFFICIAL RESULT</div>
+      </div>
+
+      <!-- 2. VICTORY ROYALE HERO BANNER -->
+      <div class="story-title-banner">
+        <div class="story-title-badge">
+          <span class="banner-sparkle">⚡</span>
+          <span>VICTORY ROYALE!</span>
+          <span class="banner-sparkle">⚡</span>
+        </div>
+      </div>
+
+      <!-- 3. CHAMPIONSHIP HERO CARD (BRIGHT YELLOW) -->
+      <div class="champion-hero-card">
+        <div class="champ-tag">
+          <span>🏆</span> MATCH WINNER
+        </div>
+        <div class="champ-avatar-container">
+          <div class="champ-crown-sticker">👑</div>
+          <div class="champ-avatar-ring">
+            <img src="avvtar/aman.svg" alt="Aman" id="avatarAman" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799863/scoopcast/avvtar/aman.svg'">
+          </div>
+        </div>
+        <div class="champ-player-name">AMAN</div>
+        <div class="champ-score-badge">
+          SCORE: <span>30 POINTS</span> ⚡
+        </div>
+      </div>
+
+      <!-- 4. RUNNER-UP LEADERBOARD (GLASS NEOBRUTALISM) -->
+      <div class="story-standings">
+        <div class="standings-head-tag">
+          <span>RUNNERS UP</span>
+          <span>FINAL SCORE</span>
+        </div>
+        <div class="standings-rows">
+          <!-- Rank 2: Aziz -->
+          <div class="player-row">
+            <div class="row-left">
+              <div class="row-rank-badge rank-silver">🥈 #2</div>
+              <div class="row-avatar">
+                <img src="avvtar/aziz.svg" alt="Aziz" id="avatarAziz" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg'">
+              </div>
+              <span class="row-player-name">AZIZ</span>
+            </div>
+            <span class="row-points-pill">18 PTS</span>
+          </div>
+
+          <!-- Rank 3: Amish -->
+          <div class="player-row">
+            <div class="row-left">
+              <div class="row-rank-badge rank-bronze">🥉 #3</div>
+              <div class="row-avatar">
+                <img src="avvtar/amish.svg" alt="Amish" id="avatarAmish" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg'">
+              </div>
+              <span class="row-player-name">AMISH</span>
+            </div>
+            <span class="row-points-pill">16 PTS</span>
+          </div>
+
+          <!-- Rank 4: Vish -->
+          <div class="player-row">
+            <div class="row-left">
+              <div class="row-rank-badge">#4</div>
+              <div class="row-avatar">
+                <img src="avvtar/vish.svg" alt="Vish" id="avatarVish" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799925/scoopcast/avvtar/vish.svg'">
+              </div>
+              <span class="row-player-name">VISH</span>
+            </div>
+            <span class="row-points-pill">12 PTS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. CTA SECTION (MINT CHALLENGE STICKER) -->
+      <div class="story-challenge-pill">
+        <span class="challenge-text">🔥 CAN YOU BEAT THIS SCORE? 👀</span>
+      </div>
+
+      <!-- 6. PROMINENT SCOOPCAST.ME BRANDING FOOTER -->
+      <div class="story-footer-banner">
+        <div class="footer-left">
+          <div class="footer-action-call">
+            <span>⚡</span> PLAY FREE ON ANY BROWSER
+          </div>
+          <div class="footer-domain">scoopcast.me</div>
+        </div>
+        <button class="footer-cta-pill" onclick="generateStoryPoster()">
+          PLAY NOW ↗
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       IMAGE PREVIEW & DOWNLOAD MODAL
+  ═════════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="imageModal" onclick="handleOverlayClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><span>🎉</span> Scorecard Story Image Ready!</h3>
+        <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-img-container">
+          <img id="generatedImagePreview" alt="ScoopCast Scorecard Preview">
+        </div>
+        <div class="modal-specs-badge" id="imageSpecsBadge">
+          📐 1080 × 1920 (9:16 Instagram Story) • High-Res PNG
+        </div>
+        <div class="modal-actions">
+          <a id="downloadImageLink" class="btn-modal-action primary" download="scoopcast-story-scorecard.png">
+            <span>📥</span> Download PNG
+          </a>
+          <button class="btn-modal-action" onclick="copyImageToClipboard()">
+            <span>📋</span> Copy Image
+          </button>
+          <button class="btn-modal-action" onclick="shareNativeImage()">
+            <span>📲</span> Share Story
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════
+       IMAGE GENERATOR ENGINE SCRIPT (SAME-TO-SAME CANVAS ENGINE)
+  ═════════════════════════════════════════════════════════════ -->
+  <script src="avvtar/avatar_data.js"></script>
+  <script>
+    let currentGeneratedBlob = null;
+    let currentDataUrl = null;
+
+    // Viewport Width Switcher
+    function setDeviceWidth(width, btn) {
+      document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('storyWrapper').style.maxWidth = width + 'px';
+    }
+
+    // Helper: Draw rounded rectangle
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    // Helper: Draw Neo-brutalist box with hard shadow
+    function drawShadowBox(ctx, x, y, w, h, r, fill, stroke, strokeW, offX, offY, shadowColor = '#111827') {
+      if (offX || offY) {
+        ctx.fillStyle = shadowColor;
+        drawRoundRect(ctx, x + offX, y + offY, w, h, r);
+        ctx.fill();
+      }
+      ctx.fillStyle = fill;
+      drawRoundRect(ctx, x, y, w, h, r);
+      ctx.fill();
+      if (stroke && strokeW) {
+        ctx.lineWidth = strokeW;
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+    }
+
+    // Helper: Asynchronously load an avatar safely (preferring zero-taint Data URIs)
+    function loadAvatarImage(key, fallbackSrc) {
+      return new Promise((resolve) => {
+        const dataUri = window.AVATAR_DATA_MAP && window.AVATAR_DATA_MAP[key];
+        const src = dataUri || fallbackSrc;
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          if (fallbackSrc && src !== fallbackSrc) {
+            const fallback = new Image();
+            fallback.onload = () => resolve(fallback);
+            fallback.onerror = () => resolve(null);
+            fallback.src = fallbackSrc;
+          } else {
+            resolve(null);
+          }
+        };
+        img.src = src;
+      });
+    }
+
+    // ═══ CORE: SAME-TO-SAME HIGH RESOLUTION STORY GENERATOR (1080 × 1920) ═══
+    async function generateStoryPoster() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext('2d');
+
+      // Preload avatars using taint-free data URIs
+      const [imgAman, imgAziz, imgAmish, imgVish] = await Promise.all([
+        loadAvatarImage('aman', 'avvtar/aman.svg'),
+        loadAvatarImage('aziz', 'avvtar/aziz.svg'),
+        loadAvatarImage('amish', 'avvtar/amish.svg'),
+        loadAvatarImage('vish', 'avvtar/vish.svg')
+      ]);
+
+      // 1. Dark Background Outer Canvas
+      ctx.fillStyle = '#0A0E17';
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // 2. Main Story Poster Card Container
+      const cardX = 60;
+      const cardY = 60;
+      const cardW = 960;
+      const cardH = 1800;
+      const cardR = 54;
+
+      // Hard Shadow
+      ctx.fillStyle = '#111827';
+      drawRoundRect(ctx, cardX + 16, cardY + 16, cardW, cardH, cardR);
+      ctx.fill();
+
+      // Poster Fill & Border
+      ctx.save();
+      drawRoundRect(ctx, cardX, cardY, cardW, cardH, cardR);
+      ctx.clip();
+
+      ctx.fillStyle = '#FFFDF0';
+      ctx.fillRect(cardX, cardY, cardW, cardH);
+
+      // Halftone dot pattern
+      ctx.fillStyle = '#FACC15';
+      ctx.globalAlpha = 0.35;
+      for (let px = cardX + 30; px < cardX + cardW; px += 36) {
+        for (let py = cardY + 30; py < cardY + cardH; py += 36) {
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1.0;
+
+      // Outer Card Thick Border
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = '#111827';
+      ctx.stroke();
+
+      // Top Corner Tape
+      ctx.save();
+      ctx.translate(cardX + cardW - 40, cardY + 50);
+      ctx.rotate(45 * Math.PI / 180);
+      drawShadowBox(ctx, -100, -22, 200, 44, 4, '#FB7185', '#111827', 3.5, 3, 3);
+      ctx.fillStyle = '#111827';
+      ctx.font = '900 16px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('CINEMA QUIZ', 0, 7);
+      ctx.restore();
+
+      // Floating Doodle Stars
+      drawDoodleStar(ctx, cardX + 50, cardY + 140, 24, '#FACC15');
+      drawDoodleStar(ctx, cardX + cardW - 70, cardY + 160, 20, '#38BDF8');
+
+      // ── 1. HEADER SECTION ──
+      // Clapperboard Logo Badge
+      drawShadowBox(ctx, cardX + 45, cardY + 55, 380, 72, 20, '#FFFFFF', '#111827', 4.5, 6, 6);
+      
+      // Clapper Mini Icon
+      ctx.fillStyle = '#FACC15';
+      drawRoundRect(ctx, cardX + 68, cardY + 70, 42, 38, 6);
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#111827';
+      ctx.stroke();
+      ctx.fillStyle = '#111827';
+      drawRoundRect(ctx, cardX + 68, cardY + 70, 42, 14, 3);
+      ctx.fill();
+
+      ctx.fillStyle = '#111827';
+      ctx.font = '900 22px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('GUESS THE FRAME', cardX + 124, cardY + 101);
+
+      // Official Result Pill
+      drawShadowBox(ctx, cardX + cardW - 350, cardY + 55, 275, 72, 20, '#EC4899', '#111827', 4.5, 6, 6);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(cardX + cardW - 315, cardY + 91, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = '900 19px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('OFFICIAL RESULT', cardX + cardW - 295, cardY + 98);
+
+      // ── 2. VICTORY ROYALE BANNER ──
+      ctx.save();
+      ctx.translate(cardX + cardW / 2, cardY + 190);
+      ctx.rotate(-1.5 * Math.PI / 180);
+      drawShadowBox(ctx, -300, -42, 600, 84, 26, '#38BDF8', '#111827', 5, 8, 8);
+      ctx.fillStyle = '#111827';
+      ctx.font = '900 38px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('⚡ VICTORY ROYALE! ⚡', 0, 14);
+      ctx.restore();
+
+      // ── 3. CHAMPIONSHIP HERO CARD (BRIGHT YELLOW) ──
+      const champY = cardY + 280;
+      drawShadowBox(ctx, cardX + 45, champY, cardW - 90, 520, 36, '#FACC15', '#111827', 5.5, 10, 10);
+
+      // Champion Match Winner Tag
+      drawShadowBox(ctx, cardX + cardW / 2 - 140, champY - 20, 280, 44, 22, '#111827', '#111827', 3, 3, 3);
+      ctx.fillStyle = '#FACC15';
+      ctx.font = '900 16px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🏆 MATCH WINNER', cardX + cardW / 2, champY + 9);
+
+      // Crown
+      ctx.font = '54px sans-serif';
+      ctx.fillText('👑', cardX + cardW / 2, champY + 80);
+
+      // Winner Avatar Ring
+      const avRingX = cardX + cardW / 2;
+      const avRingY = champY + 195;
+      const avRingR = 75;
+
+      // Hard shadow for ring
+      ctx.fillStyle = '#111827';
+      ctx.beginPath();
+      ctx.arc(avRingX + 7, avRingY + 7, avRingR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Ring white base & border
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(avRingX, avRingY, avRingR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 5.5;
+      ctx.strokeStyle = '#111827';
+      ctx.stroke();
+
+      // Draw Avatar Image inside Ring
+      if (imgAman) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(avRingX, avRingY, avRingR - 3, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(imgAman, avRingX - avRingR, avRingY - avRingR, avRingR * 2, avRingR * 2);
+        ctx.restore();
+      }
+
+      // Winner Player Name
+      ctx.fillStyle = '#111827';
+      ctx.font = '900 52px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('AMAN', cardX + cardW / 2, champY + 345);
+
+      // Score Badge Pill
+      drawShadowBox(ctx, cardX + cardW / 2 - 220, champY + 380, 440, 84, 42, '#111827', '#111827', 4, 5, 5);
+      ctx.fillStyle = '#FFFDF0';
+      ctx.font = '900 28px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('SCORE: ', cardX + cardW / 2 - 10, champY + 433);
+      ctx.fillStyle = '#FACC15';
+      ctx.font = '900 32px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('30 POINTS ⚡', cardX + cardW / 2 - 5, champY + 433);
+
+      // ── 4. RUNNER-UP LEADERBOARD (GLASS NEOBRUTALISM) ──
+      const standY = cardY + 845;
+      drawShadowBox(ctx, cardX + 45, standY, cardW - 90, 560, 32, 'rgba(255, 255, 255, 0.94)', '#111827', 5, 8, 8);
+
+      // Head Tag
+      ctx.fillStyle = '#64748B';
+      ctx.font = '900 17px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('RUNNERS UP', cardX + 80, standY + 45);
+      ctx.textAlign = 'right';
+      ctx.fillText('FINAL SCORE', cardX + cardW - 80, standY + 45);
+
+      // Runners rows data
+      const runners = [
+        { rank: '🥈 #2', medal: '#E2E8F0', name: 'AZIZ', score: '18 PTS', img: imgAziz },
+        { rank: '🥉 #3', medal: '#FED7AA', name: 'AMISH', score: '16 PTS', img: imgAmish },
+        { rank: '#4', medal: '#F1F5F9', name: 'VISH', score: '12 PTS', img: imgVish }
+      ];
+
+      runners.forEach((r, idx) => {
+        const rowY = standY + 70 + idx * 115;
+        drawShadowBox(ctx, cardX + 75, rowY, cardW - 150, 95, 20, '#FFFDF5', '#111827', 3.5, 4, 4);
+
+        // Rank Badge
+        drawShadowBox(ctx, cardX + 95, rowY + 18, 70, 58, 12, r.medal, '#111827', 3, 2, 2);
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 20px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(r.rank, cardX + 130, rowY + 54);
+
+        // Avatar
+        const rAvX = cardX + 215;
+        const rAvY = rowY + 47;
+        const rAvR = 30;
+
+        ctx.fillStyle = '#FEF08A';
+        ctx.beginPath();
+        ctx.arc(rAvX, rAvY, rAvR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#111827';
+        ctx.stroke();
+
+        if (r.img) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(rAvX, rAvY, rAvR - 2, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(r.img, rAvX - rAvR, rAvY - rAvR, rAvR * 2, rAvR * 2);
+          ctx.restore();
+        }
+
+        // Name
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 30px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(r.name, cardX + 265, rowY + 57);
+
+        // Score Pill
+        drawShadowBox(ctx, cardX + cardW - 250, rowY + 22, 140, 52, 26, '#FFFFFF', '#111827', 3, 3, 3);
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 21px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(r.score, cardX + cardW - 180, rowY + 55);
+      });
+
+      // ── 5. CHALLENGE STICKER ──
+      ctx.save();
+      ctx.translate(cardX + cardW / 2, cardY + 1465);
+      ctx.rotate(1 * Math.PI / 180);
+      drawShadowBox(ctx, -270, -32, 540, 64, 32, '#A7F3D0', '#111827', 4, 6, 6);
+      ctx.fillStyle = '#064E3B';
+      ctx.font = '900 24px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🔥 CAN YOU BEAT THIS SCORE? 👀', 0, 10);
+      ctx.restore();
+
+      // ── 6. DARK NAVY BRANDING FOOTER ──
+      const footY = cardY + 1555;
+      drawShadowBox(ctx, cardX + 45, footY, cardW - 90, 185, 32, '#111827', '#111827', 5, 8, 8, '#FACC15');
+
+      // Micro call
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '900 16px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('⚡ PLAY FREE ON ANY BROWSER', cardX + 85, footY + 60);
+
+      // Domain
+      ctx.fillStyle = '#FACC15';
+      ctx.font = '900 48px "Space Grotesk", sans-serif';
+      ctx.fillText('scoopcast.me', cardX + 85, footY + 125);
+
+      // Action Button
+      drawShadowBox(ctx, cardX + cardW - 305, footY + 55, 220, 75, 20, '#FACC15', '#111827', 4, 5, 5, '#000000');
+      ctx.fillStyle = '#111827';
+      ctx.font = '900 24px "Space Grotesk", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('PLAY NOW ↗', cardX + cardW - 195, footY + 102);
+
+      ctx.restore(); // Restore clip
+
+      // Convert canvas to Data URL & Blob
+      return new Promise((resolve) => {
+        currentDataUrl = canvas.toDataURL('image/png');
+        canvas.toBlob((blob) => {
+          currentGeneratedBlob = blob;
+          openModal(currentDataUrl, '📐 1080 × 1920 (9:16 Instagram Story) • High-Res PNG');
+          resolve(currentDataUrl);
+        }, 'image/png');
+      });
+    }
+
+    // Helper: Draw 4-pointed sparkle star
+    function drawDoodleStar(ctx, cx, cy, size, color) {
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const a = (i * Math.PI) / 2;
+        const x1 = cx + Math.cos(a) * size;
+        const y1 = cy + Math.sin(a) * size;
+        const aMid = a + Math.PI / 4;
+        const x2 = cx + Math.cos(aMid) * (size * 0.35);
+        const y2 = cy + Math.sin(aMid) * (size * 0.35);
+        if (i === 0) ctx.moveTo(x1, y1);
+        else ctx.lineTo(x1, y1);
+        ctx.lineTo(x2, y2);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // ═══ ALTERNATIVE: SNAPSHOT DOM USING HTML2CANVAS ═══
+    async function captureDomSnapshot() {
+      const card = document.getElementById('storyCard');
+      if (!card) return;
+
+      try {
+        if (typeof html2canvas === 'undefined') {
+          alert('Generating using high-res canvas...');
+          generateStoryPoster();
+          return;
+        }
+
+        const canvas = await html2canvas(card, {
+          scale: 2.5,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null
+        });
+
+        currentDataUrl = canvas.toDataURL('image/png');
+        canvas.toBlob((blob) => {
+          currentGeneratedBlob = blob;
+          openModal(currentDataUrl, `📐 ${canvas.width} × ${canvas.height} • Transparent Card Snapshot`);
+        }, 'image/png');
+      } catch (err) {
+        console.error('html2canvas error:', err);
+        generateStoryPoster();
+      }
+    }
+
+    // ═══ MODAL HANDLERS ═══
+    function openModal(dataUrl, specs) {
+      document.getElementById('generatedImagePreview').src = dataUrl;
+      document.getElementById('downloadImageLink').href = dataUrl;
+      document.getElementById('downloadImageLink').download = 'scoopcast-winner-scorecard.png';
+      document.getElementById('imageSpecsBadge').innerText = specs;
+      document.getElementById('imageModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('imageModal').classList.remove('active');
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target.id === 'imageModal') {
+        closeModal();
+      }
+    }
+
+    // Copy PNG image to system clipboard
+    async function copyImageToClipboard() {
+      if (!currentGeneratedBlob) return;
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': currentGeneratedBlob })
+        ]);
+        alert('✅ Image copied to clipboard! You can paste it into Instagram, WhatsApp, Discord, or Figma.');
+      } catch (err) {
+        console.error('Clipboard copy failed:', err);
+        alert('📋 Image URL copied! (Direct image copy requires HTTPS permission)');
+      }
+    }
+
+    // Native mobile share
+    async function shareNativeImage() {
+      if (!currentGeneratedBlob) return;
+      if (navigator.share && navigator.canShare) {
+        const file = new File([currentGeneratedBlob], 'scoopcast-story.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: 'ScoopCast Guess The Frame — Winner Result',
+              text: 'Aman won with 30 points! Can you beat this score on scoopcast.me?',
+              files: [file]
+            });
+            return;
+          } catch (err) {
+            console.log('Share canceled or failed:', err);
+          }
+        }
+      }
+      document.getElementById('downloadImageLink').click();
+    }
+
+    // Auto-trigger if query param ?auto=1 is present (for testing/automation)
+    if (new URLSearchParams(window.location.search).get('auto') === '1') {
+      window.addEventListener('load', () => {
+        setTimeout(generateStoryPoster, 300);
+      });
+    }
+  </script>
+
+</body>
+</html>

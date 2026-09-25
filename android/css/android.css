@@ -2622,7 +2622,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
 .share-preview-img {
   width: 100%;
   height: auto;
-  max-height: 270px;
+  max-height: min(54vh, 420px);
   object-fit: contain;
   display: block;
 }
@@ -2635,7 +2635,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
 }
 .share-modal-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -2646,11 +2646,11 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   border-radius: 12px;
   box-shadow: 4px 4px 0px #111827;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
   font-family: inherit;
   transition: transform 0.1s, box-shadow 0.1s;
@@ -2667,6 +2667,10 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
 .btn-action-share {
   background: #8B5CF6;
   color: #FFFFFF;
+}
+.btn-action-copy {
+  background: #FACC15;
+  color: #111827;
 }
 .btn-action-download {
   background: #10B981;

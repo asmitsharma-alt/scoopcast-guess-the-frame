@@ -76,6 +76,7 @@
   <script defer src="/_vercel/speed-insights/script.js"></script>
   <script defer src="/js/avatars-data.js"></script>
   <script defer src="/js/avatar-picker.js"></script>
+  <script src="avvtar/avatar_data.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
@@ -12388,7 +12389,7 @@
     .share-preview-img {
       width: 100%;
       height: auto;
-      max-height: 270px;
+      max-height: min(60vh, 480px);
       object-fit: contain;
       display: block;
     }
@@ -12401,7 +12402,7 @@
     }
     .share-modal-actions {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
       box-sizing: border-box;
     }
@@ -12412,11 +12413,11 @@
       border-radius: 12px;
       box-shadow: 4px 4px 0px #111827;
       font-weight: 900;
-      font-size: 15px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
       font-family: inherit;
       transition: transform 0.1s, box-shadow 0.1s;
@@ -12433,6 +12434,10 @@
     .btn-action-share {
       background: #8B5CF6;
       color: #FFFFFF;
+    }
+    .btn-action-copy {
+      background: #FACC15;
+      color: #111827;
     }
     .btn-action-download {
       background: #10B981;
@@ -14723,6 +14728,10 @@
           <button type="button" id="btnModalShare" class="share-action-btn btn-action-share" onclick="ScorecardShare.share();">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
             <span>SHARE</span>
+          </button>
+          <button type="button" id="btnModalCopy" class="share-action-btn btn-action-copy" onclick="ScorecardShare.copy();">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>COPY</span>
           </button>
           <button type="button" id="btnModalDownload" class="share-action-btn btn-action-download" onclick="ScorecardShare.download();">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
@@ -20193,207 +20202,390 @@
         ctx.closePath();
       },
 
-      generateCanvas(players) {
+      drawShadowBox(ctx, x, y, w, h, r, fill, stroke, strokeW, offX, offY, shadowColor = '#111827') {
+        if (offX || offY) {
+          ctx.fillStyle = shadowColor;
+          this.roundRect(ctx, x + offX, y + offY, w, h, r);
+          ctx.fill();
+        }
+        ctx.fillStyle = fill;
+        this.roundRect(ctx, x, y, w, h, r);
+        ctx.fill();
+        if (stroke && strokeW) {
+          ctx.lineWidth = strokeW;
+          ctx.strokeStyle = stroke;
+          ctx.stroke();
+        }
+      },
+
+      drawDoodleStar(ctx, cx, cy, size, color) {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#111827';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const a = (i * Math.PI) / 2;
+          const x1 = cx + Math.cos(a) * size;
+          const y1 = cy + Math.sin(a) * size;
+          const aMid = a + Math.PI / 4;
+          const x2 = cx + Math.cos(aMid) * (size * 0.35);
+          const y2 = cy + Math.sin(aMid) * (size * 0.35);
+          if (i === 0) ctx.moveTo(x1, y1);
+          else ctx.lineTo(x1, y1);
+          ctx.lineTo(x2, y2);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      },
+
+      loadAvatar(player) {
+        return new Promise((resolve) => {
+          const rawAv = (player && player.avatar ? String(player.avatar) : 'aman').toLowerCase().trim();
+          let key = 'aman';
+          if (rawAv.includes('aziz')) key = 'aziz';
+          else if (rawAv.includes('amish')) key = 'amish';
+          else if (rawAv.includes('vish')) key = 'vish';
+          else if (rawAv.includes('aman')) key = 'aman';
+
+          const dataUri = window.AVATAR_DATA_MAP && window.AVATAR_DATA_MAP[key];
+          const fallback = typeof UI !== 'undefined' && UI.getAvatarSrc ? UI.getAvatarSrc(rawAv) : ('avvtar/' + key + '.svg');
+          const src = dataUri || fallback;
+
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => {
+            if (fallback && src !== fallback) {
+              const fb = new Image();
+              fb.onload = () => resolve(fb);
+              fb.onerror = () => resolve(null);
+              fb.src = fallback;
+            } else {
+              resolve(null);
+            }
+          };
+          img.src = src;
+        });
+      },
+
+      async generateCanvas(players) {
         const canvas = document.createElement('canvas');
-        canvas.width = 800;
-        canvas.height = 1020;
+        canvas.width = 1080;
+        canvas.height = 1920;
         const ctx = canvas.getContext('2d');
 
-        // 1. Background
-        ctx.fillStyle = '#FFFDF0';
-        ctx.fillRect(0, 0, 800, 1020);
+        const rawList = players && players.length ? players : (typeof GS !== 'undefined' && GS.players ? GS.players : []);
+        const sorted = [...rawList].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+        const champ = sorted[0] || { name: 'AMAN', score: 30, avatar: 'aman' };
+        const runners = sorted.slice(1, 4);
 
-        // Retro halftone comic dots
-        ctx.fillStyle = '#FDE68A';
-        for (let x = 35; x < 770; x += 32) {
-          for (let y = 35; y < 990; y += 32) {
+        // Preload avatars using taint-free data URIs
+        const [imgChamp, ...imgRunners] = await Promise.all([
+          this.loadAvatar(champ),
+          ...runners.map(r => this.loadAvatar(r))
+        ]);
+
+        // 1. Dark Background Outer Canvas
+        ctx.fillStyle = '#0A0E17';
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        // 2. Main Story Poster Card Container
+        const cardX = 60;
+        const cardY = 60;
+        const cardW = 960;
+        const cardH = 1800;
+        const cardR = 54;
+
+        // Hard Shadow
+        ctx.fillStyle = '#111827';
+        this.roundRect(ctx, cardX + 16, cardY + 16, cardW, cardH, cardR);
+        ctx.fill();
+
+        // Poster Fill & Border
+        ctx.save();
+        this.roundRect(ctx, cardX, cardY, cardW, cardH, cardR);
+        ctx.clip();
+
+        ctx.fillStyle = '#FFFDF0';
+        ctx.fillRect(cardX, cardY, cardW, cardH);
+
+        // Halftone dot pattern
+        ctx.fillStyle = '#FACC15';
+        ctx.globalAlpha = 0.35;
+        for (let px = cardX + 30; px < cardX + cardW; px += 36) {
+          for (let py = cardY + 30; py < cardY + cardH; py += 36) {
             ctx.beginPath();
-            ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+            ctx.arc(px, py, 3, 0, Math.PI * 2);
             ctx.fill();
           }
         }
+        ctx.globalAlpha = 1.0;
 
-        // Outer Frame
+        // Outer Card Thick Border
         ctx.lineWidth = 10;
         ctx.strokeStyle = '#111827';
-        ctx.strokeRect(18, 18, 764, 984);
-
-        // Inner Border
-        ctx.lineWidth = 3.5;
-        ctx.strokeStyle = '#F59E0B';
-        ctx.strokeRect(30, 30, 740, 960);
-
-        // 2. Header
-        ctx.fillStyle = '#EC4899';
-        this.roundRect(ctx, 230, 48, 340, 38, 10);
-        ctx.fill();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#111827';
         ctx.stroke();
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '900 16px "Impact", "Arial Black", sans-serif';
+        // Top Corner Tape
+        ctx.save();
+        ctx.translate(cardX + cardW - 40, cardY + 50);
+        ctx.rotate(45 * Math.PI / 180);
+        this.drawShadowBox(ctx, -100, -22, 200, 44, 4, '#FB7185', '#111827', 3.5, 3, 3);
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 16px "Space Grotesk", sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('🏆 OFFICIAL MATCH SCORECARD', 400, 73);
+        ctx.fillText('CINEMA QUIZ', 0, 7);
+        ctx.restore();
 
-        // Title: GUESS THE FRAME
-        ctx.fillStyle = '#111827';
-        ctx.font = '900 44px "Impact", "Arial Black", sans-serif';
-        ctx.fillText('GUESS THE FRAME', 404, 138);
+        // Floating Doodle Stars
+        this.drawDoodleStar(ctx, cardX + 50, cardY + 140, 24, '#FACC15');
+        this.drawDoodleStar(ctx, cardX + cardW - 70, cardY + 160, 20, '#38BDF8');
+
+        // ── 1. HEADER SECTION ──
+        this.drawShadowBox(ctx, cardX + 45, cardY + 55, 380, 72, 20, '#FFFFFF', '#111827', 4.5, 6, 6);
+        
+        // Clapper Mini Icon
         ctx.fillStyle = '#FACC15';
-        ctx.fillText('GUESS THE FRAME', 400, 135);
-        ctx.lineWidth = 3.5;
-        ctx.strokeStyle = '#111827';
-        ctx.strokeText('GUESS THE FRAME', 400, 135);
-
-        // Subtitle
-        ctx.fillStyle = '#4B5563';
-        ctx.font = '800 14px "Segoe UI", sans-serif';
-        ctx.fillText('SCOOPCAST CINEMA TRIVIA CHALLENGE', 400, 166);
-
-        // Divider
-        ctx.beginPath();
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = '#111827';
-        ctx.moveTo(65, 188);
-        ctx.lineTo(735, 188);
-        ctx.stroke();
-
-        // 3. 1st Place (Champion) Box
-        const sorted = [...(players || [])].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-        const champ = sorted[0] || { name: 'Player 1', score: 0 };
-
-        ctx.fillStyle = '#FEF08A';
-        this.roundRect(ctx, 65, 205, 670, 215, 16);
-        ctx.fill();
-        ctx.lineWidth = 4.5;
-        ctx.strokeStyle = '#111827';
-        ctx.stroke();
-
-        ctx.fillStyle = '#F59E0B';
-        this.roundRect(ctx, 220, 222, 360, 36, 8);
+        this.roundRect(ctx, cardX + 68, cardY + 70, 42, 38, 6);
         ctx.fill();
         ctx.lineWidth = 3;
         ctx.strokeStyle = '#111827';
         ctx.stroke();
-
         ctx.fillStyle = '#111827';
-        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
-        ctx.fillText('🥇 1ST PLACE • CHAMPION 🥇', 400, 247);
-
-        // Winner Name
-        ctx.fillStyle = '#111827';
-        ctx.font = '900 38px "Impact", "Arial Black", sans-serif';
-        const champName = (champ.name || 'PLAYER 1').toUpperCase();
-        ctx.fillText(champName.length > 20 ? champName.slice(0, 19) + '...' : champName, 400, 315);
-
-        // Winner Score Pill
-        ctx.fillStyle = '#10B981';
-        this.roundRect(ctx, 275, 345, 250, 50, 12);
+        this.roundRect(ctx, cardX + 68, cardY + 70, 42, 14, 3);
         ctx.fill();
-        ctx.lineWidth = 3.5;
+
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 22px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('GUESS THE FRAME', cardX + 124, cardY + 101);
+
+        // Official Result Pill
+        this.drawShadowBox(ctx, cardX + cardW - 350, cardY + 55, 275, 72, 20, '#EC4899', '#111827', 4.5, 6, 6);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(cardX + cardW - 315, cardY + 91, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = '900 19px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('OFFICIAL RESULT', cardX + cardW - 295, cardY + 98);
+
+        // ── 2. VICTORY ROYALE BANNER ──
+        ctx.save();
+        ctx.translate(cardX + cardW / 2, cardY + 190);
+        ctx.rotate(-1.5 * Math.PI / 180);
+        this.drawShadowBox(ctx, -300, -42, 600, 84, 26, '#38BDF8', '#111827', 5, 8, 8);
+        ctx.fillStyle = '#111827';
+        ctx.font = '900 38px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚡ VICTORY ROYALE! ⚡', 0, 14);
+        ctx.restore();
+
+        // ── 3. CHAMPIONSHIP HERO CARD (BRIGHT YELLOW) ──
+        const champY = cardY + 280;
+        this.drawShadowBox(ctx, cardX + 45, champY, cardW - 90, 520, 36, '#FACC15', '#111827', 5.5, 10, 10);
+
+        // Champion Match Winner Tag
+        this.drawShadowBox(ctx, cardX + cardW / 2 - 140, champY - 20, 280, 44, 22, '#111827', '#111827', 3, 3, 3);
+        ctx.fillStyle = '#FACC15';
+        ctx.font = '900 16px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏆 MATCH WINNER', cardX + cardW / 2, champY + 9);
+
+        // Crown
+        ctx.font = '54px sans-serif';
+        ctx.fillText('👑', cardX + cardW / 2, champY + 80);
+
+        // Winner Avatar Ring
+        const avRingX = cardX + cardW / 2;
+        const avRingY = champY + 195;
+        const avRingR = 75;
+
+        // Hard shadow for ring
+        ctx.fillStyle = '#111827';
+        ctx.beginPath();
+        ctx.arc(avRingX + 7, avRingY + 7, avRingR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ring white base & border
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(avRingX, avRingY, avRingR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 5.5;
         ctx.strokeStyle = '#111827';
         ctx.stroke();
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
-        ctx.fillText(`${champ.score || 0} POINTS`, 400, 379);
+        // Draw Winner Avatar
+        if (imgChamp) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(avRingX, avRingY, avRingR - 3, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(imgChamp, avRingX - avRingR, avRingY - avRingR, avRingR * 2, avRingR * 2);
+          ctx.restore();
+        }
 
-        // 4. Standings Section
+        // Winner Player Name
         ctx.fillStyle = '#111827';
-        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText('FINAL STANDINGS', 68, 452);
+        ctx.font = '900 52px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        const cName = (champ.name || 'WINNER').toUpperCase();
+        ctx.fillText(cName.length > 16 ? cName.slice(0, 15) + '...' : cName, cardX + cardW / 2, champY + 345);
 
-        const runners = sorted.slice(1, 5);
-        const rowYStarts = [465, 535, 605, 675];
-        const medals = ['🥈 2ND', '🥉 3RD', '4TH', '5TH'];
-        const rowBgs = ['#FFFFFF', '#FFFFFF', '#F8FAFC', '#F8FAFC'];
+        // Score Badge Pill
+        this.drawShadowBox(ctx, cardX + cardW / 2 - 220, champY + 380, 440, 84, 42, '#111827', '#111827', 4, 5, 5);
+        ctx.fillStyle = '#FFFDF0';
+        ctx.font = '900 28px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('SCORE: ', cardX + cardW / 2 - 10, champY + 433);
+        ctx.fillStyle = '#FACC15';
+        ctx.font = '900 32px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${champ.score || 0} POINTS ⚡`, cardX + cardW / 2 - 5, champY + 433);
+
+        // ── 4. RUNNER-UP LEADERBOARD (GLASS NEOBRUTALISM) ──
+        const standY = cardY + 845;
+        this.drawShadowBox(ctx, cardX + 45, standY, cardW - 90, 560, 32, 'rgba(255, 255, 255, 0.94)', '#111827', 5, 8, 8);
+
+        // Head Tag
+        ctx.fillStyle = '#64748B';
+        ctx.font = '900 17px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('RUNNERS UP', cardX + 80, standY + 45);
+        ctx.textAlign = 'right';
+        ctx.fillText('FINAL SCORE', cardX + cardW - 80, standY + 45);
 
         if (runners.length === 0) {
-          ctx.fillStyle = '#FFFFFF';
-          this.roundRect(ctx, 65, 465, 670, 95, 12);
-          ctx.fill();
-          ctx.lineWidth = 3.5;
-          ctx.strokeStyle = '#111827';
-          ctx.stroke();
-
+          // Solo run banner
+          this.drawShadowBox(ctx, cardX + 75, standY + 120, cardW - 150, 160, 20, '#FFFDF5', '#111827', 3.5, 4, 4);
+          ctx.fillStyle = '#111827';
+          ctx.font = '900 28px "Space Grotesk", sans-serif';
           ctx.textAlign = 'center';
+          ctx.fillText('⭐ SOLO CINEMA MASTER ⭐', cardX + cardW / 2, standY + 195);
           ctx.fillStyle = '#64748B';
-          ctx.font = '800 18px "Segoe UI", sans-serif';
-          ctx.fillText('⭐ SOLO CHAMPION RUN • FLAWLESS CINEMA MASTER ⭐', 400, 520);
+          ctx.font = '700 20px "Space Grotesk", sans-serif';
+          ctx.fillText('Invite friends next round to compete on the leaderboard!', cardX + cardW / 2, standY + 235);
         } else {
-          runners.forEach((p, idx) => {
-            const y = rowYStarts[idx];
-            ctx.fillStyle = rowBgs[idx];
-            this.roundRect(ctx, 65, y, 670, 58, 10);
+          const medals = [
+            { rank: '🥈 #2', medal: '#E2E8F0' },
+            { rank: '🥉 #3', medal: '#FED7AA' },
+            { rank: '#4', medal: '#F1F5F9' }
+          ];
+
+          runners.forEach((r, idx) => {
+            const rowY = standY + 70 + idx * 115;
+            this.drawShadowBox(ctx, cardX + 75, rowY, cardW - 150, 95, 20, '#FFFDF5', '#111827', 3.5, 4, 4);
+
+            // Rank Badge
+            const m = medals[idx] || { rank: `#${idx + 2}`, medal: '#F1F5F9' };
+            this.drawShadowBox(ctx, cardX + 95, rowY + 18, 70, 58, 12, m.medal, '#111827', 3, 2, 2);
+            ctx.fillStyle = '#111827';
+            ctx.font = '900 20px "Space Grotesk", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(m.rank, cardX + 130, rowY + 54);
+
+            // Avatar
+            const rAvX = cardX + 215;
+            const rAvY = rowY + 47;
+            const rAvR = 30;
+
+            ctx.fillStyle = '#FEF08A';
+            ctx.beginPath();
+            ctx.arc(rAvX, rAvY, rAvR, 0, Math.PI * 2);
             ctx.fill();
-            ctx.lineWidth = 3.5;
+            ctx.lineWidth = 3;
             ctx.strokeStyle = '#111827';
             ctx.stroke();
 
-            ctx.fillStyle = idx === 0 ? '#475569' : idx === 1 ? '#92400E' : '#64748B';
-            ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
+            const rImg = imgRunners[idx];
+            if (rImg) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(rAvX, rAvY, rAvR - 2, 0, Math.PI * 2);
+              ctx.clip();
+              ctx.drawImage(rImg, rAvX - rAvR, rAvY - rAvR, rAvR * 2, rAvR * 2);
+              ctx.restore();
+            }
+
+            // Name
+            ctx.fillStyle = '#111827';
+            ctx.font = '900 30px "Space Grotesk", sans-serif';
             ctx.textAlign = 'left';
-            ctx.fillText(medals[idx] || `${idx + 2}TH`, 85, y + 36);
+            const rName = (r.name || `Player ${idx + 2}`).toUpperCase();
+            ctx.fillText(rName.length > 15 ? rName.slice(0, 14) + '...' : rName, cardX + 265, rowY + 57);
 
+            // Score Pill
+            this.drawShadowBox(ctx, cardX + cardW - 250, rowY + 22, 140, 52, 26, '#FFFFFF', '#111827', 3, 3, 3);
             ctx.fillStyle = '#111827';
-            ctx.font = '900 20px "Segoe UI", sans-serif';
-            const pName = (p.name || `Player ${idx + 2}`).toUpperCase();
-            ctx.fillText(pName.length > 22 ? pName.slice(0, 21) + '...' : pName, 195, y + 36);
-
-            ctx.textAlign = 'right';
-            ctx.fillStyle = '#111827';
-            ctx.font = '900 20px "Impact", "Arial Black", sans-serif';
-            ctx.fillText(`${p.score || 0} PTS`, 715, y + 37);
+            ctx.font = '900 21px "Space Grotesk", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${r.score || 0} PTS`, cardX + cardW - 180, rowY + 55);
           });
         }
 
-        // 5. Website CTA Banner
-        ctx.fillStyle = '#3B82F6';
-        this.roundRect(ctx, 65, 755, 670, 130, 16);
-        ctx.fill();
-        ctx.lineWidth = 4.5;
-        ctx.strokeStyle = '#111827';
-        ctx.stroke();
-
+        // ── 5. CHALLENGE STICKER ──
+        ctx.save();
+        ctx.translate(cardX + cardW / 2, cardY + 1465);
+        ctx.rotate(1 * Math.PI / 180);
+        this.drawShadowBox(ctx, -270, -32, 540, 64, 32, '#A7F3D0', '#111827', 4, 6, 6);
+        ctx.fillStyle = '#064E3B';
+        ctx.font = '900 24px "Space Grotesk", sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '900 18px "Impact", "Arial Black", sans-serif';
-        ctx.fillText('THINK YOU KNOW YOUR MOVIES? PLAY FREE NOW!', 400, 792);
+        ctx.fillText('🔥 CAN YOU BEAT THIS SCORE? 👀', 0, 10);
+        ctx.restore();
 
-        ctx.fillStyle = '#FFFFFF';
-        this.roundRect(ctx, 175, 810, 450, 52, 12);
-        ctx.fill();
-        ctx.lineWidth = 3.5;
-        ctx.strokeStyle = '#111827';
-        ctx.stroke();
+        // ── 6. DARK NAVY BRANDING FOOTER ──
+        const footY = cardY + 1555;
+        this.drawShadowBox(ctx, cardX + 45, footY, cardW - 90, 185, 32, '#111827', '#111827', 5, 8, 8, '#FACC15');
 
+        // Micro call
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = '900 16px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('⚡ PLAY FREE ON ANY BROWSER', cardX + 85, footY + 60);
+
+        // Domain
+        ctx.fillStyle = '#FACC15';
+        ctx.font = '900 48px "Space Grotesk", sans-serif';
+        ctx.fillText('scoopcast.me', cardX + 85, footY + 125);
+
+        // Action Button
+        this.drawShadowBox(ctx, cardX + cardW - 305, footY + 55, 220, 75, 20, '#FACC15', '#111827', 4, 5, 5, '#000000');
         ctx.fillStyle = '#111827';
-        ctx.font = '900 24px "Impact", "Arial Black", sans-serif';
-        ctx.fillText('👉 https://scoopcast.me 👈', 400, 845);
+        ctx.font = '900 24px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('PLAY NOW ↗', cardX + cardW - 195, footY + 102);
 
-        // 6. Footer
-        ctx.fillStyle = '#6B7280';
-        ctx.font = '700 13px "Segoe UI", sans-serif';
-        ctx.fillText('Guess The Frame • Multiplayer Movie Trivia Game by Asmit', 400, 925);
-        ctx.fillText('Free to play on any phone or laptop browser • No app download needed', 400, 946);
+        ctx.restore(); // Restore clip
 
         this._currentCanvas = canvas;
         this._currentDataUrl = canvas.toDataURL('image/png');
         this._currentPlayers = players;
+
+        await new Promise(resolve => {
+          canvas.toBlob((blob) => {
+            this._currentBlob = blob;
+            resolve();
+          }, 'image/png');
+        });
+
         return canvas;
       },
 
-      openModal(players) {
-        this.generateCanvas(players);
+      async openModal(players) {
+        this._currentPlayers = players;
         const modal = document.getElementById('winnerShareModal');
         const previewImg = document.getElementById('shareModalPreviewImg');
+        if (modal) modal.style.display = 'flex';
         if (previewImg && this._currentDataUrl) {
           previewImg.src = this._currentDataUrl;
         }
-        if (modal) {
-          modal.style.display = 'flex';
+        await this.generateCanvas(players);
+        if (previewImg && this._currentDataUrl) {
+          previewImg.src = this._currentDataUrl;
         }
       },
 
@@ -20405,19 +20597,13 @@
       },
 
       async share() {
-        if (!this._currentCanvas) {
-          this.generateCanvas(this._currentPlayers);
+        if (!this._currentCanvas || !this._currentBlob) {
+          await this.generateCanvas(this._currentPlayers);
         }
-        const canvas = this._currentCanvas;
-        if (!canvas) return;
+        const blob = this._currentBlob;
 
         try {
-          canvas.toBlob(async (blob) => {
-            if (!blob) {
-              this.fallbackShare();
-              return;
-            }
-
+          if (blob) {
             const file = new File([blob], 'scoopcast-winner-scorecard.png', { type: 'image/png' });
             const shareData = {
               title: 'Guess The Frame - Match Result 🎬🍿',
@@ -20427,10 +20613,7 @@
 
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
               try {
-                await navigator.share({
-                  ...shareData,
-                  files: [file]
-                });
+                await navigator.share({ ...shareData, files: [file] });
                 this.showToast('🎉 Shared successfully!');
                 return;
               } catch (err) {
@@ -20447,12 +20630,29 @@
                 if (err.name === 'AbortError') return;
               }
             }
-
-            this.fallbackShare();
-          }, 'image/png');
+          }
+          this.fallbackShare();
         } catch (err) {
           this.fallbackShare();
         }
+      },
+
+      async copy() {
+        if (!this._currentCanvas || !this._currentBlob) {
+          await this.generateCanvas(this._currentPlayers);
+        }
+        if (this._currentBlob && navigator.clipboard && navigator.clipboard.write) {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': this._currentBlob })
+            ]);
+            this.showToast('📋 Image copied to clipboard!');
+            return;
+          } catch (err) {
+            console.warn('Clipboard write failed:', err);
+          }
+        }
+        this.fallbackShare();
       },
 
       download() {
@@ -20464,12 +20664,12 @@
 
         const link = document.createElement('a');
         link.href = dataUrl;
-        link.download = `scoopcast-winner-scorecard-${Date.now()}.png`;
+        link.download = 'scoopcast-winner-scorecard.png';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
-        this.showToast('✅ Scorecard image saved directly!');
+        this.showToast('✅ Scorecard image saved!');
       },
 
       fallbackShare() {
