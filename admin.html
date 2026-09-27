@@ -1161,14 +1161,9 @@
           </div>
         </div>
 
-        <!-- 1. INSTANT FAST-TRACK LOGIN FOR MAIN HEAD -->
-        <button type="button" class="btn btn-yellow" onclick="AdminApp.quickLoginAsmit()" style="width:100%; justify-content:center; padding:13px 18px; font-size:15px; font-weight:800; border-width:3.5px; box-shadow:var(--shadow); margin-bottom:12px;">
-          👑 Instant Access: Asmit Sharma (Main Head)
-        </button>
-
-        <!-- 2. PRIMARY ACTION: GOOGLE LOGIN VIA CLERK -->
-        <button type="button" class="btn-google-login" onclick="AdminApp.loginWithGoogle()">
-          <svg class="google-g-icon" viewBox="0 0 24 24">
+        <!-- ONLY AUTH ACTION: GOOGLE LOGIN VIA CLERK -->
+        <button type="button" class="btn-google-login" onclick="AdminApp.loginWithGoogle()" style="margin-top:12px; padding:16px 20px; font-size:16px;">
+          <svg class="google-g-icon" viewBox="0 0 24 24" style="width:24px; height:24px;">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -1177,26 +1172,12 @@
           <span>Continue with Google</span>
         </button>
 
-        <div class="auth-divider">
-          <span>Or Email / Passcode</span>
+        <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:16px; display:none;">
+          Access Denied. Please try again.
         </div>
 
-        <!-- 3. EMAIL OR PASSCODE SIGN-IN -->
-        <form id="authForm" onsubmit="AdminApp.handleLogin(event)">
-          <div class="form-group" style="margin-bottom:12px;">
-            <input type="text" id="authPassInput" class="form-input" placeholder="asmit.sharma@hotmail.com or Passcode" autocomplete="username" required />
-          </div>
-          <button type="submit" class="btn" style="width:100%; justify-content:center; padding:12px; font-size:14px; background:#F3F4F6; font-weight:800;">
-            Sign In with Email / Passcode ⚡
-          </button>
-        </form>
-
-        <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:14px; display:none;">
-          Invalid credentials. Please try again.
-        </div>
-
-        <div style="margin-top:16px; font-size:11px; font-family:var(--font-mono); color:var(--muted);">
-          Protected with Clerk Authentication & Cloudinary SDK
+        <div style="margin-top:20px; font-size:11px; font-family:var(--font-mono); color:var(--muted);">
+          Protected with Clerk Google Authentication
         </div>
 
       </div>
@@ -2230,8 +2211,10 @@
         localStorage.removeItem('scoopcast_user_avatar');
 
         document.getElementById('authOverlay').style.display = 'flex';
-        document.getElementById('authPassInput').value = '';
-        document.getElementById('authError').style.display = 'none';
+        const passInput = document.getElementById('authPassInput');
+        if (passInput) passInput.value = '';
+        const errEl = document.getElementById('authError');
+        if (errEl) errEl.style.display = 'none';
       },
 
       // Mode Switcher
