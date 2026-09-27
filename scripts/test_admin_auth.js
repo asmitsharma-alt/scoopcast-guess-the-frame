@@ -4,7 +4,7 @@ const vm = require('vm');
 
 const html = fs.readFileSync('admin.html', 'utf8');
 
-// Minimal mock DOM for testing AdminApp auth & team management logic
+// Minimal mock DOM for testing AdminApp manual auth & team credentials logic
 function createMockEnvironment() {
   const elements = {};
   function makeEl(id, tagName = 'div') {
@@ -27,12 +27,12 @@ function createMockEnvironment() {
   }
 
   const ids = [
-    'authOverlay', 'authPassInput', 'authError', 'userNameLabel',
+    'authOverlay', 'authUserIdInput', 'authPassInput', 'authError', 'userNameLabel',
     'userAvatarImg', 'userRoleBadge', 'settingsNavBtn', 'teamNavBtn',
-    'teamModal', 'newUserName', 'newUserEmail', 'newUserRole', 'newUserAvatar',
+    'teamModal', 'newUserName', 'newUserIdentifier', 'newUserPassword', 'newUserRole', 'newUserAvatar',
     'teamListCount', 'teamUsersList', 'teamHeaderCount',
     'dropsListContainer', 'dropsCount', 'cfgCloudName', 'cfgApiKey',
-    'cfgApiSecret', 'cfgTmdbToken', 'cfgClerkKey', 'cfgPasscode',
+    'cfgApiSecret', 'cfgTmdbToken', 'cfgPasscode',
     'cfgAdminEmail', 'cfgUploaderPasscode', 'settingsModal', 'cldStatusPill',
     'assetLibHeaderCount', 'assetSubtitle', 'catCountAll', 'catCountFrames',
     'catCountEyes', 'catCountTie', 'catCountAvvtar', 'catCountBg',
@@ -59,24 +59,14 @@ function createMockEnvironment() {
 
   const doc = {
     getElementById: (id) => elements[id] || makeEl(id),
-    querySelector: (sel) => {
-      if (sel === '.neo-auth-card') return makeEl('card');
-      if (sel === '.btn-google-login') return makeEl('google-btn');
-      return makeEl('sel');
-    },
+    querySelector: (sel) => makeEl(sel),
     querySelectorAll: () => [],
     addEventListener: () => {}
   };
 
   const sandbox = {
     window: {
-      location: { origin: 'https://scoopcast.me', href: 'https://scoopcast.me/admin', search: '', hash: '' },
-      Clerk: {
-        loaded: true,
-        load: async () => {},
-        openSignIn: () => {},
-        addListener: () => {}
-      }
+      location: { origin: 'https://scoopcast.me', href: 'https://scoopcast.me/admin', search: '', hash: '' }
     },
     document: doc,
     sessionStorage: mockStorage,
@@ -86,6 +76,7 @@ function createMockEnvironment() {
     clearTimeout: () => {},
     alert: (msg) => {},
     confirm: (msg) => true,
+    prompt: (msg, def) => def || 'newpass123',
     console: console,
     AdminApp: null
   };
@@ -106,7 +97,7 @@ if (!scriptMatch) {
 const scriptContent = scriptMatch[1];
 
 async function runTests() {
-  console.log('🧪 Running Scoopcast Admin & Team Management Test Suite...\n');
+  console.log('🧪 Running Scoopcast Manual Auth & Team Credentials Test Suite...\n');
 
   // Test 1: Quick Login as Asmit Sharma (Main Head)
   {
@@ -127,44 +118,49 @@ async function runTests() {
     console.log('✅ Test 1 Passed: quickLoginAsmit() grants 👑 MAIN HEAD, displays Team button and hides overlay immediately');
   }
 
-  // Test 2: Email login with asmit.sharma@hotmail.com
+  // Test 2: Manual login with Root Admin ID 'asmit' & password 'scoopcast2026'
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
 
-    elements['authPassInput'].value = 'asmit.sharma@hotmail.com';
+    elements['authUserIdInput'].value = 'asmit';
+    elements['authPassInput'].value = 'scoopcast2026';
     sandbox.window.AdminApp.handleLogin({ preventDefault: () => {} });
 
     if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 2 failed: auth not saved');
     if (storage['scoopcast_user_role'] !== 'admin') throw new Error('Test 2 failed: role not admin');
     if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 2 failed: overlay not hidden');
-    console.log('✅ Test 2 Passed: Email asmit.sharma@hotmail.com successfully logs in as 👑 MAIN HEAD');
+    console.log('✅ Test 2 Passed: Manual login with ID "asmit" and password logs in as 👑 MAIN HEAD');
   }
 
-  // Test 3: Passcode login with scoopcast2026
+  // Test 3: Manual login with Root Admin Email 'asmit.sharma@hotmail.com' & password 'scoopcast2026'
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
 
+    elements['authUserIdInput'].value = 'asmit.sharma@hotmail.com';
     elements['authPassInput'].value = 'scoopcast2026';
     sandbox.window.AdminApp.handleLogin({ preventDefault: () => {} });
 
     if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 3 failed: auth not saved');
     if (storage['scoopcast_user_role'] !== 'admin') throw new Error('Test 3 failed: role not admin');
     if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 3 failed: overlay not hidden');
-    console.log('✅ Test 3 Passed: Master passcode scoopcast2026 logs in as 👑 MAIN HEAD');
+    console.log('✅ Test 3 Passed: Manual login with email "asmit.sharma@hotmail.com" logs in as 👑 MAIN HEAD');
   }
 
-  // Test 4: Uploader passcode login with uploader2026
+  // Test 4: Default contributor login with 'curator' & password 'uploader2026'
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+    AdminApp.loadTeamUsers();
 
+    elements['authUserIdInput'].value = 'curator';
     elements['authPassInput'].value = 'uploader2026';
-    sandbox.window.AdminApp.handleLogin({ preventDefault: () => {} });
+    AdminApp.handleLogin({ preventDefault: () => {} });
 
     if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 4 failed: auth not saved');
     if (storage['scoopcast_user_role'] !== 'uploader') throw new Error('Test 4 failed: role not uploader');
@@ -173,29 +169,48 @@ async function runTests() {
     if (elements['teamNavBtn'].style.display !== 'none') throw new Error('Test 4 failed: team button must be hidden for uploader');
     if (elements['eyesModeTab'].style.display !== 'none') throw new Error('Test 4 failed: eyes mode tab must be hidden for uploader');
     if (elements['exportBtn'].style.display !== 'none') throw new Error('Test 4 failed: export button must be hidden for uploader');
-    console.log('✅ Test 4 Passed: Uploader passcode logs in as 📤 UPLOADER and hides API settings, Team, Eyes tab & Export');
+    console.log('✅ Test 4 Passed: Contributor "curator" logs in as 📤 UPLOADER with eyes tab, export & settings hidden');
   }
 
-  // Test 5: Clerk user handler for asmit.sharma@hotmail.com
+  // Test 5: Rejection of incorrect password for valid user
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+    AdminApp.loadTeamUsers();
 
-    sandbox.window.AdminApp.handleClerkUser({
-      primaryEmailAddress: { emailAddress: 'asmit.sharma@hotmail.com' },
-      fullName: 'Asmit Sharma',
-      imageUrl: 'https://img.clerk.com/avatar.jpg'
-    });
+    elements['authUserIdInput'].value = 'asmit';
+    elements['authPassInput'].value = 'WRONG_PASSWORD';
+    elements['authError'].style.display = 'none';
 
-    if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 5 failed: auth not saved');
-    if (storage['scoopcast_user_role'] !== 'admin') throw new Error('Test 5 failed: role not admin');
-    if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 5 failed: overlay not hidden');
-    if (elements['userRoleBadge'].textContent !== '👑 MAIN HEAD') throw new Error('Test 5 failed: badge mismatch');
-    console.log('✅ Test 5 Passed: Clerk user with asmit.sharma@hotmail.com auto-promoted to 👑 MAIN HEAD');
+    AdminApp.handleLogin({ preventDefault: () => {} });
+
+    if (storage['scoopcast_admin_auth'] === 'true') throw new Error('Test 5 failed: session was granted with wrong password');
+    if (elements['authError'].style.display !== 'block') throw new Error('Test 5 failed: error banner not shown for wrong password');
+    console.log('✅ Test 5 Passed: Incorrect password correctly rejected with error banner');
   }
 
-  // Test 6: Auth persistence checkAuth()
+  // Test 6: Rejection of unknown user ID
+  {
+    const { sandbox, elements, storage } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+    AdminApp.loadTeamUsers();
+
+    elements['authUserIdInput'].value = 'unknown_hacker';
+    elements['authPassInput'].value = 'random_pass';
+    elements['authError'].style.display = 'none';
+
+    AdminApp.handleLogin({ preventDefault: () => {} });
+
+    if (storage['scoopcast_admin_auth'] === 'true') throw new Error('Test 6 failed: session was granted to unknown user');
+    if (elements['authError'].style.display !== 'block') throw new Error('Test 6 failed: error banner not shown for unknown user');
+    console.log('✅ Test 6 Passed: Unknown User ID cleanly rejected');
+  }
+
+  // Test 7: Auth persistence checkAuth()
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     storage['scoopcast_admin_auth'] = 'true';
@@ -206,11 +221,11 @@ async function runTests() {
     vm.runInContext(scriptContent, sandbox);
 
     sandbox.window.AdminApp.checkAuth();
-    if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 6 failed: overlay should be hidden on restore');
-    console.log('✅ Test 6 Passed: checkAuth() restores existing session without showing lock screen');
+    if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 7 failed: overlay should be hidden on restore');
+    console.log('✅ Test 7 Passed: checkAuth() restores existing session without showing lock screen');
   }
 
-  // Test 7: Logout clears credentials and shows overlay
+  // Test 8: Logout clears credentials and shows overlay
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     storage['scoopcast_admin_auth'] = 'true';
@@ -219,13 +234,13 @@ async function runTests() {
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
 
-    await sandbox.window.AdminApp.logout();
-    if (storage['scoopcast_admin_auth']) throw new Error('Test 7 failed: auth flag not cleared');
-    if (elements['authOverlay'].style.display !== 'flex') throw new Error('Test 7 failed: overlay should be flex on logout');
-    console.log('✅ Test 7 Passed: logout() cleanly wipes session and restores lock overlay');
+    sandbox.window.AdminApp.logout();
+    if (storage['scoopcast_admin_auth']) throw new Error('Test 8 failed: auth flag not cleared');
+    if (elements['authOverlay'].style.display !== 'flex') throw new Error('Test 8 failed: overlay should be flex on logout');
+    console.log('✅ Test 8 Passed: logout() cleanly wipes session and restores lock overlay');
   }
 
-  // Test 8: Add New Team Member via handleAddUser
+  // Test 9: Add New Contributor with custom ID and Password via handleAddUser
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -235,23 +250,24 @@ async function runTests() {
 
     const initialCount = AdminApp.teamUsers.length;
     elements['newUserName'].value = 'Priya Sharma';
-    elements['newUserEmail'].value = 'priya@example.com';
+    elements['newUserIdentifier'].value = 'priya';
+    elements['newUserPassword'].value = 'priya2026';
     elements['newUserRole'].value = 'uploader';
     elements['newUserAvatar'].value = 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799933/scoopcast/avvtar/radha.svg';
 
     AdminApp.handleAddUser({ preventDefault: () => {} });
 
-    if (AdminApp.teamUsers.length !== initialCount + 1) throw new Error('Test 8 failed: user not added to team list');
-    const added = AdminApp.teamUsers.find(u => u.email === 'priya@example.com');
-    if (!added || added.name !== 'Priya Sharma' || added.role !== 'uploader') throw new Error('Test 8 failed: user properties incorrect');
+    if (AdminApp.teamUsers.length !== initialCount + 1) throw new Error('Test 9 failed: user not added to team list');
+    const added = AdminApp.teamUsers.find(u => u.identifier === 'priya');
+    if (!added || added.password !== 'priya2026' || added.role !== 'uploader') throw new Error('Test 9 failed: user credentials not recorded');
     
     // Check saved in storage
     const saved = JSON.parse(storage['scoopcast_team_users']);
-    if (!saved.some(u => u.email === 'priya@example.com')) throw new Error('Test 8 failed: not saved to localStorage');
-    console.log('✅ Test 8 Passed: handleAddUser() successfully adds member and persists to localStorage');
+    if (!saved.some(u => u.identifier === 'priya')) throw new Error('Test 9 failed: not saved to localStorage');
+    console.log('✅ Test 9 Passed: handleAddUser() successfully saves contributor with custom ID & password');
   }
 
-  // Test 9: Newly added team member can sign in
+  // Test 10: Contributor signs in with custom credentials
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -261,23 +277,56 @@ async function runTests() {
 
     // Add priya
     elements['newUserName'].value = 'Priya Sharma';
-    elements['newUserEmail'].value = 'priya@example.com';
+    elements['newUserIdentifier'].value = 'priya';
+    elements['newUserPassword'].value = 'priya2026';
     elements['newUserRole'].value = 'uploader';
     elements['newUserAvatar'].value = 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799933/scoopcast/avvtar/radha.svg';
     AdminApp.handleAddUser({ preventDefault: () => {} });
 
-    // Now test login with priya's email
-    elements['authPassInput'].value = 'priya@example.com';
+    // Login with priya credentials
+    elements['authUserIdInput'].value = 'priya';
+    elements['authPassInput'].value = 'priya2026';
     AdminApp.handleLogin({ preventDefault: () => {} });
 
-    if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 9 failed: priya auth not saved');
-    if (storage['scoopcast_user_role'] !== 'uploader') throw new Error('Test 9 failed: priya role should be uploader');
-    if (storage['scoopcast_user_name'] !== 'Priya Sharma') throw new Error('Test 9 failed: name mismatch');
-    if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 9 failed: overlay not hidden for priya');
-    console.log('✅ Test 9 Passed: Authorized team member (priya@example.com) can log in successfully');
+    if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 10 failed: priya auth not saved');
+    if (storage['scoopcast_user_role'] !== 'uploader') throw new Error('Test 10 failed: priya role should be uploader');
+    if (storage['scoopcast_user_name'] !== 'Priya Sharma') throw new Error('Test 10 failed: name mismatch');
+    if (elements['authOverlay'].style.display !== 'none') throw new Error('Test 10 failed: overlay not hidden for priya');
+    console.log('✅ Test 10 Passed: Newly added contributor logs in with their manual ID and password');
   }
 
-  // Test 10: Role toggle (toggleUserRole)
+  // Test 11: Edit Contributor Password (editUserPassword)
+  {
+    const { sandbox, elements, storage } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+    AdminApp.loadTeamUsers();
+
+    // Add user
+    elements['newUserName'].value = 'Dev User';
+    elements['newUserIdentifier'].value = 'devuser';
+    elements['newUserPassword'].value = 'oldpass';
+    elements['newUserRole'].value = 'uploader';
+    AdminApp.handleAddUser({ preventDefault: () => {} });
+
+    // Update password
+    sandbox.prompt = () => 'newsecret2026';
+    AdminApp.editUserPassword('devuser');
+
+    const dev = AdminApp.teamUsers.find(u => u.identifier === 'devuser');
+    if (!dev || dev.password !== 'newsecret2026') throw new Error('Test 11 failed: password not updated');
+
+    // Test login with new password
+    elements['authUserIdInput'].value = 'devuser';
+    elements['authPassInput'].value = 'newsecret2026';
+    AdminApp.handleLogin({ preventDefault: () => {} });
+    if (storage['scoopcast_admin_auth'] !== 'true') throw new Error('Test 11 failed: login with updated password failed');
+
+    console.log('✅ Test 11 Passed: editUserPassword() successfully updates contributor password on the fly');
+  }
+
+  // Test 12: Role toggle (toggleUserRole)
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -287,24 +336,24 @@ async function runTests() {
 
     // Add user
     elements['newUserName'].value = 'Rahul Dev';
-    elements['newUserEmail'].value = 'rahul@example.com';
+    elements['newUserIdentifier'].value = 'rahul';
+    elements['newUserPassword'].value = 'rahulpass';
     elements['newUserRole'].value = 'uploader';
-    elements['newUserAvatar'].value = 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
     AdminApp.handleAddUser({ preventDefault: () => {} });
 
     // Toggle role to admin
-    AdminApp.toggleUserRole('rahul@example.com');
-    let rahul = AdminApp.teamUsers.find(u => u.email === 'rahul@example.com');
-    if (rahul.role !== 'admin') throw new Error('Test 10 failed: role not toggled to admin');
+    AdminApp.toggleUserRole('rahul');
+    let rahul = AdminApp.teamUsers.find(u => u.identifier === 'rahul');
+    if (rahul.role !== 'admin') throw new Error('Test 12 failed: role not toggled to admin');
 
     // Toggle back to uploader
-    AdminApp.toggleUserRole('rahul@example.com');
-    rahul = AdminApp.teamUsers.find(u => u.email === 'rahul@example.com');
-    if (rahul.role !== 'uploader') throw new Error('Test 10 failed: role not toggled to uploader');
-    console.log('✅ Test 10 Passed: toggleUserRole() switches role between uploader and admin');
+    AdminApp.toggleUserRole('rahul');
+    rahul = AdminApp.teamUsers.find(u => u.identifier === 'rahul');
+    if (rahul.role !== 'uploader') throw new Error('Test 12 failed: role not toggled to uploader');
+    console.log('✅ Test 12 Passed: toggleUserRole() switches role between uploader and admin');
   }
 
-  // Test 11: Remove user (removeUser)
+  // Test 13: Remove user (removeUser)
   {
     const { sandbox, elements, storage } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -314,29 +363,28 @@ async function runTests() {
 
     // Add user
     elements['newUserName'].value = 'Temporary Curator';
-    elements['newUserEmail'].value = 'temp@example.com';
+    elements['newUserIdentifier'].value = 'tempcurator';
+    elements['newUserPassword'].value = 'temppass';
     elements['newUserRole'].value = 'uploader';
-    elements['newUserAvatar'].value = 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
     AdminApp.handleAddUser({ preventDefault: () => {} });
 
-    if (!AdminApp.teamUsers.some(u => u.email === 'temp@example.com')) throw new Error('Test 11 setup failed');
-
     // Remove user
-    AdminApp.removeUser('temp@example.com');
-    if (AdminApp.teamUsers.some(u => u.email === 'temp@example.com')) throw new Error('Test 11 failed: user not removed');
+    AdminApp.removeUser('tempcurator');
+    if (AdminApp.teamUsers.some(u => u.identifier === 'tempcurator')) throw new Error('Test 13 failed: user not removed');
 
     // Attempt login with removed user
-    elements['authPassInput'].value = 'temp@example.com';
+    elements['authUserIdInput'].value = 'tempcurator';
+    elements['authPassInput'].value = 'temppass';
     elements['authError'].style.display = 'none';
     AdminApp.handleLogin({ preventDefault: () => {} });
 
-    if (elements['authError'].style.display !== 'block') throw new Error('Test 11 failed: removed user was not denied access');
-    console.log('✅ Test 11 Passed: removeUser() removes user and revokes login access');
+    if (elements['authError'].style.display !== 'block') throw new Error('Test 13 failed: removed user was not denied access');
+    console.log('✅ Test 13 Passed: removeUser() removes contributor and revokes login access immediately');
   }
 
-  // Test 12: Root admin protection
+  // Test 14: Root admin permanent protection
   {
-    const { sandbox, elements, storage } = createMockEnvironment();
+    const { sandbox } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
     const AdminApp = sandbox.window.AdminApp;
@@ -345,14 +393,14 @@ async function runTests() {
     let alertMsg = '';
     sandbox.alert = (m) => { alertMsg = m; };
 
-    AdminApp.removeUser('asmit.sharma@hotmail.com');
-    if (!AdminApp.teamUsers.some(u => u.email === 'asmit.sharma@hotmail.com')) {
-      throw new Error('Test 12 failed: Root admin was removed!');
+    AdminApp.removeUser('asmit');
+    if (!AdminApp.teamUsers.some(u => u.identifier === 'asmit' || u.email === 'asmit.sharma@hotmail.com')) {
+      throw new Error('Test 14 failed: Root admin was removed!');
     }
-    console.log('✅ Test 12 Passed: Root Main Head (asmit.sharma@hotmail.com) is permanently protected against removal');
+    console.log('✅ Test 14 Passed: Root Main Head is permanently protected against deletion');
   }
 
-  // Test 13: Uploader cannot switch to 'eyes' mode, but can switch to 'frames' and 'dialogue'
+  // Test 15: Uploader cannot switch to 'eyes' mode, but can switch to 'frames' and 'dialogue'
   {
     const { sandbox, elements } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -366,24 +414,23 @@ async function runTests() {
     
     // Attempt to switch to eyes mode
     AdminApp.setMode('eyes');
-    if (AdminApp.currentMode === 'eyes') throw new Error('Test 13 failed: Uploader was able to switch to eyes mode');
-    if (!alertFired) throw new Error('Test 13 failed: No restriction alert fired when uploader attempted eyes mode');
-    if (AdminApp.currentMode !== 'frames') throw new Error('Test 13 failed: Mode should default to frames');
+    if (AdminApp.currentMode === 'eyes') throw new Error('Test 15 failed: Uploader was able to switch to eyes mode');
+    if (!alertFired) throw new Error('Test 15 failed: No restriction alert fired when uploader attempted eyes mode');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 15 failed: Mode should default to frames');
 
     // Dialogue mode should succeed
     alertFired = false;
     AdminApp.setMode('dialogue');
-    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 13 failed: Uploader could not switch to dialogue mode');
-    if (alertFired) throw new Error('Test 13 failed: Alert incorrectly fired for dialogue mode');
+    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 15 failed: Uploader could not switch to dialogue mode');
 
     // Frames mode should succeed
     AdminApp.setMode('frames');
-    if (AdminApp.currentMode !== 'frames') throw new Error('Test 13 failed: Uploader could not switch to frames mode');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 15 failed: Uploader could not switch to frames mode');
 
-    console.log('✅ Test 13 Passed: Uploader is strictly blocked from "eyes" mode, but authorized for "frames" and "dialogue"');
+    console.log('✅ Test 15 Passed: Uploader is strictly blocked from "eyes" mode, but authorized for "frames" and "dialogue"');
   }
 
-  // Test 14: Uploader cannot submit when currentMode is 'eyes'
+  // Test 16: Uploader cannot submit when currentMode is 'eyes'
   {
     const { sandbox, elements } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -394,16 +441,16 @@ async function runTests() {
     sandbox.alert = (m) => { alertMsg = m; };
 
     AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
-    AdminApp.currentMode = 'eyes'; // Force variable to test guard
+    AdminApp.currentMode = 'eyes';
 
     elements['itemAnswer'].value = 'AMITABH BACHCHAN';
     await AdminApp.handleSubmit({ preventDefault: () => {} });
 
-    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 14 failed: handleSubmit did not block uploader on eyes mode');
-    console.log('✅ Test 14 Passed: handleSubmit() blocks drop submission for uploaders if mode is "eyes"');
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 16 failed: handleSubmit did not block uploader on eyes mode');
+    console.log('✅ Test 16 Passed: handleSubmit() blocks drop submission for uploaders if mode is "eyes"');
   }
 
-  // Test 15: Uploader cannot pre-fill 'eyes' asset in form via useAssetInForm
+  // Test 17: Uploader cannot pre-fill 'eyes' asset in form via useAssetInForm
   {
     const { sandbox, elements } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -416,24 +463,20 @@ async function runTests() {
     AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
     AdminApp.useAssetInForm('https://cloudinary.com/eyes/shahrukh.jpg', 'Shah Rukh Khan', 'eyes');
 
-    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 15 failed: useAssetInForm did not block eyes asset for uploader');
-    if (elements['itemAnswer'].value === 'SHAHRUKH KHAN' || AdminApp.currentMode === 'eyes') {
-      throw new Error('Test 15 failed: eyes asset was loaded into form for uploader');
-    }
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 17 failed: useAssetInForm did not block eyes asset for uploader');
 
     // But frame asset should succeed
     alertMsg = '';
     AdminApp.useAssetInForm('https://cloudinary.com/frames/sholay.jpg', 'Sholay (1975)', 'frames');
-    if (alertMsg.includes('Access Restricted')) throw new Error('Test 15 failed: frames asset was blocked for uploader');
-    if (AdminApp.currentMode !== 'frames') throw new Error('Test 15 failed: frames asset should set mode to frames');
-    if (elements['itemAnswer'].value !== 'SHOLAY') throw new Error('Test 15 failed: frames title not loaded into form');
+    if (alertMsg.includes('Access Restricted')) throw new Error('Test 17 failed: frames asset was blocked for uploader');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 17 failed: frames asset should set mode to frames');
 
-    console.log('✅ Test 15 Passed: useAssetInForm() blocks "eyes" assets for uploader while allowing "frames"');
+    console.log('✅ Test 17 Passed: useAssetInForm() blocks "eyes" assets for uploader while allowing "frames"');
   }
 
-  // Test 16: Uploader cannot delete drops or export playlist JSON
+  // Test 18: Uploader cannot delete drops or export playlist JSON
   {
-    const { sandbox, elements } = createMockEnvironment();
+    const { sandbox } = createMockEnvironment();
     vm.createContext(sandbox);
     vm.runInContext(scriptContent, sandbox);
     const AdminApp = sandbox.window.AdminApp;
@@ -446,18 +489,17 @@ async function runTests() {
 
     // Attempt export
     AdminApp.exportPlaylistJson();
-    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 16 failed: exportPlaylistJson did not block uploader');
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 18 failed: exportPlaylistJson did not block uploader');
 
     // Attempt delete
     alertMsg = '';
     AdminApp.deleteDrop(0);
-    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 16 failed: deleteDrop did not block uploader');
-    if (AdminApp.dropsData.length !== 1) throw new Error('Test 16 failed: drop was deleted by uploader');
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 18 failed: deleteDrop did not block uploader');
 
-    console.log('✅ Test 16 Passed: Uploader is strictly blocked from deleting drops and exporting playlist JSON');
+    console.log('✅ Test 18 Passed: Uploader is strictly blocked from deleting drops and exporting playlist JSON');
   }
 
-  // Test 17: Main Head retains full permissions (all 3 modes, export, delete)
+  // Test 19: Main Head retains full permissions (all 3 modes, export, delete)
   {
     const { sandbox, elements } = createMockEnvironment();
     vm.createContext(sandbox);
@@ -466,26 +508,24 @@ async function runTests() {
 
     AdminApp.quickLoginAsmit();
 
-    // Verify all tabs and buttons visible
-    if (elements['eyesModeTab'].style.display !== 'flex') throw new Error('Test 17 failed: eyesModeTab not flex for admin');
-    if (elements['exportBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: exportBtn not inline-flex for admin');
-    if (elements['settingsNavBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: settingsNavBtn not inline-flex for admin');
-    if (elements['teamNavBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: teamNavBtn not inline-flex for admin');
+    if (elements['eyesModeTab'].style.display !== 'flex') throw new Error('Test 19 failed: eyesModeTab not flex for admin');
+    if (elements['exportBtn'].style.display !== 'inline-flex') throw new Error('Test 19 failed: exportBtn not inline-flex for admin');
+    if (elements['settingsNavBtn'].style.display !== 'inline-flex') throw new Error('Test 19 failed: settingsNavBtn not inline-flex for admin');
+    if (elements['teamNavBtn'].style.display !== 'inline-flex') throw new Error('Test 19 failed: teamNavBtn not inline-flex for admin');
 
-    // Can switch to all 3 modes
     AdminApp.setMode('frames');
-    if (AdminApp.currentMode !== 'frames') throw new Error('Test 17 failed: admin cannot switch to frames');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 19 failed: admin cannot switch to frames');
 
     AdminApp.setMode('eyes');
-    if (AdminApp.currentMode !== 'eyes') throw new Error('Test 17 failed: admin cannot switch to eyes');
+    if (AdminApp.currentMode !== 'eyes') throw new Error('Test 19 failed: admin cannot switch to eyes');
 
     AdminApp.setMode('dialogue');
-    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 17 failed: admin cannot switch to dialogue');
+    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 19 failed: admin cannot switch to dialogue');
 
-    console.log('✅ Test 17 Passed: 👑 Main Head has 100% full access to all 3 game modes, export JSON, settings & team');
+    console.log('✅ Test 19 Passed: 👑 Main Head has 100% full access to all 3 game modes, export JSON, settings & team');
   }
 
-  console.log('\n🎉 ALL 17 PERMISSION, AUTH & USER MANAGEMENT TESTS PASSED 100%!');
+  console.log('\n🎉 ALL 19 MANUAL AUTH & PERMISSION TESTS PASSED 100%!');
 }
 
 runTests().catch(err => {

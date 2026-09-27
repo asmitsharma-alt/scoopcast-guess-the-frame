@@ -15,14 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Clerk JS Official SDK (Publishable Key: pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk) -->
-  <script
-    async
-    crossorigin="anonymous"
-    data-clerk-publishable-key="pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk"
-    src="https://infinite-koala-6523.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
-    type="text/javascript"
-  ></script>
+
 
   <style>
     /* ═════════════════════════════════════════════════════════════════
@@ -1161,23 +1154,29 @@
           </div>
         </div>
 
-        <!-- ONLY AUTH ACTION: GOOGLE LOGIN VIA CLERK -->
-        <button type="button" class="btn-google-login" onclick="AdminApp.loginWithGoogle()" style="margin-top:12px; padding:16px 20px; font-size:16px;">
-          <svg class="google-g-icon" viewBox="0 0 24 24" style="width:24px; height:24px;">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span>Continue with Google</span>
-        </button>
+        <!-- MANUAL CREDENTIALS SIGN-IN FORM -->
+        <form onsubmit="AdminApp.handleLogin(event)" style="margin-top:16px; text-align:left;">
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:12px; font-weight:800;">👤 User ID / Email / Username</label>
+            <input type="text" id="authUserIdInput" class="form-input" placeholder="e.g. asmit or curator" autocomplete="username" required style="padding:12px 14px; font-size:14px;" />
+          </div>
 
-        <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:16px; display:none;">
-          Access Denied. Please try again.
+          <div class="form-group" style="margin-bottom:18px;">
+            <label class="form-label" style="font-size:12px; font-weight:800;">🔑 Password / Passcode</label>
+            <input type="password" id="authPassInput" class="form-input" placeholder="Enter password..." autocomplete="current-password" required style="padding:12px 14px; font-size:14px;" />
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn btn-yellow" style="width:100%; padding:14px 20px; font-size:16px; font-weight:800; justify-content:center; box-shadow:var(--shadow);">
+            🚀 Sign In to Studio
+          </button>
+        </form>
+
+        <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:16px; display:none; background:#FEE2E2; border:2px solid var(--border); padding:10px; border-radius:6px; text-align:center;">
+          Access Denied. Please check your credentials.
         </div>
 
-        <div style="margin-top:20px; font-size:11px; font-family:var(--font-mono); color:var(--muted);">
-          Protected with Clerk Google Authentication
+        <div style="margin-top:18px; padding-top:14px; border-top:1.5px dashed var(--border); font-size:11px; font-family:var(--font-mono); color:var(--muted); text-align:center;">
+          🔒 Fully manual credentials • Direct root & contributor access
         </div>
 
       </div>
@@ -1405,19 +1404,15 @@
           <input type="password" id="cfgTmdbToken" class="form-input" required />
         </div>
         <div class="form-group">
-          <label class="form-label">Clerk Publishable Key</label>
-          <input type="text" id="cfgClerkKey" class="form-input" required />
+          <label class="form-label">Root Admin ID / Email (Main Head)</label>
+          <input type="text" id="cfgAdminEmail" class="form-input" placeholder="asmit.sharma@hotmail.com or asmit" required />
         </div>
         <div class="form-group">
-          <label class="form-label">Master Admin Passcode (Main Head)</label>
+          <label class="form-label">Root Admin Password / Passcode (Main Head)</label>
           <input type="password" id="cfgPasscode" class="form-input" required />
         </div>
         <div class="form-group">
-          <label class="form-label">Main Head Email (Auto Super Admin)</label>
-          <input type="email" id="cfgAdminEmail" class="form-input" placeholder="asmit.sharma@hotmail.com" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Uploader Passcode (Collaborators)</label>
+          <label class="form-label">Default Contributor Passcode (Fallback)</label>
           <input type="password" id="cfgUploaderPasscode" class="form-input" required />
         </div>
 
@@ -1450,40 +1445,44 @@
       <!-- 1. ADD NEW TEAM MEMBER FORM -->
       <div style="background:#F9FAFB; border:2.5px solid var(--border); border-radius:14px; padding:16px; margin-bottom:20px; box-shadow:var(--shadow-sm);">
         <div style="font-weight:800; font-size:14px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-          <span>➕ Add New User / Curator</span>
+          <span>➕ Add Contributor / Team Member</span>
         </div>
         <form onsubmit="AdminApp.handleAddUser(event)">
-          <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:12px; margin-bottom:12px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
             <div>
-              <label class="form-label" style="font-size:11px;">Full Name</label>
+              <label class="form-label" style="font-size:11px; font-weight:800;">Full Name</label>
               <input type="text" id="newUserName" class="form-input" placeholder="e.g. Priya Sharma" required />
             </div>
             <div>
-              <label class="form-label" style="font-size:11px;">Email Address</label>
-              <input type="email" id="newUserEmail" class="form-input" placeholder="e.g. priya@example.com" required />
+              <label class="form-label" style="font-size:11px; font-weight:800;">User ID / Username / Email</label>
+              <input type="text" id="newUserIdentifier" class="form-input" placeholder="e.g. priya or priya@scoopcast.me" required />
             </div>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
             <div>
-              <label class="form-label" style="font-size:11px;">Role & Privileges</label>
+              <label class="form-label" style="font-size:11px; font-weight:800;">Password / Passcode</label>
+              <input type="text" id="newUserPassword" class="form-input" placeholder="e.g. priya2026" required />
+            </div>
+            <div>
+              <label class="form-label" style="font-size:11px; font-weight:800;">Role & Privileges</label>
               <select id="newUserRole" class="form-input">
-                <option value="uploader">📤 Uploader (Curator)</option>
-                <option value="admin">👑 Main Head (Full Admin)</option>
-              </select>
-            </div>
-            <div>
-              <label class="form-label" style="font-size:11px;">Studio Avatar</label>
-              <select id="newUserAvatar" class="form-input">
-                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg">Aman (Blue)</option>
-                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg">Vish (Yellow)</option>
-                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799933/scoopcast/avvtar/radha.svg">Radha (Pink)</option>
-                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799946/scoopcast/avvtar/vikram.svg">Vikram (Purple)</option>
-                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799905/scoopcast/avvtar/divya.svg">Divya (Green)</option>
+                <option value="uploader">📤 Uploader (Frames & Dialogue Only)</option>
+                <option value="admin">👑 Main Head (Full Admin Access)</option>
               </select>
             </div>
           </div>
-          <button type="submit" class="btn btn-yellow" style="width:100%; justify-content:center; padding:11px; font-size:14px;">
-            ➕ Grant Access & Add User
+          <div style="margin-bottom:14px;">
+            <label class="form-label" style="font-size:11px; font-weight:800;">Studio Avatar</label>
+            <select id="newUserAvatar" class="form-input">
+              <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg">Aman (Blue)</option>
+              <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg">Vish (Yellow)</option>
+              <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799933/scoopcast/avvtar/radha.svg">Radha (Pink)</option>
+              <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799946/scoopcast/avvtar/vikram.svg">Vikram (Purple)</option>
+              <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799905/scoopcast/avvtar/divya.svg">Divya (Green)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-yellow" style="width:100%; justify-content:center; padding:11px; font-size:14px; font-weight:800;">
+            ➕ Add Contributor & Set Credentials
           </button>
         </form>
       </div>
@@ -1582,7 +1581,6 @@
         apiSecret: 'qlRcRTv_FZwvVVu6z-HG1DdtZ0Y',
         tmdbToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZWJkMzUxY2IxOGMwNTdlZjY1YmQ2Y2Q4MzI5NjZiNiIsIm5iZiI6MTc3NzcxNTUzNS4wNDE5OTk4LCJzdWIiOiI2OWY1Yzk0ZjU0M2FjMDY4ZDgyMGZjMzYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.DB3S0Ye5G28XrqsR_kxmfFLz342I8W0D-BJKw1HgpgU',
         tmdbApiKey: 'febd351cb18c057ef65bd6cd832966b6',
-        clerkKey: 'pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk',
         passcode: 'scoopcast2026',
         adminEmail: 'asmit.sharma@hotmail.com',
         uploaderPasscode: 'uploader2026'
@@ -1614,7 +1612,6 @@
         this.loadExistingDrops();
         this.setupDragAndDrop();
         this.loadAssetLibrary();
-        this.initClerk();
       },
 
       loadSettings() {
@@ -1633,7 +1630,6 @@
         this.config.apiKey = document.getElementById('cfgApiKey').value.trim();
         this.config.apiSecret = document.getElementById('cfgApiSecret').value.trim();
         this.config.tmdbToken = document.getElementById('cfgTmdbToken').value.trim();
-        this.config.clerkKey = document.getElementById('cfgClerkKey').value.trim();
         this.config.passcode = document.getElementById('cfgPasscode').value.trim();
         this.config.adminEmail = (document.getElementById('cfgAdminEmail').value.trim() || 'asmit.sharma@hotmail.com').toLowerCase();
         this.config.uploaderPasscode = document.getElementById('cfgUploaderPasscode').value.trim();
@@ -1652,7 +1648,6 @@
         document.getElementById('cfgApiKey').value = this.config.apiKey;
         document.getElementById('cfgApiSecret').value = this.config.apiSecret;
         document.getElementById('cfgTmdbToken').value = this.config.tmdbToken;
-        document.getElementById('cfgClerkKey').value = this.config.clerkKey;
         document.getElementById('cfgPasscode').value = this.config.passcode;
         document.getElementById('cfgAdminEmail').value = this.config.adminEmail || 'asmit.sharma@hotmail.com';
         document.getElementById('cfgUploaderPasscode').value = this.config.uploaderPasscode;
@@ -1665,18 +1660,26 @@
 
       // ── TEAM & USER ACCESS MANAGEMENT ──
       loadTeamUsers() {
+        const rootAdminEmail = (this.config.adminEmail || 'asmit.sharma@hotmail.com').toLowerCase();
+        const rootPass = this.config.passcode || 'scoopcast2026';
+        const defaultUploaderPass = this.config.uploaderPasscode || 'uploader2026';
+
         const defaultTeam = [
           {
+            identifier: 'asmit',
             email: 'asmit.sharma@hotmail.com',
             name: 'Asmit Sharma',
+            password: rootPass,
             role: 'admin',
             avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
             isRoot: true,
             addedAt: '2026-09-27'
           },
           {
+            identifier: 'curator',
             email: 'curator@scoopcast.me',
             name: 'Studio Curator',
+            password: defaultUploaderPass,
             role: 'uploader',
             avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg',
             isRoot: false,
@@ -1695,16 +1698,35 @@
           this.teamUsers = defaultTeam;
         }
 
-        // Ensure root admin always exists with full admin privileges
-        const rootEmail = 'asmit.sharma@hotmail.com';
-        const hasRoot = this.teamUsers.some(u => u.email.toLowerCase() === rootEmail);
+        // Migrate and ensure all team users have identifier & password
+        this.teamUsers.forEach(u => {
+          if (!u.identifier) {
+            u.identifier = (u.email ? u.email.split('@')[0] : (u.name || 'user')).toLowerCase().replace(/\s+/g, '');
+          }
+          if (!u.password) {
+            u.password = u.role === 'admin' ? rootPass : defaultUploaderPass;
+          }
+        });
+
+        // Ensure root admin always exists with full admin privileges & updated root password
+        const hasRoot = this.teamUsers.some(u => 
+          (u.email && u.email.toLowerCase() === rootAdminEmail) || 
+          (u.identifier && u.identifier.toLowerCase() === 'asmit') || 
+          u.isRoot
+        );
         if (!hasRoot) {
           this.teamUsers.unshift(defaultTeam[0]);
         } else {
-          const rootUser = this.teamUsers.find(u => u.email.toLowerCase() === rootEmail);
+          const rootUser = this.teamUsers.find(u => 
+            (u.email && u.email.toLowerCase() === rootAdminEmail) || 
+            (u.identifier && u.identifier.toLowerCase() === 'asmit') || 
+            u.isRoot
+          );
           if (rootUser) {
             rootUser.isRoot = true;
             rootUser.role = 'admin';
+            rootUser.identifier = rootUser.identifier || 'asmit';
+            rootUser.password = rootPass;
           }
         }
 
@@ -1751,30 +1773,35 @@
         list.innerHTML = this.teamUsers.map(user => {
           const isHead = user.role === 'admin';
           const isRoot = !!user.isRoot;
-          const safeEmail = (user.email || '').replace(/'/g, "\\'");
+          const safeIdentifier = (user.identifier || user.email || '').replace(/'/g, "\\'");
           const safeName = (user.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          const safePass = (user.password || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
           return `
             <div class="drop-item-row" style="padding:10px 14px;">
               <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
                 <img src="${user.avatar}" class="user-avatar-mini" style="width:36px; height:36px;" alt="${safeName}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';" />
                 <div style="min-width:0; flex:1;">
-                  <div style="font-weight:800; font-size:14px; display:flex; align-items:center; gap:6px;">
+                  <div style="font-weight:800; font-size:14px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                     <span>${user.name}</span>
                     ${isRoot ? '<span style="font-size:9px; background:#FEF08A; border:1px solid #CA8A04; padding:1px 5px; border-radius:4px; font-weight:800; color:#854D0E;">ROOT ADMIN</span>' : ''}
+                    <span style="font-family:var(--font-mono); font-size:11px; background:#EFF6FF; border:1px solid #93C5FD; color:#1D4ED8; padding:1px 6px; border-radius:4px;">ID: ${user.identifier || user.email}</span>
+                    <span style="font-family:var(--font-mono); font-size:11px; background:#FEF3C7; border:1px solid #D97706; color:#92400E; padding:1px 6px; border-radius:4px;">🔑 Pass: ${safePass}</span>
                   </div>
-                  <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
-                    ${user.email}
+                  <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-top:2px;">
+                    ${user.email || ''}
                   </div>
                 </div>
               </div>
 
-              <div style="display:flex; align-items:center; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px;">
                 <span class="user-role-tag ${isHead ? 'role-tag-head' : 'role-tag-uploader'}">
                   ${isHead ? '👑 MAIN HEAD' : '📤 UPLOADER'}
                 </span>
+                <button type="button" class="btn btn-xs" onclick="AdminApp.editUserPassword('${safeIdentifier}')" title="Change Password for this user">🔑 Edit Pass</button>
                 ${!isRoot ? `
-                  <button type="button" class="btn btn-xs" onclick="AdminApp.toggleUserRole('${safeEmail}')" title="Switch between Uploader and Main Head">⇄ Role</button>
-                  <button type="button" class="btn btn-xs btn-red" onclick="AdminApp.removeUser('${safeEmail}')" title="Revoke Studio Access">✕ Remove</button>
+                  <button type="button" class="btn btn-xs" onclick="AdminApp.toggleUserRole('${safeIdentifier}')" title="Switch between Uploader and Main Head">⇄ Role</button>
+                  <button type="button" class="btn btn-xs btn-red" onclick="AdminApp.removeUser('${safeIdentifier}')" title="Revoke Studio Access">✕ Remove</button>
                 ` : ''}
               </div>
             </div>
@@ -1784,25 +1811,38 @@
 
       handleAddUser(e) {
         if (e) e.preventDefault();
-        const name = document.getElementById('newUserName').value.trim();
-        const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
+        const name = (document.getElementById('newUserName').value || '').trim();
+        const rawIdentifier = (document.getElementById('newUserIdentifier').value || '').trim();
+        const password = (document.getElementById('newUserPassword').value || '').trim();
         const role = document.getElementById('newUserRole').value;
         const avatar = document.getElementById('newUserAvatar').value;
 
-        if (!email || !email.includes('@')) {
-          alert('Please enter a valid email address.');
+        if (!rawIdentifier) {
+          alert('Please enter a User ID, Username, or Email.');
           return;
         }
 
-        const exists = this.teamUsers.some(u => u.email.toLowerCase() === email);
+        if (!password) {
+          alert('Please specify a password / passcode for this contributor.');
+          return;
+        }
+
+        const identifier = rawIdentifier.toLowerCase();
+        const exists = this.teamUsers.some(u => 
+          (u.identifier && u.identifier.toLowerCase() === identifier) ||
+          (u.email && u.email.toLowerCase() === identifier)
+        );
+
         if (exists) {
-          alert(`User with email "${email}" already has access.`);
+          alert(`User with ID / Email "${rawIdentifier}" already exists.`);
           return;
         }
 
         const newUser = {
-          name: name || email.split('@')[0],
-          email: email,
+          name: name || rawIdentifier,
+          identifier: identifier,
+          email: rawIdentifier.includes('@') ? rawIdentifier : `${identifier}@scoopcast.me`,
+          password: password,
           role: role,
           avatar: avatar,
           isRoot: false,
@@ -1814,27 +1854,57 @@
         this.renderTeamUsers();
 
         document.getElementById('newUserName').value = '';
-        document.getElementById('newUserEmail').value = '';
+        document.getElementById('newUserIdentifier').value = '';
+        document.getElementById('newUserPassword').value = '';
 
-        this.showToast(`✅ Added ${newUser.name} (${role === 'admin' ? 'Main Head' : 'Uploader'})`);
+        this.showToast(`✅ Added ${newUser.name} with password "${password}" (${role === 'admin' ? 'Main Head' : 'Uploader'})`);
       },
 
-      removeUser(email) {
+      editUserPassword(identifier) {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only Main Head can change user passwords.');
+          return;
+        }
+
+        const target = this.teamUsers.find(u => 
+          (u.identifier && u.identifier.toLowerCase() === identifier.toLowerCase()) ||
+          (u.email && u.email.toLowerCase() === identifier.toLowerCase())
+        );
+
+        if (!target) return;
+
+        const newPass = prompt(`Set new password for "${target.name}" (${target.identifier}):`, target.password || '');
+        if (newPass && newPass.trim()) {
+          target.password = newPass.trim();
+          if (target.isRoot) {
+            this.config.passcode = target.password;
+            localStorage.setItem('scoopcast_admin_config', JSON.stringify(this.config));
+          }
+          this.saveTeamUsers();
+          this.renderTeamUsers();
+          this.showToast(`🔑 Password updated for ${target.name}!`);
+        }
+      },
+
+      removeUser(identifier) {
         if (this.currentUser.role !== 'admin') {
           alert('Access Restricted: Only Main Head can remove users.');
           return;
         }
 
-        const targetIndex = this.teamUsers.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+        const targetIndex = this.teamUsers.findIndex(u => 
+          (u.identifier && u.identifier.toLowerCase() === identifier.toLowerCase()) ||
+          (u.email && u.email.toLowerCase() === identifier.toLowerCase())
+        );
         if (targetIndex === -1) return;
 
         const user = this.teamUsers[targetIndex];
-        if (user.isRoot || user.email.toLowerCase() === 'asmit.sharma@hotmail.com') {
+        if (user.isRoot || (user.email && user.email.toLowerCase() === 'asmit.sharma@hotmail.com')) {
           alert('Access Protected: Root Main Head cannot be removed.');
           return;
         }
 
-        if (confirm(`Revoke access for "${user.name}" (${user.email})?\n\nThey will no longer be able to log into the Admin Studio.`)) {
+        if (confirm(`Revoke access for "${user.name}" (${user.identifier || user.email})?\n\nThey will no longer be able to log into the Admin Studio.`)) {
           this.teamUsers.splice(targetIndex, 1);
           this.saveTeamUsers();
           this.renderTeamUsers();
@@ -1842,13 +1912,16 @@
         }
       },
 
-      toggleUserRole(email) {
+      toggleUserRole(identifier) {
         if (this.currentUser.role !== 'admin') {
           alert('Access Restricted: Only Main Head can change roles.');
           return;
         }
 
-        const user = this.teamUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+        const user = this.teamUsers.find(u => 
+          (u.identifier && u.identifier.toLowerCase() === identifier.toLowerCase()) ||
+          (u.email && u.email.toLowerCase() === identifier.toLowerCase())
+        );
         if (!user || user.isRoot) return;
 
         const oldRole = user.role;
@@ -1856,117 +1929,6 @@
         this.saveTeamUsers();
         this.renderTeamUsers();
         this.showToast(`⇄ Changed ${user.name}'s role to ${user.role === 'admin' ? '👑 Main Head' : '📤 Uploader'}`);
-      },
-
-      // ── CLERK INTEGRATION & AUTH ──
-      async initClerk() {
-        try {
-          let retries = 0;
-          while (!window.Clerk && retries < 40) {
-            await new Promise(r => setTimeout(r, 100));
-            retries++;
-          }
-          if (!window.Clerk) return;
-
-          if (!window.Clerk.loaded) {
-            await window.Clerk.load();
-          }
-
-          // Check if returning from OAuth redirect callback (Google Sign-In)
-          const urlStr = window.location.href;
-          const searchStr = window.location.search || '';
-          const hashStr = window.location.hash || '';
-          const hasCallbackParams = 
-            searchStr.includes('__clerk') ||
-            searchStr.includes('status') ||
-            searchStr.includes('created_session_id') ||
-            searchStr.includes('rotating_token') ||
-            searchStr.includes('ticket') ||
-            hashStr.includes('__clerk') ||
-            urlStr.includes('oauth_callback');
-
-          if (hasCallbackParams) {
-            const authCard = document.querySelector('.neo-auth-card');
-            if (authCard) {
-              const sub = authCard.querySelector('.neo-auth-sub');
-              if (sub) sub.innerHTML = '<span style="color:#2563EB; font-weight:800;">⏳ Completing Google sign-in...</span>';
-            }
-            try {
-              if (window.Clerk.handleRedirectCallback) {
-                await window.Clerk.handleRedirectCallback({
-                  redirectUrl: window.location.origin + '/admin'
-                });
-              }
-            } catch (cbErr) {
-              console.warn('handleRedirectCallback notice:', cbErr);
-            }
-
-            // Explicitly activate created session if signIn or signUp finished
-            try {
-              if (window.Clerk.client?.signIn?.status === 'complete' && window.Clerk.client.signIn.createdSessionId) {
-                await window.Clerk.setActive({ session: window.Clerk.client.signIn.createdSessionId });
-              } else if (window.Clerk.client?.signUp?.status === 'complete' && window.Clerk.client.signUp.createdSessionId) {
-                await window.Clerk.setActive({ session: window.Clerk.client.signUp.createdSessionId });
-              }
-            } catch (actErr) {
-              console.warn('setActive notice:', actErr);
-            }
-          }
-
-          // Check authenticated user
-          const activeUser = window.Clerk.user || (window.Clerk.session && window.Clerk.session.user);
-          if (activeUser) {
-            this.handleClerkUser(activeUser);
-          }
-
-          // Register reactive listener for future session changes
-          if (window.Clerk.addListener) {
-            window.Clerk.addListener(({ user, session }) => {
-              const u = user || (session && session.user);
-              if (u) {
-                this.handleClerkUser(u);
-              }
-            });
-          }
-        } catch (err) {
-          console.warn('Clerk initialization notice:', err);
-        }
-      },
-
-      handleClerkUser(user) {
-        const email = (user.primaryEmailAddress?.emailAddress || '').toLowerCase();
-        const matchedMember = (this.teamUsers || []).find(u => u.email.toLowerCase() === email);
-
-        const name = user.fullName || user.firstName || (matchedMember ? matchedMember.name : (email.includes('asmit') ? 'Asmit Sharma' : 'Curator'));
-        const avatar = user.imageUrl || (matchedMember ? matchedMember.avatar : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
-        
-        // Auto-assign Main Head role if email matches asmit.sharma@hotmail.com or contains asmit
-        const mainHeadEmails = ['asmit.sharma@hotmail.com', (this.config.adminEmail || '').toLowerCase()];
-        const isMainHead = mainHeadEmails.includes(email) || 
-                           email.includes('asmit') ||
-                           (matchedMember && matchedMember.role === 'admin') ||
-                           (user.publicMetadata && user.publicMetadata.role === 'admin');
-
-        const role = isMainHead ? 'admin' : (matchedMember ? matchedMember.role : 'uploader');
-
-        // Auto-register in team list if new
-        if (!matchedMember && email) {
-          this.teamUsers.push({
-            name,
-            email,
-            role,
-            avatar,
-            isRoot: isMainHead && email.includes('asmit'),
-            addedAt: new Date().toISOString().split('T')[0]
-          });
-          this.saveTeamUsers();
-        }
-
-        this.applyRole(role, { name, avatar, email });
-        sessionStorage.setItem('scoopcast_admin_auth', 'true');
-        localStorage.setItem('scoopcast_admin_auth', 'true');
-        document.getElementById('authOverlay').style.display = 'none';
-        this.showToast(`🎉 Logged in as ${name} (${isMainHead ? '👑 Main Head' : '📤 Uploader'})`);
       },
 
       quickLoginAsmit() {
@@ -1979,79 +1941,6 @@
         });
         document.getElementById('authOverlay').style.display = 'none';
         this.showToast('👑 Welcome back, Asmit Sharma (Main Head)!');
-      },
-
-      async loginWithGoogle() {
-        const btn = document.querySelector('.btn-google-login');
-        const originalHtml = btn ? btn.innerHTML : '';
-        if (btn) {
-          btn.style.opacity = '0.75';
-          btn.style.pointerEvents = 'none';
-          btn.innerHTML = `<span style="font-size:18px;">⏳</span> <span>Connecting to Google...</span>`;
-        }
-
-        try {
-          let retries = 0;
-          while (!window.Clerk && retries < 35) {
-            await new Promise(r => setTimeout(r, 100));
-            retries++;
-          }
-
-          if (window.Clerk && !window.Clerk.loaded) {
-            await window.Clerk.load();
-          }
-
-          // 1. Try Clerk modal openSignIn (avoids redirect page reload and 3rd party cookie loss on custom domains)
-          if (window.Clerk && typeof window.Clerk.openSignIn === 'function') {
-            window.Clerk.openSignIn({
-              afterSignInUrl: window.location.href,
-              afterSignUpUrl: window.location.href
-            });
-            if (btn) {
-              btn.style.opacity = '1';
-              btn.style.pointerEvents = 'auto';
-              btn.innerHTML = originalHtml;
-            }
-            return;
-          }
-
-          // 2. Fallback to authenticateWithRedirect
-          const redirectUrl = window.location.origin + '/admin';
-          if (window.Clerk?.client?.signIn) {
-            try {
-              await window.Clerk.client.signIn.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl: redirectUrl,
-                redirectUrlComplete: redirectUrl
-              });
-              return;
-            } catch (signInErr) {
-              console.warn('signIn.authenticateWithRedirect notice, trying signUp:', signInErr);
-              if (window.Clerk?.client?.signUp) {
-                await window.Clerk.client.signUp.authenticateWithRedirect({
-                  strategy: 'oauth_google',
-                  redirectUrl: redirectUrl,
-                  redirectUrlComplete: redirectUrl
-                });
-                return;
-              }
-            }
-          }
-
-          throw new Error('Google Sign-In initializing. You can use Instant Access or Email below.');
-        } catch (err) {
-          console.error('Clerk Google Auth notice:', err);
-          if (btn) {
-            btn.style.opacity = '1';
-            btn.style.pointerEvents = 'auto';
-            btn.innerHTML = originalHtml;
-          }
-          const errEl = document.getElementById('authError');
-          if (errEl) {
-            errEl.innerHTML = `⚠️ ${err.message || 'Google Auth notice'}. You can click <b>Instant Access</b> or enter <b>asmit.sharma@hotmail.com</b> below!`;
-            errEl.style.display = 'block';
-          }
-        }
       },
 
       // Role Application
@@ -2101,7 +1990,7 @@
         this.renderDropsList();
       },
 
-      // Passcode Sign-In Handler
+      // Manual Sign-In Session Checker
       checkAuth() {
         const isAuth = (sessionStorage.getItem('scoopcast_admin_auth') === 'true') ||
                        (localStorage.getItem('scoopcast_admin_auth') === 'true');
@@ -2112,71 +2001,84 @@
           this.applyRole(savedRole, { name: savedName, avatar: savedAvatar });
           document.getElementById('authOverlay').style.display = 'none';
         } else {
-          // If URL has callback tokens, show loading state on overlay
-          const hasTokens = window.location.search.includes('__clerk') || window.location.hash.includes('__clerk');
-          if (hasTokens) {
-            const sub = document.querySelector('.neo-auth-sub');
-            if (sub) sub.innerHTML = '<span style="color:#2563EB; font-weight:800;">⏳ Completing Google sign-in...</span>';
-          }
           document.getElementById('authOverlay').style.display = 'flex';
         }
       },
 
       handleLogin(e) {
         if (e) e.preventDefault();
-        const rawInput = (document.getElementById('authPassInput').value || '').trim();
-        const input = rawInput.toLowerCase();
+        const userIdInput = document.getElementById('authUserIdInput');
+        const passInput = document.getElementById('authPassInput');
+        const errEl = document.getElementById('authError');
 
-        if (!rawInput) {
-          const err = document.getElementById('authError');
-          if (err) {
-            err.textContent = 'Please enter an email or passcode.';
-            err.style.display = 'block';
+        const rawId = (userIdInput ? userIdInput.value : '').trim();
+        const idLower = rawId.toLowerCase();
+        const rawPass = (passInput ? passInput.value : '').trim();
+
+        if (!rawId || !rawPass) {
+          if (errEl) {
+            errEl.textContent = 'Please enter both User ID and Password.';
+            errEl.style.display = 'block';
           }
           return;
         }
 
-        // 1. Asmit Sharma / Main Head Match
+        // 1. Root Admin / Main Head Check
+        const rootAdminEmail = (this.config.adminEmail || 'asmit.sharma@hotmail.com').toLowerCase();
+        const rootPass = this.config.passcode || 'scoopcast2026';
+
         if (
-          input === 'asmit.sharma@hotmail.com' ||
-          input.includes('asmit') ||
-          rawInput === this.config.passcode ||
-          input === 'scoopcast2026' ||
-          input === 'admin'
+          (idLower === rootAdminEmail || idLower === 'asmit' || idLower === 'admin' || idLower === 'root') &&
+          (rawPass === rootPass)
         ) {
           sessionStorage.setItem('scoopcast_admin_auth', 'true');
           localStorage.setItem('scoopcast_admin_auth', 'true');
           this.applyRole('admin', {
             name: 'Asmit Sharma',
             avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
-            email: 'asmit.sharma@hotmail.com'
+            email: rootAdminEmail
           });
           document.getElementById('authOverlay').style.display = 'none';
+          if (errEl) errEl.style.display = 'none';
           this.showToast('👑 Welcome back, Asmit Sharma (Main Head)!');
           return;
         }
 
-        // 2. Check Authorized Team Members List (Managed via Team & Users)
+        // 2. Contributor / Team Users Check
         const matchedMember = (this.teamUsers || []).find(u => 
-          u.email.toLowerCase() === input ||
-          u.name.toLowerCase() === input
+          (u.identifier && u.identifier.toLowerCase() === idLower) ||
+          (u.email && u.email.toLowerCase() === idLower) ||
+          (u.name && u.name.toLowerCase() === idLower)
         );
 
         if (matchedMember) {
-          sessionStorage.setItem('scoopcast_admin_auth', 'true');
-          localStorage.setItem('scoopcast_admin_auth', 'true');
-          this.applyRole(matchedMember.role, {
-            name: matchedMember.name,
-            avatar: matchedMember.avatar,
-            email: matchedMember.email
-          });
-          document.getElementById('authOverlay').style.display = 'none';
-          this.showToast(`🎉 Welcome back, ${matchedMember.name}! (${matchedMember.role === 'admin' ? '👑 Main Head' : '📤 Uploader'})`);
-          return;
+          const expectedPass = matchedMember.password || (matchedMember.role === 'admin' ? rootPass : (this.config.uploaderPasscode || 'uploader2026'));
+          if (rawPass === expectedPass) {
+            sessionStorage.setItem('scoopcast_admin_auth', 'true');
+            localStorage.setItem('scoopcast_admin_auth', 'true');
+            this.applyRole(matchedMember.role, {
+              name: matchedMember.name,
+              avatar: matchedMember.avatar,
+              email: matchedMember.email || matchedMember.identifier
+            });
+            document.getElementById('authOverlay').style.display = 'none';
+            if (errEl) errEl.style.display = 'none';
+            this.showToast(`🎉 Welcome back, ${matchedMember.name}! (${matchedMember.role === 'admin' ? '👑 Main Head' : '📤 Uploader'})`);
+            return;
+          } else {
+            if (errEl) {
+              errEl.textContent = `⚠️ Incorrect password for "${rawId}". Please try again.`;
+              errEl.style.display = 'block';
+            }
+            return;
+          }
         }
 
-        // 3. Fallback Uploader Passcode / Curator Match
-        if (rawInput === this.config.uploaderPasscode || input === 'uploader2026' || input === 'curator') {
+        // 3. Fallback generic uploader / curator account
+        if (
+          (idLower === 'uploader' || idLower === 'curator') &&
+          (rawPass === this.config.uploaderPasscode || rawPass === 'uploader2026')
+        ) {
           sessionStorage.setItem('scoopcast_admin_auth', 'true');
           localStorage.setItem('scoopcast_admin_auth', 'true');
           this.applyRole('uploader', {
@@ -2185,32 +2087,19 @@
             email: 'curator@scoopcast.me'
           });
           document.getElementById('authOverlay').style.display = 'none';
+          if (errEl) errEl.style.display = 'none';
           this.showToast('📤 Logged in as Curator / Uploader');
           return;
         }
 
-        // 4. Any other email attempt if not in authorized team list
-        if (input.includes('@') && input.includes('.')) {
-          const err = document.getElementById('authError');
-          if (err) {
-            err.innerHTML = `⚠️ Access Restricted: "<b>${rawInput}</b>" is not in the authorized team list.<br>Please ask the Main Head (Asmit Sharma) to add your email.`;
-            err.style.display = 'block';
-          }
-          return;
-        }
-
-        // Failed
-        const err = document.getElementById('authError');
-        if (err) {
-          err.textContent = 'Invalid credentials. Enter authorized email or Passcode (scoopcast2026).';
-          err.style.display = 'block';
+        // 4. Failed
+        if (errEl) {
+          errEl.textContent = `⚠️ Invalid credentials. User "${rawId}" not found or password incorrect.`;
+          errEl.style.display = 'block';
         }
       },
 
-      async logout() {
-        if (window.Clerk) {
-          try { await window.Clerk.signOut(); } catch (e) {}
-        }
+      logout() {
         sessionStorage.removeItem('scoopcast_admin_auth');
         sessionStorage.removeItem('scoopcast_user_role');
         sessionStorage.removeItem('scoopcast_user_name');
@@ -2222,7 +2111,9 @@
         localStorage.removeItem('scoopcast_user_avatar');
 
         document.getElementById('authOverlay').style.display = 'flex';
+        const userIdInput = document.getElementById('authUserIdInput');
         const passInput = document.getElementById('authPassInput');
+        if (userIdInput) userIdInput.value = '';
         if (passInput) passInput.value = '';
         const errEl = document.getElementById('authError');
         if (errEl) errEl.style.display = 'none';
