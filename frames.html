@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMDB Pure Movie Frame Finder — Scoopcast Labs</title>
+  <meta name="description" content="Search any movie on TMDB and extract only genuine widescreen film frames and scene stills — with posters, wallpapers, and marketing logos automatically filtered out.">
+  
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #FFFDF5;
+      --card-bg: #FFFFFF;
+      --border: #111827;
+      --yellow: #FACC15;
+      --yellow-hover: #FDE047;
+      --blue: #38BDF8;
+      --green: #4ADE80;
+      --red: #F87171;
+      --purple: #C084FC;
+      --text: #111827;
+      --muted: #6B7280;
+      --shadow: 4px 4px 0 #111827;
+      --shadow-sm: 2.5px 2.5px 0 #111827;
+      --shadow-lg: 6px 6px 0 #111827;
+      --font-brand: 'Lilita One', cursive, sans-serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: radial-gradient(var(--border) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      line-height: 1.5;
+    }
+
+    /* ── HEADER ── */
+    header.tool-header {
+      background: var(--yellow);
+      border-bottom: 3.5px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--border);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--yellow);
+    }
+
+    .brand-title {
+      font-family: var(--font-brand);
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-tag {
+      background: #111827;
+      color: #FFF;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 800;
+      border: 2.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .btn:hover {
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--border);
+    }
+
+    .btn-yellow { background: var(--yellow); }
+    .btn-yellow:hover { background: var(--yellow-hover); }
+    .btn-blue { background: var(--blue); }
+    .btn-green { background: var(--green); }
+    .btn-red { background: var(--red); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-xs { padding: 4px 8px; font-size: 11px; }
+
+    /* ── HERO & SEARCH SECTION ── */
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 20px 80px 20px;
+    }
+
+    .hero-box {
+      background: #FFF;
+      border: 3.5px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FEF08A;
+      border: 2px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: var(--font-brand);
+      font-size: 32px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 24px;
+      max-width: 700px;
+    }
+
+    /* ── SEARCH INPUT WRAPPER ── */
+    .search-box-wrap {
+      position: relative;
+    }
+
+    .search-input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-input {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 18px;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      background: #FFFDF5;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-input:focus {
+      background: #FFF;
+      border-color: #2563EB;
+      box-shadow: 4px 4px 0 #2563EB;
+    }
+
+    .search-submit-btn {
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 800;
+      background: var(--yellow);
+    }
+
+    /* ── AUTOCOMPLETE DROPDOWN ── */
+    .autocomplete-box {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #FFF;
+      border: 3px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      z-index: 50;
+      max-height: 380px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .autocomplete-box.open {
+      display: block;
+    }
+
+    .ac-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border-bottom: 2px solid #F3F4F6;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .ac-item:last-child {
+      border-bottom: none;
+    }
+
+    .ac-item:hover {
+      background: #FEF9C3;
+    }
+
+    .ac-poster {
+      width: 42px;
+      height: 60px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 2px 2px 0 var(--border);
+      background: #E5E7EB;
+      flex-shrink: 0;
+    }
+
+    .ac-title {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .ac-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── QUICK POPULAR CHIPS ── */
+    .popular-chips-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .chip-label {
+      font-size: 12px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--muted);
+    }
+
+    .quick-chip {
+      background: #F3F4F6;
+      border: 2px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--border);
+      transition: transform 0.1s, background 0.1s;
+    }
+
+    .quick-chip:hover {
+      background: var(--yellow);
+      transform: translateY(-1px);
+    }
+
+    /* ── ACTIVE MOVIE BANNER ── */
+    .movie-banner {
+      background: #FFF;
+      border: 3px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .movie-info-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .movie-poster-sm {
+      width: 54px;
+      height: 80px;
+      object-fit: cover;
+      border: 2.5px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 3px 3px 0 var(--border);
+    }
+
+    .movie-title-large {
+      font-family: var(--font-brand);
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .movie-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .filter-stat-badge {
+      background: #DCFCE7;
+      border: 2px solid #16A34A;
+      color: #15803D;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    /* ── FILTER & SORT CONTROLS ── */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      background: #FFF;
+      border: 2px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--border);
+      transition: all 0.1s;
+    }
+
+    .pill-btn.active {
+      background: var(--border);
+      color: #FFF;
+    }
+
+    .sort-select {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 6px 10px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: #FFF;
+      box-shadow: 2px 2px 0 var(--border);
+      outline: none;
+    }
+
+    /* ── FRAMES GRID ── */
+    .frames-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .frames-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .frame-card {
+      background: #FFF;
+      border: 3px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .frame-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .frame-thumb-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0F172A;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .frame-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .frame-card:hover .frame-img {
+      transform: scale(1.02);
+    }
+
+    .frame-res-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(4px);
+      color: #FFF;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .frame-aspect-tag {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: var(--yellow);
+      color: var(--border);
+      border: 1.5px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .frame-rating-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(17, 24, 39, 0.85);
+      color: #FACC15;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .frame-card-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .frame-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* ── FULLSCREEN PREVIEW LIGHTBOX ── */
+    .lightbox-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.88);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox-modal.open {
+      display: flex;
+    }
+
+    .lightbox-content {
+      background: #FFF;
+      border: 4px solid var(--border);
+      border-radius: 16px;
+      max-width: 1000px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 12px 12px 0 var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox-header {
+      background: var(--yellow);
+      border-bottom: 3px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .lightbox-img-wrap {
+      width: 100%;
+      background: #000;
+      max-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lightbox-footer {
+      padding: 14px 20px;
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 3px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ── TOAST NOTIFICATION ── */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #FFF;
+      border: 2.5px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 2000;
+    }
+
+    /* ── EMPTY / LOADING STATES ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: #FFF;
+      border: 3px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-title {
+      font-family: var(--font-brand);
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .empty-desc {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="tool-header">
+    <a href="/" class="brand-wrap">
+      <div class="brand-logo">🎞️</div>
+      <span class="brand-title">SCOOPCAST</span>
+      <span class="brand-tag">FRAME EXTRACTOR</span>
+    </a>
+
+    <div class="header-links">
+      <a href="/admin" class="btn btn-sm btn-yellow">🚀 Open Admin Studio</a>
+      <button type="button" class="btn btn-sm" onclick="App.openConfigModal()">⚙️ TMDB API Key</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+
+    <!-- HERO SEARCH CARD -->
+    <div class="hero-box">
+      <div class="hero-badge">🎬 PURE CINEMA STILLS ONLY</div>
+      <h1 class="hero-title">TMDB Movie Frame & Still Extractor</h1>
+      <p class="hero-sub">
+        Search any movie on TMDB. Our intelligent cinema filter strips out all vertical posters, title cards, marketing wallpapers, and localized logos — isolating <b>only real, unadulterated movie frames and scene stills</b>.
+      </p>
+
+      <!-- SEARCH INPUT & AUTOCOMPLETE -->
+      <div class="search-box-wrap">
+        <form onsubmit="App.handleSearchSubmit(event)" class="search-input-group">
+          <input 
+            type="text" 
+            id="movieSearchInput" 
+            class="search-input" 
+            placeholder="Type any movie title (e.g. Sholay, Inception, Gangs of Wasseypur, Interstellar, Dune)..." 
+            autocomplete="off" 
+            oninput="App.debounceSearch()" 
+          />
+          <button type="submit" class="btn search-submit-btn">🔍 Search</button>
+        </form>
+        <div id="autocompleteDropdown" class="autocomplete-box"></div>
+      </div>
+
+      <!-- POPULAR QUICK CHIPS -->
+      <div class="popular-chips-wrap">
+        <span class="chip-label">QUICK TEST:</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('Sholay')">🎬 Sholay (1975)</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('Inception')">🌀 Inception (2010)</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('Gangs of Wasseypur')">🔫 Gangs of Wasseypur (2012)</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('Interstellar')">🚀 Interstellar (2014)</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('Dune: Part Two')">🏜️ Dune: Part Two (2024)</span>
+        <span class="quick-chip" onclick="App.searchAndSelect('3 Idiots')">🎓 3 Idiots (2009)</span>
+      </div>
+    </div>
+
+    <!-- ACTIVE MOVIE HERO BANNER (POPULATED AFTER SELECTING A MOVIE) -->
+    <div id="movieBanner" class="movie-banner" style="display:none;">
+      <div class="movie-info-wrap">
+        <img id="bannerPoster" class="movie-poster-sm" src="" alt="Movie Poster" />
+        <div>
+          <div class="movie-title-large" id="bannerTitle">Movie Title</div>
+          <div class="movie-tagline" id="bannerMeta">2010 • Action, Sci-Fi • Rating: 8.4/10</div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="filter-stat-badge" id="frameStatsBadge">
+          ✓ 24 Clean Movie Frames Found (Posters & Logos Excluded)
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS & FILTER BAR -->
+    <div id="controlsBar" class="controls-bar" style="display:none;">
+      <div class="filter-pills" id="resFilterPills">
+        <span class="chip-label">RESOLUTION:</span>
+        <button type="button" class="pill-btn active" data-res="all" onclick="App.setResFilter('all')">All Frames (<span id="countAll">0</span>)</button>
+        <button type="button" class="pill-btn" data-res="4k" onclick="App.setResFilter('4k')">4K UHD (<span id="count4k">0</span>)</button>
+        <button type="button" class="pill-btn" data-res="1080p" onclick="App.setResFilter('1080p')">Full HD 1080p (<span id="count1080p">0</span>)</button>
+        <button type="button" class="pill-btn" data-res="scope" onclick="App.setResFilter('scope')">Cinemascope (2.35-2.40:1) (<span id="countScope">0</span>)</button>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="chip-label">SORT:</span>
+        <select id="sortSelect" class="sort-select" onchange="App.applyFilters()">
+          <option value="rating">⭐ Highest Community Rating</option>
+          <option value="res">📐 Highest Resolution</option>
+          <option value="votes">👥 Most Votes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- FRAMES GRID CONTAINER -->
+    <div id="framesGrid" class="frames-grid"></div>
+
+    <!-- INITIAL EMPTY STATE -->
+    <div id="initialState" class="empty-state">
+      <div class="empty-icon">🎞️</div>
+      <h2 class="empty-title">Ready to Extract Clean Cinema Frames</h2>
+      <p class="empty-desc">
+        Type any movie title in the search box above or click one of the quick test chips to view verified widescreen movie scene stills.
+      </p>
+    </div>
+
+    <!-- NO FRAMES FOUND STATE -->
+    <div id="noFramesState" class="empty-state" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <h2 class="empty-title">No Clean Frames Found for this Filter</h2>
+      <p class="empty-desc">
+        Try clicking "All Frames" above or search for another movie with widescreen still submissions on TMDB.
+      </p>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX PREVIEW MODAL -->
+  <div id="lightboxModal" class="lightbox-modal" onclick="if(event.target===this) App.closeLightbox()">
+    <div class="lightbox-content">
+      <div class="lightbox-header">
+        <div style="font-family:var(--font-brand); font-size:18px;" id="lightboxTitle">Frame Preview</div>
+        <button type="button" class="btn btn-sm" onclick="App.closeLightbox()">✕ Close</button>
+      </div>
+      <div class="lightbox-img-wrap">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="Frame High-Res" />
+      </div>
+      <div class="lightbox-footer">
+        <div style="font-family:var(--font-mono); font-size:12px; color:var(--muted);" id="lightboxDetails">
+          Resolution: 3840x2160 • Aspect Ratio: 1.78:1 (16:9)
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-sm btn-yellow" onclick="App.copyCurrentLightboxUrl()">📋 Copy Image URL</button>
+          <a id="lightboxDownloadBtn" href="#" target="_blank" download class="btn btn-sm btn-green">⬇️ Download File</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API KEY MODAL -->
+  <div id="apiModal" class="lightbox-modal" onclick="if(event.target===this) App.closeConfigModal()">
+    <div class="lightbox-content" style="max-width:550px;">
+      <div class="lightbox-header">
+        <div style="font-family:var(--font-brand); font-size:18px;">⚙️ TMDB Credentials Settings</div>
+        <button type="button" class="btn btn-sm" onclick="App.closeConfigModal()">✕</button>
+      </div>
+      <div style="padding:20px;">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+          A working Scoopcast TMDB Read Token is pre-configured by default. You can enter your own TMDB v4 Bearer Token or v3 API Key below:
+        </p>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:11px; font-weight:800; font-family:var(--font-mono); display:block; margin-bottom:4px;">TMDB v4 Read Access Token (Bearer)</label>
+          <input type="password" id="customTmdbToken" class="search-input" style="padding:10px 14px; font-size:13px; width:100%;" />
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:20px;">
+          <button type="button" class="btn btn-sm" onclick="App.closeConfigModal()">Cancel</button>
+          <button type="button" class="btn btn-sm btn-yellow" onclick="App.saveCustomToken()">💾 Save Token</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBox" class="toast-box">
+    <span id="toastIcon">📋</span>
+    <span id="toastText">Copied URL to clipboard!</span>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    const App = {
+      // Pre-configured working TMDB Token
+      tmdbToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZWJkMzUxY2IxOGMwNTdlZjY1YmQ2Y2Q4MzI5NjZiNiIsIm5iZiI6MTc3NzcxNTUzNS4wNDE5OTk4LCJzdWIiOiI2OWY1Yzk0ZjU0M2FjMDY4ZDgyMGZjMzYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.DB3S0Ye5G28XrqsR_kxmfFLz342I8W0D-BJKw1HgpgU',
+      searchTimer: null,
+      currentMovie: null,
+      allExtractedFrames: [],
+      activeResFilter: 'all',
+      activeLightboxUrl: '',
+
+      init() {
+        const savedToken = localStorage.getItem('scoopcast_tmdb_token');
+        if (savedToken) {
+          this.tmdbToken = savedToken;
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.search-box-wrap')) {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (dropdown) dropdown.classList.remove('open');
+          }
+        });
+      },
+
+      openConfigModal() {
+        document.getElementById('customTmdbToken').value = this.tmdbToken;
+        document.getElementById('apiModal').classList.add('open');
+      },
+
+      closeConfigModal() {
+        document.getElementById('apiModal').classList.remove('open');
+      },
+
+      saveCustomToken() {
+        const token = document.getElementById('customTmdbToken').value.trim();
+        if (token) {
+          this.tmdbToken = token;
+          localStorage.setItem('scoopcast_tmdb_token', token);
+          this.showToast('✅ TMDB API Token saved successfully!');
+          this.closeConfigModal();
+        }
+      },
+
+      debounceSearch() {
+        clearTimeout(this.searchTimer);
+        const query = document.getElementById('movieSearchInput').value.trim();
+        if (query.length < 2) {
+          document.getElementById('autocompleteDropdown').classList.remove('open');
+          return;
+        }
+        this.searchTimer = setTimeout(() => this.searchMovies(query), 280);
+      },
+
+      async searchMovies(query) {
+        const dropdown = document.getElementById('autocompleteDropdown');
+        try {
+          const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US`;
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${this.tmdbToken}`,
+              'Content-Type': 'application/json;charset=utf-8'
+            }
+          });
+          const data = await res.json();
+
+          if (data && data.results && data.results.length > 0) {
+            dropdown.innerHTML = data.results.slice(0, 8).map(m => {
+              const year = m.release_date ? m.release_date.split('-')[0] : 'N/A';
+              const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : 'https://via.placeholder.com/42x60?text=Film';
+              const safeTitle = (m.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+              return `
+                <div class="ac-item" onclick="App.selectMovie(${m.id}, '${safeTitle}', '${year}', '${m.poster_path || ''}', ${m.vote_average || 0})">
+                  <img src="${poster}" class="ac-poster" alt="${safeTitle}" />
+                  <div>
+                    <div class="ac-title">${m.title}</div>
+                    <div class="ac-meta">${year} • Rating: ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'}/10</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+            dropdown.classList.add('open');
+          } else {
+            dropdown.innerHTML = '<div style="padding:14px; text-align:center; color:var(--muted); font-size:13px;">No movies found on TMDB.</div>';
+            dropdown.classList.add('open');
+          }
+        } catch (err) {
+          console.error('TMDB search error:', err);
+        }
+      },
+
+      async searchAndSelect(title) {
+        document.getElementById('movieSearchInput').value = title;
+        try {
+          const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(title)}&include_adult=false&language=en-US`;
+          const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${this.tmdbToken}` }
+          });
+          const data = await res.json();
+          if (data?.results?.[0]) {
+            const m = data.results[0];
+            const year = m.release_date ? m.release_date.split('-')[0] : '';
+            this.selectMovie(m.id, m.title, year, m.poster_path, m.vote_average);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      handleSearchSubmit(e) {
+        if (e) e.preventDefault();
+        const val = document.getElementById('movieSearchInput').value.trim();
+        if (val) this.searchAndSelect(val);
+      },
+
+      async selectMovie(id, title, year, posterPath, voteAverage) {
+        document.getElementById('autocompleteDropdown').classList.remove('open');
+        document.getElementById('movieSearchInput').value = `${title} (${year})`;
+
+        this.currentMovie = { id, title, year, posterPath, voteAverage };
+
+        // Update Banner
+        const banner = document.getElementById('movieBanner');
+        banner.style.display = 'flex';
+        document.getElementById('bannerTitle').textContent = title;
+        document.getElementById('bannerMeta').textContent = `${year} • Rating: ${voteAverage ? voteAverage.toFixed(1) : 'N/A'}/10 • TMDB ID: ${id}`;
+        
+        const posterEl = document.getElementById('bannerPoster');
+        if (posterPath) {
+          posterEl.style.display = 'block';
+          posterEl.src = `https://image.tmdb.org/t/p/w185${posterPath}`;
+        } else {
+          posterEl.style.display = 'none';
+        }
+
+        // Fetch and extract frames
+        await this.fetchMovieFrames(id, title);
+      },
+
+      async fetchMovieFrames(movieId, title) {
+        const grid = document.getElementById('framesGrid');
+        const initial = document.getElementById('initialState');
+        const noFrames = document.getElementById('noFramesState');
+        const controls = document.getElementById('controlsBar');
+
+        initial.style.display = 'none';
+        noFrames.style.display = 'none';
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; font-weight:800; font-size:16px;">⏳ Extracting movie frames from TMDB...</div>';
+
+        try {
+          // Fetch all backdrops with include_image_language=null,en
+          const url = `https://api.themoviedb.org/3/movie/${movieId}/images?include_image_language=null,en`;
+          const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${this.tmdbToken}` }
+          });
+          const data = await res.json();
+
+          const allBackdrops = data.backdrops || [];
+
+          // ── CORE MOVIE FRAME EXTRACTION FILTER ──
+          // 1. iso_639_1 must be null (No localized marketing titles or typography overlays)
+          // 2. aspect_ratio must be >= 1.70 (Strictly widescreen cinema aspect ratios: 16:9, 1.85:1, 2.35:1, 2.39:1)
+          // 3. posters (aspect_ratio < 1.0) and logos are completely excluded
+          const cleanFrames = allBackdrops.filter(b => {
+            const isTextless = b.iso_639_1 === null;
+            const isWidescreen = b.aspect_ratio >= 1.70;
+            const isGoodRes = b.width >= 1280;
+            return isTextless && isWidescreen && isGoodRes;
+          });
+
+          this.allExtractedFrames = cleanFrames;
+
+          // Update stats
+          document.getElementById('frameStatsBadge').innerHTML = 
+            `✓ <b>${cleanFrames.length}</b> Genuine Cinema Frames Identified (Filtered out ${allBackdrops.length - cleanFrames.length} posters/promos)`;
+
+          controls.style.display = 'flex';
+          this.updateFilterCounts();
+          this.applyFilters();
+
+        } catch (err) {
+          console.error('Frame fetch error:', err);
+          grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--red); padding:30px; font-weight:800;">⚠️ Failed to load frames from TMDB. Please check your API token.</div>`;
+        }
+      },
+
+      updateFilterCounts() {
+        const total = this.allExtractedFrames.length;
+        const fourK = this.allExtractedFrames.filter(f => f.width >= 3840).length;
+        const fhd = this.allExtractedFrames.filter(f => f.width >= 1920 && f.width < 3840).length;
+        const scope = this.allExtractedFrames.filter(f => f.aspect_ratio >= 2.20).length;
+
+        document.getElementById('countAll').textContent = total;
+        document.getElementById('count4k').textContent = fourK;
+        document.getElementById('count1080p').textContent = fhd;
+        document.getElementById('countScope').textContent = scope;
+      },
+
+      setResFilter(filter) {
+        this.activeResFilter = filter;
+        document.querySelectorAll('#resFilterPills .pill-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.res === filter);
+        });
+        this.applyFilters();
+      },
+
+      applyFilters() {
+        let items = [...this.allExtractedFrames];
+
+        // Apply resolution filter
+        if (this.activeResFilter === '4k') {
+          items = items.filter(f => f.width >= 3840);
+        } else if (this.activeResFilter === '1080p') {
+          items = items.filter(f => f.width >= 1920);
+        } else if (this.activeResFilter === 'scope') {
+          items = items.filter(f => f.aspect_ratio >= 2.20);
+        }
+
+        // Apply Sort
+        const sortVal = document.getElementById('sortSelect').value;
+        if (sortVal === 'rating') {
+          items.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+        } else if (sortVal === 'res') {
+          items.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+        } else if (sortVal === 'votes') {
+          items.sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0));
+        }
+
+        this.renderFrames(items);
+      },
+
+      renderFrames(frames) {
+        const grid = document.getElementById('framesGrid');
+        const noFrames = document.getElementById('noFramesState');
+
+        if (!frames || frames.length === 0) {
+          grid.innerHTML = '';
+          noFrames.style.display = 'block';
+          return;
+        }
+
+        noFrames.style.display = 'none';
+
+        grid.innerHTML = frames.map((frame, index) => {
+          const fullResUrl = `https://image.tmdb.org/t/p/original${frame.file_path}`;
+          const webpThumbUrl = `https://image.tmdb.org/t/p/w780${frame.file_path}`;
+
+          let aspectLabel = '16:9 Widescreen';
+          if (frame.aspect_ratio >= 2.30) aspectLabel = '2.39:1 Scope';
+          else if (frame.aspect_ratio >= 1.80) aspectLabel = '1.85:1 Flat';
+
+          let resTag = `${frame.width}×${frame.height}`;
+          if (frame.width >= 3840) resTag = `4K • ${frame.width}×${frame.height}`;
+          else if (frame.width >= 1920) resTag = `FHD • ${frame.width}×${frame.height}`;
+
+          const safeUrl = fullResUrl.replace(/'/g, "\\'");
+          const movieTitle = (this.currentMovie?.title || 'Movie').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+          return `
+            <div class="frame-card">
+              <div class="frame-thumb-box" onclick="App.openLightbox('${safeUrl}', '${movieTitle}', '${resTag}', '${aspectLabel}')">
+                <img src="${webpThumbUrl}" class="frame-img" loading="lazy" alt="${movieTitle} Frame ${index + 1}" />
+                <span class="frame-res-tag">${resTag}</span>
+                <span class="frame-aspect-tag">${aspectLabel}</span>
+                <span class="frame-rating-tag">★ ${frame.vote_average ? frame.vote_average.toFixed(1) : '5.0'} (${frame.vote_count || 0})</span>
+              </div>
+              <div class="frame-card-body">
+                <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted); word-break:break-all;">
+                  ${frame.file_path}
+                </div>
+                <div class="frame-card-actions">
+                  <button type="button" class="btn btn-xs btn-yellow" onclick="App.copyUrl('${safeUrl}', this)" title="Copy direct high-resolution TMDB image URL">
+                    📋 Copy URL
+                  </button>
+                  <button type="button" class="btn btn-xs" onclick="App.openLightbox('${safeUrl}', '${movieTitle}', '${resTag}', '${aspectLabel}')" title="View Fullscreen 16:9 Preview">
+                    👁️ Preview
+                  </button>
+                  <a href="${fullResUrl}" target="_blank" download class="btn btn-xs btn-green" title="Open full resolution in new tab">
+                    ⬇️ Download
+                  </a>
+                  <button type="button" class="btn btn-xs btn-blue" onclick="App.useInAdmin('${safeUrl}', '${movieTitle}', '${this.currentMovie?.year || ''}')" title="Pre-fill into Scoopcast Admin Studio">
+                    🚀 Use in Studio
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      openLightbox(url, title, resTag, aspectLabel) {
+        this.activeLightboxUrl = url;
+        const modal = document.getElementById('lightboxModal');
+        const img = document.getElementById('lightboxImg');
+        const titleEl = document.getElementById('lightboxTitle');
+        const detailsEl = document.getElementById('lightboxDetails');
+        const downloadBtn = document.getElementById('lightboxDownloadBtn');
+
+        titleEl.textContent = `${title} — Cinema Still`;
+        detailsEl.textContent = `${resTag} • ${aspectLabel} • Direct TMDB Source`;
+        img.src = url;
+        downloadBtn.href = url;
+
+        modal.classList.add('open');
+      },
+
+      closeLightbox() {
+        document.getElementById('lightboxModal').classList.remove('open');
+      },
+
+      copyCurrentLightboxUrl() {
+        if (this.activeLightboxUrl) {
+          navigator.clipboard.writeText(this.activeLightboxUrl);
+          this.showToast('📋 Copied full resolution image URL!');
+        }
+      },
+
+      copyUrl(url, btn) {
+        navigator.clipboard.writeText(url);
+        if (btn) {
+          const old = btn.textContent;
+          btn.textContent = '✓ Copied!';
+          setTimeout(() => btn.textContent = old, 1500);
+        }
+        this.showToast('📋 Copied full resolution image URL!');
+      },
+
+      useInAdmin(url, title, year) {
+        // Encode into query param and open admin
+        const adminUrl = `/admin?prefill_img=${encodeURIComponent(url)}&prefill_title=${encodeURIComponent(title)}&prefill_year=${encodeURIComponent(year)}`;
+        window.open(adminUrl, '_blank');
+      },
+
+      showToast(text) {
+        const box = document.getElementById('toastBox');
+        const txt = document.getElementById('toastText');
+        txt.textContent = text;
+        box.style.display = 'flex';
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          box.style.display = 'none';
+        }, 2200);
+      }
+    };
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => App.init());
+  </script>
+</body>
+</html>
