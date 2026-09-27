@@ -1229,6 +1229,7 @@
       </div>
 
       <button type="button" id="assetLibNavBtn" class="btn btn-sm btn-yellow" onclick="AdminApp.openAssetLibrary()" title="Browse all 59 game media assets">🖼️ Asset Library <span id="assetLibHeaderCount" class="badge-count">59</span></button>
+      <button type="button" id="teamNavBtn" class="btn btn-sm btn-blue" onclick="AdminApp.openTeamModal()" title="Manage authorized curators & admins">👥 Team <span id="teamHeaderCount" class="badge-count">2</span></button>
       <button type="button" id="settingsNavBtn" class="btn btn-sm" onclick="AdminApp.openSettings()">⚙️ Settings</button>
       <button type="button" class="btn btn-sm btn-red" onclick="AdminApp.logout()">Sign Out</button>
     </div>
@@ -1448,6 +1449,80 @@
   </div>
 
   <!-- ═════════════════════════════════════════════════════════════════
+       TEAM & USER ACCESS MANAGEMENT MODAL
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="teamModal" class="modal-backdrop" onclick="if(event.target===this) AdminApp.closeTeamModal()">
+    <div class="modal-box" style="max-width:660px;">
+      <div class="card-header" style="margin-bottom:18px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:38px; height:38px; background:var(--blue); border:2.5px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:var(--shadow-sm); color:#FFF;">
+            👥
+          </div>
+          <div>
+            <h3 class="card-title" style="margin:0; font-size:20px;">Team & User Access</h3>
+            <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted); font-weight:700;">Authorize or revoke curators and admins</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="AdminApp.closeTeamModal()">✕</button>
+      </div>
+
+      <!-- 1. ADD NEW TEAM MEMBER FORM -->
+      <div style="background:#F9FAFB; border:2.5px solid var(--border); border-radius:14px; padding:16px; margin-bottom:20px; box-shadow:var(--shadow-sm);">
+        <div style="font-weight:800; font-size:14px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+          <span>➕ Add New User / Curator</span>
+        </div>
+        <form onsubmit="AdminApp.handleAddUser(event)">
+          <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:12px; margin-bottom:12px;">
+            <div>
+              <label class="form-label" style="font-size:11px;">Full Name</label>
+              <input type="text" id="newUserName" class="form-input" placeholder="e.g. Priya Sharma" required />
+            </div>
+            <div>
+              <label class="form-label" style="font-size:11px;">Email Address</label>
+              <input type="email" id="newUserEmail" class="form-input" placeholder="e.g. priya@example.com" required />
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label class="form-label" style="font-size:11px;">Role & Privileges</label>
+              <select id="newUserRole" class="form-input">
+                <option value="uploader">📤 Uploader (Curator)</option>
+                <option value="admin">👑 Main Head (Full Admin)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size:11px;">Studio Avatar</label>
+              <select id="newUserAvatar" class="form-input">
+                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg">Aman (Blue)</option>
+                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg">Vish (Yellow)</option>
+                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799933/scoopcast/avvtar/radha.svg">Radha (Pink)</option>
+                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799946/scoopcast/avvtar/vikram.svg">Vikram (Purple)</option>
+                <option value="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799905/scoopcast/avvtar/divya.svg">Divya (Green)</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-yellow" style="width:100%; justify-content:center; padding:11px; font-size:14px;">
+            ➕ Grant Access & Add User
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. ACTIVE TEAM LIST -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+        <span style="font-weight:800; font-size:14px;">Authorized Members (<span id="teamListCount">0</span>)</span>
+        <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted);">Changes persist immediately</span>
+      </div>
+      <div id="teamUsersList" style="display:flex; flex-direction:column; gap:10px; max-height:300px; overflow-y:auto; padding-right:4px;">
+        <!-- Dynamically rendered rows -->
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button type="button" class="btn btn-sm" onclick="AdminApp.closeTeamModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
        ASSET LIBRARY EXPLORER MODAL
        ═════════════════════════════════════════════════════════════════ -->
   <div id="assetLibraryModal" class="modal-backdrop" onclick="if(event.target===this) AdminApp.closeAssetLibrary()">
@@ -1549,9 +1624,11 @@
       currentTmdbMovie: null,
       dropsData: [],
       searchDebounceTimer: null,
+      teamUsers: [],
 
       init() {
         this.loadSettings();
+        this.loadTeamUsers();
         this.checkAuth();
         this.loadExistingDrops();
         this.setupDragAndDrop();
@@ -1603,6 +1680,201 @@
 
       closeSettings() {
         document.getElementById('settingsModal').classList.remove('open');
+      },
+
+      // ── TEAM & USER ACCESS MANAGEMENT ──
+      loadTeamUsers() {
+        const defaultTeam = [
+          {
+            email: 'asmit.sharma@hotmail.com',
+            name: 'Asmit Sharma',
+            role: 'admin',
+            avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+            isRoot: true,
+            addedAt: '2026-09-27'
+          },
+          {
+            email: 'curator@scoopcast.me',
+            name: 'Studio Curator',
+            role: 'uploader',
+            avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg',
+            isRoot: false,
+            addedAt: '2026-09-27'
+          }
+        ];
+
+        const saved = localStorage.getItem('scoopcast_team_users');
+        if (saved) {
+          try {
+            this.teamUsers = JSON.parse(saved);
+          } catch (e) {
+            this.teamUsers = defaultTeam;
+          }
+        } else {
+          this.teamUsers = defaultTeam;
+        }
+
+        // Ensure root admin always exists with full admin privileges
+        const rootEmail = 'asmit.sharma@hotmail.com';
+        const hasRoot = this.teamUsers.some(u => u.email.toLowerCase() === rootEmail);
+        if (!hasRoot) {
+          this.teamUsers.unshift(defaultTeam[0]);
+        } else {
+          const rootUser = this.teamUsers.find(u => u.email.toLowerCase() === rootEmail);
+          if (rootUser) {
+            rootUser.isRoot = true;
+            rootUser.role = 'admin';
+          }
+        }
+
+        this.updateTeamBadge();
+      },
+
+      saveTeamUsers() {
+        localStorage.setItem('scoopcast_team_users', JSON.stringify(this.teamUsers));
+        this.updateTeamBadge();
+      },
+
+      updateTeamBadge() {
+        const badge = document.getElementById('teamHeaderCount');
+        if (badge) badge.textContent = this.teamUsers.length;
+        const countEl = document.getElementById('teamListCount');
+        if (countEl) countEl.textContent = this.teamUsers.length;
+      },
+
+      openTeamModal() {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only the Main Head can manage team access.');
+          return;
+        }
+        this.renderTeamUsers();
+        const modal = document.getElementById('teamModal');
+        if (modal) modal.classList.add('open');
+      },
+
+      closeTeamModal() {
+        const modal = document.getElementById('teamModal');
+        if (modal) modal.classList.remove('open');
+      },
+
+      renderTeamUsers() {
+        const list = document.getElementById('teamUsersList');
+        this.updateTeamBadge();
+        if (!list) return;
+
+        if (!this.teamUsers || this.teamUsers.length === 0) {
+          list.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted); font-size:13px;">No team members found</div>';
+          return;
+        }
+
+        list.innerHTML = this.teamUsers.map(user => {
+          const isHead = user.role === 'admin';
+          const isRoot = !!user.isRoot;
+          const safeEmail = (user.email || '').replace(/'/g, "\\'");
+          const safeName = (user.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          return `
+            <div class="drop-item-row" style="padding:10px 14px;">
+              <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                <img src="${user.avatar}" class="user-avatar-mini" style="width:36px; height:36px;" alt="${safeName}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';" />
+                <div style="min-width:0; flex:1;">
+                  <div style="font-weight:800; font-size:14px; display:flex; align-items:center; gap:6px;">
+                    <span>${user.name}</span>
+                    ${isRoot ? '<span style="font-size:9px; background:#FEF08A; border:1px solid #CA8A04; padding:1px 5px; border-radius:4px; font-weight:800; color:#854D0E;">ROOT ADMIN</span>' : ''}
+                  </div>
+                  <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
+                    ${user.email}
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="user-role-tag ${isHead ? 'role-tag-head' : 'role-tag-uploader'}">
+                  ${isHead ? '👑 MAIN HEAD' : '📤 UPLOADER'}
+                </span>
+                ${!isRoot ? `
+                  <button type="button" class="btn btn-xs" onclick="AdminApp.toggleUserRole('${safeEmail}')" title="Switch between Uploader and Main Head">⇄ Role</button>
+                  <button type="button" class="btn btn-xs btn-red" onclick="AdminApp.removeUser('${safeEmail}')" title="Revoke Studio Access">✕ Remove</button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      handleAddUser(e) {
+        if (e) e.preventDefault();
+        const name = document.getElementById('newUserName').value.trim();
+        const email = document.getElementById('newUserEmail').value.trim().toLowerCase();
+        const role = document.getElementById('newUserRole').value;
+        const avatar = document.getElementById('newUserAvatar').value;
+
+        if (!email || !email.includes('@')) {
+          alert('Please enter a valid email address.');
+          return;
+        }
+
+        const exists = this.teamUsers.some(u => u.email.toLowerCase() === email);
+        if (exists) {
+          alert(`User with email "${email}" already has access.`);
+          return;
+        }
+
+        const newUser = {
+          name: name || email.split('@')[0],
+          email: email,
+          role: role,
+          avatar: avatar,
+          isRoot: false,
+          addedAt: new Date().toISOString().split('T')[0]
+        };
+
+        this.teamUsers.push(newUser);
+        this.saveTeamUsers();
+        this.renderTeamUsers();
+
+        document.getElementById('newUserName').value = '';
+        document.getElementById('newUserEmail').value = '';
+
+        this.showToast(`✅ Added ${newUser.name} (${role === 'admin' ? 'Main Head' : 'Uploader'})`);
+      },
+
+      removeUser(email) {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only Main Head can remove users.');
+          return;
+        }
+
+        const targetIndex = this.teamUsers.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+        if (targetIndex === -1) return;
+
+        const user = this.teamUsers[targetIndex];
+        if (user.isRoot || user.email.toLowerCase() === 'asmit.sharma@hotmail.com') {
+          alert('Access Protected: Root Main Head cannot be removed.');
+          return;
+        }
+
+        if (confirm(`Revoke access for "${user.name}" (${user.email})?\n\nThey will no longer be able to log into the Admin Studio.`)) {
+          this.teamUsers.splice(targetIndex, 1);
+          this.saveTeamUsers();
+          this.renderTeamUsers();
+          this.showToast(`🗑️ Revoked access for ${user.name}`);
+        }
+      },
+
+      toggleUserRole(email) {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only Main Head can change roles.');
+          return;
+        }
+
+        const user = this.teamUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (!user || user.isRoot) return;
+
+        const oldRole = user.role;
+        user.role = oldRole === 'admin' ? 'uploader' : 'admin';
+        this.saveTeamUsers();
+        this.renderTeamUsers();
+        this.showToast(`⇄ Changed ${user.name}'s role to ${user.role === 'admin' ? '👑 Main Head' : '📤 Uploader'}`);
       },
 
       // ── CLERK INTEGRATION & AUTH ──
@@ -1682,16 +1954,32 @@
 
       handleClerkUser(user) {
         const email = (user.primaryEmailAddress?.emailAddress || '').toLowerCase();
-        const name = user.fullName || user.firstName || (email.includes('asmit') ? 'Asmit Sharma' : 'Curator');
-        const avatar = user.imageUrl || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+        const matchedMember = (this.teamUsers || []).find(u => u.email.toLowerCase() === email);
+
+        const name = user.fullName || user.firstName || (matchedMember ? matchedMember.name : (email.includes('asmit') ? 'Asmit Sharma' : 'Curator'));
+        const avatar = user.imageUrl || (matchedMember ? matchedMember.avatar : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg');
         
         // Auto-assign Main Head role if email matches asmit.sharma@hotmail.com or contains asmit
         const mainHeadEmails = ['asmit.sharma@hotmail.com', (this.config.adminEmail || '').toLowerCase()];
         const isMainHead = mainHeadEmails.includes(email) || 
                            email.includes('asmit') ||
+                           (matchedMember && matchedMember.role === 'admin') ||
                            (user.publicMetadata && user.publicMetadata.role === 'admin');
 
-        const role = isMainHead ? 'admin' : 'uploader';
+        const role = isMainHead ? 'admin' : (matchedMember ? matchedMember.role : 'uploader');
+
+        // Auto-register in team list if new
+        if (!matchedMember && email) {
+          this.teamUsers.push({
+            name,
+            email,
+            role,
+            avatar,
+            isRoot: isMainHead && email.includes('asmit'),
+            addedAt: new Date().toISOString().split('T')[0]
+          });
+          this.saveTeamUsers();
+        }
 
         this.applyRole(role, { name, avatar, email });
         sessionStorage.setItem('scoopcast_admin_auth', 'true');
@@ -1796,15 +2084,18 @@
 
         const roleBadge = document.getElementById('userRoleBadge');
         const settingsBtn = document.getElementById('settingsNavBtn');
+        const teamBtn = document.getElementById('teamNavBtn');
 
         if (role === 'admin') {
           roleBadge.textContent = '👑 MAIN HEAD';
           roleBadge.className = 'user-role-tag role-tag-head';
           if (settingsBtn) settingsBtn.style.display = 'inline-flex';
+          if (teamBtn) teamBtn.style.display = 'inline-flex';
         } else {
           roleBadge.textContent = '📤 UPLOADER';
           roleBadge.className = 'user-role-tag role-tag-uploader';
           if (settingsBtn) settingsBtn.style.display = 'none'; // Uploaders cannot see API keys
+          if (teamBtn) teamBtn.style.display = 'none'; // Uploaders cannot manage team members
         }
 
         sessionStorage.setItem('scoopcast_user_role', role);
@@ -1873,7 +2164,26 @@
           return;
         }
 
-        // 2. Uploader Passcode / Curator Match
+        // 2. Check Authorized Team Members List (Managed via Team & Users)
+        const matchedMember = (this.teamUsers || []).find(u => 
+          u.email.toLowerCase() === input ||
+          u.name.toLowerCase() === input
+        );
+
+        if (matchedMember) {
+          sessionStorage.setItem('scoopcast_admin_auth', 'true');
+          localStorage.setItem('scoopcast_admin_auth', 'true');
+          this.applyRole(matchedMember.role, {
+            name: matchedMember.name,
+            avatar: matchedMember.avatar,
+            email: matchedMember.email
+          });
+          document.getElementById('authOverlay').style.display = 'none';
+          this.showToast(`🎉 Welcome back, ${matchedMember.name}! (${matchedMember.role === 'admin' ? '👑 Main Head' : '📤 Uploader'})`);
+          return;
+        }
+
+        // 3. Fallback Uploader Passcode / Curator Match
         if (rawInput === this.config.uploaderPasscode || input === 'uploader2026' || input === 'curator') {
           sessionStorage.setItem('scoopcast_admin_auth', 'true');
           localStorage.setItem('scoopcast_admin_auth', 'true');
@@ -1887,28 +2197,20 @@
           return;
         }
 
-        // 3. Any Team Email Match
+        // 4. Any other email attempt if not in authorized team list
         if (input.includes('@') && input.includes('.')) {
-          const isHead = input.includes('asmit') || input === (this.config.adminEmail || '').toLowerCase();
-          const role = isHead ? 'admin' : 'uploader';
-          const name = isHead ? 'Asmit Sharma' : input.split('@')[0].toUpperCase();
-
-          sessionStorage.setItem('scoopcast_admin_auth', 'true');
-          localStorage.setItem('scoopcast_admin_auth', 'true');
-          this.applyRole(role, {
-            name: name,
-            avatar: isHead ? 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg' : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg',
-            email: input
-          });
-          document.getElementById('authOverlay').style.display = 'none';
-          this.showToast(`✅ Welcome, ${name}! (${isHead ? '👑 Main Head' : '📤 Uploader'})`);
+          const err = document.getElementById('authError');
+          if (err) {
+            err.innerHTML = `⚠️ Access Restricted: "<b>${rawInput}</b>" is not in the authorized team list.<br>Please ask the Main Head (Asmit Sharma) to add your email.`;
+            err.style.display = 'block';
+          }
           return;
         }
 
         // Failed
         const err = document.getElementById('authError');
         if (err) {
-          err.textContent = 'Invalid credentials. Enter asmit.sharma@hotmail.com or Master Passcode (scoopcast2026).';
+          err.textContent = 'Invalid credentials. Enter authorized email or Passcode (scoopcast2026).';
           err.style.display = 'block';
         }
       },
