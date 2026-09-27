@@ -55,6 +55,8 @@ if "cloudinary" in sys.modules:
         secure=True
     )
 
+CURL_BIN = "curl.exe" if sys.platform == "win32" else "curl"
+
 def sanitize_public_id(title, year):
     clean = re.sub(r"[^\w\s-]", "", title.replace("&", "and")).strip()
     clean = re.sub(r"[-\s]+", "_", clean)
@@ -148,19 +150,33 @@ def tmdb_get(endpoint, params=None):
     query = urllib.parse.urlencode(params)
     url = f"https://api.themoviedb.org/3/{endpoint}?{query}"
     
+    # 1. Try standard request (fast and direct on GitHub cloud runners)
     cmd = [
-        "curl.exe", "-s", "-L",
+        CURL_BIN, "-s", "-L",
+        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        url
+    ]
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
+        if res.stdout and res.stdout.strip().startswith("{"):
+            return json.loads(res.stdout)
+    except Exception:
+        pass
+
+    # 2. Fallback with CloudFront resolve (for Indian ISP DNS blocks)
+    resolve_cmd = [
+        CURL_BIN, "-s", "-L",
         "--resolve", "api.themoviedb.org:443:3.175.86.103",
         "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
         url
     ]
-    for _ in range(3):
-        try:
-            res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
-            if res.stdout and res.stdout.startswith("{"):
-                return json.loads(res.stdout)
-        except Exception:
-            time.sleep(1.0)
+    try:
+        res = subprocess.run(resolve_cmd, capture_output=True, text=True, encoding="utf-8", errors="ignore")
+        if res.stdout and res.stdout.strip().startswith("{"):
+            return json.loads(res.stdout)
+    except Exception:
+        pass
+
     return None
 
 def fetch_movies_to_process():
@@ -289,7 +305,7 @@ def main():
             img_url = f"https://image.tmdb.org/t/p/w1280{file_path}"
             
             try:
-                res = subprocess.run(["curl.exe", "-s", "-L", "-A", "Mozilla/5.0", img_url], capture_output=True)
+                res = subprocess.run([CURL_BIN, "-s", "-L", "-A", "Mozilla/5.0", img_url], capture_output=True)
                 raw_bytes = res.stdout
             except Exception:
                 continue
