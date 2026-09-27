@@ -106,9 +106,23 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`====================================================\n`);
 });
 
-// Keep event loop alive
-setInterval(() => {}, 1000 * 60 * 60);
+// Heartbeat keeps background task active and monitors uptime
+setInterval(() => {
+  console.log(`[${new Date().toLocaleTimeString()}] Scoopcast server active on http://localhost:${PORT}/admin`);
+}, 45000);
 
-process.on('uncaughtException', (err) => {
-  console.error('[Uncaught Exception]:', err);
-});
+const logError = (type, err) => {
+  const line = `[${new Date().toISOString()}] ${type}: ${err && err.stack ? err.stack : err}\n`;
+  try {
+    fs.appendFileSync(path.join(__dirname, 'err.log'), line);
+  } catch (e) {}
+  console.error(line);
+};
+
+process.on('uncaughtException', (err) => logError('UncaughtException', err));
+process.on('unhandledRejection', (err) => logError('UnhandledRejection', err));
+
+if (process.stdin.isTTY) {
+  process.stdin.resume();
+}
+

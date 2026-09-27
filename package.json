@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node scripts/build.js",
     "start": "node scripts/start.js",
-    "test": "node --version"
+    "serve": "node scripts/serve_local.js",
+    "test": "node scripts/test_admin_auth.js"
   },
   "engines": {
     "node": ">=18.0.0"
