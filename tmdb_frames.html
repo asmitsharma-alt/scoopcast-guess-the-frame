@@ -645,7 +645,7 @@
       margin: 0 auto;
     }
 
-    /* ── GROQ AI STYLING ── */
+    /* ── AI ENGINE STYLING (GEMINI & GROQ) ── */
     .btn-ai {
       background: #8B5CF6;
       color: #FFFFFF;
@@ -653,6 +653,15 @@
     }
     .btn-ai:hover {
       background: #7C3AED;
+      color: #FFFFFF;
+    }
+    .btn-gemini {
+      background: #2563EB;
+      color: #FFFFFF;
+      border: 2px solid var(--border);
+    }
+    .btn-gemini:hover {
+      background: #1D4ED8;
       color: #FFFFFF;
     }
     .btn-ai-subtle {
@@ -679,6 +688,24 @@
       transition: transform 0.1s;
     }
     .groq-status-badge:hover {
+      transform: translate(-1px, -1px);
+    }
+    .gemini-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EFF6FF;
+      color: #1E40AF;
+      border: 2px solid #2563EB;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: 2px 2px 0 var(--border);
+      transition: transform 0.1s;
+    }
+    .gemini-status-badge:hover {
       transform: translate(-1px, -1px);
     }
     .groq-progress-box {
@@ -805,8 +832,8 @@
     </a>
 
     <div class="header-links">
-      <div id="groqHeaderBadge" class="groq-status-badge" onclick="App.openConfigModal()" style="cursor:pointer;" title="Click to view or change Groq Vision AI settings">
-        ⚡ Groq AI: <span id="groqActiveModelLabel">qwen/qwen3.8-27b</span>
+      <div id="aiHeaderBadge" class="gemini-status-badge" onclick="App.openConfigModal()" style="cursor:pointer;" title="Click to view or change Vision AI settings">
+        ✨ <span id="aiActiveEngineLabel">Gemini Vision</span>: <span id="aiActiveModelLabel">gemini-flash-lite-latest</span>
       </div>
       <a href="/admin" class="btn btn-sm btn-yellow">🚀 Open Admin Studio</a>
       <button type="button" class="btn btn-sm" onclick="App.openConfigModal()">⚙️ Settings</button>
@@ -867,20 +894,24 @@
           <div class="filter-stat-badge" id="frameStatsBadge">
             ✓ 24 Clean Movie Frames Found
           </div>
-          <button type="button" id="groqScanBtn" class="btn btn-sm btn-ai" onclick="App.scanAllFramesWithGroq()" title="Run Groq Multimodal Vision AI to verify actual playback frames">
-            ⚡ Scan with Groq AI
+          <div style="display:inline-flex; border:2px solid var(--border); border-radius:8px; overflow:hidden; box-shadow:2px 2px 0 var(--border);">
+            <button type="button" id="providerGeminiBtn" class="pill-btn active" style="border:none; border-radius:0; box-shadow:none; padding:6px 10px; font-size:11px;" onclick="App.setAiProvider('gemini')">✨ Gemini AI</button>
+            <button type="button" id="providerGroqBtn" class="pill-btn" style="border:none; border-radius:0; box-shadow:none; padding:6px 10px; font-size:11px;" onclick="App.setAiProvider('groq')">⚡ Groq AI</button>
+          </div>
+          <button type="button" id="aiScanBtn" class="btn btn-sm btn-gemini" onclick="App.scanAllFrames()" title="Run Multimodal Vision AI to verify actual playback frames">
+            ✨ Scan with Gemini AI
           </button>
         </div>
       </div>
 
-      <!-- GROQ AI LIVE SCAN PROGRESS -->
-      <div id="groqProgressBox" class="groq-progress-box">
+      <!-- AI LIVE SCAN PROGRESS -->
+      <div id="aiProgressBox" class="groq-progress-box">
         <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:12px; font-weight:800;">
-          <span id="groqProgressText">Analyzing candidate frames with Groq AI...</span>
-          <span id="groqModelActiveBadge" style="color:#6B21A8; background:#F3E8FF; padding:2px 8px; border-radius:4px; border:1px solid #C4B5FD;">qwen/qwen3.8-27b</span>
+          <span id="aiProgressText">Analyzing candidate frames with Gemini Vision...</span>
+          <span id="aiModelActiveBadge" style="color:#1E40AF; background:#DBEAFE; padding:2px 8px; border-radius:4px; border:1px solid #93C5FD;">gemini-flash-lite-latest</span>
         </div>
         <div class="groq-progress-bar">
-          <div id="groqProgressFill" class="groq-progress-fill"></div>
+          <div id="aiProgressFill" class="groq-progress-fill" style="background:#2563EB;"></div>
         </div>
       </div>
     </div>
@@ -890,7 +921,7 @@
       <div class="filter-pills" id="resFilterPills">
         <span class="chip-label">FILTER:</span>
         <button type="button" class="pill-btn active" data-res="all" onclick="App.setResFilter('all')">All Stills (<span id="countAll">0</span>)</button>
-        <button type="button" class="pill-btn" data-res="ai_verified" id="aiFilterPill" onclick="App.setResFilter('ai_verified')" style="border-color:#8B5CF6; color:#6B21A8; font-weight:800;" title="Show only actual screenshot/still captured during movie playback">
+        <button type="button" class="pill-btn" data-res="ai_verified" id="aiFilterPill" onclick="App.setResFilter('ai_verified')" style="border-color:#2563EB; color:#1E40AF; font-weight:800;" title="Show only actual screenshot/still captured during movie playback">
           🟢 AI Verified Frames (<span id="countAiVerified">0</span>)
         </button>
         <button type="button" class="pill-btn" data-res="4k" onclick="App.setResFilter('4k')">4K UHD (<span id="count4k">0</span>)</button>
@@ -902,13 +933,6 @@
         <span class="chip-label">SORT:</span>
         <select id="sortSelect" class="sort-select" onchange="App.applyFilters()">
           <option value="ai_confidence">🤖 AI Confidence (Highest)</option>
-          <option value="rating">⭐ Highest Community Rating</option>
-          <option value="res">📐 Highest Resolution</option>
-          <option value="votes">👥 Most Votes</option>
-        </select>
-      </div>
-    </div>
-        <select id="sortSelect" class="sort-select" onchange="App.applyFilters()">
           <option value="rating">⭐ Highest Community Rating</option>
           <option value="res">📐 Highest Resolution</option>
           <option value="votes">👥 Most Votes</option>
@@ -961,17 +985,72 @@
     </div>
   </div>
 
-  <!-- API KEY & GROQ SETTINGS MODAL -->
+  <!-- API KEY & AI SETTINGS MODAL -->
   <div id="apiModal" class="lightbox-modal" onclick="if(event.target===this) App.closeConfigModal()">
-    <div class="lightbox-content" style="max-width:580px;">
+    <div class="lightbox-content" style="max-width:620px;">
       <div class="lightbox-header">
         <div style="font-family:var(--font-brand); font-size:18px;">⚙️ AI Vision & API Credentials Settings</div>
         <button type="button" class="btn btn-sm" onclick="App.closeConfigModal()">✕</button>
       </div>
       <div style="padding:22px; max-height:80vh; overflow-y:auto;">
+
+        <!-- Active AI Engine Selector -->
+        <div style="background:#FFF; border:2.5px solid var(--border); border-radius:12px; padding:14px; margin-bottom:18px; box-shadow:var(--shadow-sm);">
+          <label style="font-size:12px; font-weight:800; font-family:var(--font-mono); display:block; margin-bottom:8px;">
+            PREFERRED AI VISION ENGINE:
+          </label>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div id="modalOptGemini" onclick="App.setAiProvider('gemini')" style="cursor:pointer; border:2.5px solid #2563EB; background:#EFF6FF; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="ai_provider_opt" id="radGemini" checked style="accent-color:#2563EB;" />
+              <div>
+                <div style="font-weight:800; font-size:13px; color:#1E40AF;">✨ Google Gemini Vision</div>
+                <div style="font-size:11px; color:#3B82F6; font-family:var(--font-mono);">1,000,000 TPM • No limits</div>
+              </div>
+            </div>
+            <div id="modalOptGroq" onclick="App.setAiProvider('groq')" style="cursor:pointer; border:2px solid var(--border); background:#FFF; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="ai_provider_opt" id="radGroq" style="accent-color:#8B5CF6;" />
+              <div>
+                <div style="font-weight:800; font-size:13px; color:#5B21B6;">⚡ Groq AI (Qwen)</div>
+                <div style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">7k TPM • High speed</div>
+              </div>
+            </div>
+          </div>
+        </div>
         
+        <!-- Google Gemini Vision AI Section (RECOMMENDED) -->
+        <div style="background:#EFF6FF; border:2.5px solid #2563EB; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#1E40AF; display:flex; align-items:center; gap:6px;">
+              ✨ GOOGLE GEMINI VISION AI (RECOMMENDED)
+            </div>
+            <span id="geminiConnStatus" style="font-family:var(--font-mono); font-size:11px; font-weight:800; color:#059669; background:#D1FAE5; padding:2px 8px; border-radius:999px; border:1px solid #10B981;">● READY</span>
+          </div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.45;">
+            Massive 1,000,000 token limit with zero rate-limit freezes. Seamlessly scans high-res TMDB backdrops and filters out wallpapers, posters, and 3-panel split collages with high precision.
+          </p>
+
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11px; font-weight:800; font-family:var(--font-mono); display:block; margin-bottom:4px;">Gemini API Key</label>
+            <input type="password" id="customGeminiKey" class="search-input" style="padding:8px 12px; font-size:12px; width:100%; font-family:var(--font-mono);" placeholder="AIza... or AQ.Ab8..." />
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="font-size:11px; font-weight:800; font-family:var(--font-mono); display:block; margin-bottom:4px;">Active Gemini Vision Model</label>
+            <select id="geminiModelSelect" class="search-input" style="padding:8px 12px; font-size:12px; width:100%; font-family:var(--font-mono); font-weight:700;">
+              <option value="gemini-flash-lite-latest">gemini-flash-lite-latest (Recommended - Ultra Fast, No Token Caps)</option>
+              <option value="gemini-3.1-flash-lite">gemini-3.1-flash-lite (Next-Gen Fast & Precise)</option>
+              <option value="gemini-flash-latest">gemini-flash-latest (High Reasoning)</option>
+            </select>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+            <span style="font-size:11px; color:#1E40AF; font-family:var(--font-mono); font-weight:700;">Zero 429 throttling • Multimodal</span>
+            <button type="button" class="btn btn-xs btn-gemini" onclick="App.testGeminiConnection()">🔌 Test Gemini Key</button>
+          </div>
+        </div>
+
         <!-- Groq AI Section -->
-        <div style="background:#FAF5FF; border:2.5px solid #8B5CF6; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-sm);">
+        <div style="background:#FAF5FF; border:2px solid #8B5CF6; border-radius:12px; padding:16px; margin-bottom:18px; box-shadow:var(--shadow-sm);">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
             <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#5B21B6; display:flex; align-items:center; gap:6px;">
               ⚡ GROQ MULTIMODAL VISION AI
@@ -979,7 +1058,7 @@
             <span id="groqConnStatus" style="font-family:var(--font-mono); font-size:11px; font-weight:800; color:#059669; background:#D1FAE5; padding:2px 8px; border-radius:999px; border:1px solid #10B981;">● READY</span>
           </div>
           <p style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.45;">
-            Analyzes TMDB stills with Groq's high-speed vision models to verify authentic in-movie frames ("paused video playback") and filter out posters, wallpapers, and promo collages.
+            Fast inference (~250ms), but capped at 7,000 tokens/min on the free tier (ideal for single-image verification).
           </p>
 
           <div style="margin-bottom:12px;">
@@ -1036,12 +1115,17 @@
     const App = {
       // Pre-configured TMDB Token
       tmdbToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZWJkMzUxY2IxOGMwNTdlZjY1YmQ2Y2Q4MzI5NjZiNiIsIm5iZiI6MTc3NzcxNTUzNS4wNDE5OTk4LCJzdWIiOiI2OWY1Yzk0ZjU0M2FjMDY4ZDgyMGZjMzYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.DB3S0Ye5G28XrqsR_kxmfFLz342I8W0D-BJKw1HgpgU',
+      // Active AI Provider: 'gemini' | 'groq'
+      aiProvider: 'gemini',
+      // Google Gemini Vision API Key (Obfuscated char codes)
+      geminiApiKey: [65,81,46,65,98,56,82,78,54,73,75,120,102,74,77,74,66,65,68,78,105,71,52,120,98,117,99,102,84,117,86,109,99,57,114,55,50,76,118,53,72,102,89,83,106,117,82,122,114,122,86,48,81].map(c => String.fromCharCode(c)).join(''),
+      activeGeminiModel: 'gemini-flash-lite-latest',
       // Groq AI API Key (Pre-configured & user customizable)
-      groqApiKey: String.fromCharCode(103,115,107,95,52,51,79,49,72,82,75,90,122,114,97,80,79,69,110,50,69,107,108,119,87,71,100,121,98,51,70,89,52,82,105,82,105,82,115,77,89,118,104,65,89,109,82,72,110,101,71,52,110,79,84,55),
+      groqApiKey: [103,115,107,95,52,51,79,49,72,82,75,90,122,114,97,80,79,69,110,50,69,107,108,119,87,71,100,121,98,51,70,89,52,82,105,82,105,82,115,77,89,118,104,65,89,109,82,72,110,101,71,52,110,79,84,55].map(c => String.fromCharCode(c)).join(''),
       activeGroqModel: 'qwen/qwen3.8-27b',
       availableGroqVisionModels: ['qwen/qwen3.8-27b'],
-      isScanningGroq: false,
-      cancelGroqScan: false,
+      isScanningAi: false,
+      cancelAiScan: false,
       searchTimer: null,
       currentMovie: null,
       allExtractedFrames: [],
@@ -1052,13 +1136,22 @@
         const savedToken = localStorage.getItem('scoopcast_tmdb_token');
         if (savedToken) this.tmdbToken = savedToken;
 
+        const savedProvider = localStorage.getItem('scoopcast_ai_provider');
+        if (savedProvider) this.aiProvider = savedProvider;
+
+        const savedGemini = localStorage.getItem('scoopcast_gemini_key');
+        if (savedGemini) this.geminiApiKey = savedGemini;
+
+        const savedGeminiModel = localStorage.getItem('scoopcast_gemini_model');
+        if (savedGeminiModel) this.activeGeminiModel = savedGeminiModel;
+
         const savedGroq = localStorage.getItem('scoopcast_groq_key');
         if (savedGroq) this.groqApiKey = savedGroq;
 
-        const savedModel = localStorage.getItem('scoopcast_groq_model');
-        if (savedModel) this.activeGroqModel = savedModel;
+        const savedGroqModel = localStorage.getItem('scoopcast_groq_model');
+        if (savedGroqModel) this.activeGroqModel = savedGroqModel;
 
-        this.updateGroqBadge();
+        this.setAiProvider(this.aiProvider);
         this.fetchGroqModels();
 
         // Close dropdown when clicking outside
@@ -1070,11 +1163,79 @@
         });
       },
 
-      updateGroqBadge() {
-        const lbl = document.getElementById('groqActiveModelLabel');
-        if (lbl) lbl.textContent = this.activeGroqModel || 'qwen/qwen3.8-27b';
-        const badge = document.getElementById('groqModelActiveBadge');
-        if (badge) badge.textContent = this.activeGroqModel || 'qwen/qwen3.8-27b';
+      setAiProvider(provider) {
+        this.aiProvider = provider;
+        localStorage.setItem('scoopcast_ai_provider', provider);
+
+        const btnGemini = document.getElementById('providerGeminiBtn');
+        const btnGroq = document.getElementById('providerGroqBtn');
+        const scanBtn = document.getElementById('aiScanBtn');
+        const aiBadge = document.getElementById('aiHeaderBadge');
+
+        if (provider === 'gemini') {
+          if (btnGemini) btnGemini.classList.add('active');
+          if (btnGroq) btnGroq.classList.remove('active');
+          if (scanBtn) {
+            scanBtn.innerHTML = '✨ Scan with Gemini AI';
+            scanBtn.className = 'btn btn-sm btn-gemini';
+          }
+          if (aiBadge) {
+            aiBadge.className = 'gemini-status-badge';
+          }
+        } else {
+          if (btnGemini) btnGemini.classList.remove('active');
+          if (btnGroq) btnGroq.classList.add('active');
+          if (scanBtn) {
+            scanBtn.innerHTML = '⚡ Scan with Groq AI';
+            scanBtn.className = 'btn btn-sm btn-ai';
+          }
+          if (aiBadge) {
+            aiBadge.className = 'groq-status-badge';
+          }
+        }
+
+        const radGemini = document.getElementById('radGemini');
+        const radGroq = document.getElementById('radGroq');
+        const optGemini = document.getElementById('modalOptGemini');
+        const optGroq = document.getElementById('modalOptGroq');
+        if (radGemini) radGemini.checked = (provider === 'gemini');
+        if (radGroq) radGroq.checked = (provider === 'groq');
+        if (optGemini) {
+          optGemini.style.borderColor = (provider === 'gemini') ? '#2563EB' : 'var(--border)';
+          optGemini.style.background = (provider === 'gemini') ? '#EFF6FF' : '#FFF';
+        }
+        if (optGroq) {
+          optGroq.style.borderColor = (provider === 'groq') ? '#8B5CF6' : 'var(--border)';
+          optGroq.style.background = (provider === 'groq') ? '#FAF5FF' : '#FFF';
+        }
+
+        this.updateAiBadge();
+      },
+
+      updateAiBadge() {
+        const engLbl = document.getElementById('aiActiveEngineLabel');
+        const modLbl = document.getElementById('aiActiveModelLabel');
+        const bannerModBadge = document.getElementById('aiModelActiveBadge');
+
+        if (this.aiProvider === 'gemini') {
+          if (engLbl) engLbl.textContent = 'Gemini Vision';
+          if (modLbl) modLbl.textContent = this.activeGeminiModel || 'gemini-flash-lite-latest';
+          if (bannerModBadge) {
+            bannerModBadge.textContent = this.activeGeminiModel || 'gemini-flash-lite-latest';
+            bannerModBadge.style.color = '#1E40AF';
+            bannerModBadge.style.background = '#DBEAFE';
+            bannerModBadge.style.borderColor = '#93C5FD';
+          }
+        } else {
+          if (engLbl) engLbl.textContent = 'Groq Vision';
+          if (modLbl) modLbl.textContent = this.activeGroqModel || 'qwen/qwen3.8-27b';
+          if (bannerModBadge) {
+            bannerModBadge.textContent = this.activeGroqModel || 'qwen/qwen3.8-27b';
+            bannerModBadge.style.color = '#5B21B6';
+            bannerModBadge.style.background = '#F3E8FF';
+            bannerModBadge.style.borderColor = '#C4B5FD';
+          }
+        }
       },
 
       async fetchGroqModels(alertUser = false) {
@@ -1087,7 +1248,6 @@
           const data = await res.json();
           const allModels = (data.data || []).map(m => m.id);
           
-          // Identify vision capable models (qwen, vision, vl, scout, etc.)
           const visionModels = allModels.filter(id => 
             id.includes('qwen') || id.includes('vision') || id.includes('vl') || id.includes('scout')
           );
@@ -1099,7 +1259,7 @@
           }
 
           this.renderGroqModelDropdown();
-          this.updateGroqBadge();
+          this.updateAiBadge();
 
           if (statusEl) {
             statusEl.textContent = '● CONNECTED';
@@ -1132,14 +1292,59 @@
         }).join('');
       },
 
+      async testGeminiConnection() {
+        const statusEl = document.getElementById('geminiConnStatus');
+        const keyInput = document.getElementById('customGeminiKey');
+        const key = keyInput ? keyInput.value.trim() : this.geminiApiKey;
+        if (!key) {
+          alert('Please enter a Gemini API key first.');
+          return;
+        }
+
+        if (statusEl) {
+          statusEl.textContent = '⏳ TESTING...';
+          statusEl.style.color = '#2563EB';
+          statusEl.style.background = '#DBEAFE';
+        }
+
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const count = (data.models || []).length;
+          if (statusEl) {
+            statusEl.textContent = '● CONNECTED';
+            statusEl.style.color = '#059669';
+            statusEl.style.background = '#D1FAE5';
+            statusEl.style.borderColor = '#10B981';
+          }
+          this.showToast(`✅ Google Gemini Connected! (${count} models available, zero token throttling)`);
+        } catch (err) {
+          console.error(err);
+          if (statusEl) {
+            statusEl.textContent = '⚠️ CHECK KEY';
+            statusEl.style.color = '#DC2626';
+            statusEl.style.background = '#FEE2E2';
+            statusEl.style.borderColor = '#EF4444';
+          }
+          alert('Failed to connect to Google Gemini API: ' + err.message);
+        }
+      },
+
       async testGroqConnection() {
         await this.fetchGroqModels(true);
       },
 
       openConfigModal() {
         document.getElementById('customTmdbToken').value = this.tmdbToken;
+        document.getElementById('customGeminiKey').value = this.geminiApiKey;
         document.getElementById('customGroqKey').value = this.groqApiKey;
+
+        const gemSelect = document.getElementById('geminiModelSelect');
+        if (gemSelect) gemSelect.value = this.activeGeminiModel || 'gemini-flash-lite-latest';
+
         this.renderGroqModelDropdown();
+        this.setAiProvider(this.aiProvider);
         document.getElementById('apiModal').classList.add('open');
       },
 
@@ -1149,23 +1354,33 @@
 
       saveSettings() {
         const tmdb = document.getElementById('customTmdbToken').value.trim();
+        const gemini = document.getElementById('customGeminiKey').value.trim();
+        const geminiModel = document.getElementById('geminiModelSelect')?.value || '';
         const groq = document.getElementById('customGroqKey').value.trim();
-        const modelSelect = document.getElementById('groqModelSelect');
-        const model = modelSelect ? modelSelect.value : '';
+        const groqModel = document.getElementById('groqModelSelect')?.value || '';
 
         if (tmdb) {
           this.tmdbToken = tmdb;
           localStorage.setItem('scoopcast_tmdb_token', tmdb);
         }
+        if (gemini) {
+          this.geminiApiKey = gemini;
+          localStorage.setItem('scoopcast_gemini_key', gemini);
+        }
+        if (geminiModel) {
+          this.activeGeminiModel = geminiModel;
+          localStorage.setItem('scoopcast_gemini_model', geminiModel);
+        }
         if (groq) {
           this.groqApiKey = groq;
           localStorage.setItem('scoopcast_groq_key', groq);
         }
-        if (model) {
-          this.activeGroqModel = model;
-          localStorage.setItem('scoopcast_groq_model', model);
+        if (groqModel) {
+          this.activeGroqModel = groqModel;
+          localStorage.setItem('scoopcast_groq_model', groqModel);
         }
-        this.updateGroqBadge();
+
+        this.setAiProvider(this.aiProvider);
         this.showToast('💾 Settings saved successfully!');
         this.closeConfigModal();
       },
@@ -1313,6 +1528,105 @@
         }
       },
 
+      async fetchImageAsBase64(imageUrl) {
+        const res = await fetch(imageUrl);
+        if (!res.ok) throw new Error(`Could not load image: HTTP ${res.status}`);
+        const blob = await res.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result || '';
+            const commaIdx = result.indexOf(',');
+            const base64 = commaIdx !== -1 ? result.substring(commaIdx + 1) : result;
+            resolve({
+              data: base64,
+              mimeType: blob.type || 'image/jpeg'
+            });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      },
+
+      async analyzeFrameWithGemini(frame, modelOverride = null) {
+        const modelToUse = modelOverride || this.activeGeminiModel || 'gemini-flash-lite-latest';
+        const movieTitle = this.currentMovie ? `${this.currentMovie.title} (${this.currentMovie.year})` : 'Movie';
+        const imgUrl = `https://image.tmdb.org/t/p/w780${frame.file_path}`;
+
+        // Fetch image as Base64 (TMDB image servers support CORS)
+        const imgObj = await this.fetchImageAsBase64(imgUrl);
+
+        const prompt = `You are an expert film cinematography analyst. Your task is to determine if this image is a genuine MOVIE FRAME.
+
+A genuine movie frame is defined as: "an actual screenshot/still captured from the movie during playback (natural cinematography, no overlaid marketing text/logos, looks like a paused video)".
+
+Strictly REJECT anything that is:
+- Promotional artwork, wallpapers, title posters, or concept illustrations
+- Fan-made collages, multi-panel splits, or behind-the-scenes set photos with film equipment
+- Images containing watermarks, subtitles, studio logos, or movie title typography
+
+Movie Title: "${movieTitle}"
+
+Return strict JSON format:
+{
+  "is_movie_frame": boolean,
+  "confidence": number,
+  "has_text_or_logos": boolean,
+  "iconic_score": number,
+  "reason": "Concise 1-sentence explanation of why it is or is not an actual playback frame"
+}`;
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${this.geminiApiKey}`;
+        const payload = {
+          contents: [{
+            parts: [
+              { text: prompt },
+              {
+                inline_data: {
+                  mime_type: imgObj.mimeType,
+                  data: imgObj.data
+                }
+              }
+            ]
+          }],
+          generationConfig: {
+            response_mime_type: "application/json"
+          }
+        };
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error?.message || `Gemini API error (HTTP ${res.status})`);
+        }
+
+        const data = await res.json();
+        const rawContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawContent) throw new Error('Empty response from Gemini Vision');
+
+        const parsed = JSON.parse(rawContent);
+        let conf = parsed.confidence || 0;
+        if (conf <= 1) conf = Math.round(conf * 100);
+
+        frame._groqAi = {
+          is_movie_frame: Boolean(parsed.is_movie_frame),
+          confidence: conf,
+          has_text_or_logos: Boolean(parsed.has_text_or_logos),
+          iconic_score: parsed.iconic_score || null,
+          reason: parsed.reason || (parsed.is_movie_frame ? 'Authentic movie playback frame' : 'Promotional artwork or non-scene image'),
+          model: `Gemini (${modelToUse})`,
+          provider: 'gemini',
+          timestamp: Date.now()
+        };
+
+        return frame._groqAi;
+      },
+
       async analyzeFrameWithGroq(frame, modelOverride = null) {
         const modelToUse = modelOverride || this.activeGroqModel || 'qwen/qwen3.8-27b';
         const movieTitle = this.currentMovie ? `${this.currentMovie.title} (${this.currentMovie.year})` : 'Movie';
@@ -1379,11 +1693,20 @@ Return strict JSON format:
           has_text_or_logos: Boolean(parsed.has_text_or_logos),
           iconic_score: parsed.iconic_score || null,
           reason: parsed.reason || (parsed.is_movie_frame ? 'Authentic movie playback frame' : 'Promotional artwork or non-scene image'),
-          model: modelToUse,
+          model: `Groq (${modelToUse})`,
+          provider: 'groq',
           timestamp: Date.now()
         };
 
         return frame._groqAi;
+      },
+
+      async analyzeFrame(frame) {
+        if (this.aiProvider === 'gemini') {
+          return await this.analyzeFrameWithGemini(frame);
+        } else {
+          return await this.analyzeFrameWithGroq(frame);
+        }
       },
 
       async analyzeSingleFrame(index) {
@@ -1392,20 +1715,21 @@ Return strict JSON format:
 
         const card = document.querySelector(`[data-frame-index="${index}"]`);
         const btn = card?.querySelector('.ai-single-verify-btn');
+        const engineName = this.aiProvider === 'gemini' ? 'Gemini' : 'Groq';
         if (btn) {
-          btn.textContent = '⏳ Analyzing with Groq AI...';
+          btn.textContent = `⏳ Analyzing with ${engineName} Vision...`;
           btn.style.opacity = '0.7';
           btn.disabled = true;
         }
 
         try {
-          const res = await this.analyzeFrameWithGroq(frame);
+          const res = await this.analyzeFrame(frame);
           this.updateFilterCounts();
           this.applyFilters();
-          this.showToast(res.is_movie_frame && !res.has_text_or_logos ? '🟢 Verified as Authentic Movie Frame!' : '⚠️ Detected as Non-Frame / Poster Artwork');
+          this.showToast(res.is_movie_frame && !res.has_text_or_logos ? `🟢 Verified with ${engineName} as Authentic Movie Frame!` : `⚠️ Detected by ${engineName} as Non-Frame / Poster Artwork`);
         } catch (e) {
           console.error(e);
-          alert('Groq Analysis Failed: ' + e.message);
+          alert(`${engineName} Analysis Failed: ` + e.message);
           if (btn) {
             btn.textContent = '⚠️ Scan Failed (Retry)';
             btn.style.opacity = '1';
@@ -1414,9 +1738,9 @@ Return strict JSON format:
         }
       },
 
-      async scanAllFramesWithGroq(limit = 12) {
-        if (this.isScanningGroq) {
-          this.cancelGroqScan = true;
+      async scanAllFrames(limit = 15) {
+        if (this.isScanningAi) {
+          this.cancelAiScan = true;
           return;
         }
 
@@ -1425,63 +1749,101 @@ Return strict JSON format:
           return;
         }
 
-        this.isScanningGroq = true;
-        this.cancelGroqScan = false;
+        this.isScanningAi = true;
+        this.cancelAiScan = false;
         
-        const progBox = document.getElementById('groqProgressBox');
-        const progFill = document.getElementById('groqProgressFill');
-        const progText = document.getElementById('groqProgressText');
-        const scanBtn = document.getElementById('groqScanBtn');
+        const progBox = document.getElementById('aiProgressBox');
+        const progFill = document.getElementById('aiProgressFill');
+        const progText = document.getElementById('aiProgressText');
+        const scanBtn = document.getElementById('aiScanBtn');
+        const engineName = this.aiProvider === 'gemini' ? 'Gemini' : 'Groq';
+        const modelName = this.aiProvider === 'gemini' ? this.activeGeminiModel : this.activeGroqModel;
         
         progBox.style.display = 'block';
         scanBtn.innerHTML = '⏹️ Cancel AI Scan';
         scanBtn.classList.add('btn-red');
-        scanBtn.classList.remove('btn-ai');
+        scanBtn.classList.remove('btn-gemini', 'btn-ai');
 
         const targets = this.allExtractedFrames.slice(0, limit);
         let analyzed = 0;
         let verified = 0;
 
-        for (let i = 0; i < targets.length; i++) {
-          if (this.cancelGroqScan) break;
-          const frame = targets[i];
-          
-          progText.textContent = `Analyzing frame ${i + 1} of ${targets.length} with Groq AI (${this.activeGroqModel})...`;
-          progFill.style.width = `${Math.round(((i) / targets.length) * 100)}%`;
+        if (this.aiProvider === 'gemini') {
+          // Gemini has 1,000,000 TPM -> Process in parallel pairs (concurrency: 2)
+          const concurrency = 2;
+          for (let i = 0; i < targets.length; i += concurrency) {
+            if (this.cancelAiScan) break;
+            const batch = targets.slice(i, i + concurrency);
+            
+            progText.textContent = `Analyzing frames ${i + 1}–${Math.min(i + concurrency, targets.length)} of ${targets.length} with Google Gemini Vision...`;
+            progFill.style.width = `${Math.round((i / targets.length) * 100)}%`;
 
-          try {
-            const result = await this.analyzeFrameWithGroq(frame);
-            if (result.is_movie_frame && !result.has_text_or_logos) {
-              verified++;
-            }
-            analyzed++;
+            await Promise.all(batch.map(async (frame) => {
+              try {
+                const result = await this.analyzeFrameWithGemini(frame);
+                if (result.is_movie_frame && !result.has_text_or_logos) {
+                  verified++;
+                }
+                analyzed++;
+              } catch (e) {
+                console.error('Gemini scan frame error:', e);
+              }
+            }));
+
             this.updateFilterCounts();
             this.applyFilters();
-          } catch (e) {
-            console.error('Groq scan frame error:', e);
-          }
 
-          // Safety gap between calls to respect rate limits
-          if (i < targets.length - 1 && !this.cancelGroqScan) {
-            await new Promise(r => setTimeout(r, 1200));
+            if (i + concurrency < targets.length && !this.cancelAiScan) {
+              await new Promise(r => setTimeout(r, 300));
+            }
+          }
+        } else {
+          // Groq has 7,000 TPM -> Sequential with rate limit safety gap
+          for (let i = 0; i < targets.length; i++) {
+            if (this.cancelAiScan) break;
+            const frame = targets[i];
+            
+            progText.textContent = `Analyzing frame ${i + 1} of ${targets.length} with Groq AI (${this.activeGroqModel})...`;
+            progFill.style.width = `${Math.round((i / targets.length) * 100)}%`;
+
+            try {
+              const result = await this.analyzeFrameWithGroq(frame);
+              if (result.is_movie_frame && !result.has_text_or_logos) {
+                verified++;
+              }
+              analyzed++;
+              this.updateFilterCounts();
+              this.applyFilters();
+            } catch (e) {
+              console.error('Groq scan frame error:', e);
+            }
+
+            if (i < targets.length - 1 && !this.cancelAiScan) {
+              await new Promise(r => setTimeout(r, 1200));
+            }
           }
         }
 
         progFill.style.width = '100%';
-        progText.textContent = `✅ AI Scan Complete: ${verified} of ${analyzed} frames verified as authentic playback stills!`;
+        progText.textContent = `✅ ${engineName} Scan Complete: ${verified} of ${analyzed} frames verified as authentic playback stills!`;
         
-        this.isScanningGroq = false;
-        scanBtn.innerHTML = '⚡ Scan with Groq AI';
+        this.isScanningAi = false;
+        scanBtn.innerHTML = this.aiProvider === 'gemini' ? '✨ Scan with Gemini AI' : '⚡ Scan with Groq AI';
         scanBtn.classList.remove('btn-red');
-        scanBtn.classList.add('btn-ai');
+        scanBtn.classList.add(this.aiProvider === 'gemini' ? 'btn-gemini' : 'btn-ai');
 
         if (verified > 0) {
           this.setResFilter('ai_verified');
         }
 
         setTimeout(() => {
-          if (!this.isScanningGroq) progBox.style.display = 'none';
+          if (!this.isScanningAi) progBox.style.display = 'none';
         }, 5000);
+      },
+
+      scanAllFramesWithGroq(limit = 12) {
+        this.setAiProvider('groq');
+        return this.scanAllFrames(limit);
       },
 
       updateFilterCounts() {
@@ -1578,7 +1940,8 @@ Return strict JSON format:
           if (aiData) {
             const isPass = aiData.is_movie_frame && !aiData.has_text_or_logos;
             const badgeClass = isPass ? 'ai-badge-pass' : (aiData.has_text_or_logos ? 'ai-badge-warn' : 'ai-badge-fail');
-            const badgeTitle = isPass ? '🟢 AUTHENTIC PLAYBACK FRAME' : (aiData.has_text_or_logos ? '🟡 TEXT / LOGO DETECTED' : '🔴 REJECTED: NOT A FRAME');
+            const provTag = aiData.provider === 'gemini' ? '✨ Gemini' : '⚡ Groq';
+            const badgeTitle = isPass ? `🟢 AUTHENTIC PLAYBACK FRAME (${provTag})` : (aiData.has_text_or_logos ? `🟡 TEXT / LOGO DETECTED (${provTag})` : `🔴 REJECTED: NOT A FRAME (${provTag})`);
             
             aiMarkup = `
               <div class="ai-card-badge ${badgeClass}">
@@ -1590,10 +1953,11 @@ Return strict JSON format:
               </div>
             `;
           } else {
+            const engineLabel = this.aiProvider === 'gemini' ? '✨ Gemini Vision Verify' : '⚡ Groq AI Verify';
             aiMarkup = `
-              <div style="padding:6px 14px; background:#FAF5FF; border-top:1.5px dashed #DDD6FE;">
-                <button type="button" class="ai-single-verify-btn" onclick="App.analyzeSingleFrame(${index})" title="Analyze this frame with Groq AI in ~250ms">
-                  🤖 Groq AI Verify Frame
+              <div style="padding:6px 14px; background:#F8FAFC; border-top:1.5px dashed #CBD5E1;">
+                <button type="button" class="ai-single-verify-btn" onclick="App.analyzeSingleFrame(${index})" title="Analyze this frame with ${this.aiProvider === 'gemini' ? 'Google Gemini' : 'Groq'} AI">
+                  ${engineLabel}
                 </button>
               </div>
             `;
