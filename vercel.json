@@ -125,6 +125,10 @@
       "destination": "/admin.html"
     },
     {
+      "source": "/frames",
+      "destination": "/tmdb_frames.html"
+    },
+    {
       "source": "/",
       "has": [
         {

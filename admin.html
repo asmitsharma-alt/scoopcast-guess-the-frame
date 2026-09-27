@@ -211,6 +211,9 @@
       background: var(--red);
       color: #FFFFFF;
     }
+    .btn-purple {
+      background: var(--purple);
+    }
     .btn-sm {
       padding: 5px 12px;
       font-size: 12px;
@@ -1208,6 +1211,7 @@
         <span>nvwgbyr3</span>
       </div>
 
+      <a href="/frames" target="_blank" class="btn btn-sm btn-purple" style="text-decoration:none;" title="Search TMDB & isolate pure movie scene frames">🎬 Frame Finder</a>
       <button type="button" id="assetLibNavBtn" class="btn btn-sm btn-yellow" onclick="AdminApp.openAssetLibrary()" title="Browse all 59 game media assets">🖼️ Asset Library <span id="assetLibHeaderCount" class="badge-count">59</span></button>
       <button type="button" id="teamNavBtn" class="btn btn-sm btn-blue" onclick="AdminApp.openTeamModal()" title="Manage authorized curators & admins">👥 Team <span id="teamHeaderCount" class="badge-count">2</span></button>
       <button type="button" id="settingsNavBtn" class="btn btn-sm" onclick="AdminApp.openSettings()">⚙️ Settings</button>
@@ -1612,6 +1616,44 @@
         this.loadExistingDrops();
         this.setupDragAndDrop();
         this.loadAssetLibrary();
+        this.handleUrlPrefill();
+      },
+
+      handleUrlPrefill() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const img = params.get('prefill_img');
+          const title = params.get('prefill_title');
+          const year = params.get('prefill_year');
+
+          if (img || title) {
+            this.setMode('frames');
+            if (title) {
+              const ansInput = document.getElementById('itemAnswer');
+              if (ansInput) ansInput.value = title.toUpperCase();
+              const hintInput = document.getElementById('itemHint');
+              if (hintInput) hintInput.value = this.generateMaskedHint(title);
+            }
+            if (year && year !== 'N/A') {
+              const yearInput = document.getElementById('itemYear');
+              if (yearInput) yearInput.value = year;
+            }
+            if (img) {
+              this.selectedTmdbStillUrl = img;
+              this.selectedFile = null;
+              this.selectedAssetPath = null;
+              const preview = document.getElementById('mockImage');
+              if (preview) {
+                preview.src = img;
+                preview.style.display = 'block';
+              }
+            }
+            this.updatePreview();
+            this.showToast('🎬 Prefilled frame from Frame Finder!');
+          }
+        } catch (e) {
+          console.warn('URL prefill error:', e);
+        }
       },
 
       loadSettings() {
