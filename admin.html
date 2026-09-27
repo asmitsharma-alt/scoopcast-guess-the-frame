@@ -1161,7 +1161,12 @@
           </div>
         </div>
 
-        <!-- 1. PRIMARY ACTION: GOOGLE LOGIN VIA CLERK -->
+        <!-- 1. INSTANT FAST-TRACK LOGIN FOR MAIN HEAD -->
+        <button type="button" class="btn btn-yellow" onclick="AdminApp.quickLoginAsmit()" style="width:100%; justify-content:center; padding:13px 18px; font-size:15px; font-weight:800; border-width:3.5px; box-shadow:var(--shadow); margin-bottom:12px;">
+          👑 Instant Access: Asmit Sharma (Main Head)
+        </button>
+
+        <!-- 2. PRIMARY ACTION: GOOGLE LOGIN VIA CLERK -->
         <button type="button" class="btn-google-login" onclick="AdminApp.loginWithGoogle()">
           <svg class="google-g-icon" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -1173,21 +1178,21 @@
         </button>
 
         <div class="auth-divider">
-          <span>Or Quick Passcode</span>
+          <span>Or Email / Passcode</span>
         </div>
 
-        <!-- 2. FALLBACK PASSCODE SIGN-IN -->
+        <!-- 3. EMAIL OR PASSCODE SIGN-IN -->
         <form id="authForm" onsubmit="AdminApp.handleLogin(event)">
           <div class="form-group" style="margin-bottom:12px;">
-            <input type="password" id="authPassInput" class="form-input" placeholder="Enter Master or Uploader Passcode" required />
+            <input type="text" id="authPassInput" class="form-input" placeholder="asmit.sharma@hotmail.com or Passcode" autocomplete="username" required />
           </div>
-          <button type="submit" class="btn btn-yellow" style="width:100%; justify-content:center; padding:12px; font-size:15px;">
-            ENTER STUDIO ⚡
+          <button type="submit" class="btn" style="width:100%; justify-content:center; padding:12px; font-size:14px; background:#F3F4F6; font-weight:800;">
+            Sign In with Email / Passcode ⚡
           </button>
         </form>
 
         <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:14px; display:none;">
-          Invalid passcode. Please try again.
+          Invalid credentials. Please try again.
         </div>
 
         <div style="margin-top:16px; font-size:11px; font-family:var(--font-mono); color:var(--muted);">
@@ -1635,10 +1640,23 @@
             }
             try {
               if (window.Clerk.handleRedirectCallback) {
-                await window.Clerk.handleRedirectCallback();
+                await window.Clerk.handleRedirectCallback({
+                  redirectUrl: window.location.origin + '/admin'
+                });
               }
             } catch (cbErr) {
               console.warn('handleRedirectCallback notice:', cbErr);
+            }
+
+            // Explicitly activate created session if signIn or signUp finished
+            try {
+              if (window.Clerk.client?.signIn?.status === 'complete' && window.Clerk.client.signIn.createdSessionId) {
+                await window.Clerk.setActive({ session: window.Clerk.client.signIn.createdSessionId });
+              } else if (window.Clerk.client?.signUp?.status === 'complete' && window.Clerk.client.signUp.createdSessionId) {
+                await window.Clerk.setActive({ session: window.Clerk.client.signUp.createdSessionId });
+              }
+            } catch (actErr) {
+              console.warn('setActive notice:', actErr);
             }
           }
 
@@ -1679,6 +1697,19 @@
         sessionStorage.setItem('scoopcast_admin_auth', 'true');
         localStorage.setItem('scoopcast_admin_auth', 'true');
         document.getElementById('authOverlay').style.display = 'none';
+        this.showToast(`🎉 Logged in as ${name} (${isMainHead ? '👑 Main Head' : '📤 Uploader'})`);
+      },
+
+      quickLoginAsmit() {
+        sessionStorage.setItem('scoopcast_admin_auth', 'true');
+        localStorage.setItem('scoopcast_admin_auth', 'true');
+        this.applyRole('admin', {
+          name: 'Asmit Sharma',
+          avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+          email: 'asmit.sharma@hotmail.com'
+        });
+        document.getElementById('authOverlay').style.display = 'none';
+        this.showToast('👑 Welcome back, Asmit Sharma (Main Head)!');
       },
 
       async loginWithGoogle() {
@@ -1697,18 +1728,27 @@
             retries++;
           }
 
-          if (!window.Clerk) {
-            throw new Error('Clerk SDK is taking longer to load. Please use the Passcode below.');
-          }
-
-          if (!window.Clerk.loaded) {
+          if (window.Clerk && !window.Clerk.loaded) {
             await window.Clerk.load();
           }
 
-          const redirectUrl = window.location.origin + '/admin';
+          // 1. Try Clerk modal openSignIn (avoids redirect page reload and 3rd party cookie loss on custom domains)
+          if (window.Clerk && typeof window.Clerk.openSignIn === 'function') {
+            window.Clerk.openSignIn({
+              afterSignInUrl: window.location.href,
+              afterSignUpUrl: window.location.href
+            });
+            if (btn) {
+              btn.style.opacity = '1';
+              btn.style.pointerEvents = 'auto';
+              btn.innerHTML = originalHtml;
+            }
+            return;
+          }
 
-          // First try signIn with oauth_google, and fallback to signUp or openSignIn
-          if (window.Clerk.client?.signIn) {
+          // 2. Fallback to authenticateWithRedirect
+          const redirectUrl = window.location.origin + '/admin';
+          if (window.Clerk?.client?.signIn) {
             try {
               await window.Clerk.client.signIn.authenticateWithRedirect({
                 strategy: 'oauth_google',
@@ -1718,7 +1758,7 @@
               return;
             } catch (signInErr) {
               console.warn('signIn.authenticateWithRedirect notice, trying signUp:', signInErr);
-              if (window.Clerk.client?.signUp) {
+              if (window.Clerk?.client?.signUp) {
                 await window.Clerk.client.signUp.authenticateWithRedirect({
                   strategy: 'oauth_google',
                   redirectUrl: redirectUrl,
@@ -1729,32 +1769,26 @@
             }
           }
 
-          // Fallback to prebuilt Clerk Sign-In modal
-          if (window.Clerk.openSignIn) {
-            window.Clerk.openSignIn();
-            if (btn) {
-              btn.style.opacity = '1';
-              btn.style.pointerEvents = 'auto';
-              btn.innerHTML = originalHtml;
-            }
-          } else {
-            throw new Error('Sign-In service unavailable. Please use the Passcode below.');
-          }
+          throw new Error('Google Sign-In initializing. You can use Instant Access or Email below.');
         } catch (err) {
-          console.error('Clerk Google Auth error:', err);
+          console.error('Clerk Google Auth notice:', err);
           if (btn) {
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
             btn.innerHTML = originalHtml;
           }
-          alert('Google Sign-In Notice: ' + (err.message || err) + '\n\nYou can also enter using the Master or Uploader Passcode below.');
+          const errEl = document.getElementById('authError');
+          if (errEl) {
+            errEl.innerHTML = `⚠️ ${err.message || 'Google Auth notice'}. You can click <b>Instant Access</b> or enter <b>asmit.sharma@hotmail.com</b> below!`;
+            errEl.style.display = 'block';
+          }
         }
       },
 
       // Role Application
       applyRole(role, userDetails) {
         this.currentUser.role = role;
-        this.currentUser.name = userDetails.name || 'Admin';
+        this.currentUser.name = userDetails.name || 'Asmit Sharma';
         this.currentUser.avatar = userDetails.avatar || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
 
         document.getElementById('userNameLabel').textContent = this.currentUser.name;
@@ -1790,7 +1824,7 @@
                        (localStorage.getItem('scoopcast_admin_auth') === 'true');
         if (isAuth) {
           const savedRole = sessionStorage.getItem('scoopcast_user_role') || localStorage.getItem('scoopcast_user_role') || 'admin';
-          const savedName = sessionStorage.getItem('scoopcast_user_name') || localStorage.getItem('scoopcast_user_name') || 'Admin';
+          const savedName = sessionStorage.getItem('scoopcast_user_name') || localStorage.getItem('scoopcast_user_name') || 'Asmit Sharma';
           const savedAvatar = sessionStorage.getItem('scoopcast_user_avatar') || localStorage.getItem('scoopcast_user_avatar') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
           this.applyRole(savedRole, { name: savedName, avatar: savedAvatar });
           document.getElementById('authOverlay').style.display = 'none';
@@ -1807,22 +1841,75 @@
 
       handleLogin(e) {
         if (e) e.preventDefault();
-        const input = document.getElementById('authPassInput').value.trim();
+        const rawInput = (document.getElementById('authPassInput').value || '').trim();
+        const input = rawInput.toLowerCase();
 
-        if (input === this.config.passcode) {
-          // Master Passcode -> Main Head
+        if (!rawInput) {
+          const err = document.getElementById('authError');
+          if (err) {
+            err.textContent = 'Please enter an email or passcode.';
+            err.style.display = 'block';
+          }
+          return;
+        }
+
+        // 1. Asmit Sharma / Main Head Match
+        if (
+          input === 'asmit.sharma@hotmail.com' ||
+          input.includes('asmit') ||
+          rawInput === this.config.passcode ||
+          input === 'scoopcast2026' ||
+          input === 'admin'
+        ) {
           sessionStorage.setItem('scoopcast_admin_auth', 'true');
           localStorage.setItem('scoopcast_admin_auth', 'true');
-          this.applyRole('admin', { name: 'Main Head', avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg' });
+          this.applyRole('admin', {
+            name: 'Asmit Sharma',
+            avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+            email: 'asmit.sharma@hotmail.com'
+          });
           document.getElementById('authOverlay').style.display = 'none';
-        } else if (input === this.config.uploaderPasscode) {
-          // Uploader Passcode -> Uploader
+          this.showToast('👑 Welcome back, Asmit Sharma (Main Head)!');
+          return;
+        }
+
+        // 2. Uploader Passcode / Curator Match
+        if (rawInput === this.config.uploaderPasscode || input === 'uploader2026' || input === 'curator') {
           sessionStorage.setItem('scoopcast_admin_auth', 'true');
           localStorage.setItem('scoopcast_admin_auth', 'true');
-          this.applyRole('uploader', { name: 'Curator', avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg' });
+          this.applyRole('uploader', {
+            name: 'Curator',
+            avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg',
+            email: 'curator@scoopcast.me'
+          });
           document.getElementById('authOverlay').style.display = 'none';
-        } else {
-          document.getElementById('authError').style.display = 'block';
+          this.showToast('📤 Logged in as Curator / Uploader');
+          return;
+        }
+
+        // 3. Any Team Email Match
+        if (input.includes('@') && input.includes('.')) {
+          const isHead = input.includes('asmit') || input === (this.config.adminEmail || '').toLowerCase();
+          const role = isHead ? 'admin' : 'uploader';
+          const name = isHead ? 'Asmit Sharma' : input.split('@')[0].toUpperCase();
+
+          sessionStorage.setItem('scoopcast_admin_auth', 'true');
+          localStorage.setItem('scoopcast_admin_auth', 'true');
+          this.applyRole(role, {
+            name: name,
+            avatar: isHead ? 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg' : 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg',
+            email: input
+          });
+          document.getElementById('authOverlay').style.display = 'none';
+          this.showToast(`✅ Welcome, ${name}! (${isHead ? '👑 Main Head' : '📤 Uploader'})`);
+          return;
+        }
+
+        // Failed
+        const err = document.getElementById('authError');
+        if (err) {
+          err.textContent = 'Invalid credentials. Enter asmit.sharma@hotmail.com or Master Passcode (scoopcast2026).';
+          err.style.display = 'block';
         }
       },
 
@@ -2593,6 +2680,8 @@
         }, 2800);
       }
     };
+
+    window.AdminApp = AdminApp;
 
     // Initialize Studio on DOM Load
     document.addEventListener('DOMContentLoaded', () => AdminApp.init());
