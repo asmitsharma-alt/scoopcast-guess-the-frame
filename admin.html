@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoopcast Admin Studio — Creator & Drop Manager</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Google Fonts: Lilita One, DM Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Clerk JS Official SDK (Publishable Key: pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk) -->
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk"
+    src="https://infinite-koala-6523.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
+
+  <style>
+    /* ═════════════════════════════════════════════════════════════════
+       SCOOPCAST NEO-BRUTALIST DESIGN SYSTEM & BASE STYLES
+       ═════════════════════════════════════════════════════════════════ */
+    :root {
+      --bg: #FFFDF5;
+      --card-bg: #FFFFFF;
+      --border: #111827;
+      --yellow: #FACC15;
+      --yellow-hover: #FDE047;
+      --blue: #38BDF8;
+      --green: #4ADE80;
+      --red: #F87171;
+      --purple: #C084FC;
+      --pink: #F472B6;
+      --text: #111827;
+      --muted: #6B7280;
+      --shadow: 4px 4px 0 #111827;
+      --shadow-sm: 2.5px 2.5px 0 #111827;
+      --shadow-lg: 6px 6px 0 #111827;
+      --shadow-xl: 8px 8px 0 #111827;
+      --font-brand: 'Lilita One', cursive, sans-serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(var(--border) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      line-height: 1.5;
+    }
+
+    /* ── HEADER ── */
+    header.admin-header {
+      background: var(--yellow);
+      border-bottom: 3.5px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-title {
+      font-family: var(--font-brand);
+      font-size: 26px;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
+    .brand-badge {
+      background: var(--border);
+      color: var(--yellow);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #FFFFFF;
+      border: 2.5px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: 999px;
+      padding: 4px 12px 4px 6px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .user-avatar-mini {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      object-fit: cover;
+      background: var(--yellow);
+    }
+    .user-role-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .role-tag-head {
+      background: var(--yellow);
+      color: var(--border);
+    }
+    .role-tag-uploader {
+      background: var(--blue);
+      color: #FFFFFF;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.4);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 9px 18px;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      background: #FFFFFF;
+      color: var(--border);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s, box-shadow 0.1s;
+      text-decoration: none;
+      user-select: none;
+    }
+    .btn:hover {
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 5.5px 5.5px 0 var(--border);
+    }
+    .btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--border);
+    }
+    .btn-yellow {
+      background: var(--yellow);
+    }
+    .btn-yellow:hover {
+      background: var(--yellow-hover);
+    }
+    .btn-blue {
+      background: var(--blue);
+      color: #FFFFFF;
+    }
+    .btn-green {
+      background: var(--green);
+    }
+    .btn-red {
+      background: var(--red);
+      color: #FFFFFF;
+    }
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 12px;
+      border-width: 2px;
+      border-radius: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ── NEO-BRUTALIST GOOGLE LOGIN BUTTON ── */
+    .btn-google-login {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: var(--font-body);
+      background: #FFFFFF;
+      color: var(--border);
+      border: 3.5px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .btn-google-login:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--border);
+      background: #FEF3C7;
+    }
+    .btn-google-login:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 var(--border);
+    }
+    .google-g-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* ── MAIN CONTAINER ── */
+    .admin-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 24px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card-bg);
+      border: 3.5px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2.5px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: var(--font-brand);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ── TABS ── */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .mode-tab {
+      background: #F3F4F6;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 8px;
+      font-family: var(--font-brand);
+      font-size: 15px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s;
+    }
+    .mode-tab:hover {
+      background: #E5E7EB;
+    }
+    .mode-tab.active {
+      background: var(--yellow);
+      transform: translate(-1.5px, -1.5px);
+      box-shadow: 4px 4px 0 var(--border);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      background: #FFFFFF;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+      outline: none;
+      transition: all 0.15s;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      background: #FFFBEB;
+      border-color: #000000;
+      box-shadow: 4px 4px 0 #000000;
+    }
+    .form-input.uppercase {
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ── TMDB AUTOCOMPLETE DROPDOWN ── */
+    .tmdb-search-wrap {
+      position: relative;
+    }
+    .tmdb-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border: 3px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      margin-top: 6px;
+      max-height: 380px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+    }
+    .tmdb-results.open {
+      display: block;
+    }
+    .tmdb-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 2px solid #E5E7EB;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .tmdb-item:last-child {
+      border-bottom: none;
+    }
+    .tmdb-item:hover {
+      background: #FEF3C7;
+    }
+    .tmdb-poster {
+      width: 42px;
+      height: 60px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      background: #F3F4F6;
+      flex-shrink: 0;
+    }
+    .tmdb-details {
+      flex: 1;
+      min-width: 0;
+    }
+    .tmdb-title {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tmdb-year {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* ── TMDB STILLS GALLERY ── */
+    .stills-gallery-section {
+      margin-top: 16px;
+      background: #F8FAFC;
+      border: 2.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .stills-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .stills-header h4 {
+      font-family: var(--font-brand);
+      font-size: 16px;
+    }
+    .stills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .still-thumb {
+      aspect-ratio: 16/9;
+      border: 2.5px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #000;
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .still-thumb:hover {
+      transform: scale(1.03);
+      box-shadow: var(--shadow-sm);
+    }
+    .still-thumb.selected {
+      border-color: #000;
+      outline: 4px solid var(--yellow);
+      transform: scale(1.02);
+    }
+    .still-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .still-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: var(--yellow);
+      color: var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      font-size: 9px;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      padding: 1px 4px;
+      display: none;
+    }
+    .still-thumb.selected .still-badge {
+      display: block;
+    }
+
+    /* ── FILE DROPZONE ── */
+    .dropzone {
+      border: 3px dashed var(--border);
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      background: #FEF3C7;
+      border-color: #000;
+      box-shadow: var(--shadow-sm);
+    }
+    .dropzone-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+    .dropzone-text {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .dropzone-sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ── LIVE PREVIEW BOX (Right Column) ── */
+    .preview-sticky {
+      position: sticky;
+      top: 86px;
+    }
+    .mock-game-frame {
+      aspect-ratio: 16/9;
+      background: #111827;
+      border: 3.5px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mock-game-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .mock-dialogue-box {
+      padding: 24px;
+      text-align: center;
+      color: #FFFFFF;
+      font-family: var(--font-brand);
+      font-size: 20px;
+      line-height: 1.4;
+      text-shadow: 2px 2px 0 #000;
+    }
+    .mock-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--yellow);
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      box-shadow: 2px 2px 0 var(--border);
+    }
+    .mock-timer {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      background: var(--red);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      color: #FFF;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0 var(--border);
+    }
+
+    .preview-details {
+      margin-top: 14px;
+      background: #FFFFFF;
+      border: 2.5px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .pd-answer {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+    }
+    .pd-hint {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #2563EB;
+      margin-top: 4px;
+    }
+
+    /* ── EXISTING DROPS LIST ── */
+    .drops-list {
+      max-height: 480px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 4px;
+    }
+    .drop-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border: 2.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-sm);
+      gap: 12px;
+    }
+    .drop-thumb {
+      width: 58px;
+      height: 36px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: #111827;
+      flex-shrink: 0;
+    }
+    .drop-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .drop-ans {
+      font-weight: 800;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .drop-cat {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       ULTRA-PROFESSIONAL NEO-BRUTALIST AUTH SCREEN
+       ═════════════════════════════════════════════════════════════════ */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      background-image: radial-gradient(var(--border) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .neo-auth-container {
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Decorative Tilted Sticker */
+    .neo-sticker {
+      position: absolute;
+      top: -16px;
+      right: -12px;
+      background: var(--red);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border: 3px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 3px 3px 0 var(--border);
+      transform: rotate(6deg);
+      z-index: 10;
+      letter-spacing: 0.5px;
+    }
+
+    .neo-auth-card {
+      background: #FFFFFF;
+      border: 4px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow-xl);
+      padding: 40px 32px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    .neo-auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--yellow);
+      border: 2.5px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      box-shadow: 2px 2px 0 var(--border);
+    }
+
+    .neo-auth-title {
+      font-family: var(--font-brand);
+      font-size: 34px;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .neo-auth-sub {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+
+    /* 2 Roles Explainer Box */
+    .neo-roles-box {
+      background: #F9FAFB;
+      border: 3px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 24px;
+      text-align: left;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .neo-role-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .neo-role-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .neo-role-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 2.5px;
+      background: #E5E7EB;
+      border-radius: 2px;
+    }
+    .auth-divider span {
+      padding: 0 12px;
+    }
+
+    /* ── MODAL (SETTINGS) ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+      padding: 20px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-box {
+      background: #FFFFFF;
+      border: 4px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      padding: 28px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .upload-progress-wrap {
+      display: none;
+      margin-top: 14px;
+    }
+    .progress-bar-track {
+      height: 14px;
+      background: #E5E7EB;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--yellow);
+      transition: width 0.2s;
+    }
+    .progress-text {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ── ASSET LIBRARY MODAL & GRID ── */
+    .asset-lib-modal {
+      max-width: 1080px;
+      width: 95%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+    .asset-lib-header {
+      padding: 18px 24px;
+      border-bottom: 3px solid var(--border);
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .asset-count-subtitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 2px;
+      display: block;
+    }
+    .asset-controls-bar {
+      padding: 16px 24px;
+      background: #F9FAFB;
+      border-bottom: 2.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .asset-search-input-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .asset-search-input-wrap .form-input {
+      padding-right: 36px;
+    }
+    .asset-clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #E5E7EB;
+      border: 1.5px solid var(--border);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .asset-cat-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cat-pill {
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--border);
+      transition: all 0.15s;
+    }
+    .cat-pill:hover {
+      background: #FEF3C7;
+      transform: translateY(-1px);
+    }
+    .cat-pill.active {
+      background: var(--yellow);
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--border);
+    }
+    .asset-grid-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      background: #F3F4F6;
+      min-height: 320px;
+    }
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .asset-card {
+      background: #FFFFFF;
+      border: 2.5px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .asset-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .asset-thumb-wrap {
+      aspect-ratio: 16/9;
+      background: #111827;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .asset-thumb-wrap.square {
+      aspect-ratio: 1/1;
+      max-height: 130px;
+      background: #FEF3C7;
+    }
+    .asset-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .asset-thumb-wrap.square .asset-img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
+    .asset-cat-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: var(--yellow);
+      color: var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      text-transform: uppercase;
+      box-shadow: 1.5px 1.5px 0 var(--border);
+    }
+    .asset-cat-tag.cat-eyes {
+      background: #38BDF8;
+      color: #000;
+    }
+    .asset-cat-tag.cat-tie {
+      background: #F472B6;
+      color: #000;
+    }
+    .asset-cat-tag.cat-avvtar {
+      background: #4ADE80;
+      color: #000;
+    }
+    .asset-cat-tag.cat-bg {
+      background: #A78BFA;
+      color: #000;
+    }
+    .asset-size-tag {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(17, 24, 39, 0.85);
+      color: #FFF;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .asset-card-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .asset-card-title {
+      font-family: var(--font-brand);
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .asset-card-file {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .asset-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .asset-lib-footer {
+      padding: 12px 24px;
+      background: #FFFFFF;
+      border-top: 2.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .asset-empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+    .badge-count {
+      background: var(--border);
+      color: var(--yellow);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      margin-left: 4px;
+    }
+    .btn-xs {
+      padding: 4px 8px;
+      font-size: 11px;
+      border-width: 2px;
+      border-radius: 6px;
+      box-shadow: 2px 2px 0 var(--border);
+    }
+    .admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #FFFFFF;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .admin-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       ULTRA-PROFESSIONAL NEO-BRUTALIST AUTH LOCK SCREEN
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="authOverlay">
+    <div class="neo-auth-container">
+      
+      <!-- Decorative Neo-Brutalist Sticker -->
+      <div class="neo-sticker">RESTRICTED PORTAL</div>
+
+      <div class="neo-auth-card">
+        <div class="neo-auth-badge">🎬 SCOOPCAST CINEMA LABS</div>
+        <h1 class="neo-auth-title">ADMIN STUDIO</h1>
+        <p class="neo-auth-sub">Secure access for curators & game administrators</p>
+
+        <!-- Role Privileges Guide -->
+        <div class="neo-roles-box">
+          <div class="neo-role-item">
+            <span class="neo-role-name">👑 MAIN HEAD</span>
+            <span class="neo-role-desc">Full rights, drops approval, delete, & API settings.</span>
+          </div>
+          <div class="neo-role-item">
+            <span class="neo-role-name">📤 UPLOADER</span>
+            <span class="neo-role-desc">TMDB search & direct Cloudinary frame curation.</span>
+          </div>
+        </div>
+
+        <!-- 1. PRIMARY ACTION: GOOGLE LOGIN VIA CLERK -->
+        <button type="button" class="btn-google-login" onclick="AdminApp.loginWithGoogle()">
+          <svg class="google-g-icon" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>Or Quick Passcode</span>
+        </div>
+
+        <!-- 2. FALLBACK PASSCODE SIGN-IN -->
+        <form id="authForm" onsubmit="AdminApp.handleLogin(event)">
+          <div class="form-group" style="margin-bottom:12px;">
+            <input type="password" id="authPassInput" class="form-input" placeholder="Enter Master or Uploader Passcode" required />
+          </div>
+          <button type="submit" class="btn btn-yellow" style="width:100%; justify-content:center; padding:12px; font-size:15px;">
+            ENTER STUDIO ⚡
+          </button>
+        </form>
+
+        <div id="authError" style="color:var(--red); font-weight:800; font-size:13px; margin-top:14px; display:none;">
+          Invalid passcode. Please try again.
+        </div>
+
+        <div style="margin-top:16px; font-size:11px; font-family:var(--font-mono); color:var(--muted);">
+          Protected with Clerk Authentication & Cloudinary SDK
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       HEADER BAR
+       ═════════════════════════════════════════════════════════════════ -->
+  <header class="admin-header">
+    <a href="/" class="brand-wrap">
+      <div style="width:34px; height:34px; background:#111827; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#FACC15; font-size:18px;">
+        🎞️
+      </div>
+      <span class="brand-title">SCOOPCAST</span>
+      <span class="brand-badge">STUDIO</span>
+    </a>
+
+    <div class="header-actions">
+      <!-- Active User Profile Pill -->
+      <div class="user-pill" id="activeUserPill">
+        <img id="userAvatarImg" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" class="user-avatar-mini" alt="User avatar" />
+        <span id="userNameLabel">Admin</span>
+        <span id="userRoleBadge" class="user-role-tag role-tag-head">👑 MAIN HEAD</span>
+      </div>
+
+      <div class="status-pill" id="cldStatusPill">
+        <span class="status-dot"></span>
+        <span>nvwgbyr3</span>
+      </div>
+
+      <button type="button" id="assetLibNavBtn" class="btn btn-sm btn-yellow" onclick="AdminApp.openAssetLibrary()" title="Browse all 59 game media assets">🖼️ Asset Library <span id="assetLibHeaderCount" class="badge-count">59</span></button>
+      <button type="button" id="settingsNavBtn" class="btn btn-sm" onclick="AdminApp.openSettings()">⚙️ Settings</button>
+      <button type="button" class="btn btn-sm btn-red" onclick="AdminApp.logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       MAIN 2-COLUMN WORKSPACE
+       ═════════════════════════════════════════════════════════════════ -->
+  <main class="admin-container">
+
+    <!-- LEFT COLUMN: CREATION FORMS -->
+    <section>
+      
+      <!-- MODE SELECTION -->
+      <div class="mode-tabs">
+        <div class="mode-tab active" data-mode="frames" onclick="AdminApp.setMode('frames')">
+          🎬 GUESS THE FRAME
+        </div>
+        <div class="mode-tab" data-mode="eyes" onclick="AdminApp.setMode('eyes')">
+          👀 GUESS THE EYES
+        </div>
+        <div class="mode-tab" data-mode="dialogue" onclick="AdminApp.setMode('dialogue')">
+          💬 GUESS THE DIALOGUE
+        </div>
+      </div>
+
+      <!-- MAIN FORM CARD -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title" id="formHeaderTitle">🎬 Add New Movie Frame</h2>
+          <span style="font-size:12px; font-family:var(--font-mono); font-weight:700; color:var(--muted);">TMDB AUTO-SYNC</span>
+        </div>
+
+        <form id="dropForm" onsubmit="AdminApp.handleSubmit(event)">
+
+          <!-- TMDB MOVIE SEARCH WITH AUTOCOMPLETE -->
+          <div class="form-group tmdb-search-wrap">
+            <label class="form-label">🔍 Search Movie on TMDB (Auto-fills Title & Year)</label>
+            <input type="text" id="tmdbSearchInput" class="form-input" placeholder="Type movie title (e.g. Sholay, Inception, Gangs of Wasseypur)..." autocomplete="off" oninput="AdminApp.debounceTmdbSearch()" />
+            <div id="tmdbResultsBox" class="tmdb-results"></div>
+          </div>
+
+          <!-- MOVIE ANSWER & RELEASE YEAR -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" id="answerLabel">Answer Title (Canonical)</label>
+              <input type="text" id="itemAnswer" class="form-input uppercase" placeholder="e.g. SHOLAY" required oninput="AdminApp.updatePreview()" />
+            </div>
+            <div class="form-group" id="yearGroup">
+              <label class="form-label">Release Year</label>
+              <input type="text" id="itemYear" class="form-input" placeholder="e.g. 1975" maxlength="4" oninput="AdminApp.updatePreview()" />
+            </div>
+          </div>
+
+          <!-- DIALOGUE SPECIFIC FIELDS (Hidden for frames/eyes) -->
+          <div id="dialogueFields" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Iconic Movie Quote / Line</label>
+              <textarea id="itemDialogue" class="form-textarea" rows="3" placeholder="e.g. Kitne aadmi the?" oninput="AdminApp.updatePreview()"></textarea>
+            </div>
+          </div>
+
+          <!-- TMDB 1-CLICK STILLS GALLERY (For frames mode) -->
+          <div id="tmdbStillsSection" class="stills-gallery-section" style="display:none;">
+            <div class="stills-header">
+              <h4>📸 Official TMDB Cinema Stills (1-Click Pick)</h4>
+              <span id="stillsCountBadge" style="font-size:12px; font-family:var(--font-mono); font-weight:700; color:#2563EB;">0 Stills Found</span>
+            </div>
+            <div id="stillsGrid" class="stills-grid"></div>
+          </div>
+
+          <!-- IMAGE UPLOADER (For frames & eyes) -->
+          <div id="imageUploadSection" class="form-group">
+            <label class="form-label" id="imageUploadLabel">Or Upload Custom Image</label>
+            
+            <div class="dropzone" id="fileDropzone" onclick="document.getElementById('fileInput').click()">
+              <div class="dropzone-icon">🖼️</div>
+              <div class="dropzone-text">Click or Drag & Drop image here</div>
+              <div class="dropzone-sub">PNG, WebP, JPG up to 10MB • Auto-optimizes to WebP</div>
+              <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="AdminApp.handleFileSelect(event)" />
+            </div>
+
+            <!-- EYES REVEAL IMAGE (Optional for Eyes mode) -->
+            <div id="eyesRevealGroup" style="display:none; margin-top:14px;">
+              <label class="form-label">Optional: Full Face Reveal Image</label>
+              <input type="file" id="fileRevealInput" accept="image/*" class="form-input" onchange="AdminApp.handleRevealFileSelect(event)" />
+            </div>
+          </div>
+
+          <!-- HINT & TRIVIA CLUE -->
+          <div class="form-group">
+            <label class="form-label">Masked Hint / Clue</label>
+            <input type="text" id="itemHint" class="form-input" placeholder="e.g. S _ O _ A Y or 1975 Bollywood classic" oninput="AdminApp.updatePreview()" />
+            <span style="font-size:11px; color:var(--muted); font-family:var(--font-mono); margin-top:4px; display:block;">
+              ⚡ Auto-generated from title, or customize freely.
+            </span>
+          </div>
+
+          <!-- PROGRESS BAR -->
+          <div id="uploadProgress" class="upload-progress-wrap">
+            <div class="progress-bar-track">
+              <div id="progressFill" class="progress-bar-fill"></div>
+            </div>
+            <div class="progress-text">
+              <span id="progressStatus">Uploading to Cloudinary...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+          </div>
+
+          <!-- SUBMIT ACTION -->
+          <div style="margin-top:24px; display:flex; gap:12px;">
+            <button type="submit" id="submitBtn" class="btn btn-yellow" style="flex:1; justify-content:center; padding:14px; font-size:16px;">
+              ⚡ UPLOAD TO CLOUDINARY & SAVE DROP
+            </button>
+            <button type="button" class="btn" onclick="AdminApp.resetForm()">Reset</button>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: LIVE GAME PREVIEW & PLAYLIST VIEWER -->
+    <section>
+      
+      <!-- LIVE GAME CARD MOCKUP PREVIEW -->
+      <div class="card preview-sticky">
+        <div class="card-header">
+          <h3 class="card-title">👁️ Live In-Game Preview</h3>
+          <span style="font-size:11px; font-family:var(--font-mono); background:#111827; color:#FFF; padding:2px 8px; border-radius:4px;">16:9 VIEW</span>
+        </div>
+
+        <div class="mock-game-frame" id="mockPreviewFrame">
+          <div class="mock-badge" id="mockModeBadge">CINEMA STILL</div>
+          <div class="mock-timer">20</div>
+          
+          <img id="mockImage" class="mock-game-img" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799513/scoopcast/bg/guess_the_frame.webp" alt="Frame preview" />
+          <div id="mockDialogueText" class="mock-dialogue-box" style="display:none;">
+            "Quote text will appear here..."
+          </div>
+        </div>
+
+        <div class="preview-details">
+          <div style="font-size:11px; font-family:var(--font-mono); font-weight:800; color:var(--muted);">TARGET ANSWER:</div>
+          <div class="pd-answer" id="mockAnswerText">SHOLAY (1975)</div>
+          <div class="pd-hint" id="mockHintText">Hint: S _ O _ A Y</div>
+        </div>
+      </div>
+
+      <!-- ACTIVE PLAYLIST / WEEKLY DROPS MANAGER -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">📦 Existing Drops (<span id="dropsCount">0</span>)</h3>
+          <button type="button" id="exportBtn" class="btn btn-sm btn-green" onclick="AdminApp.exportPlaylistJson()">📥 Export JSON</button>
+        </div>
+
+        <div class="drops-list" id="dropsListContainer">
+          <!-- Drops populated dynamically -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       SETTINGS MODAL (CREDENTIALS CONFIGURATION)
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="settingsModal" class="modal-backdrop" onclick="if(event.target===this) AdminApp.closeSettings()">
+    <div class="modal-box">
+      <div class="card-header">
+        <h3 class="card-title">⚙️ API & Studio Settings</h3>
+        <button type="button" class="btn btn-sm" onclick="AdminApp.closeSettings()">✕</button>
+      </div>
+
+      <form onsubmit="AdminApp.saveSettings(event)">
+        <div class="form-group">
+          <label class="form-label">Cloudinary Cloud Name</label>
+          <input type="text" id="cfgCloudName" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cloudinary API Key</label>
+          <input type="text" id="cfgApiKey" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cloudinary API Secret</label>
+          <input type="password" id="cfgApiSecret" class="form-input" required />
+          <span style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">Used exclusively in-browser to generate SHA-1 upload signatures. Never committed to Git.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">TMDB Read Access Token (v4)</label>
+          <input type="password" id="cfgTmdbToken" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Clerk Publishable Key</label>
+          <input type="text" id="cfgClerkKey" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Master Admin Passcode (Main Head)</label>
+          <input type="password" id="cfgPasscode" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Main Head Email (Auto Super Admin)</label>
+          <input type="email" id="cfgAdminEmail" class="form-input" placeholder="asmit.sharma@hotmail.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Uploader Passcode (Collaborators)</label>
+          <input type="password" id="cfgUploaderPasscode" class="form-input" required />
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
+          <button type="button" class="btn" onclick="AdminApp.closeSettings()">Cancel</button>
+          <button type="submit" class="btn btn-yellow">💾 Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       ASSET LIBRARY EXPLORER MODAL
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="assetLibraryModal" class="modal-backdrop" onclick="if(event.target===this) AdminApp.closeAssetLibrary()">
+    <div class="modal-box asset-lib-modal">
+      <div class="card-header asset-lib-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; background:var(--yellow); border:2.5px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:2px 2px 0 var(--border);">
+            🖼️
+          </div>
+          <div>
+            <h3 class="card-title" style="margin:0; font-size:20px;">Media Asset Library</h3>
+            <span class="asset-count-subtitle" id="assetSubtitle">59 Game Media Assets Indexed</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-sm" onclick="AdminApp.refreshAssets()" title="Reload asset manifest from server">🔄 Refresh</button>
+          <button type="button" class="btn btn-sm" onclick="AdminApp.closeAssetLibrary()">✕</button>
+        </div>
+      </div>
+
+      <!-- Controls: Search & Category Pills -->
+      <div class="asset-controls-bar">
+        <div class="asset-search-input-wrap">
+          <input type="text" id="assetSearchInput" class="form-input" placeholder="🔍 Search assets by movie title, filename, or year..." autocomplete="off" oninput="AdminApp.filterAssets()" />
+          <button type="button" class="asset-clear-btn" id="assetClearBtn" onclick="AdminApp.clearAssetSearch()" style="display:none;" title="Clear search">✕</button>
+        </div>
+        <div class="asset-cat-filters" id="assetCategoryTabs">
+          <button type="button" class="cat-pill active" data-cat="all" onclick="AdminApp.setAssetCategory('all')">All (<span id="catCountAll">59</span>)</button>
+          <button type="button" class="cat-pill" data-cat="frames" onclick="AdminApp.setAssetCategory('frames')">🎬 Frames (<span id="catCountFrames">20</span>)</button>
+          <button type="button" class="cat-pill" data-cat="eyes" onclick="AdminApp.setAssetCategory('eyes')">👀 Eyes (<span id="catCountEyes">20</span>)</button>
+          <button type="button" class="cat-pill" data-cat="tie_breaker" onclick="AdminApp.setAssetCategory('tie_breaker')">⚖️ Tie Breakers (<span id="catCountTie">14</span>)</button>
+          <button type="button" class="cat-pill" data-cat="avvtar" onclick="AdminApp.setAssetCategory('avvtar')">👤 Avatars (<span id="catCountAvvtar">4</span>)</button>
+          <button type="button" class="cat-pill" data-cat="bg" onclick="AdminApp.setAssetCategory('bg')">🌄 BG (<span id="catCountBg">1</span>)</button>
+        </div>
+      </div>
+
+      <!-- Scrollable Asset Cards Grid -->
+      <div class="asset-grid-scroll">
+        <div class="asset-grid" id="assetGridContainer">
+          <!-- Populated dynamically by AdminApp.renderAssetGrid -->
+        </div>
+        <div id="assetEmptyState" class="asset-empty-state" style="display:none;">
+          <div style="font-size:38px; margin-bottom:10px;">🔍</div>
+          <div style="font-family:var(--font-brand); font-size:18px;">No matching assets found</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:6px;">Try adjusting your search query or switching categories.</div>
+        </div>
+      </div>
+
+      <!-- Footer Bar -->
+      <div class="asset-lib-footer">
+        <div style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--muted);" id="assetFooterStatus">
+          Showing 59 assets
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-sm btn-yellow" onclick="AdminApp.closeAssetLibrary()">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div id="adminToast" class="admin-toast">
+    <span id="adminToastIcon">✅</span>
+    <span id="adminToastMsg">Notification</span>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       STUDIO CORE ENGINE SCRIPT
+       ═════════════════════════════════════════════════════════════════ -->
+  <script>
+    const AdminApp = {
+      // Configuration Defaults
+      config: {
+        cloudName: 'nvwgbyr3',
+        apiKey: '671677953743618',
+        apiSecret: 'qlRcRTv_FZwvVVu6z-HG1DdtZ0Y',
+        tmdbToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmZWJkMzUxY2IxOGMwNTdlZjY1YmQ2Y2Q4MzI5NjZiNiIsIm5iZiI6MTc3NzcxNTUzNS4wNDE5OTk4LCJzdWIiOiI2OWY1Yzk0ZjU0M2FjMDY4ZDgyMGZjMzYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.DB3S0Ye5G28XrqsR_kxmfFLz342I8W0D-BJKw1HgpgU',
+        tmdbApiKey: 'febd351cb18c057ef65bd6cd832966b6',
+        clerkKey: 'pk_test_aW5maW5pdGUta29hbGEtNjUyMy5jbGVyay5hY2NvdW50cy5kZXYk',
+        passcode: 'scoopcast2026',
+        adminEmail: 'asmit.sharma@hotmail.com',
+        uploaderPasscode: 'uploader2026'
+      },
+
+      currentUser: {
+        name: 'Asmit Sharma',
+        avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg',
+        role: 'admin' // 'admin' (Main Head) or 'uploader'
+      },
+
+      currentMode: 'frames',
+      selectedFile: null,
+      selectedRevealFile: null,
+      selectedTmdbStillUrl: null,
+      selectedAssetPath: null,
+      allAssets: [],
+      activeAssetCategory: 'all',
+      toastTimer: null,
+      currentTmdbMovie: null,
+      dropsData: [],
+      searchDebounceTimer: null,
+
+      init() {
+        this.loadSettings();
+        this.checkAuth();
+        this.loadExistingDrops();
+        this.setupDragAndDrop();
+        this.loadAssetLibrary();
+        this.initClerk();
+      },
+
+      loadSettings() {
+        const saved = localStorage.getItem('scoopcast_admin_config');
+        if (saved) {
+          try {
+            this.config = Object.assign(this.config, JSON.parse(saved));
+          } catch (e) {}
+        }
+        document.getElementById('cldStatusPill').innerHTML = `<span class="status-dot"></span><span>${this.config.cloudName}</span>`;
+      },
+
+      saveSettings(e) {
+        if (e) e.preventDefault();
+        this.config.cloudName = document.getElementById('cfgCloudName').value.trim();
+        this.config.apiKey = document.getElementById('cfgApiKey').value.trim();
+        this.config.apiSecret = document.getElementById('cfgApiSecret').value.trim();
+        this.config.tmdbToken = document.getElementById('cfgTmdbToken').value.trim();
+        this.config.clerkKey = document.getElementById('cfgClerkKey').value.trim();
+        this.config.passcode = document.getElementById('cfgPasscode').value.trim();
+        this.config.adminEmail = (document.getElementById('cfgAdminEmail').value.trim() || 'asmit.sharma@hotmail.com').toLowerCase();
+        this.config.uploaderPasscode = document.getElementById('cfgUploaderPasscode').value.trim();
+        localStorage.setItem('scoopcast_admin_config', JSON.stringify(this.config));
+        this.loadSettings();
+        this.closeSettings();
+        alert('Settings saved successfully!');
+      },
+
+      openSettings() {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only the Main Head can access Studio Settings.');
+          return;
+        }
+        document.getElementById('cfgCloudName').value = this.config.cloudName;
+        document.getElementById('cfgApiKey').value = this.config.apiKey;
+        document.getElementById('cfgApiSecret').value = this.config.apiSecret;
+        document.getElementById('cfgTmdbToken').value = this.config.tmdbToken;
+        document.getElementById('cfgClerkKey').value = this.config.clerkKey;
+        document.getElementById('cfgPasscode').value = this.config.passcode;
+        document.getElementById('cfgAdminEmail').value = this.config.adminEmail || 'asmit.sharma@hotmail.com';
+        document.getElementById('cfgUploaderPasscode').value = this.config.uploaderPasscode;
+        document.getElementById('settingsModal').classList.add('open');
+      },
+
+      closeSettings() {
+        document.getElementById('settingsModal').classList.remove('open');
+      },
+
+      // ── CLERK INTEGRATION & AUTH ──
+      async initClerk() {
+        try {
+          let retries = 0;
+          while (!window.Clerk && retries < 40) {
+            await new Promise(r => setTimeout(r, 100));
+            retries++;
+          }
+          if (!window.Clerk) return;
+
+          if (!window.Clerk.loaded) {
+            await window.Clerk.load();
+          }
+
+          // Check if returning from OAuth redirect callback (Google Sign-In)
+          const urlStr = window.location.href;
+          const searchStr = window.location.search || '';
+          const hashStr = window.location.hash || '';
+          const hasCallbackParams = 
+            searchStr.includes('__clerk') ||
+            searchStr.includes('status') ||
+            searchStr.includes('created_session_id') ||
+            searchStr.includes('rotating_token') ||
+            searchStr.includes('ticket') ||
+            hashStr.includes('__clerk') ||
+            urlStr.includes('oauth_callback');
+
+          if (hasCallbackParams) {
+            const authCard = document.querySelector('.neo-auth-card');
+            if (authCard) {
+              const sub = authCard.querySelector('.neo-auth-sub');
+              if (sub) sub.innerHTML = '<span style="color:#2563EB; font-weight:800;">⏳ Completing Google sign-in...</span>';
+            }
+            try {
+              if (window.Clerk.handleRedirectCallback) {
+                await window.Clerk.handleRedirectCallback();
+              }
+            } catch (cbErr) {
+              console.warn('handleRedirectCallback notice:', cbErr);
+            }
+          }
+
+          // Check authenticated user
+          const activeUser = window.Clerk.user || (window.Clerk.session && window.Clerk.session.user);
+          if (activeUser) {
+            this.handleClerkUser(activeUser);
+          }
+
+          // Register reactive listener for future session changes
+          if (window.Clerk.addListener) {
+            window.Clerk.addListener(({ user, session }) => {
+              const u = user || (session && session.user);
+              if (u) {
+                this.handleClerkUser(u);
+              }
+            });
+          }
+        } catch (err) {
+          console.warn('Clerk initialization notice:', err);
+        }
+      },
+
+      handleClerkUser(user) {
+        const email = (user.primaryEmailAddress?.emailAddress || '').toLowerCase();
+        const name = user.fullName || user.firstName || (email.includes('asmit') ? 'Asmit Sharma' : 'Curator');
+        const avatar = user.imageUrl || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+        
+        // Auto-assign Main Head role if email matches asmit.sharma@hotmail.com or contains asmit
+        const mainHeadEmails = ['asmit.sharma@hotmail.com', (this.config.adminEmail || '').toLowerCase()];
+        const isMainHead = mainHeadEmails.includes(email) || 
+                           email.includes('asmit') ||
+                           (user.publicMetadata && user.publicMetadata.role === 'admin');
+
+        const role = isMainHead ? 'admin' : 'uploader';
+
+        this.applyRole(role, { name, avatar, email });
+        sessionStorage.setItem('scoopcast_admin_auth', 'true');
+        localStorage.setItem('scoopcast_admin_auth', 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+      },
+
+      async loginWithGoogle() {
+        const btn = document.querySelector('.btn-google-login');
+        const originalHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+          btn.style.opacity = '0.75';
+          btn.style.pointerEvents = 'none';
+          btn.innerHTML = `<span style="font-size:18px;">⏳</span> <span>Connecting to Google...</span>`;
+        }
+
+        try {
+          let retries = 0;
+          while (!window.Clerk && retries < 35) {
+            await new Promise(r => setTimeout(r, 100));
+            retries++;
+          }
+
+          if (!window.Clerk) {
+            throw new Error('Clerk SDK is taking longer to load. Please use the Passcode below.');
+          }
+
+          if (!window.Clerk.loaded) {
+            await window.Clerk.load();
+          }
+
+          const redirectUrl = window.location.origin + '/admin';
+
+          // First try signIn with oauth_google, and fallback to signUp or openSignIn
+          if (window.Clerk.client?.signIn) {
+            try {
+              await window.Clerk.client.signIn.authenticateWithRedirect({
+                strategy: 'oauth_google',
+                redirectUrl: redirectUrl,
+                redirectUrlComplete: redirectUrl
+              });
+              return;
+            } catch (signInErr) {
+              console.warn('signIn.authenticateWithRedirect notice, trying signUp:', signInErr);
+              if (window.Clerk.client?.signUp) {
+                await window.Clerk.client.signUp.authenticateWithRedirect({
+                  strategy: 'oauth_google',
+                  redirectUrl: redirectUrl,
+                  redirectUrlComplete: redirectUrl
+                });
+                return;
+              }
+            }
+          }
+
+          // Fallback to prebuilt Clerk Sign-In modal
+          if (window.Clerk.openSignIn) {
+            window.Clerk.openSignIn();
+            if (btn) {
+              btn.style.opacity = '1';
+              btn.style.pointerEvents = 'auto';
+              btn.innerHTML = originalHtml;
+            }
+          } else {
+            throw new Error('Sign-In service unavailable. Please use the Passcode below.');
+          }
+        } catch (err) {
+          console.error('Clerk Google Auth error:', err);
+          if (btn) {
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            btn.innerHTML = originalHtml;
+          }
+          alert('Google Sign-In Notice: ' + (err.message || err) + '\n\nYou can also enter using the Master or Uploader Passcode below.');
+        }
+      },
+
+      // Role Application
+      applyRole(role, userDetails) {
+        this.currentUser.role = role;
+        this.currentUser.name = userDetails.name || 'Admin';
+        this.currentUser.avatar = userDetails.avatar || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+
+        document.getElementById('userNameLabel').textContent = this.currentUser.name;
+        document.getElementById('userAvatarImg').src = this.currentUser.avatar;
+
+        const roleBadge = document.getElementById('userRoleBadge');
+        const settingsBtn = document.getElementById('settingsNavBtn');
+
+        if (role === 'admin') {
+          roleBadge.textContent = '👑 MAIN HEAD';
+          roleBadge.className = 'user-role-tag role-tag-head';
+          if (settingsBtn) settingsBtn.style.display = 'inline-flex';
+        } else {
+          roleBadge.textContent = '📤 UPLOADER';
+          roleBadge.className = 'user-role-tag role-tag-uploader';
+          if (settingsBtn) settingsBtn.style.display = 'none'; // Uploaders cannot see API keys
+        }
+
+        sessionStorage.setItem('scoopcast_user_role', role);
+        sessionStorage.setItem('scoopcast_user_name', this.currentUser.name);
+        sessionStorage.setItem('scoopcast_user_avatar', this.currentUser.avatar);
+
+        localStorage.setItem('scoopcast_user_role', role);
+        localStorage.setItem('scoopcast_user_name', this.currentUser.name);
+        localStorage.setItem('scoopcast_user_avatar', this.currentUser.avatar);
+
+        this.renderDropsList();
+      },
+
+      // Passcode Sign-In Handler
+      checkAuth() {
+        const isAuth = (sessionStorage.getItem('scoopcast_admin_auth') === 'true') ||
+                       (localStorage.getItem('scoopcast_admin_auth') === 'true');
+        if (isAuth) {
+          const savedRole = sessionStorage.getItem('scoopcast_user_role') || localStorage.getItem('scoopcast_user_role') || 'admin';
+          const savedName = sessionStorage.getItem('scoopcast_user_name') || localStorage.getItem('scoopcast_user_name') || 'Admin';
+          const savedAvatar = sessionStorage.getItem('scoopcast_user_avatar') || localStorage.getItem('scoopcast_user_avatar') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+          this.applyRole(savedRole, { name: savedName, avatar: savedAvatar });
+          document.getElementById('authOverlay').style.display = 'none';
+        } else {
+          // If URL has callback tokens, show loading state on overlay
+          const hasTokens = window.location.search.includes('__clerk') || window.location.hash.includes('__clerk');
+          if (hasTokens) {
+            const sub = document.querySelector('.neo-auth-sub');
+            if (sub) sub.innerHTML = '<span style="color:#2563EB; font-weight:800;">⏳ Completing Google sign-in...</span>';
+          }
+          document.getElementById('authOverlay').style.display = 'flex';
+        }
+      },
+
+      handleLogin(e) {
+        if (e) e.preventDefault();
+        const input = document.getElementById('authPassInput').value.trim();
+
+        if (input === this.config.passcode) {
+          // Master Passcode -> Main Head
+          sessionStorage.setItem('scoopcast_admin_auth', 'true');
+          localStorage.setItem('scoopcast_admin_auth', 'true');
+          this.applyRole('admin', { name: 'Main Head', avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg' });
+          document.getElementById('authOverlay').style.display = 'none';
+        } else if (input === this.config.uploaderPasscode) {
+          // Uploader Passcode -> Uploader
+          sessionStorage.setItem('scoopcast_admin_auth', 'true');
+          localStorage.setItem('scoopcast_admin_auth', 'true');
+          this.applyRole('uploader', { name: 'Curator', avatar: 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg' });
+          document.getElementById('authOverlay').style.display = 'none';
+        } else {
+          document.getElementById('authError').style.display = 'block';
+        }
+      },
+
+      async logout() {
+        if (window.Clerk) {
+          try { await window.Clerk.signOut(); } catch (e) {}
+        }
+        sessionStorage.removeItem('scoopcast_admin_auth');
+        sessionStorage.removeItem('scoopcast_user_role');
+        sessionStorage.removeItem('scoopcast_user_name');
+        sessionStorage.removeItem('scoopcast_user_avatar');
+
+        localStorage.removeItem('scoopcast_admin_auth');
+        localStorage.removeItem('scoopcast_user_role');
+        localStorage.removeItem('scoopcast_user_name');
+        localStorage.removeItem('scoopcast_user_avatar');
+
+        document.getElementById('authOverlay').style.display = 'flex';
+        document.getElementById('authPassInput').value = '';
+        document.getElementById('authError').style.display = 'none';
+      },
+
+      // Mode Switcher
+      setMode(mode) {
+        this.currentMode = mode;
+        document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+        
+        const isDialogue = mode === 'dialogue';
+        const isEyes = mode === 'eyes';
+
+        document.getElementById('dialogueFields').style.display = isDialogue ? 'block' : 'none';
+        document.getElementById('imageUploadSection').style.display = isDialogue ? 'none' : 'block';
+        document.getElementById('eyesRevealGroup').style.display = isEyes ? 'block' : 'none';
+        document.getElementById('tmdbStillsSection').style.display = (mode === 'frames' && this.selectedTmdbStillUrl) ? 'block' : 'none';
+
+        document.getElementById('formHeaderTitle').textContent = 
+          mode === 'frames' ? '🎬 Add New Movie Frame' :
+          mode === 'eyes' ? '👀 Add New Celebrity Eyes' :
+          '💬 Add New Movie Dialogue';
+
+        document.getElementById('answerLabel').textContent = 
+          mode === 'eyes' ? 'Actor / Celebrity Name' : 'Answer Title (Canonical)';
+
+        document.getElementById('mockModeBadge').textContent = 
+          mode === 'frames' ? 'CINEMA STILL' :
+          mode === 'eyes' ? 'EYES CLOSEUP' :
+          'ICONIC DIALOGUE';
+
+        this.updatePreview();
+      },
+
+      // TMDB Search with Debouncing
+      debounceTmdbSearch() {
+        clearTimeout(this.searchDebounceTimer);
+        const q = document.getElementById('tmdbSearchInput').value.trim();
+        if (q.length < 2) {
+          document.getElementById('tmdbResultsBox').classList.remove('open');
+          return;
+        }
+        this.searchDebounceTimer = setTimeout(() => this.searchTmdb(q), 300);
+      },
+
+      async searchTmdb(query) {
+        const box = document.getElementById('tmdbResultsBox');
+        try {
+          const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US`;
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${this.config.tmdbToken}`,
+              'Content-Type': 'application/json;charset=utf-8'
+            }
+          });
+          const data = await res.json();
+          if (data && data.results && data.results.length > 0) {
+            box.innerHTML = data.results.slice(0, 8).map(m => {
+              const year = m.release_date ? m.release_date.split('-')[0] : 'N/A';
+              const poster = m.poster_path ? `https://image.tmdb.org/t/p/w92${m.poster_path}` : 'https://via.placeholder.com/42x60?text=No+Img';
+              return `
+                <div class="tmdb-item" onclick="AdminApp.selectTmdbMovie(${m.id}, '${encodeURIComponent(m.title)}', '${year}')">
+                  <img src="${poster}" class="tmdb-poster" alt="${m.title}" />
+                  <div class="tmdb-details">
+                    <div class="tmdb-title">${m.title}</div>
+                    <div class="tmdb-year">${year} • Rating: ${m.vote_average || 'N/A'}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+            box.classList.add('open');
+          } else {
+            box.innerHTML = '<div style="padding:12px; text-align:center; color:var(--muted); font-size:13px;">No movies found on TMDB</div>';
+            box.classList.add('open');
+          }
+        } catch (e) {
+          console.error('TMDB Search Error:', e);
+        }
+      },
+
+      async selectTmdbMovie(id, encTitle, year) {
+        const title = decodeURIComponent(encTitle);
+        document.getElementById('tmdbResultsBox').classList.remove('open');
+        document.getElementById('tmdbSearchInput').value = `${title} (${year})`;
+        
+        if (this.currentMode !== 'eyes') {
+          document.getElementById('itemAnswer').value = title.toUpperCase();
+        }
+        document.getElementById('itemYear').value = year !== 'N/A' ? year : '';
+        
+        // Auto generate masked hint
+        document.getElementById('itemHint').value = this.generateMaskedHint(title);
+
+        this.currentTmdbMovie = { id, title, year };
+        this.updatePreview();
+
+        // Fetch stills from TMDB if in frames mode
+        if (this.currentMode === 'frames') {
+          this.fetchTmdbStills(id);
+        }
+      },
+
+      async fetchTmdbStills(movieId) {
+        const section = document.getElementById('tmdbStillsSection');
+        const grid = document.getElementById('stillsGrid');
+        const badge = document.getElementById('stillsCountBadge');
+        
+        section.style.display = 'block';
+        grid.innerHTML = '<div style="padding:20px; font-size:13px; font-family:var(--font-mono); color:var(--muted);">Loading high-res stills from TMDB...</div>';
+
+        try {
+          const url = `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images`;
+          const res = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${this.config.tmdbToken}` }
+          });
+          const data = await res.json();
+          const backdrops = (data && data.images && data.images.backdrops) || [];
+
+          if (backdrops.length > 0) {
+            badge.textContent = `${backdrops.length} Stills Available`;
+            grid.innerHTML = backdrops.map((b, i) => {
+              const fullUrl = `https://image.tmdb.org/t/p/original${b.file_path}`;
+              const thumbUrl = `https://image.tmdb.org/t/p/w780${b.file_path}`;
+              return `
+                <div class="still-thumb ${i === 0 ? 'selected' : ''}" onclick="AdminApp.selectStill('${fullUrl}', this)">
+                  <img src="${thumbUrl}" alt="Still" loading="lazy" />
+                  <span class="still-badge">✓ CHOSEN</span>
+                </div>
+              `;
+            }).join('');
+            
+            // Auto-select first still
+            this.selectedTmdbStillUrl = `https://image.tmdb.org/t/p/original${backdrops[0].file_path}`;
+            this.selectedFile = null;
+            this.updatePreview();
+          } else {
+            badge.textContent = '0 Stills Found';
+            grid.innerHTML = '<div style="padding:14px; font-size:13px; color:var(--muted);">No backdrops available for this movie on TMDB. Please upload a screenshot below.</div>';
+          }
+        } catch (e) {
+          console.error('Error fetching TMDB stills:', e);
+          grid.innerHTML = '<div style="padding:14px; font-size:13px; color:var(--red);">Failed to load TMDB stills.</div>';
+        }
+      },
+
+      selectStill(url, el) {
+        document.querySelectorAll('.still-thumb').forEach(t => t.classList.remove('selected'));
+        if (el) el.classList.add('selected');
+        this.selectedTmdbStillUrl = url;
+        this.selectedFile = null; // Prioritize chosen still
+        this.updatePreview();
+      },
+
+      // File Selection & Drag-and-Drop
+      setupDragAndDrop() {
+        const zone = document.getElementById('fileDropzone');
+        ['dragenter', 'dragover'].forEach(eName => {
+          zone.addEventListener(eName, (e) => { e.preventDefault(); zone.classList.add('dragover'); }, false);
+        });
+        ['dragleave', 'drop'].forEach(eName => {
+          zone.addEventListener(eName, (e) => { e.preventDefault(); zone.classList.remove('dragover'); }, false);
+        });
+        zone.addEventListener('drop', (e) => {
+          const files = e.dataTransfer.files;
+          if (files && files.length > 0) {
+            this.handleFileSelect({ target: { files } });
+          }
+        });
+      },
+
+      handleFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        this.selectedFile = file;
+        this.selectedTmdbStillUrl = null; // Override TMDB still
+        document.querySelectorAll('.still-thumb').forEach(t => t.classList.remove('selected'));
+
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          document.getElementById('mockImage').src = re.target.result;
+          this.updatePreview();
+        };
+        reader.readAsDataURL(file);
+      },
+
+      handleRevealFileSelect(e) {
+        this.selectedRevealFile = e.target.files[0] || null;
+      },
+
+      // Masked Hint Generator (Matches Game Logic)
+      generateMaskedHint(text) {
+        if (!text) return '';
+        const words = text.toUpperCase().split(' ');
+        return words.map(w => {
+          let letters = w.split('');
+          if (letters.length <= 2) return letters.join(' ');
+          const unmaskedIndices = new Set([0, letters.length - 1]);
+          if (letters.length > 5) unmaskedIndices.add(Math.floor(letters.length / 2));
+          return letters.map((ch, idx) => unmaskedIndices.has(idx) ? ch : '_').join(' ');
+        }).join('   ');
+      },
+
+      // Live Preview Updater
+      updatePreview() {
+        const ans = document.getElementById('itemAnswer').value.trim() || 'SAMPLE TITLE';
+        const year = document.getElementById('itemYear').value.trim();
+        const hint = document.getElementById('itemHint').value.trim();
+        const dialogue = document.getElementById('itemDialogue').value.trim();
+
+        document.getElementById('mockAnswerText').textContent = `${ans.toUpperCase()} ${year ? '(' + year + ')' : ''}`;
+        document.getElementById('mockHintText').textContent = hint ? `Hint: ${hint}` : '';
+
+        const mockImg = document.getElementById('mockImage');
+        const mockDiag = document.getElementById('mockDialogueText');
+
+        if (this.currentMode === 'dialogue') {
+          mockImg.style.display = 'none';
+          mockDiag.style.display = 'block';
+          mockDiag.textContent = dialogue ? `"${dialogue}"` : '"Kitne aadmi the?"';
+        } else {
+          mockDiag.style.display = 'none';
+          mockImg.style.display = 'block';
+          if (this.selectedTmdbStillUrl) {
+            mockImg.src = this.selectedTmdbStillUrl;
+          }
+        }
+      },
+
+      // Cloudinary SHA-1 Signature Generator
+      async generateSha1(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-1', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      },
+
+      // Direct Cloudinary Upload Handler
+      async uploadToCloudinary(fileOrUrl, folder) {
+        const timestamp = Math.floor(Date.now() / 1000);
+        const paramsToSign = `folder=${folder}&timestamp=${timestamp}${this.config.apiSecret}`;
+        const signature = await this.generateSha1(paramsToSign);
+
+        const formData = new FormData();
+        formData.append('file', fileOrUrl);
+        formData.append('api_key', this.config.apiKey);
+        formData.append('timestamp', timestamp);
+        formData.append('folder', folder);
+        formData.append('signature', signature);
+
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${this.config.cloudName}/image/upload`;
+        const res = await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error?.message || 'Cloudinary upload failed');
+        }
+
+        const data = await res.json();
+        return data.secure_url;
+      },
+
+      // Form Submit Workflow
+      async handleSubmit(e) {
+        if (e) e.preventDefault();
+
+        const ans = document.getElementById('itemAnswer').value.trim().toUpperCase();
+        const year = document.getElementById('itemYear').value.trim();
+        const hint = document.getElementById('itemHint').value.trim();
+        const dialogue = document.getElementById('itemDialogue').value.trim();
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!ans) {
+          alert('Please enter the movie answer title');
+          return;
+        }
+
+        const progressWrap = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('progressFill');
+        const progressStatus = document.getElementById('progressStatus');
+        const progressPercent = document.getElementById('progressPercent');
+
+        progressWrap.style.display = 'block';
+        submitBtn.disabled = true;
+
+        try {
+          let contentUrl = '';
+          let revealUrl = '';
+
+          // 1. Upload media if needed
+          if (this.currentMode === 'frames' || this.currentMode === 'eyes') {
+            const folder = this.currentMode === 'frames' ? 'scoopcast/frames' : 'scoopcast/eyes';
+            
+            progressStatus.textContent = 'Uploading main image to Cloudinary...';
+            progressFill.style.width = '45%';
+            progressPercent.textContent = '45%';
+
+            const targetSource = this.selectedFile || this.selectedTmdbStillUrl || this.selectedAssetPath;
+            if (!targetSource) {
+              alert('Please select an asset from library, pick a TMDB still, or upload a custom image');
+              submitBtn.disabled = false;
+              progressWrap.style.display = 'none';
+              return;
+            }
+
+            if (this.selectedAssetPath) {
+              contentUrl = this.selectedAssetPath;
+              progressStatus.textContent = 'Linking indexed media asset...';
+              progressFill.style.width = '70%';
+              progressPercent.textContent = '70%';
+            } else {
+              contentUrl = await this.uploadToCloudinary(targetSource, folder);
+            }
+
+            // Optional reveal image for eyes
+            if (this.currentMode === 'eyes' && this.selectedRevealFile) {
+              progressStatus.textContent = 'Uploading reveal image...';
+              progressFill.style.width = '75%';
+              progressPercent.textContent = '75%';
+              revealUrl = await this.uploadToCloudinary(this.selectedRevealFile, 'scoopcast/eyes');
+            }
+          } else {
+            // Dialogue mode
+            contentUrl = dialogue;
+          }
+
+          progressFill.style.width = '95%';
+          progressStatus.textContent = 'Packaging drop entry...';
+          progressPercent.textContent = '95%';
+
+          // 2. Build Schema Entry with Curator Attribution
+          const newDrop = {
+            id: `wf_${Date.now()}`,
+            category: this.currentMode === 'dialogue' ? 'dialogue' : (this.currentMode === 'eyes' ? 'eyes' : 'frames'),
+            type: this.currentMode === 'dialogue' ? 'dialogue' : (this.currentMode === 'eyes' ? 'eye' : 'image'),
+            content: contentUrl,
+            answer: ans,
+            year: year,
+            tag: 'new',
+            curatedBy: this.currentUser.name || 'Admin',
+            hints: hint ? [hint] : []
+          };
+
+          if (this.currentMode === 'dialogue') {
+            newDrop.dialogue = dialogue;
+          }
+          if (revealUrl) {
+            newDrop.revealContent = revealUrl;
+          }
+
+          // 3. Add to local drops list & persist
+          this.dropsData.unshift(newDrop);
+          this.renderDropsList();
+          this.saveDropsToStorage();
+
+          progressFill.style.width = '100%';
+          progressStatus.textContent = '🎉 Successfully Published!';
+          progressPercent.textContent = '100%';
+
+          setTimeout(() => {
+            alert(`✅ Added "${ans}" to active drops!\n\nCurated by: ${this.currentUser.name}\nAsset: ${contentUrl}`);
+            this.resetForm();
+            progressWrap.style.display = 'none';
+            progressFill.style.width = '0%';
+            submitBtn.disabled = false;
+          }, 400);
+
+        } catch (err) {
+          console.error(err);
+          alert('Error during upload: ' + err.message);
+          submitBtn.disabled = false;
+          progressWrap.style.display = 'none';
+        }
+      },
+
+      // Reset Form
+      resetForm() {
+        document.getElementById('dropForm').reset();
+        this.selectedFile = null;
+        this.selectedRevealFile = null;
+        this.selectedTmdbStillUrl = null;
+        this.selectedAssetPath = null;
+        this.currentTmdbMovie = null;
+        document.getElementById('tmdbStillsSection').style.display = 'none';
+        document.getElementById('tmdbResultsBox').classList.remove('open');
+        this.resetDropzoneVisual();
+        this.updatePreview();
+      },
+
+      // Load & Render Existing Drops
+      async loadExistingDrops() {
+        try {
+          const res = await fetch('/weekly_drops.json');
+          if (res.ok) {
+            const data = await res.json();
+            const savedLocal = localStorage.getItem('scoopcast_active_drops');
+            this.dropsData = savedLocal ? JSON.parse(savedLocal) : (data.drops || []);
+            this.renderDropsList();
+          }
+        } catch (e) {
+          console.error('Failed to load weekly_drops.json:', e);
+        }
+      },
+
+      saveDropsToStorage() {
+        localStorage.setItem('scoopcast_active_drops', JSON.stringify(this.dropsData));
+      },
+
+      renderDropsList() {
+        const container = document.getElementById('dropsListContainer');
+        document.getElementById('dropsCount').textContent = this.dropsData.length;
+
+        if (!this.dropsData || this.dropsData.length === 0) {
+          container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--muted); font-size:13px;">No drops added yet</div>';
+          return;
+        }
+
+        const isHead = this.currentUser.role === 'admin';
+
+        container.innerHTML = this.dropsData.map((d, i) => {
+          const isImg = d.type === 'image' || d.type === 'eye';
+          const thumbSrc = isImg ? d.content : 'https://via.placeholder.com/58x36?text=💬';
+          const curatorTag = d.curatedBy ? ` • By ${d.curatedBy}` : '';
+          return `
+            <div class="drop-item-row">
+              ${isImg ? `<img src="${thumbSrc}" class="drop-thumb" alt="Thumb" onerror="this.src='https://via.placeholder.com/58x36?text=🎬';" />` : `<div class="drop-thumb" style="display:flex;align-items:center;justify-content:center;color:#FFF;font-size:16px;">💬</div>`}
+              <div class="drop-meta">
+                <div class="drop-ans">${d.answer} ${d.year ? `(${d.year})` : ''}</div>
+                <div class="drop-cat">${d.category}${curatorTag}</div>
+              </div>
+              ${isHead ? `<button type="button" class="btn btn-sm btn-red" onclick="AdminApp.deleteDrop(${i})" title="Delete Drop">✕</button>` : ''}
+            </div>
+          `;
+        }).join('');
+      },
+
+      deleteDrop(index) {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only the Main Head can delete drops.');
+          return;
+        }
+        if (confirm(`Delete "${this.dropsData[index].answer}" from drops list?`)) {
+          this.dropsData.splice(index, 1);
+          this.renderDropsList();
+          this.saveDropsToStorage();
+        }
+      },
+
+      exportPlaylistJson() {
+        const exportObj = {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "title": "Scoopcast Weekly Movie Drops",
+          "description": "Weekly movie frames, dialogues, and eye closeups for Scoopcast Guess The Frame",
+          "version": "1.0.0",
+          "lastUpdated": new Date().toISOString().split('T')[0],
+          "activeWeek": `2026-W${Math.ceil((new Date().getDate() + new Date(new Date().getFullYear(), 0, 1).getDay()) / 7)}`,
+          "drops": this.dropsData
+        };
+
+        const jsonStr = JSON.stringify(exportObj, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'weekly_drops.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      },
+
+      // ── ASSET LIBRARY EXPLORER ENGINE ──
+      async loadAssetLibrary() {
+        try {
+          const res = await fetch('/assets_manifest.json');
+          if (res.ok) {
+            this.allAssets = await res.json();
+            this.updateAssetCounts();
+            this.renderAssetGrid(this.allAssets);
+          }
+        } catch (err) {
+          console.warn('Could not load assets_manifest.json:', err);
+        }
+      },
+
+      updateAssetCounts() {
+        const total = this.allAssets.length;
+        const frames = this.allAssets.filter(a => a.category === 'frames').length;
+        const eyes = this.allAssets.filter(a => a.category === 'eyes').length;
+        const tie = this.allAssets.filter(a => a.category === 'tie_breaker').length;
+        const avvtar = this.allAssets.filter(a => a.category === 'avvtar').length;
+        const bg = this.allAssets.filter(a => a.category === 'bg').length;
+
+        const navCount = document.getElementById('assetLibHeaderCount');
+        if (navCount) navCount.textContent = total;
+
+        const subTitle = document.getElementById('assetSubtitle');
+        if (subTitle) subTitle.textContent = `${total} Game Media Assets Indexed`;
+
+        const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        setTxt('catCountAll', total);
+        setTxt('catCountFrames', frames);
+        setTxt('catCountEyes', eyes);
+        setTxt('catCountTie', tie);
+        setTxt('catCountAvvtar', avvtar);
+        setTxt('catCountBg', bg);
+      },
+
+      openAssetLibrary() {
+        const modal = document.getElementById('assetLibraryModal');
+        if (!modal) return;
+        modal.classList.add('open');
+        if (!this.allAssets || this.allAssets.length === 0) {
+          this.loadAssetLibrary();
+        } else {
+          this.filterAssets();
+        }
+        const searchInput = document.getElementById('assetSearchInput');
+        if (searchInput) {
+          setTimeout(() => searchInput.focus(), 100);
+        }
+      },
+
+      closeAssetLibrary() {
+        const modal = document.getElementById('assetLibraryModal');
+        if (modal) modal.classList.remove('open');
+      },
+
+      async refreshAssets() {
+        try {
+          const res = await fetch('/assets_manifest.json?t=' + Date.now());
+          if (res.ok) {
+            this.allAssets = await res.json();
+            this.updateAssetCounts();
+            this.filterAssets();
+            this.showToast('🔄 Asset Library manifest reloaded!');
+          }
+        } catch (e) {
+          this.showToast('⚠️ Failed to refresh assets manifest');
+        }
+      },
+
+      setAssetCategory(cat) {
+        this.activeAssetCategory = cat;
+        document.querySelectorAll('#assetCategoryTabs .cat-pill').forEach(pill => {
+          pill.classList.toggle('active', pill.dataset.cat === cat);
+        });
+        this.filterAssets();
+      },
+
+      filterAssets() {
+        const searchInput = document.getElementById('assetSearchInput');
+        const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+        const clearBtn = document.getElementById('assetClearBtn');
+        if (clearBtn) clearBtn.style.display = query ? 'flex' : 'none';
+
+        const filtered = (this.allAssets || []).filter(item => {
+          const matchesCat = this.activeAssetCategory === 'all' || item.category === this.activeAssetCategory;
+          if (!matchesCat) return false;
+          if (!query) return true;
+          return (
+            (item.name && item.name.toLowerCase().includes(query)) ||
+            (item.filename && item.filename.toLowerCase().includes(query)) ||
+            (item.category && item.category.toLowerCase().includes(query)) ||
+            (item.label && item.label.toLowerCase().includes(query))
+          );
+        });
+
+        this.renderAssetGrid(filtered);
+
+        const statusEl = document.getElementById('assetFooterStatus');
+        if (statusEl) {
+          statusEl.textContent = `Showing ${filtered.length} of ${this.allAssets.length} assets`;
+        }
+      },
+
+      clearAssetSearch() {
+        const searchInput = document.getElementById('assetSearchInput');
+        if (searchInput) searchInput.value = '';
+        this.filterAssets();
+        if (searchInput) searchInput.focus();
+      },
+
+      formatBytes(bytes) {
+        if (!bytes || bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+      },
+
+      renderAssetGrid(items) {
+        const container = document.getElementById('assetGridContainer');
+        const emptyState = document.getElementById('assetEmptyState');
+        if (!container) return;
+
+        if (!items || items.length === 0) {
+          container.innerHTML = '';
+          if (emptyState) emptyState.style.display = 'block';
+          return;
+        }
+
+        if (emptyState) emptyState.style.display = 'none';
+
+        container.innerHTML = items.map((asset) => {
+          const isSquare = asset.category === 'avvtar';
+          let tagClass = 'cat-frames';
+          if (asset.category === 'eyes') tagClass = 'cat-eyes';
+          else if (asset.category === 'tie_breaker') tagClass = 'cat-tie';
+          else if (asset.category === 'avvtar') tagClass = 'cat-avvtar';
+          else if (asset.category === 'bg') tagClass = 'cat-bg';
+
+          const safeName = (asset.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          const safePath = (asset.path || '').replace(/'/g, "\\'");
+
+          return `
+            <div class="asset-card" data-category="${asset.category}">
+              <div class="asset-thumb-wrap ${isSquare ? 'square' : ''}">
+                <img src="${asset.path}" class="asset-img" loading="lazy" alt="${safeName}" onerror="this.onerror=null;this.src='https://via.placeholder.com/320x180?text=Asset';" />
+                <span class="asset-cat-tag ${tagClass}">${asset.label}</span>
+                <span class="asset-size-tag">${this.formatBytes(asset.size)}</span>
+              </div>
+              <div class="asset-card-body">
+                <div>
+                  <div class="asset-card-title" title="${safeName}">${asset.name}</div>
+                  <div class="asset-card-file" title="${asset.filename}">${asset.filename}</div>
+                </div>
+                <div class="asset-card-actions">
+                  <button type="button" class="btn btn-xs" onclick="AdminApp.previewAsset('${safePath}', '${safeName}', '${asset.category}')" title="Preview in Live In-Game Frame">👁️ Preview</button>
+                  ${(asset.category === 'frames' || asset.category === 'eyes' || asset.category === 'tie_breaker') ? `
+                    <button type="button" class="btn btn-xs btn-yellow" onclick="AdminApp.useAssetInForm('${safePath}', '${safeName}', '${asset.category}')" title="Pre-fill form to add as active drop">⚡ Use in Form</button>
+                  ` : ''}
+                  <button type="button" class="btn btn-xs" onclick="AdminApp.copyAssetPath('${safePath}', this)" title="Copy path to clipboard">📋 Path</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      previewAsset(path, name, category) {
+        const mockImg = document.getElementById('mockImage');
+        const mockDiag = document.getElementById('mockDialogueText');
+        const ansText = document.getElementById('mockAnswerText');
+        const badge = document.getElementById('mockModeBadge');
+
+        if (mockImg) {
+          mockImg.style.display = 'block';
+          mockImg.src = path;
+        }
+        if (mockDiag) mockDiag.style.display = 'none';
+        if (ansText) ansText.textContent = name;
+        if (badge) badge.textContent = (category || 'ASSET').toUpperCase().replace('_', ' ');
+
+        this.showToast(`👁️ Previewing: ${name}`);
+      },
+
+      useAssetInForm(path, name, category) {
+        // Parse Title & Year from filename (e.g., "American History X (1998)")
+        const match = name.match(/^(.*?)\s*(?:\((\d{4})\))?$/);
+        const title = (match ? match[1] : name).trim().toUpperCase();
+        const year = (match && match[2]) ? match[2] : '';
+
+        // Switch to appropriate mode
+        if (category === 'eyes') {
+          this.setMode('eyes');
+        } else {
+          this.setMode('frames');
+        }
+
+        // Fill form fields
+        document.getElementById('itemAnswer').value = title;
+        document.getElementById('itemYear').value = year;
+        document.getElementById('itemHint').value = this.generateMaskedHint(title);
+
+        // Stage asset
+        this.selectedAssetPath = path;
+        this.selectedFile = null;
+        this.selectedTmdbStillUrl = null;
+
+        // Update dropzone UI visually
+        const dropzone = document.getElementById('fileDropzone');
+        if (dropzone) {
+          dropzone.innerHTML = `
+            <div style="display:flex; align-items:center; gap:12px; justify-content:center;">
+              <img src="${path}" style="width:70px; height:45px; object-fit:cover; border:2px solid var(--border); border-radius:6px; box-shadow:2px 2px 0 var(--border);" />
+              <div style="text-align:left;">
+                <div style="font-weight:800; font-size:13px; color:var(--text);">✓ Selected from Asset Library</div>
+                <div style="font-family:var(--font-mono); font-size:11px; color:var(--muted);">${path}</div>
+                <div style="font-size:11px; color:var(--blue); font-weight:700; margin-top:2px;">Click to change image</div>
+              </div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="AdminApp.handleFileSelect(event)" />
+          `;
+        }
+
+        // Update preview
+        this.previewAsset(path, name, category);
+
+        // Close library modal & scroll to form
+        this.closeAssetLibrary();
+        const dropForm = document.getElementById('dropForm');
+        if (dropForm) dropForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        this.showToast(`⚡ Loaded "${title}" into form!`);
+      },
+
+      resetDropzoneVisual() {
+        const dropzone = document.getElementById('fileDropzone');
+        if (dropzone) {
+          dropzone.innerHTML = `
+            <div class="dropzone-icon">🖼️</div>
+            <div class="dropzone-text">Click or Drag & Drop image here</div>
+            <div class="dropzone-sub">PNG, WebP, JPG up to 10MB • Auto-optimizes to WebP</div>
+            <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="AdminApp.handleFileSelect(event)" />
+          `;
+        }
+      },
+
+      async copyAssetPath(path, btn) {
+        try {
+          await navigator.clipboard.writeText(path);
+          if (btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✓ Copied!';
+            btn.style.background = '#4ADE80';
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.background = '';
+            }, 1400);
+          }
+          this.showToast(`📋 Copied: ${path}`);
+        } catch (err) {
+          prompt('Copy asset path:', path);
+        }
+      },
+
+      showToast(msg, icon = '✅') {
+        const toast = document.getElementById('adminToast');
+        const msgEl = document.getElementById('adminToastMsg');
+        const iconEl = document.getElementById('adminToastIcon');
+        if (!toast) return;
+
+        if (msgEl) msgEl.textContent = msg;
+        if (iconEl) iconEl.textContent = icon;
+
+        toast.classList.add('show');
+        if (this.toastTimer) clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2800);
+      }
+    };
+
+    // Initialize Studio on DOM Load
+    document.addEventListener('DOMContentLoaded', () => AdminApp.init());
+  </script>
+</body>
+</html>

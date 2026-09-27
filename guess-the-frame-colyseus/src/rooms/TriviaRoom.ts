@@ -317,10 +317,7 @@ export class TriviaRoom extends Room<GameState> {
           multiplier
         });
 
-        const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : '🥉';
-        const streakTag = player.streak >= 2 ? ` 🔥 ${player.streak}x STREAK (${multiplier}x pts)!` : '';
-        this.addSystemChatMessage(`${medal} <strong>${player.name}</strong> guessed correctly! (+${points} pts)${streakTag}`);
-
+        // Dedicated round winner banner is handled authoritatively by state.currentRoundWinners.onAdd
         this.checkRoundCompletion();
       } else {
         client.send("guess_result", {

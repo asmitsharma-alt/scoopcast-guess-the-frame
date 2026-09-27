@@ -131,36 +131,34 @@ const FuzzyMatcher = {
     const c2 = this.canonicalWord(w2);
     if (c1 === c2) return true;
 
-    if (w1.length >= 3 && w2.length >= 3) {
-      if (w1.startsWith(w2) || w2.startsWith(w1)) return true;
-      if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
-    }
-
-    if (w1.length >= 4 && w2.length >= 4) {
-      if (w1.includes(w2) || w2.includes(w1)) return true;
-      if (c1.includes(c2) || c2.includes(c1)) return true;
-    }
-
     const deDup = (s) => s.replace(/(.)\1+/g, '$1');
     const d1 = deDup(c1);
     const d2 = deDup(c2);
     if (d1 === d2) return true;
-    if (d1.length >= 4 && d2.length >= 4 && (d1.includes(d2) || d2.includes(d1))) return true;
 
     const maxLen = Math.max(c1.length, c2.length);
+    const minLen = Math.min(c1.length, c2.length);
     const lenDiff = Math.abs(c1.length - c2.length);
 
-    if (maxLen === 3) return this.levenshtein(c1, c2) <= 1;
-    if (maxLen <= 5) {
-      if (lenDiff > 2) return false;
+    if (minLen >= 5 && minLen / maxLen >= 0.8) {
+      if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
+      if (d1.startsWith(d2) || d2.startsWith(d1)) return true;
+    }
+
+    // Short words (<= 4 chars): 0 typos allowed
+    if (maxLen <= 4) {
+      return false;
+    }
+
+    // Medium words (5 to 7 chars): max 1 typo, length diff <= 1
+    if (maxLen <= 7) {
+      if (lenDiff > 1) return false;
       return this.levenshtein(c1, c2) <= 1 || this.levenshtein(d1, d2) <= 1;
     }
-    if (maxLen <= 8) {
-      if (lenDiff > 3) return false;
-      return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
-    }
-    if (lenDiff > 4) return false;
-    return this.levenshtein(c1, c2) <= 3 || this.levenshtein(d1, d2) <= 3;
+
+    // Long words (8+ chars): max 2 typos, length diff <= 2
+    if (lenDiff > 2) return false;
+    return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
   },
 
   getSignificantWords(normalizedStr) {
@@ -192,24 +190,24 @@ const FuzzyMatcher = {
     const compactGuess = nGuess.replace(/\s+/g, '');
     const compactAns = nAns.replace(/\s+/g, '');
     if (compactGuess === compactAns) return true;
-    if (Math.abs(compactGuess.length - compactAns.length) <= 3) {
+    if (Math.abs(compactGuess.length - compactAns.length) <= 2) {
       const cDist = this.levenshtein(compactGuess, compactAns);
       if (compactAns.length <= 6 && cDist <= 1) return true;
-      if (compactAns.length > 6 && cDist <= 3) return true;
+      if (compactAns.length > 6 && cDist <= 2) return true;
     }
 
     // 3. Whole-string Levenshtein distance
     const lenDiff = Math.abs(nGuess.length - nAns.length);
-    if (lenDiff <= 4) {
+    if (lenDiff <= 2) {
       const dist = this.levenshtein(nGuess, nAns);
-      if (nAns.length <= 4) {
+      if (nAns.length <= 5) {
         if (dist <= 1) return true;
       } else if (nAns.length <= 8) {
-        if (dist <= 2) return true;
+        if (dist <= 1) return true;
       } else if (nAns.length <= 15) {
-        if (dist <= 3) return true;
+        if (dist <= 2) return true;
       } else {
-        if (dist <= 4) return true;
+        if (dist <= 3) return true;
       }
     }
 
@@ -221,51 +219,50 @@ const FuzzyMatcher = {
           if (nGuess === part) return true;
           const compactPart = part.replace(/\s+/g, '');
           if (compactGuess === compactPart) return true;
-          if (Math.abs(compactGuess.length - compactPart.length) <= 2 && this.levenshtein(compactGuess, compactPart) <= 2) return true;
-          if (Math.abs(nGuess.length - part.length) <= 2 && this.levenshtein(nGuess, part) <= 2) return true;
+          if (Math.abs(compactGuess.length - compactPart.length) <= 1 && this.levenshtein(compactGuess, compactPart) <= 1) return true;
+          if (Math.abs(nGuess.length - part.length) <= 1 && this.levenshtein(nGuess, part) <= 1) return true;
         }
       }
     }
 
     const ansSigWords = this.getSignificantWords(nAns);
-    const guessSigWords = this.getSignificantWords(nGuess);
-
     const rawAnsWords = String(answer).toLowerCase().split(/[\s\-:\(\)\/\.\_]+/).filter(w => w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w));
     for (const rw of rawAnsWords) {
       if (!ansSigWords.includes(rw)) ansSigWords.push(rw);
     }
 
-    if (ansSigWords.length === 0) {
-      return nGuess === nAns || compactGuess === compactAns || this.levenshtein(nGuess, nAns) <= 2;
-    }
-
-    // 5. ANY-WORD MATCH: If any word in player's guess matches any significant word in the answer (even with typos)
-    for (const gw of guessSigWords) {
-      for (const aw of ansSigWords) {
-        if (this.isWordMatch(gw, aw)) return true;
-      }
-    }
-
-    // 6. Check individual tokens in the guess
     const guessTokens = nGuess.split(/[\s\-:\(\)\/\.\_]+/).map(w => w.trim()).filter(Boolean);
-    for (const token of guessTokens) {
-      if (token.length >= 3 && !this.STOP_WORDS.has(token) && !/^\d+$/.test(token)) {
-        for (const aw of ansSigWords) {
-          if (this.isWordMatch(token, aw)) return true;
+    const validGuessWords = guessTokens.filter(t => t.length >= 3 && !this.STOP_WORDS.has(t) && !/^\d+$/.test(t));
+
+    if (ansSigWords.length === 0 || validGuessWords.length === 0) {
+      return nGuess === nAns || compactGuess === compactAns;
+    }
+
+    // 5. Word-level matching:
+    // Case A: Single-word guess
+    if (validGuessWords.length === 1) {
+      const singleWord = validGuessWords[0];
+      for (const aw of ansSigWords) {
+        if (this.isWordMatch(singleWord, aw)) {
+          return true;
         }
       }
-    }
-
-    // 7. Check if entire guess itself matches any significant word
-    if (!this.STOP_WORDS.has(nGuess) && nGuess.length >= 3) {
-      for (const aw of ansSigWords) {
-        if (this.isWordMatch(nGuess, aw)) return true;
+    } else {
+      // Case B: Multi-word guess
+      let matchCount = 0;
+      for (const gw of validGuessWords) {
+        let matched = false;
+        for (const aw of ansSigWords) {
+          if (this.isWordMatch(gw, aw)) {
+            matched = true;
+            break;
+          }
+        }
+        if (matched) matchCount++;
       }
-    }
-
-    // 8. Substring inclusion check
-    if (nAns.length >= 4 && !this.STOP_WORDS.has(nGuess) && nGuess.length >= 4) {
-      if (nAns.includes(nGuess) || nGuess.includes(nAns)) return true;
+      if (matchCount > 0 && (matchCount / validGuessWords.length) >= 0.7) {
+        return true;
+      }
     }
 
     return false;
@@ -1083,15 +1080,19 @@ const GameClient = {
     if (room.state && room.state.chatMessages) {
       room.state.chatMessages.onAdd((chat) => {
         if (chat && typeof UI !== 'undefined' && UI.appendChatMessage) {
-          // Suppress raw server system message if it's the duplicate guess notification
-          if (chat.isSystem && typeof chat.text === 'string' && (chat.text.includes('guessed correctly! (+') || chat.text.includes('guessed the answer!'))) {
+          // Suppress raw server system message if it's a guess/winner notification (handled by currentRoundWinners)
+          if (chat.isSystem && typeof chat.text === 'string' && (
+            chat.text.includes('guessed correctly') || 
+            chat.text.includes('guessed the answer') ||
+            (chat.text.includes('pts') && (chat.text.includes('🥇') || chat.text.includes('🥈') || chat.text.includes('🥉')))
+          )) {
             return;
           }
           UI.appendChatMessage({
             id: chat.id,
             senderId: chat.senderId,
             senderName: chat.senderName,
-            senderAvatar: chat.avatar,
+            senderAvatar: chat.senderAvatar || chat.avatar || 'aman',
             text: chat.text,
             timestamp: chat.timestamp,
             isSystem: chat.isSystem

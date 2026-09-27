@@ -30,8 +30,19 @@ assert.strictEqual(FuzzyMatcher.isMatch("infinity war", "AVENGERS: INFINITY WAR"
 // 7. Reject false matches
 assert.strictEqual(FuzzyMatcher.isMatch("star wars", "Star Trek"), false, "Should reject different franchise");
 assert.strictEqual(FuzzyMatcher.isMatch("godfather", "Batman Begins"), false, "Should reject unrelated movie");
+assert.strictEqual(FuzzyMatcher.isMatch("ravi kishan", "KICCHA SUDEEP"), false, "Should reject completely different person");
+assert.strictEqual(FuzzyMatcher.isMatch("ravi sudeep", "KICCHA SUDEEP"), false, "Should reject alien compound with wrong first name");
+assert.strictEqual(FuzzyMatcher.isMatch("kishan", "KICCHA SUDEEP"), false, "Should reject severe typo/unrelated name");
+assert.strictEqual(FuzzyMatcher.isMatch("moon knight", "The Dark Knight"), false, "Should reject different superhero title");
 
-// 8. Anti-Spoiler Shield
+// 8. Accept genuine single-word & minor typo answers
+assert.strictEqual(FuzzyMatcher.isMatch("kiccha", "KICCHA SUDEEP"), true, "Should accept valid single word from answer");
+assert.strictEqual(FuzzyMatcher.isMatch("sudeep", "KICCHA SUDEEP"), true, "Should accept valid single word from answer");
+assert.strictEqual(FuzzyMatcher.isMatch("kiccha sudeep", "KICCHA SUDEEP"), true, "Should accept exact full name");
+assert.strictEqual(FuzzyMatcher.isMatch("kicha sudeep", "KICCHA SUDEEP"), true, "Should accept 1-letter typo in kiccha");
+assert.strictEqual(FuzzyMatcher.isMatch("kicha", "KICCHA SUDEEP"), true, "Should accept 1-letter typo in single word");
+
+// 9. Anti-Spoiler Shield
 assert.strictEqual(FuzzyMatcher.isAnswerOrSpoiler("i think this is 12th fail", "12TH FAIL"), true, "Should flag chat spoiler");
 assert.strictEqual(FuzzyMatcher.isAnswerOrSpoiler("is it bramayugam?", "BRAMAYUGAM"), true, "Should flag question spoiler");
 assert.strictEqual(FuzzyMatcher.isAnswerOrSpoiler("this movie is awesome!", "12TH FAIL"), false, "Should allow regular chat");

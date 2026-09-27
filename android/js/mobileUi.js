@@ -1345,11 +1345,26 @@ const UI = {
   appendChatMessage(chat) {
     if (!chat) return;
 
+    if (chat.id) {
+      if (!this.seenChatIds) this.seenChatIds = new Set();
+      if (this.seenChatIds.has(chat.id)) return;
+      this.seenChatIds.add(chat.id);
+      if (this.seenChatIds.size > 200) {
+        const first = this.seenChatIds.values().next().value;
+        this.seenChatIds.delete(first);
+      }
+    }
+
     const isMe = (typeof GameClient !== 'undefined' && chat.senderId === GameClient.playerId);
     const isSystem = Boolean(chat.isSystem || chat.senderId === 'system' || chat.senderName === 'System');
     const rawText = isSystem ? this.formatSystemText(chat.text || '') : (chat.text || '');
     const parsedText = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(rawText)) : this.escapeHtml(rawText);
     const parsedName = typeof SvgIcons !== 'undefined' ? SvgIcons.replaceEmojis(this.escapeHtml(chat.senderName || 'Player')) : this.escapeHtml(chat.senderName || 'Player');
+
+    const senderAv = chat.senderAvatar || (isMe && typeof GameClient !== 'undefined' ? GameClient.playerAvatar : null) || 'aman';
+    const avatarSrc = this.getAvatarSrc(senderAv);
+    const avBg = this.getAvatarBg(senderAv);
+    const avFit = this.getAvatarFit(senderAv);
 
     if (chat.isWinner) {
       if (!this.winnerKeysSeen) this.winnerKeysSeen = new Set();
@@ -1384,9 +1399,7 @@ const UI = {
         item.innerHTML = `<span>${parsedText}</span>`;
       } else {
         item.className = `chat-row-item ${isMe ? 'chat-me' : ''}`;
-        const avatarSrc = this.getAvatarSrc(chat.senderAvatar);
-        const avBg = this.getAvatarBg(chat.senderAvatar);
-        const avFit = this.getAvatarFit(chat.senderAvatar);
+        // avatarSrc, avBg, avFit already resolved above
         item.innerHTML = `
           <img class="chat-row-avatar" src="${avatarSrc}" alt="${parsedName}" style="background:${avBg}; ${avFit}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
           <div class="chat-row-body">
@@ -1428,9 +1441,15 @@ const UI = {
         msg.className = 'chat-row-drawer-system';
         msg.innerHTML = `<span>${parsedText}</span>`;
       } else {
+        msg.className = `chat-row-item ${isMe ? 'chat-me' : ''}`;
         msg.style.marginBottom = '8px';
-        msg.style.fontSize = '0.9rem';
-        msg.innerHTML = `<strong>${parsedName}:</strong> <span>${parsedText}</span>`;
+        msg.innerHTML = `
+          <img class="chat-row-avatar" src="${avatarSrc}" alt="${parsedName}" style="background:${avBg}; ${avFit}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';">
+          <div class="chat-row-body">
+            <span class="chat-row-name">${parsedName}${isMe ? ' (You)' : ''}</span>
+            <span class="chat-row-text">${parsedText}</span>
+          </div>
+        `;
       }
 
       drawerStream.appendChild(msg);

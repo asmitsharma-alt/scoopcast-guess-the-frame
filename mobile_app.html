@@ -53,12 +53,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <meta name="theme-color" content="#FACC15">
-  <link rel="manifest" href="/android/manifest.json">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,13 +144,38 @@
           "url": "https://scoopcast.me/"
         },
         "publisher": {
-          "@type": "Organization",
-          "name": "Scoopcast",
-          "url": "https://scoopcast.me/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png"
-          }
+          "@id": "https://scoopcast.me/#organization"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://scoopcast.me/#organization",
+        "name": "Scoopcast",
+        "alternateName": [
+          "Scoopcast Cinema",
+          "Scoopcast Guess The Frame",
+          "Scoopcast Games"
+        ],
+        "url": "https://scoopcast.me/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://scoopcast.me/#logo",
+          "url": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
+          "contentUrl": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
+          "caption": "Scoopcast Official Logo",
+          "width": "2035",
+          "height": "700"
+        },
+        "image": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://scoopcast.me/#website",
+        "url": "https://scoopcast.me/",
+        "name": "Guess The Frame",
+        "alternateName": "Scoopcast",
+        "publisher": {
+          "@id": "https://scoopcast.me/#organization"
         }
       },
       {

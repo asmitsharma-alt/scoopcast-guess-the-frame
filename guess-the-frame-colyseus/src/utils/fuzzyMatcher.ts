@@ -65,11 +65,13 @@ export class FuzzyMatcher {
   }
 
   /**
-   * Ultra-lenient single-word matcher with adaptive typo tolerance and prefix matching.
+   * Robust single-word matcher with controlled typo tolerance.
    * - Strips common stopwords and numbers.
-   * - Allows prefixes: typing "rob" matches "robert", "gladiat" matches "gladiator".
-   * - Allows duplicate letters: "baahubali" matches "bahubali", "pattinson" matches "patinson".
-   * - Typo distances: length 3 allows dist <= 1, 4-5 allows dist <= 1-2, 6-8 allows dist <= 2, 9+ allows dist <= 3.
+   * - Handles duplicate letters: "baahubali" matches "bahubali", "pattinson" matches "patinson".
+   * - Short words (<= 4 chars): 0 typos allowed. Must match exact, canonical, or deduplicated.
+   * - Medium words (5-7 chars): Max 1 typo allowed, max length difference of 1.
+   * - Long words (8+ chars): Max 2 typos allowed, max length difference of 2.
+   * - Arbitrary substring overlap (e.g. "kishan" inside/overlapping "kiccha") is strictly rejected.
    */
   public static isWordMatch(w1: string, w2: string): boolean {
     if (!w1 || !w2) return false;
@@ -86,39 +88,36 @@ export class FuzzyMatcher {
     const c2 = this.canonicalWord(w2);
     if (c1 === c2) return true;
 
-    // Prefix matching for 3+ letter stems (e.g. "rob" matches "robert", "americ" matches "american")
-    if (w1.length >= 3 && w2.length >= 3) {
-      if (w1.startsWith(w2) || w2.startsWith(w1)) return true;
-      if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
-    }
-
-    // Substring inclusion: if one word is inside the other and long enough
-    if (w1.length >= 4 && w2.length >= 4) {
-      if (w1.includes(w2) || w2.includes(w1)) return true;
-      if (c1.includes(c2) || c2.includes(c1)) return true;
-    }
-
     // Collapse duplicate letters: "baahubali" -> "bahubali", "pattinson" -> "patinson"
     const deDup = (s: string) => s.replace(/(.)\1+/g, '$1');
     const d1 = deDup(c1);
     const d2 = deDup(c2);
     if (d1 === d2) return true;
-    if (d1.length >= 4 && d2.length >= 4 && (d1.includes(d2) || d2.includes(d1))) return true;
 
     const maxLen = Math.max(c1.length, c2.length);
+    const minLen = Math.min(c1.length, c2.length);
     const lenDiff = Math.abs(c1.length - c2.length);
 
-    if (maxLen === 3) return this.levenshtein(c1, c2) <= 1;
-    if (maxLen <= 5) {
-      if (lenDiff > 2) return false;
+    // Stems / prefix check: only valid if stem is long (>= 5 chars) and covers >= 80% of longer word
+    if (minLen >= 5 && minLen / maxLen >= 0.8) {
+      if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
+      if (d1.startsWith(d2) || d2.startsWith(d1)) return true;
+    }
+
+    // Short words (<= 4 chars, e.g. "star", "dark", "ring", "man"): 0 typos allowed
+    if (maxLen <= 4) {
+      return false;
+    }
+
+    // Medium words (5 to 7 chars, e.g. "kiccha", "sudeep", "batman"): max 1 typo, length diff <= 1
+    if (maxLen <= 7) {
+      if (lenDiff > 1) return false;
       return this.levenshtein(c1, c2) <= 1 || this.levenshtein(d1, d2) <= 1;
     }
-    if (maxLen <= 8) {
-      if (lenDiff > 3) return false;
-      return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
-    }
-    if (lenDiff > 4) return false;
-    return this.levenshtein(c1, c2) <= 3 || this.levenshtein(d1, d2) <= 3;
+
+    // Long words (8+ chars, e.g. "oppenheimer", "interstellar", "bramayugam"): max 2 typos, length diff <= 2
+    if (lenDiff > 2) return false;
+    return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
   }
 
   public static getSignificantWords(normalizedStr: string): string[] {
@@ -139,10 +138,12 @@ export class FuzzyMatcher {
   }
 
   /**
-   * Ultra-lenient matching:
-   * 1. Exact / compact / subtitle / whole-title match
-   * 2. Any single significant word from the answer (even with typos) matches!
-   * 3. Common words, stop words, and standalone digits are barred from winning alone.
+   * Robust multi-tier matching:
+   * 1. Exact normalized match
+   * 2. Direct compact comparison without spaces
+   * 3. Whole-string Levenshtein distance with strict thresholds
+   * 4. Subtitle handling
+   * 5. Word-level matching: single-word guess matches genuine answer word; multi-word guess requires >= 70% word alignment without intruder words.
    */
   public static isMatch(guess: string, answer: string): boolean {
     if (!guess || !answer) return false;
@@ -157,24 +158,24 @@ export class FuzzyMatcher {
     const compactGuess = nGuess.replace(/\s+/g, '');
     const compactAns = nAns.replace(/\s+/g, '');
     if (compactGuess === compactAns) return true;
-    if (Math.abs(compactGuess.length - compactAns.length) <= 3) {
+    if (Math.abs(compactGuess.length - compactAns.length) <= 2) {
       const cDist = this.levenshtein(compactGuess, compactAns);
       if (compactAns.length <= 6 && cDist <= 1) return true;
-      if (compactAns.length > 6 && cDist <= 3) return true;
+      if (compactAns.length > 6 && cDist <= 2) return true;
     }
 
-    // 3. Whole-string Levenshtein distance
+    // 3. Whole-string Levenshtein distance with strict length diff
     const lenDiff = Math.abs(nGuess.length - nAns.length);
-    if (lenDiff <= 4) {
+    if (lenDiff <= 2) {
       const dist = this.levenshtein(nGuess, nAns);
-      if (nAns.length <= 4) {
+      if (nAns.length <= 5) {
         if (dist <= 1) return true;
       } else if (nAns.length <= 8) {
-        if (dist <= 2) return true;
+        if (dist <= 1) return true;
       } else if (nAns.length <= 15) {
-        if (dist <= 3) return true;
+        if (dist <= 2) return true;
       } else {
-        if (dist <= 4) return true;
+        if (dist <= 3) return true;
       }
     }
 
@@ -186,15 +187,14 @@ export class FuzzyMatcher {
           if (nGuess === part) return true;
           const compactPart = part.replace(/\s+/g, '');
           if (compactGuess === compactPart) return true;
-          if (Math.abs(compactGuess.length - compactPart.length) <= 2 && this.levenshtein(compactGuess, compactPart) <= 2) return true;
-          if (Math.abs(nGuess.length - part.length) <= 2 && this.levenshtein(nGuess, part) <= 2) return true;
+          if (Math.abs(compactGuess.length - compactPart.length) <= 1 && this.levenshtein(compactGuess, compactPart) <= 1) return true;
+          if (Math.abs(nGuess.length - part.length) <= 1 && this.levenshtein(nGuess, part) <= 1) return true;
         }
       }
     }
 
     // 5. Extract significant words from both answer and guess
     const ansSigWords = this.getSignificantWords(nAns);
-    const guessSigWords = this.getSignificantWords(nGuess);
 
     // If answer has raw words (e.g. from hyphenated/bracketed titles)
     const rawAnsWords = String(answer).toLowerCase().split(/[\s\-:\(\)\/\.\_]+/).filter(w => w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w));
@@ -202,44 +202,42 @@ export class FuzzyMatcher {
       if (!ansSigWords.includes(rw)) ansSigWords.push(rw);
     }
 
-    if (ansSigWords.length === 0) {
-      return nGuess === nAns || compactGuess === compactAns || this.levenshtein(nGuess, nAns) <= 2;
+    const guessTokens = nGuess.split(/[\s\-:\(\)\/\.\_]+/).map(w => w.trim()).filter(Boolean);
+    const validGuessWords = guessTokens.filter(t => t.length >= 3 && !this.STOP_WORDS.has(t) && !/^\d+$/.test(t));
+
+    if (ansSigWords.length === 0 || validGuessWords.length === 0) {
+      return nGuess === nAns || compactGuess === compactAns;
     }
 
-    // 6. ANY-WORD MATCH:
-    // If the guess contains ANY significant word matching ANY significant word of the answer:
-    for (const gw of guessSigWords) {
+    // 6. Word-level matching:
+    // Case A: Single-word guess (e.g. player typed "sudeep" or "kiccha" or "interstellar")
+    // If the guess contains only ONE significant word, it must match one of the answer's words with strict typo tolerance.
+    if (validGuessWords.length === 1) {
+      const singleWord = validGuessWords[0];
       for (const aw of ansSigWords) {
-        if (this.isWordMatch(gw, aw)) {
+        if (this.isWordMatch(singleWord, aw)) {
           return true;
         }
       }
-    }
-
-    // Also check every individual token in the guess
-    const guessTokens = nGuess.split(/[\s\-:\(\)\/\.\_]+/).map(w => w.trim()).filter(Boolean);
-    for (const token of guessTokens) {
-      if (token.length >= 3 && !this.STOP_WORDS.has(token) && !/^\d+$/.test(token)) {
+    } else {
+      // Case B: Multi-word guess (e.g. "ravi kishan", "kiccha sudeep", "the dark knight", "star wars")
+      // In a multi-word guess, we check how many words match the answer.
+      // Every matched word must genuinely match an answer word.
+      // Unrelated intruder words (e.g. "ravi" in "ravi sudeep" or "ravi kishan") prevent false awards.
+      let matchCount = 0;
+      for (const gw of validGuessWords) {
+        let matched = false;
         for (const aw of ansSigWords) {
-          if (this.isWordMatch(token, aw)) {
-            return true;
+          if (this.isWordMatch(gw, aw)) {
+            matched = true;
+            break;
           }
         }
+        if (matched) matchCount++;
       }
-    }
-
-    // Check if the entire guess itself (if not a stopword) matches any significant word
-    if (!this.STOP_WORDS.has(nGuess) && nGuess.length >= 3) {
-      for (const aw of ansSigWords) {
-        if (this.isWordMatch(nGuess, aw)) {
-          return true;
-        }
+      if (matchCount > 0 && (matchCount / validGuessWords.length) >= 0.7) {
+        return true;
       }
-    }
-
-    // 7. Substring inclusion check (if answer contains guess or guess contains answer)
-    if (nAns.length >= 4 && !this.STOP_WORDS.has(nGuess) && nGuess.length >= 4) {
-      if (nAns.includes(nGuess) || nGuess.includes(nAns)) return true;
     }
 
     return false;

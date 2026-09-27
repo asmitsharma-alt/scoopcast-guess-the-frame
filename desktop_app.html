@@ -53,11 +53,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#FFFDF5">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
   <!-- Lucide Icons Engine (Local Bundle + CDN Fallback: https://lucide.dev/guide/) -->
   <script src="/js/lucide.min.js"></script>
   <script>
@@ -160,13 +163,38 @@
           "url": "https://scoopcast.me/"
         },
         "publisher": {
-          "@type": "Organization",
-          "name": "Scoopcast",
-          "url": "https://scoopcast.me/",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png"
-          }
+          "@id": "https://scoopcast.me/#organization"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://scoopcast.me/#organization",
+        "name": "Scoopcast",
+        "alternateName": [
+          "Scoopcast Cinema",
+          "Scoopcast Guess The Frame",
+          "Scoopcast Games"
+        ],
+        "url": "https://scoopcast.me/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://scoopcast.me/#logo",
+          "url": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
+          "contentUrl": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png",
+          "caption": "Scoopcast Official Logo",
+          "width": "2035",
+          "height": "700"
+        },
+        "image": "https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799633/scoopcast/logo.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://scoopcast.me/#website",
+        "url": "https://scoopcast.me/",
+        "name": "Guess The Frame",
+        "alternateName": "Scoopcast",
+        "publisher": {
+          "@id": "https://scoopcast.me/#organization"
         }
       },
       {
@@ -16802,7 +16830,7 @@
       },
 
       /**
-       * Ultra-lenient single-word matcher with adaptive typo tolerance and prefix matching.
+       * Robust single-word matcher with controlled typo tolerance.
        */
       isWordMatch(w1, w2) {
         if (!w1 || !w2) return false;
@@ -16818,36 +16846,34 @@
         const c2 = this.canonicalWord(w2);
         if (c1 === c2) return true;
 
-        if (w1.length >= 3 && w2.length >= 3) {
-          if (w1.startsWith(w2) || w2.startsWith(w1)) return true;
-          if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
-        }
-
-        if (w1.length >= 4 && w2.length >= 4) {
-          if (w1.includes(w2) || w2.includes(w1)) return true;
-          if (c1.includes(c2) || c2.includes(c1)) return true;
-        }
-
         const deDup = (s) => s.replace(/(.)\1+/g, '$1');
         const d1 = deDup(c1);
         const d2 = deDup(c2);
         if (d1 === d2) return true;
-        if (d1.length >= 4 && d2.length >= 4 && (d1.includes(d2) || d2.includes(d1))) return true;
 
         const maxLen = Math.max(c1.length, c2.length);
+        const minLen = Math.min(c1.length, c2.length);
         const lenDiff = Math.abs(c1.length - c2.length);
 
-        if (maxLen === 3) return this.levenshtein(c1, c2) <= 1;
-        if (maxLen <= 5) {
-          if (lenDiff > 2) return false;
+        if (minLen >= 5 && minLen / maxLen >= 0.8) {
+          if (c1.startsWith(c2) || c2.startsWith(c1)) return true;
+          if (d1.startsWith(d2) || d2.startsWith(d1)) return true;
+        }
+
+        // Short words (<= 4 chars): 0 typos allowed
+        if (maxLen <= 4) {
+          return false;
+        }
+
+        // Medium words (5 to 7 chars): max 1 typo, length diff <= 1
+        if (maxLen <= 7) {
+          if (lenDiff > 1) return false;
           return this.levenshtein(c1, c2) <= 1 || this.levenshtein(d1, d2) <= 1;
         }
-        if (maxLen <= 8) {
-          if (lenDiff > 3) return false;
-          return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
-        }
-        if (lenDiff > 4) return false;
-        return this.levenshtein(c1, c2) <= 3 || this.levenshtein(d1, d2) <= 3;
+
+        // Long words (8+ chars): max 2 typos, length diff <= 2
+        if (lenDiff > 2) return false;
+        return this.levenshtein(c1, c2) <= 2 || this.levenshtein(d1, d2) <= 2;
       },
 
       getSignificantWords(normalizedStr) {
@@ -16879,24 +16905,24 @@
         const compactGuess = nGuess.replace(/\s+/g, '');
         const compactAns = nAns.replace(/\s+/g, '');
         if (compactGuess === compactAns) return true;
-        if (Math.abs(compactGuess.length - compactAns.length) <= 3) {
+        if (Math.abs(compactGuess.length - compactAns.length) <= 2) {
           const cDist = this.levenshtein(compactGuess, compactAns);
           if (compactAns.length <= 6 && cDist <= 1) return true;
-          if (compactAns.length > 6 && cDist <= 3) return true;
+          if (compactAns.length > 6 && cDist <= 2) return true;
         }
 
         // 3. Whole-string Levenshtein distance
         const lenDiff = Math.abs(nGuess.length - nAns.length);
-        if (lenDiff <= 4) {
+        if (lenDiff <= 2) {
           const dist = this.levenshtein(nGuess, nAns);
-          if (nAns.length <= 4) {
+          if (nAns.length <= 5) {
             if (dist <= 1) return true;
           } else if (nAns.length <= 8) {
-            if (dist <= 2) return true;
+            if (dist <= 1) return true;
           } else if (nAns.length <= 15) {
-            if (dist <= 3) return true;
+            if (dist <= 2) return true;
           } else {
-            if (dist <= 4) return true;
+            if (dist <= 3) return true;
           }
         }
 
@@ -16908,51 +16934,50 @@
               if (nGuess === part) return true;
               const compactPart = part.replace(/\s+/g, '');
               if (compactGuess === compactPart) return true;
-              if (Math.abs(compactGuess.length - compactPart.length) <= 2 && this.levenshtein(compactGuess, compactPart) <= 2) return true;
-              if (Math.abs(nGuess.length - part.length) <= 2 && this.levenshtein(nGuess, part) <= 2) return true;
+              if (Math.abs(compactGuess.length - compactPart.length) <= 1 && this.levenshtein(compactGuess, compactPart) <= 1) return true;
+              if (Math.abs(nGuess.length - part.length) <= 1 && this.levenshtein(nGuess, part) <= 1) return true;
             }
           }
         }
 
         const ansSigWords = this.getSignificantWords(nAns);
-        const guessSigWords = this.getSignificantWords(nGuess);
-
         const rawAnsWords = String(answer).toLowerCase().split(/[\s\-:\(\)\/\.\_]+/).filter(w => w.length >= 3 && !this.STOP_WORDS.has(w) && !/^\d+$/.test(w));
         for (const rw of rawAnsWords) {
           if (!ansSigWords.includes(rw)) ansSigWords.push(rw);
         }
 
-        if (ansSigWords.length === 0) {
-          return nGuess === nAns || compactGuess === compactAns || this.levenshtein(nGuess, nAns) <= 2;
-        }
-
-        // 5. ANY-WORD MATCH: If any word in player's guess matches any significant word in the answer (even with typos)
-        for (const gw of guessSigWords) {
-          for (const aw of ansSigWords) {
-            if (this.isWordMatch(gw, aw)) return true;
-          }
-        }
-
-        // 6. Check individual tokens in the guess
         const guessTokens = nGuess.split(/[\s\-:\(\)\/\.\_]+/).map(w => w.trim()).filter(Boolean);
-        for (const token of guessTokens) {
-          if (token.length >= 3 && !this.STOP_WORDS.has(token) && !/^\d+$/.test(token)) {
-            for (const aw of ansSigWords) {
-              if (this.isWordMatch(token, aw)) return true;
+        const validGuessWords = guessTokens.filter(t => t.length >= 3 && !this.STOP_WORDS.has(t) && !/^\d+$/.test(t));
+
+        if (ansSigWords.length === 0 || validGuessWords.length === 0) {
+          return nGuess === nAns || compactGuess === compactAns;
+        }
+
+        // 5. Word-level matching:
+        // Case A: Single-word guess
+        if (validGuessWords.length === 1) {
+          const singleWord = validGuessWords[0];
+          for (const aw of ansSigWords) {
+            if (this.isWordMatch(singleWord, aw)) {
+              return true;
             }
           }
-        }
-
-        // 7. Check if entire guess itself matches any significant word
-        if (!this.STOP_WORDS.has(nGuess) && nGuess.length >= 3) {
-          for (const aw of ansSigWords) {
-            if (this.isWordMatch(nGuess, aw)) return true;
+        } else {
+          // Case B: Multi-word guess
+          let matchCount = 0;
+          for (const gw of validGuessWords) {
+            let matched = false;
+            for (const aw of ansSigWords) {
+              if (this.isWordMatch(gw, aw)) {
+                matched = true;
+                break;
+              }
+            }
+            if (matched) matchCount++;
           }
-        }
-
-        // 8. Substring inclusion check
-        if (nAns.length >= 4 && !this.STOP_WORDS.has(nGuess) && nGuess.length >= 4) {
-          if (nAns.includes(nGuess) || nGuess.includes(nAns)) return true;
+          if (matchCount > 0 && (matchCount / validGuessWords.length) >= 0.7) {
+            return true;
+          }
         }
 
         return false;
@@ -17203,6 +17228,58 @@
           return;
         }
 
+        const safeMsgId = msg.id ? String(msg.id).replace(/[^a-zA-Z0-9_-]/g, '') : '';
+        // If element with this ID already exists, do not duplicate
+        if (safeMsgId && document.getElementById('chatMsg_' + safeMsgId)) {
+          return;
+        }
+
+        // Reconcile optimistic local message when authoritative server message arrives
+        if (msg.id && !msg.id.startsWith('msg_') && msg.senderId === MultiplayerEngine.playerId) {
+          for (const [oldId, oldRecord] of this.messages.entries()) {
+            if (oldId.startsWith('msg_') && oldRecord.senderId === msg.senderId && oldRecord.text === msg.text) {
+              this.messages.delete(oldId);
+              const mergedRecord = { ...oldRecord, ...msg, id: msg.id, likes: oldRecord.likes || new Set(), dislikes: oldRecord.dislikes || new Set() };
+              this.messages.set(msg.id, mergedRecord);
+              const safeOldId = String(oldId).replace(/[^a-zA-Z0-9_-]/g, '');
+              const existingEl = document.getElementById('chatMsg_' + safeOldId);
+              if (existingEl) {
+                existingEl.id = 'chatMsg_' + safeMsgId;
+                const reactionsEl = existingEl.querySelector('.chat-msg-reactions');
+                if (reactionsEl) reactionsEl.setAttribute('data-msg-id', msg.id);
+                const lCnt = existingEl.querySelector('[id^="likeCount_"]');
+                if (lCnt) lCnt.id = 'likeCount_' + safeMsgId;
+                const dCnt = existingEl.querySelector('[id^="dislikeCount_"]');
+                if (dCnt) dCnt.id = 'dislikeCount_' + safeMsgId;
+                const lBtn = existingEl.querySelector('[id^="likeBtn_"]');
+                if (lBtn) {
+                  lBtn.id = 'likeBtn_' + safeMsgId;
+                  lBtn.setAttribute('onclick', "ChatEngine.toggleReaction('" + safeMsgId + "', 'like')");
+                }
+                const dBtn = existingEl.querySelector('[id^="dislikeBtn_"]');
+                if (dBtn) {
+                  dBtn.id = 'dislikeBtn_' + safeMsgId;
+                  dBtn.setAttribute('onclick', "ChatEngine.toggleReaction('" + safeMsgId + "', 'dislike')");
+                }
+                return;
+              }
+            }
+          }
+        }
+
+        // Check if identical message from same sender was rendered in the last 1500ms
+        const now = Date.now();
+        const msgTime = msg.timestamp || now;
+        const recentDuplicate = Array.from(this.messages.values()).some(m =>
+          m.id !== msg.id &&
+          m.senderId === msg.senderId &&
+          m.text === msg.text &&
+          Math.abs((m.timestamp || now) - msgTime) < 1500
+        );
+        if (recentDuplicate) {
+          return;
+        }
+
         if (!msg.id) {
           msg.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
         }
@@ -17215,31 +17292,33 @@
         this.messages.set(msg.id, msgRecord);
 
         const isMe = msg.senderId === MultiplayerEngine.playerId;
-        const safeMsgId = String(msg.id).replace(/[^a-zA-Z0-9_-]/g, '');
+        const finalSafeId = String(msg.id).replace(/[^a-zA-Z0-9_-]/g, '');
         const msgEl = document.createElement('div');
         msgEl.className = 'chat-msg';
-        msgEl.id = 'chatMsg_' + safeMsgId;
+        msgEl.id = 'chatMsg_' + finalSafeId;
 
-        const chatAvUrl = resolvePlayerAvatar(msg.senderAvatar || 'aman');
-        const chatAvBg = getPlayerAvatarBg(msg.senderAvatar || 'aman', '#facc15');
-        const chatAvFit = getPlayerAvatarFit(msg.senderAvatar || 'aman');
+        const senderPlayer = (GS.players && GS.players.find(p => p.id === msg.senderId));
+        const senderAv = msg.senderAvatar || (isMe ? MultiplayerEngine.playerAvatar : null) || (senderPlayer && senderPlayer.avatar) || 'aman';
+        const chatAvUrl = resolvePlayerAvatar(senderAv);
+        const chatAvBg = getPlayerAvatarBg(senderAv, '#facc15');
+        const chatAvFit = getPlayerAvatarFit(senderAv);
 
         const reactionButtonsHtml = isMe ?
           ('<span class="chat-reaction-btn chat-self-disabled" title="You cannot vote on your own answer">' +
             '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsUp : '') + '</span>' +
-            '<span class="reaction-count" id="likeCount_' + safeMsgId + '"></span>' +
+            '<span class="reaction-count" id="likeCount_' + finalSafeId + '"></span>' +
           '</span>' +
           '<span class="chat-reaction-btn chat-self-disabled" title="You cannot vote on your own answer">' +
             '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsDown : '') + '</span>' +
-            '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
+            '<span class="reaction-count" id="dislikeCount_' + finalSafeId + '"></span>' +
           '</span>') :
-          ('<button type="button" class="chat-reaction-btn chat-like-btn" id="likeBtn_' + safeMsgId + '" onclick="ChatEngine.toggleReaction(\'' + safeMsgId + '\', \'like\')" title="Like this answer">' +
+          ('<button type="button" class="chat-reaction-btn chat-like-btn" id="likeBtn_' + finalSafeId + '" onclick="ChatEngine.toggleReaction(\'' + finalSafeId + '\', \'like\')" title="Like this answer">' +
             '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsUp : '') + '</span>' +
-            '<span class="reaction-count" id="likeCount_' + safeMsgId + '"></span>' +
+            '<span class="reaction-count" id="likeCount_' + finalSafeId + '"></span>' +
           '</button>' +
-          '<button type="button" class="chat-reaction-btn chat-dislike-btn" id="dislikeBtn_' + safeMsgId + '" onclick="ChatEngine.toggleReaction(\'' + safeMsgId + '\', \'dislike\')" title="Dislike this answer">' +
+          '<button type="button" class="chat-reaction-btn chat-dislike-btn" id="dislikeBtn_' + finalSafeId + '" onclick="ChatEngine.toggleReaction(\'' + finalSafeId + '\', \'dislike\')" title="Dislike this answer">' +
             '<span class="reaction-emoji">' + (typeof SvgIcons !== 'undefined' ? SvgIcons.thumbsDown : '') + '</span>' +
-            '<span class="reaction-count" id="dislikeCount_' + safeMsgId + '"></span>' +
+            '<span class="reaction-count" id="dislikeCount_' + finalSafeId + '"></span>' +
           '</button>');
 
         msgEl.innerHTML = '<div class="chat-avatar" style="background:' + chatAvBg + ';">' +
@@ -17407,7 +17486,8 @@
 
         const banner = document.createElement('div');
         banner.className = 'chat-msg-winner ' + colorClass;
-        const winAv = (winRecord && winRecord.avatar) || (GS.players && GS.players.find(p => p.id === winRecord.playerId)) || 'aman';
+        const pObj = GS.players && GS.players.find(p => p.id === winRecord.playerId);
+        const winAv = (winRecord && winRecord.avatar) || (pObj && pObj.avatar) || 'aman';
         const avSrc = resolvePlayerAvatar(winAv, 'aman');
         const avBg = getPlayerAvatarBg(winAv, pos === 1 ? '#facc15' : (pos === 2 ? '#60a5fa' : '#4ade80'));
         const avFit = getPlayerAvatarFit(winAv);
@@ -19560,8 +19640,12 @@
         if (room.state && room.state.chatMessages) {
           room.state.chatMessages.onAdd((chat) => {
             if (chat && typeof ChatEngine !== 'undefined') {
-              // Suppress raw server system message if it's the duplicate guess notification
-              if (chat.isSystem && typeof chat.text === 'string' && (chat.text.includes('guessed correctly! (+') || chat.text.includes('guessed the answer!'))) {
+              // Suppress raw server system message if it's a guess/winner notification (handled by currentRoundWinners)
+              if (chat.isSystem && typeof chat.text === 'string' && (
+                chat.text.includes('guessed correctly') || 
+                chat.text.includes('guessed the answer') ||
+                (chat.text.includes('pts') && (chat.text.includes('🥇') || chat.text.includes('🥈') || chat.text.includes('🥉')))
+              )) {
                 return;
               }
               if (chat.isSystem || chat.senderId === 'system') {
@@ -19572,7 +19656,7 @@
                 id: chat.id,
                 senderId: chat.senderId,
                 senderName: chat.senderName,
-                senderAvatar: chat.avatar,
+                senderAvatar: chat.senderAvatar || chat.avatar || 'aman',
                 text: chat.text,
                 timestamp: chat.timestamp,
                 isSystem: chat.isSystem
