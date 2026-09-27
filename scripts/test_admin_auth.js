@@ -36,7 +36,13 @@ function createMockEnvironment() {
     'cfgAdminEmail', 'cfgUploaderPasscode', 'settingsModal', 'cldStatusPill',
     'assetLibHeaderCount', 'assetSubtitle', 'catCountAll', 'catCountFrames',
     'catCountEyes', 'catCountTie', 'catCountAvvtar', 'catCountBg',
-    'adminToast', 'toastIcon', 'toastMsg'
+    'adminToast', 'toastIcon', 'toastMsg',
+    'eyesModeTab', 'exportBtn', 'dialogueFields', 'imageUploadSection',
+    'eyesRevealGroup', 'tmdbStillsSection', 'formHeaderTitle', 'answerLabel',
+    'mockModeBadge', 'itemAnswer', 'itemYear', 'itemHint', 'itemDialogue',
+    'mockAnswerText', 'mockHintText', 'mockImage', 'mockDialogueText',
+    'submitBtn', 'uploadProgress', 'progressFill', 'progressStatus',
+    'progressPercent', 'fileDropzone'
   ];
 
   ids.forEach(id => {
@@ -165,7 +171,9 @@ async function runTests() {
     if (elements['userRoleBadge'].textContent !== '📤 UPLOADER') throw new Error('Test 4 failed: role badge mismatch');
     if (elements['settingsNavBtn'].style.display !== 'none') throw new Error('Test 4 failed: settings button must be hidden for uploader');
     if (elements['teamNavBtn'].style.display !== 'none') throw new Error('Test 4 failed: team button must be hidden for uploader');
-    console.log('✅ Test 4 Passed: Uploader passcode logs in as 📤 UPLOADER and hides API settings & Team management');
+    if (elements['eyesModeTab'].style.display !== 'none') throw new Error('Test 4 failed: eyes mode tab must be hidden for uploader');
+    if (elements['exportBtn'].style.display !== 'none') throw new Error('Test 4 failed: export button must be hidden for uploader');
+    console.log('✅ Test 4 Passed: Uploader passcode logs in as 📤 UPLOADER and hides API settings, Team, Eyes tab & Export');
   }
 
   // Test 5: Clerk user handler for asmit.sharma@hotmail.com
@@ -344,7 +352,140 @@ async function runTests() {
     console.log('✅ Test 12 Passed: Root Main Head (asmit.sharma@hotmail.com) is permanently protected against removal');
   }
 
-  console.log('\n🎉 ALL 12 AUTH & USER MANAGEMENT TESTS PASSED 100%!');
+  // Test 13: Uploader cannot switch to 'eyes' mode, but can switch to 'frames' and 'dialogue'
+  {
+    const { sandbox, elements } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+
+    let alertFired = false;
+    sandbox.alert = (msg) => { alertFired = true; };
+
+    AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
+    
+    // Attempt to switch to eyes mode
+    AdminApp.setMode('eyes');
+    if (AdminApp.currentMode === 'eyes') throw new Error('Test 13 failed: Uploader was able to switch to eyes mode');
+    if (!alertFired) throw new Error('Test 13 failed: No restriction alert fired when uploader attempted eyes mode');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 13 failed: Mode should default to frames');
+
+    // Dialogue mode should succeed
+    alertFired = false;
+    AdminApp.setMode('dialogue');
+    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 13 failed: Uploader could not switch to dialogue mode');
+    if (alertFired) throw new Error('Test 13 failed: Alert incorrectly fired for dialogue mode');
+
+    // Frames mode should succeed
+    AdminApp.setMode('frames');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 13 failed: Uploader could not switch to frames mode');
+
+    console.log('✅ Test 13 Passed: Uploader is strictly blocked from "eyes" mode, but authorized for "frames" and "dialogue"');
+  }
+
+  // Test 14: Uploader cannot submit when currentMode is 'eyes'
+  {
+    const { sandbox, elements } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+
+    let alertMsg = '';
+    sandbox.alert = (m) => { alertMsg = m; };
+
+    AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
+    AdminApp.currentMode = 'eyes'; // Force variable to test guard
+
+    elements['itemAnswer'].value = 'AMITABH BACHCHAN';
+    await AdminApp.handleSubmit({ preventDefault: () => {} });
+
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 14 failed: handleSubmit did not block uploader on eyes mode');
+    console.log('✅ Test 14 Passed: handleSubmit() blocks drop submission for uploaders if mode is "eyes"');
+  }
+
+  // Test 15: Uploader cannot pre-fill 'eyes' asset in form via useAssetInForm
+  {
+    const { sandbox, elements } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+
+    let alertMsg = '';
+    sandbox.alert = (m) => { alertMsg = m; };
+
+    AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
+    AdminApp.useAssetInForm('https://cloudinary.com/eyes/shahrukh.jpg', 'Shah Rukh Khan', 'eyes');
+
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 15 failed: useAssetInForm did not block eyes asset for uploader');
+    if (elements['itemAnswer'].value === 'SHAHRUKH KHAN' || AdminApp.currentMode === 'eyes') {
+      throw new Error('Test 15 failed: eyes asset was loaded into form for uploader');
+    }
+
+    // But frame asset should succeed
+    alertMsg = '';
+    AdminApp.useAssetInForm('https://cloudinary.com/frames/sholay.jpg', 'Sholay (1975)', 'frames');
+    if (alertMsg.includes('Access Restricted')) throw new Error('Test 15 failed: frames asset was blocked for uploader');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 15 failed: frames asset should set mode to frames');
+    if (elements['itemAnswer'].value !== 'SHOLAY') throw new Error('Test 15 failed: frames title not loaded into form');
+
+    console.log('✅ Test 15 Passed: useAssetInForm() blocks "eyes" assets for uploader while allowing "frames"');
+  }
+
+  // Test 16: Uploader cannot delete drops or export playlist JSON
+  {
+    const { sandbox, elements } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+
+    let alertMsg = '';
+    sandbox.alert = (m) => { alertMsg = m; };
+
+    AdminApp.applyRole('uploader', { name: 'Curator', avatar: '' });
+    AdminApp.dropsData = [{ answer: 'SHOLAY', category: 'frames' }];
+
+    // Attempt export
+    AdminApp.exportPlaylistJson();
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 16 failed: exportPlaylistJson did not block uploader');
+
+    // Attempt delete
+    alertMsg = '';
+    AdminApp.deleteDrop(0);
+    if (!alertMsg.includes('Access Restricted')) throw new Error('Test 16 failed: deleteDrop did not block uploader');
+    if (AdminApp.dropsData.length !== 1) throw new Error('Test 16 failed: drop was deleted by uploader');
+
+    console.log('✅ Test 16 Passed: Uploader is strictly blocked from deleting drops and exporting playlist JSON');
+  }
+
+  // Test 17: Main Head retains full permissions (all 3 modes, export, delete)
+  {
+    const { sandbox, elements } = createMockEnvironment();
+    vm.createContext(sandbox);
+    vm.runInContext(scriptContent, sandbox);
+    const AdminApp = sandbox.window.AdminApp;
+
+    AdminApp.quickLoginAsmit();
+
+    // Verify all tabs and buttons visible
+    if (elements['eyesModeTab'].style.display !== 'flex') throw new Error('Test 17 failed: eyesModeTab not flex for admin');
+    if (elements['exportBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: exportBtn not inline-flex for admin');
+    if (elements['settingsNavBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: settingsNavBtn not inline-flex for admin');
+    if (elements['teamNavBtn'].style.display !== 'inline-flex') throw new Error('Test 17 failed: teamNavBtn not inline-flex for admin');
+
+    // Can switch to all 3 modes
+    AdminApp.setMode('frames');
+    if (AdminApp.currentMode !== 'frames') throw new Error('Test 17 failed: admin cannot switch to frames');
+
+    AdminApp.setMode('eyes');
+    if (AdminApp.currentMode !== 'eyes') throw new Error('Test 17 failed: admin cannot switch to eyes');
+
+    AdminApp.setMode('dialogue');
+    if (AdminApp.currentMode !== 'dialogue') throw new Error('Test 17 failed: admin cannot switch to dialogue');
+
+    console.log('✅ Test 17 Passed: 👑 Main Head has 100% full access to all 3 game modes, export JSON, settings & team');
+  }
+
+  console.log('\n🎉 ALL 17 PERMISSION, AUTH & USER MANAGEMENT TESTS PASSED 100%!');
 }
 
 runTests().catch(err => {

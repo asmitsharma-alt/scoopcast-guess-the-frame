@@ -1229,7 +1229,7 @@
         <div class="mode-tab active" data-mode="frames" onclick="AdminApp.setMode('frames')">
           🎬 GUESS THE FRAME
         </div>
-        <div class="mode-tab" data-mode="eyes" onclick="AdminApp.setMode('eyes')">
+        <div class="mode-tab" data-mode="eyes" id="eyesModeTab" onclick="AdminApp.setMode('eyes')">
           👀 GUESS THE EYES
         </div>
         <div class="mode-tab" data-mode="dialogue" onclick="AdminApp.setMode('dialogue')">
@@ -2066,17 +2066,28 @@
         const roleBadge = document.getElementById('userRoleBadge');
         const settingsBtn = document.getElementById('settingsNavBtn');
         const teamBtn = document.getElementById('teamNavBtn');
+        const eyesTab = document.getElementById('eyesModeTab');
+        const exportBtn = document.getElementById('exportBtn');
 
         if (role === 'admin') {
           roleBadge.textContent = '👑 MAIN HEAD';
           roleBadge.className = 'user-role-tag role-tag-head';
           if (settingsBtn) settingsBtn.style.display = 'inline-flex';
           if (teamBtn) teamBtn.style.display = 'inline-flex';
+          if (eyesTab) eyesTab.style.display = 'flex';
+          if (exportBtn) exportBtn.style.display = 'inline-flex';
         } else {
           roleBadge.textContent = '📤 UPLOADER';
           roleBadge.className = 'user-role-tag role-tag-uploader';
           if (settingsBtn) settingsBtn.style.display = 'none'; // Uploaders cannot see API keys
           if (teamBtn) teamBtn.style.display = 'none'; // Uploaders cannot manage team members
+          if (eyesTab) eyesTab.style.display = 'none'; // Uploaders can only add frames and dialogue
+          if (exportBtn) exportBtn.style.display = 'none'; // Uploaders cannot export playlist
+
+          // If currently in eyes mode, reset to frames
+          if (this.currentMode === 'eyes') {
+            this.setMode('frames');
+          }
         }
 
         sessionStorage.setItem('scoopcast_user_role', role);
@@ -2219,6 +2230,11 @@
 
       // Mode Switcher
       setMode(mode) {
+        if (this.currentUser.role === 'uploader' && mode !== 'frames' && mode !== 'dialogue') {
+          alert('Access Restricted: Uploaders are only authorized to add Frames and Dialogue.');
+          mode = 'frames';
+        }
+
         this.currentMode = mode;
         document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
         
@@ -2480,6 +2496,11 @@
       async handleSubmit(e) {
         if (e) e.preventDefault();
 
+        if (this.currentUser.role === 'uploader' && this.currentMode !== 'frames' && this.currentMode !== 'dialogue') {
+          alert('Access Restricted: Uploaders are only authorized to add Frames and Dialogue.');
+          return;
+        }
+
         const ans = document.getElementById('itemAnswer').value.trim().toUpperCase();
         const year = document.getElementById('itemYear').value.trim();
         const hint = document.getElementById('itemHint').value.trim();
@@ -2663,6 +2684,11 @@
       },
 
       exportPlaylistJson() {
+        if (this.currentUser.role !== 'admin') {
+          alert('Access Restricted: Only the Main Head can export the playlist JSON.');
+          return;
+        }
+
         const exportObj = {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "title": "Scoopcast Weekly Movie Drops",
@@ -2841,7 +2867,7 @@
                 </div>
                 <div class="asset-card-actions">
                   <button type="button" class="btn btn-xs" onclick="AdminApp.previewAsset('${safePath}', '${safeName}', '${asset.category}')" title="Preview in Live In-Game Frame">👁️ Preview</button>
-                  ${(asset.category === 'frames' || asset.category === 'eyes' || asset.category === 'tie_breaker') ? `
+                  ${(asset.category === 'frames' || (asset.category === 'eyes' && this.currentUser.role === 'admin') || asset.category === 'tie_breaker') ? `
                     <button type="button" class="btn btn-xs btn-yellow" onclick="AdminApp.useAssetInForm('${safePath}', '${safeName}', '${asset.category}')" title="Pre-fill form to add as active drop">⚡ Use in Form</button>
                   ` : ''}
                   <button type="button" class="btn btn-xs" onclick="AdminApp.copyAssetPath('${safePath}', this)" title="Copy path to clipboard">📋 Path</button>
@@ -2870,6 +2896,11 @@
       },
 
       useAssetInForm(path, name, category) {
+        if (category === 'eyes' && this.currentUser.role === 'uploader') {
+          alert('Access Restricted: Uploaders are only authorized to add Frames and Dialogue.');
+          return;
+        }
+
         // Parse Title & Year from filename (e.g., "American History X (1998)")
         const match = name.match(/^(.*?)\s*(?:\((\d{4})\))?$/);
         const title = (match ? match[1] : name).trim().toUpperCase();
