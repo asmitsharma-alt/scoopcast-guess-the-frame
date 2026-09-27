@@ -16228,6 +16228,25 @@
       framesLoaded: false
     };
 
+    // Auto-sync dynamic Cloudinary frames from data/frames.json
+    (async function syncDynamicFrames() {
+      try {
+        const res = await fetch('/data/frames.json');
+        if (res.ok) {
+          const dynamicFrames = await res.json();
+          if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
+            GS.sections[0].frames = dynamicFrames;
+            console.log('[Scoopcast] Successfully synced', dynamicFrames.length, 'frames from /data/frames.json');
+            if (window.AdminStudio && typeof AdminStudio.renderSections === 'function') {
+              AdminStudio.renderSections();
+            }
+          }
+        }
+      } catch (err) {
+        // Keeps local fallback frames if fetch fails
+      }
+    })();
+
     const sectionIcons = ['<svg class="svg-icon"><use href="#icon-clapperboard" /></svg>', '<svg class="svg-icon"><use href="#icon-video" /></svg>', '<svg class="svg-icon"><use href="#icon-message-circle" /></svg>', '<svg class="svg-icon"><use href="#icon-tv" /></svg>', '<svg class="svg-icon"><use href="#icon-smile" /></svg>', '<svg class="svg-icon"><use href="#icon-tent" /></svg>', '<svg class="svg-icon"><use href="#icon-palette" /></svg>', '<svg class="svg-icon"><use href="#icon-gamepad-2" /></svg>', '<svg class="svg-icon"><use href="#icon-target" /></svg>', '<svg class="svg-icon"><use href="#icon-music" /></svg>', '<svg class="svg-icon"><use href="#icon-audio-lines" /></svg>'];
     const taglines = ['Get Ready!', 'Here We Go!', 'Eyes on Screen!', 'Think Fast!', 'Can You Guess?'];
 

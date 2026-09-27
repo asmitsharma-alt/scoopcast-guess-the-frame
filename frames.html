@@ -1395,10 +1395,17 @@
         this.searchTimer = setTimeout(() => this.searchMovies(query), 280);
       },
 
+      getTmdbApiBase() {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          return '/api/tmdb/3';
+        }
+        return 'https://api.themoviedb.org/3';
+      },
+
       async searchMovies(query) {
         const dropdown = document.getElementById('autocompleteDropdown');
         try {
-          const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US`;
+          const url = `${this.getTmdbApiBase()}/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US`;
           const res = await fetch(url, {
             headers: {
               'Authorization': `Bearer ${this.tmdbToken}`,
@@ -1436,7 +1443,7 @@
       async searchAndSelect(title) {
         document.getElementById('movieSearchInput').value = title;
         try {
-          const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(title)}&include_adult=false&language=en-US`;
+          const url = `${this.getTmdbApiBase()}/search/movie?query=${encodeURIComponent(title)}&include_adult=false&language=en-US`;
           const res = await fetch(url, {
             headers: { 'Authorization': `Bearer ${this.tmdbToken}` }
           });
@@ -1493,7 +1500,7 @@
 
         try {
           // Fetch all backdrops with include_image_language=null,en
-          const url = `https://api.themoviedb.org/3/movie/${movieId}/images?include_image_language=null,en`;
+          const url = `${this.getTmdbApiBase()}/movie/${movieId}/images?include_image_language=null,en`;
           const res = await fetch(url, {
             headers: { 'Authorization': `Bearer ${this.tmdbToken}` }
           });

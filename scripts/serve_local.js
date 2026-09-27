@@ -1,9 +1,36 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
+
+// TMDB DNS-over-HTTPS resolver (bypasses Indian ISP DNS blocks on api.themoviedb.org)
+let cachedTmdbIp = null;
+let lastDohTime = 0;
+
+async function getRealTmdbHost() {
+  const now = Date.now();
+  if (cachedTmdbIp && (now - lastDohTime < 300000)) {
+    return cachedTmdbIp;
+  }
+  try {
+    const res = await fetch('https://cloudflare-dns.com/dns-query?name=api.themoviedb.org&type=AAAA', {
+      headers: { 'Accept': 'application/dns-json' }
+    });
+    const json = await res.json();
+    const aaaa = json.Answer && json.Answer.find(a => a.type === 28);
+    if (aaaa && aaaa.data) {
+      cachedTmdbIp = aaaa.data;
+      lastDohTime = now;
+      return cachedTmdbIp;
+    }
+  } catch (e) {
+    console.error('[DoH Resolution Error]:', e);
+  }
+  return '2600:9000:21b3:e00:c:174a:c400:93a1';
+}
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -21,7 +48,7 @@ const MIME_TYPES = {
   '.txt': 'text/plain; charset=utf-8'
 };
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', '*');
@@ -38,6 +65,44 @@ const server = http.createServer((req, res) => {
     urlPath = req.url.split('?')[0];
   }
 
+  // ── TMDB PROXY (Bypasses Indian ISP DNS poison blocks) ──
+  if (urlPath.startsWith('/api/tmdb')) {
+    try {
+      const tmdbPath = req.url.replace(/^\/api\/tmdb/, '');
+      const realIp = await getRealTmdbHost();
+      const options = {
+        hostname: realIp,
+        port: 443,
+        path: tmdbPath,
+        method: req.method,
+        headers: {
+          'Host': 'api.themoviedb.org',
+          'User-Agent': 'Mozilla/5.0',
+          'Authorization': req.headers['authorization'] || ''
+        },
+        servername: 'api.themoviedb.org'
+      };
+      const proxyReq = https.request(options, (proxyRes) => {
+        res.writeHead(proxyRes.statusCode, {
+          'Content-Type': proxyRes.headers['content-type'] || 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        });
+        proxyRes.pipe(res);
+      });
+      proxyReq.on('error', (err) => {
+        console.error('[TMDB Proxy Error]:', err);
+        if (!res.headersSent) res.writeHead(502, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'TMDB proxy connection failed', details: err.message }));
+      });
+      req.pipe(proxyReq);
+      return;
+    } catch (e) {
+      if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+      return;
+    }
+  }
+
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(req.headers['user-agent'] || '');
 
   let targetFile = '';
@@ -45,6 +110,8 @@ const server = http.createServer((req, res) => {
     targetFile = isMobile ? 'mobile_app.html' : 'desktop_app.html';
   } else if (urlPath === '/admin' || urlPath === '/admin.html') {
     targetFile = 'admin.html';
+  } else if (urlPath === '/frames' || urlPath === '/frames.html' || urlPath === '/tmdb_frames') {
+    targetFile = 'frames.html';
   } else if (urlPath === '/desktop_app' || urlPath === '/desktop') {
     targetFile = 'desktop_app.html';
   } else if (urlPath === '/mobile_app' || urlPath === '/android') {
@@ -53,6 +120,9 @@ const server = http.createServer((req, res) => {
     targetFile = 'manifest.json';
   } else {
     targetFile = urlPath.replace(/^\//, '');
+    if (!path.extname(targetFile) && fs.existsSync(path.join(PROJECT_ROOT, targetFile + '.html'))) {
+      targetFile += '.html';
+    }
   }
 
   const filePath = path.join(PROJECT_ROOT, targetFile);
@@ -120,9 +190,11 @@ const logError = (type, err) => {
 };
 
 process.on('uncaughtException', (err) => logError('UncaughtException', err));
-process.on('unhandledRejection', (err) => logError('UnhandledRejection', err));
+process.on('exit', (code) => {
+  console.log(`[Process Exit] Server exited with code: ${code}`);
+});
+process.on('SIGINT', () => process.exit(0));
+process.on('SIGTERM', () => process.exit(0));
 
-if (process.stdin.isTTY) {
-  process.stdin.resume();
-}
+
 

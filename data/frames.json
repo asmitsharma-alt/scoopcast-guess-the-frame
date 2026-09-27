@@ -1,0 +1,86 @@
+[
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544162/scoopcast_frames/Batman_and_Robin_1997.webp",
+    "answer": "BATMAN & ROBIN",
+    "year": "1997",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544163/scoopcast_frames/Batman_1989.webp",
+    "answer": "BATMAN",
+    "year": "1989",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544164/scoopcast_frames/Batman_Begins_2005.webp",
+    "answer": "BATMAN BEGINS",
+    "year": "2005",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544165/scoopcast_frames/Batman_Forever_1995.webp",
+    "answer": "BATMAN FOREVER",
+    "year": "1995",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544167/scoopcast_frames/Batman_Returns_1992.webp",
+    "answer": "BATMAN RETURNS",
+    "year": "1992",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544168/scoopcast_frames/Batman_v_Superman_Dawn_of_Justice_2016.webp",
+    "answer": "BATMAN V SUPERMAN DAWN OF JUSTICE",
+    "year": "2016",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544169/scoopcast_frames/The_Batman_2022.webp",
+    "answer": "THE BATMAN",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544171/scoopcast_frames/The_Dark_Knight_2008.webp",
+    "answer": "THE DARK KNIGHT",
+    "year": "2008",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544172/scoopcast_frames/The_Dark_Knight_Rises_2012.webp",
+    "answer": "THE DARK KNIGHT RISES",
+    "year": "2012",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544266/scoopcast_frames/Dilwale_Dulhania_Le_Jayenge_1995.webp",
+    "answer": "DILWALE DULHANIA LE JAYENGE",
+    "year": "1995",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544362/scoopcast_frames/3_Idiots_2009.webp",
+    "answer": "3 IDIOTS",
+    "year": "2009",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544767/scoopcast_frames/My_Name_Is_Khan_2010.webp",
+    "answer": "MY NAME IS KHAN",
+    "year": "2010",
+    "tag": "classic"
+  }
+]
