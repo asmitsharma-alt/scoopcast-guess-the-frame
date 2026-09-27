@@ -38,3 +38,7 @@ graphify-out/
 
 # Scratch & test scripts
 scratch/
+
+# Python cache
+__pycache__/
+*.pyc

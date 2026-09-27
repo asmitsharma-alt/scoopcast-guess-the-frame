@@ -82,5 +82,40 @@
     "answer": "MY NAME IS KHAN",
     "year": "2010",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546286/scoopcast_frames/Star_Trek_Beyond_2016.webp",
+    "answer": "STAR TREK BEYOND",
+    "year": "2016",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546298/scoopcast_frames/Starred_Up_2013.webp",
+    "answer": "STARRED UP",
+    "year": "2013",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546341/scoopcast_frames/Polite_Society_2023.webp",
+    "answer": "POLITE SOCIETY",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546351/scoopcast_frames/Unforgiven_1992.webp",
+    "answer": "UNFORGIVEN",
+    "year": "1992",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546361/scoopcast_frames/Sleeping_Beauty_2011.webp",
+    "answer": "SLEEPING BEAUTY",
+    "year": "2011",
+    "tag": "classic"
   }
 ]
