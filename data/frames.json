@@ -110,5 +110,19 @@
     "answer": "INCEPTION",
     "year": "2010",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790548107/scoopcast_frames/A_Summers_Tale_1996.webp",
+    "answer": "A SUMMER'S TALE",
+    "year": "1996",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790548486/scoopcast_frames/Embrace_Of_The_Serpent_2015.webp",
+    "answer": "EMBRACE OF THE SERPENT",
+    "year": "2015",
+    "tag": "classic"
   }
 ]
