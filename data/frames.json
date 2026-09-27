@@ -64,27 +64,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544266/scoopcast_frames/Dilwale_Dulhania_Le_Jayenge_1995.webp",
-    "answer": "DILWALE DULHANIA LE JAYENGE",
-    "year": "1995",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544362/scoopcast_frames/3_Idiots_2009.webp",
-    "answer": "3 IDIOTS",
-    "year": "2009",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790544767/scoopcast_frames/My_Name_Is_Khan_2010.webp",
-    "answer": "MY NAME IS KHAN",
-    "year": "2010",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546286/scoopcast_frames/Star_Trek_Beyond_2016.webp",
     "answer": "STAR TREK BEYOND",
     "year": "2016",
@@ -99,13 +78,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546341/scoopcast_frames/Polite_Society_2023.webp",
-    "answer": "POLITE SOCIETY",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546351/scoopcast_frames/Unforgiven_1992.webp",
     "answer": "UNFORGIVEN",
     "year": "1992",
@@ -116,6 +88,27 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790546361/scoopcast_frames/Sleeping_Beauty_2011.webp",
     "answer": "SLEEPING BEAUTY",
     "year": "2011",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790547232/scoopcast_frames/Pulp_Fiction_1994.webp",
+    "answer": "PULP FICTION",
+    "year": "1994",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790547240/scoopcast_frames/The_Matrix_1999.webp",
+    "answer": "THE MATRIX",
+    "year": "1999",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790547248/scoopcast_frames/Inception_2010.webp",
+    "answer": "INCEPTION",
+    "year": "2010",
     "tag": "classic"
   }
 ]

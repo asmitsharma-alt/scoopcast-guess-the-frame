@@ -1,6 +1,7 @@
 """
 Scoopcast Auto-Collector: Cinephile Screencaps (Film-Grab) + Gemini Vision AI + Cloudinary
 Automates pure playback frame collection from 4,100+ cinema master stills with Gemini verification.
+Focused on globally recognized, popular Hollywood & international classics.
 """
 
 import os
@@ -66,6 +67,61 @@ BROWSER_HEADERS = [
     "-H", "Accept-Language: en-US,en;q=0.9",
 ]
 
+# Explicit exclusions for Indian Cinema (per user request to focus exclusively on easy/famous Hollywood/Western frames)
+INDIAN_EXCLUSIONS = {
+    "india", "hindi", "telugu", "tamil", "malayalam", "kannada", "bengali",
+    "bollywood", "tollywood", "kollywood", "mollywood", "sandalwood",
+    "satyajit ray", "mira nair", "aparajito", "pather panchali", "charulata",
+    "devi", "monsoon wedding", "sholay", "lagaan", "dangal", "3 idiots",
+    "rrr", "baahubali", "bahubali", "dilwale", "my name is khan", "tumbbad",
+    "swades", "wasseypur", "polite society", "salaam bombay", "lunchbox",
+    "jalsaghar", "kanchanjungha", "nayak", "the big city", "dev.d", "gangs of wasseypur"
+}
+
+# Universally recognized famous classics to prioritize first (fast, iconic, recognizable)
+POPULAR_CLASSICS = [
+    "Pulp Fiction", "The Matrix", "Inception", "Fight Club", "Interstellar",
+    "Gladiator", "The Shining", "Alien", "Blade Runner", "Goodfellas",
+    "Taxi Driver", "The Godfather", "The Godfather Part II", "Whiplash",
+    "La La Land", "Spirited Away", "Parasite", "Joker", "No Country for Old Men",
+    "There Will Be Blood", "Inglourious Basterds", "Django Unchained",
+    "The Grand Budapest Hotel", "Mad Max: Fury Road", "Her", "Arrival",
+    "Blade Runner 2049", "Dune", "Drive", "The Social Network",
+    "Eternal Sunshine of the Spotless Mind", "Memento", "Se7en",
+    "The Silence of the Lambs", "Fargo", "The Big Lebowski", "Boogie Nights",
+    "Zodiac", "Prisoners", "Gone Girl", "Shutter Island", "The Departed",
+    "Catch Me If You Can", "The Wolf of Wall Street", "American Psycho",
+    "The Truman Show", "Requiem for a Dream", "Oldboy", "Pan's Labyrinth",
+    "Leon: The Professional", "The Prestige", "Reservoir Dogs",
+    "Kill Bill: Vol. 1", "Kill Bill: Vol. 2", "Children of Men",
+    "Birdman", "1917", "Oppenheimer", "Barbie", "Spider-Man: Into the Spider-Verse",
+    "Everything Everywhere All at Once", "Apocalypse Now", "Full Metal Jacket",
+    "A Clockwork Orange", "2001: A Space Odyssey", "Schindler's List",
+    "Saving Private Ryan", "Jurassic Park", "Back to the Future",
+    "Terminator 2: Judgment Day", "The Terminator", "Die Hard",
+    "Raiders of the Lost Ark", "Aliens", "The Thing", "Scarface",
+    "Heat", "Casino", "Good Will Hunting", "The Shawshank Redemption",
+    "Forrest Gump", "The Green Mile", "Cast Away", "Braveheart",
+    "Titanic", "Avatar", "Nightcrawler", "Ex Machina", "Baby Driver",
+    "Knives Out", "Glass Onion", "Sicario", "Dunkirk", "Tenet",
+    "The Lighthouse", "The Witch", "Midsommar", "Hereditary",
+    "Get Out", "Us", "Black Swan", "Stand By Me", "The Breakfast Club",
+    "Ferris Bueller's Day Off", "Ghostbusters", "Jaws", "RoboCop",
+    "Total Recall", "Starship Troopers", "The Sixth Sense", "Unbreakable",
+    "Signs", "Minority Report", "Edge of Tomorrow", "Looper",
+    "Source Code", "District 9", "Children of Men", "Gravity",
+    "The Martian", "First Man", "Ford v Ferrari", "Rush",
+    "Baby Driver", "Scott Pilgrim vs. the World", "Hot Fuzz", "Shaun of the Dead"
+]
+
+def is_indian_movie(title, url):
+    t_low = title.lower()
+    u_low = url.lower()
+    for kw in INDIAN_EXCLUSIONS:
+        if kw in t_low or kw in u_low:
+            return True
+    return False
+
 def fetch_url(url, referer=None, binary=False):
     """Fetches a URL using curl with browser headers."""
     cmd = [CURL_BIN, "-s", "-L"]
@@ -84,7 +140,6 @@ def fetch_url(url, referer=None, binary=False):
 def clean_movie_title(raw_title):
     """Cleans up raw movie title from HTML / metadata."""
     t = html.unescape(raw_title)
-    # Replace unicode quotes and dashes
     t = t.replace("\u2018", "'").replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"')
     t = t.replace("\u2013", "-").replace("\u2014", "-")
     t = re.sub(r'<[^>]+>', '', t)
@@ -185,7 +240,7 @@ Return strict JSON:
     return {"is_movie_frame": False, "confidence": 0, "has_text_or_logos": True, "iconic_score": 0, "reason": "Verification failed"}
 
 def fetch_filmgrab_catalog():
-    """Fetches the 4,100+ movie catalog from Film-Grab A-Z."""
+    """Fetches the 4,100+ movie catalog from Film-Grab A-Z, filtering out Indian films."""
     print("Fetching Film-Grab movies catalog (movies-a-z)...")
     html_text = fetch_url("https://film-grab.com/movies-a-z/")
     if not html_text or len(html_text) < 10000:
@@ -201,13 +256,18 @@ def fetch_filmgrab_catalog():
             continue
         seen_urls.add(post_url)
         clean_title = clean_movie_title(raw_title)
+
+        # Skip Indian movies explicitly
+        if is_indian_movie(clean_title, post_url):
+            continue
+
         if clean_title and len(clean_title) >= 2:
             catalog.append({
                 "title": clean_title,
                 "url": post_url
             })
 
-    print(f"Discovered {len(catalog)} films in Film-Grab archive.")
+    print(f"Discovered {len(catalog)} eligible non-Indian films in Film-Grab archive.")
     return catalog
 
 def extract_movie_details(post_url):
@@ -224,7 +284,7 @@ def extract_movie_details(post_url):
         h1 = re.search(r'<h1 class="entry-title">([^<]+)</h1>', post_html)
         title = clean_movie_title(h1.group(1)) if h1 else ""
 
-    if not title:
+    if not title or is_indian_movie(title, post_url):
         return None
 
     # Year extraction (from og:description "[Director – Year]" or post URL)
@@ -240,7 +300,6 @@ def extract_movie_details(post_url):
         year = url_ym.group(1) if url_ym else "2020"
 
     # Extract all stills
-    # Matches /wp-content/uploads/photo-gallery/ or /wp-content/uploads/YYYY/MM/
     raw_imgs = re.findall(
         r'["\'](https?://film-grab\.com/wp-content/uploads/(?:photo-gallery/|(?:\d{4}/\d{2}/))[^"\']+\.(?:jpg|jpeg|png)(?:\?[^"\']*)?)["\']',
         post_html,
@@ -252,6 +311,7 @@ def extract_movie_details(post_url):
 
     for raw in raw_imgs:
         clean = raw.split("?")[0]
+        # Remove thumbnails and downscaled sizes
         clean = clean.replace("/thumb/", "/")
         if re.search(r'-\d+x\d+\.(?:jpg|jpeg|png)$', clean, re.IGNORECASE):
             continue
@@ -277,7 +337,7 @@ def main():
     parser = argparse.ArgumentParser(description="Scoopcast Auto-Collector (Film-Grab + Gemini AI + Cloudinary)")
     parser.add_argument("--max-minutes", type=int, default=int(os.getenv("MAX_RUNTIME_MINUTES", "60")), help="Maximum runtime in minutes (default: 60)")
     parser.add_argument("--limit", type=int, default=1000, help="Max movies to collect in this run")
-    parser.add_argument("--no-shuffle", action="store_true", help="Do not shuffle candidate movies")
+    parser.add_argument("--no-shuffle", action="store_true", help="Do not shuffle general candidates")
     args = parser.parse_args()
 
     max_seconds = args.max_minutes * 60
@@ -285,6 +345,7 @@ def main():
 
     print("=" * 65)
     print("SCOOPCAST AUTO-FRAME COLLECTOR (FILM-GRAB CINEPHILE ARCHIVE)")
+    print("Focus: Iconic, famous Hollywood & international hits (Zero Indian films)")
     print(f"Max Runtime: {args.max_minutes} minutes ({max_seconds} seconds)")
     print(f"Limit: {args.limit} new frames")
     print(f"Target Database: {DATA_FILE}")
@@ -310,19 +371,38 @@ def main():
         print("Error: Could not retrieve movie catalog. Exiting.")
         return
 
-    # Filter out already existing films
-    candidates = [m for m in catalog if normalize_key(m["title"]) not in existing_keys]
-    print(f"Eligible new candidates: {len(candidates)} of {len(catalog)}")
+    # Map catalog by normalized title for quick lookup
+    catalog_by_norm = {normalize_key(m["title"]): m for m in catalog}
 
-    # Shuffle candidates to get a rich variety across genres and eras
+    # 2. Prioritize Popular Classics first!
+    prioritized_candidates = []
+    seen_in_priority = set()
+
+    for famous_title in POPULAR_CLASSICS:
+        k = normalize_key(famous_title)
+        if k in catalog_by_norm and k not in existing_keys and k not in seen_in_priority:
+            seen_in_priority.add(k)
+            prioritized_candidates.append(catalog_by_norm[k])
+
+    print(f"Queued {len(prioritized_candidates)} universally famous classics as Tier 1 priority.")
+
+    # General candidates (the rest of Film-Grab catalog, excluding existing & priority)
+    general_candidates = [
+        m for m in catalog
+        if normalize_key(m["title"]) not in existing_keys and normalize_key(m["title"]) not in seen_in_priority
+    ]
+
     if not args.no_shuffle:
         random.seed(int(time.time()))
-        random.shuffle(candidates)
+        random.shuffle(general_candidates)
+
+    # Combined candidate pipeline: Famous classics first, then diverse general catalog
+    all_candidates = prioritized_candidates + general_candidates
+    print(f"Total eligible new candidates: {len(all_candidates)}")
 
     added_count = 0
 
-    for idx, movie in enumerate(candidates, 1):
-        # Check time limit
+    for idx, movie in enumerate(all_candidates, 1):
         elapsed = time.time() - start_time
         if elapsed >= max_seconds:
             print(f"\n[Timer Reached] Runtime reached {args.max_minutes} minutes. Gracefully stopping.")
@@ -337,11 +417,11 @@ def main():
         if norm_key in existing_keys:
             continue
 
-        print(f"\n[{idx}/{len(candidates)}] Inspecting: {movie_title} -> {movie['url']}")
+        print(f"\n[{idx}/{len(all_candidates)}] Inspecting: {movie_title} -> {movie['url']}")
         details = extract_movie_details(movie["url"])
         if not details or not details["stills"]:
             print("  -> No usable stills found on page.")
-            time.sleep(0.5)
+            time.sleep(0.4)
             continue
 
         title = details["title"]
@@ -351,7 +431,7 @@ def main():
 
         print(f"  Title: '{title}' ({year}) | Available Stills: {len(stills)}")
 
-        # Pick up to 4 high-yield candidates (spaced across 20% to 80% of the film)
+        # Pick up to 4 high-yield candidates (spaced across 25% to 80% of the film)
         n = len(stills)
         if n <= 4:
             picked_stills = stills
@@ -359,10 +439,7 @@ def main():
             indices = [int(n * 0.25), int(n * 0.45), int(n * 0.65), int(n * 0.80)]
             picked_stills = [stills[i] for i in dict.fromkeys(indices) if i < n]
 
-        success = False
-
         for still_idx, still_url in enumerate(picked_stills, 1):
-            # Check time limit
             if time.time() - start_time >= max_seconds:
                 break
 
@@ -385,7 +462,7 @@ def main():
             print(f"     Verdict: frame={is_frame} | no_text={no_text} | clear={is_clear} | importance={importance} | score={score} | conf={conf}")
             print(f"     Reason: {reason}")
 
-            # Quality gate: Must be playback frame, 0 text, clear/sharp, and important/medium scene
+            # Strict quality gate
             if is_frame and no_text and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
                 print("     [VERIFIED] Frame passed quality criteria! Processing for Cloudinary...")
                 try:
@@ -420,7 +497,6 @@ def main():
                     frames_data.append(entry)
                     existing_keys.add(normalize_key(title))
                     added_count += 1
-                    success = True
 
                     # Immediately persist to data/frames.json
                     with open(DATA_FILE, "w", encoding="utf-8") as f:
@@ -433,9 +509,9 @@ def main():
             else:
                 print("     [Rejected by Quality Gate] Trying next candidate...")
 
-            time.sleep(0.5)
+            time.sleep(0.4)
 
-        time.sleep(0.5)
+        time.sleep(0.4)
 
     total_time = int(time.time() - start_time)
     print("\n" + "=" * 65)

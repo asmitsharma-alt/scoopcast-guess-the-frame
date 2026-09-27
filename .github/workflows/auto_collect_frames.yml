@@ -58,6 +58,7 @@ jobs:
             --limit "${{ github.event.inputs.limit || '1000' }}"
 
       - name: Commit & Push New Frames
+        if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
