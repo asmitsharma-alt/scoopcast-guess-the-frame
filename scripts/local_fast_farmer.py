@@ -165,7 +165,8 @@ def clean_movie_title(raw_title):
     return t.strip()
 
 def normalize_key(title):
-    return re.sub(r'[^A-Z0-9]', '', title.upper())
+    clean = re.sub(r'\s*\(\d{4}\)\s*$', '', title)
+    return re.sub(r'[^A-Z0-9]', '', clean.upper())
 
 def sanitize_public_id(title, year):
     clean = re.sub(r"[^\w\s-]", "", title.replace("&", "and")).strip()
