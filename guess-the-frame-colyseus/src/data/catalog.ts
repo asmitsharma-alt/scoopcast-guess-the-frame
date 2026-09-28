@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (955 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (989 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -8608,6 +8608,312 @@ export const CATALOG: CatalogItem[] = [
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599078/scoopcast_frames/Licence_to_Kill_1989.jpg",
     answer: "LICENCE TO KILL",
     year: "1989",
+    tag: "classic"
+  },
+  {
+    id: "f_956",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599115/scoopcast_frames/The_Last_Days_On_Mars_2013.jpg",
+    answer: "THE LAST DAYS ON MARS",
+    year: "2013",
+    tag: "classic"
+  },
+  {
+    id: "f_957",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599135/scoopcast_frames/Mala_Noche_1986.jpg",
+    answer: "MALA NOCHE",
+    year: "1986",
+    tag: "classic"
+  },
+  {
+    id: "f_958",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599182/scoopcast_frames/Zero_Dark_Thirty_2012.jpg",
+    answer: "ZERO DARK THIRTY",
+    year: "2012",
+    tag: "classic"
+  },
+  {
+    id: "f_959",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599225/scoopcast_frames/Winter_Light_1963.jpg",
+    answer: "WINTER LIGHT",
+    year: "1963",
+    tag: "classic"
+  },
+  {
+    id: "f_960",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599368/scoopcast_frames/Three_Colours_Red_1994.jpg",
+    answer: "THREE COLOURS: RED",
+    year: "1994",
+    tag: "classic"
+  },
+  {
+    id: "f_961",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599373/scoopcast_frames/White_Of_The_Eye_1987.jpg",
+    answer: "WHITE OF THE EYE",
+    year: "1987",
+    tag: "classic"
+  },
+  {
+    id: "f_962",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599415/scoopcast_frames/Fear_and_Loathing_In_Las_Vegas_1998.jpg",
+    answer: "FEAR AND LOATHING IN LAS VEGAS",
+    year: "1998",
+    tag: "classic"
+  },
+  {
+    id: "f_963",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599468/scoopcast_frames/The_Empire_Strikes_Back_1980.jpg",
+    answer: "THE EMPIRE STRIKES BACK",
+    year: "1980",
+    tag: "classic"
+  },
+  {
+    id: "f_964",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599483/scoopcast_frames/The_Big_Trail_1930.jpg",
+    answer: "THE BIG TRAIL",
+    year: "1930",
+    tag: "classic"
+  },
+  {
+    id: "f_965",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599502/scoopcast_frames/Dancer_In_The_Dark_2000.jpg",
+    answer: "DANCER IN THE DARK",
+    year: "2000",
+    tag: "classic"
+  },
+  {
+    id: "f_966",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599565/scoopcast_frames/The_Bird_With_The_Crystal_Plumage_1970.jpg",
+    answer: "THE BIRD WITH THE CRYSTAL PLUMAGE",
+    year: "1970",
+    tag: "classic"
+  },
+  {
+    id: "f_967",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599568/scoopcast_frames/A_History_of_Violence_2005.jpg",
+    answer: "A HISTORY OF VIOLENCE",
+    year: "2005",
+    tag: "classic"
+  },
+  {
+    id: "f_968",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599669/scoopcast_frames/Walk_The_Line_2005.jpg",
+    answer: "WALK THE LINE",
+    year: "2005",
+    tag: "classic"
+  },
+  {
+    id: "f_969",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599677/scoopcast_frames/Layer_Cake_2004.jpg",
+    answer: "LAYER CAKE",
+    year: "2004",
+    tag: "classic"
+  },
+  {
+    id: "f_970",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599711/scoopcast_frames/Open_Range_2003.jpg",
+    answer: "OPEN RANGE",
+    year: "2003",
+    tag: "classic"
+  },
+  {
+    id: "f_971",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599800/scoopcast_frames/Silent_Running_1972.jpg",
+    answer: "SILENT RUNNING",
+    year: "1972",
+    tag: "classic"
+  },
+  {
+    id: "f_972",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599826/scoopcast_frames/Skyfall_2012.jpg",
+    answer: "SKYFALL",
+    year: "2012",
+    tag: "classic"
+  },
+  {
+    id: "f_973",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599881/scoopcast_frames/Selah_and_the_Spades_2019.png",
+    answer: "SELAH AND THE SPADES",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_974",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599904/scoopcast_frames/Youre_Next_2013.jpg",
+    answer: "YOU'RE NEXT",
+    year: "2013",
+    tag: "classic"
+  },
+  {
+    id: "f_975",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599957/scoopcast_frames/Ghostbusters_2_1989.jpg",
+    answer: "GHOSTBUSTERS 2",
+    year: "1989",
+    tag: "classic"
+  },
+  {
+    id: "f_976",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599984/scoopcast_frames/The_Conformist_1970.jpg",
+    answer: "THE CONFORMIST",
+    year: "1970",
+    tag: "classic"
+  },
+  {
+    id: "f_977",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599999/scoopcast_frames/First_Cow_2019.jpg",
+    answer: "FIRST COW",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_978",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600035/scoopcast_frames/The_Wolf_of_Wall_Street_2013.jpg",
+    answer: "THE WOLF OF WALL STREET",
+    year: "2013",
+    tag: "classic"
+  },
+  {
+    id: "f_979",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600111/scoopcast_frames/To_Die_For_1995.jpg",
+    answer: "TO DIE FOR",
+    year: "1995",
+    tag: "classic"
+  },
+  {
+    id: "f_980",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600155/scoopcast_frames/The_Great_Dictator_1940.jpg",
+    answer: "THE GREAT DICTATOR",
+    year: "1940",
+    tag: "classic"
+  },
+  {
+    id: "f_981",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600199/scoopcast_frames/Everyday_2012.jpg",
+    answer: "EVERYDAY",
+    year: "2012",
+    tag: "classic"
+  },
+  {
+    id: "f_982",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600231/scoopcast_frames/Apocalypse_Now_1979.jpg",
+    answer: "APOCALYPSE NOW",
+    year: "1979",
+    tag: "classic"
+  },
+  {
+    id: "f_983",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600235/scoopcast_frames/La_Belle_et_la_B%C3%AAte_1946.jpg",
+    answer: "LA BELLE ET LA BÊTE",
+    year: "1946",
+    tag: "classic"
+  },
+  {
+    id: "f_984",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600265/scoopcast_frames/Creepshow_1982.jpg",
+    answer: "CREEPSHOW",
+    year: "1982",
+    tag: "classic"
+  },
+  {
+    id: "f_985",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600274/scoopcast_frames/Back_To_The_Future_Part_III_1990.jpg",
+    answer: "BACK TO THE FUTURE PART III",
+    year: "1990",
+    tag: "classic"
+  },
+  {
+    id: "f_986",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600295/scoopcast_frames/Paris_Texas_1984.jpg",
+    answer: "PARIS, TEXAS",
+    year: "1984",
+    tag: "classic"
+  },
+  {
+    id: "f_987",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600296/scoopcast_frames/Streetwise_1984.jpg",
+    answer: "STREETWISE",
+    year: "1984",
+    tag: "classic"
+  },
+  {
+    id: "f_988",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600393/scoopcast_frames/Back_to_the_Future_II_1989.jpg",
+    answer: "BACK TO THE FUTURE II",
+    year: "1989",
+    tag: "classic"
+  },
+  {
+    id: "f_989",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600456/scoopcast_frames/Return_Of_The_Jedi_1983.jpg",
+    answer: "RETURN OF THE JEDI",
+    year: "1983",
     tag: "classic"
   },
 
