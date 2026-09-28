@@ -407,11 +407,42 @@ const GameClient = {
   },
 
   getColyseusEndpoint() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const param = urlParams.get('colyseus');
+    if (param) return param;
+    const saved = localStorage.getItem('gtf_colyseus_url');
+    if (saved) return saved;
+
+    // Check if running on mobile device or native container (Capacitor/Cordova/WebView)
+    const isMobileDevice = window.Capacitor !== undefined ||
+                           window.location.protocol === 'capacitor:' ||
+                           window.location.protocol === 'file:' ||
+                           /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobileDevice && !urlParams.has('local')) {
+      return 'wss://guess-the-frame-colyseus.onrender.com';
+    }
+
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     return isLocal ? 'ws://localhost:2567' : 'wss://guess-the-frame-colyseus.onrender.com';
   },
 
   getHttpEndpoint() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const param = urlParams.get('colyseus_http');
+    if (param) return param;
+    const saved = localStorage.getItem('gtf_colyseus_http_url');
+    if (saved) return saved;
+
+    const isMobileDevice = window.Capacitor !== undefined ||
+                           window.location.protocol === 'capacitor:' ||
+                           window.location.protocol === 'file:' ||
+                           /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isMobileDevice && !urlParams.has('local')) {
+      return 'https://guess-the-frame-colyseus.onrender.com';
+    }
+
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     return isLocal ? 'http://localhost:2567' : 'https://guess-the-frame-colyseus.onrender.com';
   },
@@ -711,6 +742,7 @@ const GameClient = {
         if (UI.hideLoading) UI.hideLoading();
         UI.showToast('Could not connect to multiplayer server: ' + (err.message || 'Server offline. Please try again.'));
       }
+      throw err;
     }
   },
 
