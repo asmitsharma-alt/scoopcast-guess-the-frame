@@ -2161,5 +2161,103 @@
     "answer": "MISSISSIPPI MASALA",
     "year": "1991",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589350/scoopcast_frames/3_Iron_2004.jpg",
+    "answer": "3-IRON",
+    "year": "2004",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/Snowbound_2017.jpg",
+    "answer": "SNOWBOUND",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/xxxHolic_2022.jpg",
+    "answer": "XXXHOLIC",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/The_Black_Phone_2021.jpg",
+    "answer": "THE BLACK PHONE",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589354/scoopcast_frames/Faust_1994_1994.jpg",
+    "answer": "FAUST (1994)",
+    "year": "1994",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589356/scoopcast_frames/A_Room_With_A_View_1985.jpg",
+    "answer": "A ROOM WITH A VIEW",
+    "year": "1985",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589358/scoopcast_frames/Visible_Secret_2001.jpg",
+    "answer": "VISIBLE SECRET",
+    "year": "2001",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589362/scoopcast_frames/Monster_2023.jpg",
+    "answer": "MONSTER",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589363/scoopcast_frames/Love_Lies_Bleeding_2024.jpg",
+    "answer": "LOVE LIES BLEEDING",
+    "year": "2024",
+    "tag": "new"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589367/scoopcast_frames/Bullet_Train_2022.jpg",
+    "answer": "BULLET TRAIN",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587815/scoopcast_frames/The_Naked_Kiss_1964.jpg",
+    "answer": "THE NAKED KISS",
+    "year": "1964",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589368/scoopcast_frames/For_Your_Eyes_Only_1981.jpg",
+    "answer": "FOR YOUR EYES ONLY",
+    "year": "1981",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589370/scoopcast_frames/Ferrari_2023.jpg",
+    "answer": "FERRARI",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589370/scoopcast_frames/The_Big_Easy_1986.jpg",
+    "answer": "THE BIG EASY",
+    "year": "1986",
+    "tag": "classic"
   }
 ]
