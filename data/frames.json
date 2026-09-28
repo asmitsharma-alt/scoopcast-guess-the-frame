@@ -2158,7 +2158,7 @@
   {
     "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589408/scoopcast_frames/T%C3%A1r_2022.jpg",
-    "answer": "TÁR",
+    "answer": "T\u00c1R",
     "year": "2022",
     "tag": "classic"
   },
@@ -2468,6 +2468,20 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589532/scoopcast_frames/The_Big_Heat_1953.jpg",
     "answer": "THE BIG HEAT",
     "year": "1953",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790597314/scoopcast_frames/Red_Sorghum_1988.jpg",
+    "answer": "RED SORGHUM",
+    "year": "1988",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790597326/scoopcast_frames/Blindfire_2020.jpg",
+    "answer": "BLINDFIRE",
+    "year": "2020",
     "tag": "classic"
   }
 ]
