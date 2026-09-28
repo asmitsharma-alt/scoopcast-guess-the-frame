@@ -457,8 +457,10 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
                         return None
                     frames_data.append(entry)
                     existing_keys.add(norm_k)
-                    with open(DATA_FILE, "w", encoding="utf-8") as f:
+                    tmp_file = DATA_FILE + ".tmp"
+                    with open(tmp_file, "w", encoding="utf-8") as f:
                         json.dump(frames_data, f, indent=2)
+                    os.replace(tmp_file, DATA_FILE)
 
                 with stats_lock:
                     added_count += 1
