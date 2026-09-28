@@ -466,6 +466,15 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
                     cur_elapsed = max(1, time.time() - start_time)
                     rpm = (current_added / cur_elapsed) * 60.0
 
+                    if current_added % 50 == 0:
+                        try:
+                            subprocess.run(["git", "add", "data/frames.json"], timeout=10)
+                            subprocess.run(["git", "commit", "-m", f"feat(frames): milestone +{current_added} frames (total: {len(frames_data)}) [skip ci]"], timeout=10)
+                            subprocess.run(["git", "push", "origin", "main"], timeout=20)
+                            print(f"📦 [Milestone Sync] Synced +{current_added} frames to GitHub main!")
+                        except Exception:
+                            pass
+
                 print(f"[+{current_added}] '{title} ({year})' [{w}x{h} HD] UPLOADED! ({rpm:.1f} frames/min) -> {secure_url}")
                 return entry
 
@@ -568,6 +577,16 @@ def main():
     print(f"Total time: {total_time // 60}m {total_time % 60}s")
     print(f"Average Speed: {avg_speed:.1f} frames/minute")
     print("=" * 70)
+
+    # Final git sync upon completion
+    if added_count > 0:
+        try:
+            subprocess.run(["git", "add", "data/frames.json"], timeout=15)
+            subprocess.run(["git", "commit", "-m", f"feat(frames): successfully harvested {added_count} new 1080p frames (total: {len(frames_data)}) [skip ci]"], timeout=15)
+            subprocess.run(["git", "push", "origin", "main"], timeout=30)
+            print("📦 Successfully pushed all newly farmed frames to GitHub main!")
+        except Exception as e:
+            print(f"Git final push note: {e}")
 
 if __name__ == "__main__":
     main()

@@ -2645,14 +2645,52 @@
       // ── ASSET LIBRARY EXPLORER ENGINE ──
       async loadAssetLibrary() {
         try {
-          const res = await fetch('/assets_manifest.json');
-          if (res.ok) {
-            this.allAssets = await res.json();
-            this.updateAssetCounts();
-            this.renderAssetGrid(this.allAssets);
+          // 1. Fetch base assets (eyes, avatars, tie-breakers, background)
+          let baseAssets = [];
+          try {
+            const res = await fetch('/assets_manifest.json?t=' + Date.now());
+            if (res.ok) {
+              baseAssets = await res.json();
+            }
+          } catch (e) {
+            console.warn('Could not load assets_manifest.json:', e);
           }
+
+          // 2. Fetch live cinema frames directly from data/frames.json (cache-busted)
+          let movieFrames = [];
+          try {
+            const fRes = await fetch('/data/frames.json?t=' + Date.now());
+            if (fRes.ok) {
+              const framesData = await fRes.json();
+              movieFrames = framesData.map(f => {
+                const yearStr = f.year ? ` (${f.year})` : '';
+                const cleanAns = (f.answer || 'Movie Frame').trim();
+                const filename = (f.content || '').split('/').pop() || `${cleanAns}.jpg`;
+                return {
+                  category: 'frames',
+                  label: 'Movie Frame',
+                  name: `${cleanAns}${yearStr}`,
+                  filename: filename,
+                  path: f.content,
+                  size: 150000,
+                  tag: f.tag || 'classic',
+                  year: f.year || ''
+                };
+              });
+            }
+          } catch (e) {
+            console.warn('Could not load data/frames.json:', e);
+          }
+
+          // Keep non-frame assets (eyes, avatars, etc.) from baseAssets, and use all live movieFrames
+          const nonFrames = (baseAssets || []).filter(a => a.category !== 'frames');
+          const combined = movieFrames.length > 0 ? [...movieFrames, ...nonFrames] : baseAssets;
+
+          this.allAssets = combined;
+          this.updateAssetCounts();
+          this.renderAssetGrid(this.allAssets);
         } catch (err) {
-          console.warn('Could not load assets_manifest.json:', err);
+          console.warn('Error loading asset library:', err);
         }
       },
 
@@ -2683,11 +2721,7 @@
         const modal = document.getElementById('assetLibraryModal');
         if (!modal) return;
         modal.classList.add('open');
-        if (!this.allAssets || this.allAssets.length === 0) {
-          this.loadAssetLibrary();
-        } else {
-          this.filterAssets();
-        }
+        this.loadAssetLibrary();
         const searchInput = document.getElementById('assetSearchInput');
         if (searchInput) {
           setTimeout(() => searchInput.focus(), 100);
@@ -2700,17 +2734,9 @@
       },
 
       async refreshAssets() {
-        try {
-          const res = await fetch('/assets_manifest.json?t=' + Date.now());
-          if (res.ok) {
-            this.allAssets = await res.json();
-            this.updateAssetCounts();
-            this.filterAssets();
-            this.showToast('🔄 Asset Library manifest reloaded!');
-          }
-        } catch (e) {
-          this.showToast('⚠️ Failed to refresh assets manifest');
-        }
+        await this.loadAssetLibrary();
+        this.filterAssets();
+        this.showToast(`🔄 Asset Library reloaded (${this.allAssets.length} total assets)!`);
       },
 
       setAssetCategory(cat) {

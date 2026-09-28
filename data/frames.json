@@ -715,702 +715,576 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587630/scoopcast_frames/Corsage_2022.jpg",
-    "answer": "CORSAGE",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587630/scoopcast_frames/Kingdom_of_Heaven_2005.jpg",
-    "answer": "KINGDOM OF HEAVEN",
-    "year": "2005",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587633/scoopcast_frames/Larks_On_A_String_1969.jpg",
-    "answer": "LARKS ON A STRING",
-    "year": "1969",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587636/scoopcast_frames/Thunderball_1965.jpg",
-    "answer": "THUNDERBALL",
-    "year": "1965",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587637/scoopcast_frames/Rosalie_2023.jpg",
-    "answer": "ROSALIE",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587562/scoopcast_frames/Fallen_Leaves_2023.webp",
+    "answer": "FALLEN LEAVES",
     "year": "2023",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587641/scoopcast_frames/A_Matter_of_Life_and_Death_1946.jpg",
-    "answer": "A MATTER OF LIFE AND DEATH",
-    "year": "1946",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587643/scoopcast_frames/At_Midnight_Ill_Take_Your_Soul_1964.jpg",
-    "answer": "AT MIDNIGHT I'LL TAKE YOUR SOUL",
-    "year": "1964",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587644/scoopcast_frames/Fair_Play_2023.jpg",
-    "answer": "FAIR PLAY",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587646/scoopcast_frames/Kinds_of_Kindness_2024.jpg",
-    "answer": "KINDS OF KINDNESS",
-    "year": "2024",
-    "tag": "new"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587652/scoopcast_frames/The_Living_Daylights_1987.jpg",
-    "answer": "THE LIVING DAYLIGHTS",
-    "year": "1987",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587656/scoopcast_frames/Eros_2004.jpg",
-    "answer": "EROS",
-    "year": "2004",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587659/scoopcast_frames/The_Silent_Twins_2022.jpg",
-    "answer": "THE SILENT TWINS",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587664/scoopcast_frames/Robin_Hood_1973_1973.jpg",
-    "answer": "ROBIN HOOD (1973)",
-    "year": "1973",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587685/scoopcast_frames/What_A_Way_To_Go_1964.jpg",
-    "answer": "WHAT A WAY TO GO!",
-    "year": "1964",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587686/scoopcast_frames/The_Ritual_2017.jpg",
-    "answer": "THE RITUAL",
-    "year": "2017",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587688/scoopcast_frames/The_Power_of_the_Dog_2021.jpg",
-    "answer": "THE POWER OF THE DOG",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587695/scoopcast_frames/In_The_Realm_of_the_Senses_1976.jpg",
-    "answer": "IN THE REALM OF THE SENSES",
-    "year": "1976",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587746/scoopcast_frames/A_White_White_Day_2019.jpg",
-    "answer": "A WHITE, WHITE DAY",
-    "year": "2019",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587748/scoopcast_frames/My_Animal_2023.jpg",
-    "answer": "MY ANIMAL",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587750/scoopcast_frames/Shin_Ultraman_2022.jpg",
-    "answer": "SHIN ULTRAMAN",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/Fr%C3%A9waka_2024.jpg",
-    "answer": "FR\u00c9WAKA",
-    "year": "2024",
-    "tag": "new"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/Chopper_2000.jpg",
-    "answer": "CHOPPER",
-    "year": "2000",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/Society_1989.jpg",
-    "answer": "SOCIETY",
-    "year": "1989",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/Peeping_Tom_1960.jpg",
-    "answer": "PEEPING TOM",
-    "year": "1960",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587754/scoopcast_frames/Saint_Omer_2022.jpg",
-    "answer": "SAINT OMER",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587756/scoopcast_frames/Avatar_The_Way_of_Water_2022.jpg",
-    "answer": "AVATAR: THE WAY OF WATER",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587764/scoopcast_frames/Unfaithful_2002.jpg",
-    "answer": "UNFAITHFUL",
-    "year": "2002",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587766/scoopcast_frames/The_Lady_Vanishes_1938.jpg",
-    "answer": "THE LADY VANISHES",
-    "year": "1938",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587767/scoopcast_frames/Never_Say_Never_Again_1983.jpg",
-    "answer": "NEVER SAY NEVER AGAIN",
-    "year": "1983",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587769/scoopcast_frames/Please_Baby_Please_2022.jpg",
-    "answer": "PLEASE BABY PLEASE",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587769/scoopcast_frames/Bacurau_2019.jpg",
-    "answer": "BACURAU",
-    "year": "2019",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587770/scoopcast_frames/The_Popes_Exorcist_2023.jpg",
-    "answer": "THE POPE'S EXORCIST",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587772/scoopcast_frames/The_Last_Stand_2013.jpg",
-    "answer": "THE LAST STAND",
-    "year": "2013",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587805/scoopcast_frames/The_Whip_and_The_Body_1963.jpg",
-    "answer": "THE WHIP AND THE BODY",
-    "year": "1963",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587809/scoopcast_frames/A_Better_Tomorrow_1986.jpg",
-    "answer": "A BETTER TOMORROW",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587573/scoopcast_frames/Peggy_Sue_Got_Married_1986.webp",
+    "answer": "PEGGY SUE GOT MARRIED",
     "year": "1986",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587812/scoopcast_frames/Nekromantik_1988.jpg",
-    "answer": "NEKROMANTIK",
-    "year": "1988",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587575/scoopcast_frames/Planet_Terror_2007.webp",
+    "answer": "PLANET TERROR",
+    "year": "2007",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587814/scoopcast_frames/Festen_1998.jpg",
-    "answer": "FESTEN",
-    "year": "1998",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587576/scoopcast_frames/Do_Revenge_2022.webp",
+    "answer": "DO REVENGE",
+    "year": "2022",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587815/scoopcast_frames/The_Naked_Kiss_1964.jpg",
-    "answer": "THE NAKED KISS",
-    "year": "1964",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587583/scoopcast_frames/The_Golem_1920.webp",
+    "answer": "THE GOLEM",
+    "year": "1920",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587826/scoopcast_frames/Lord_of_War_2005.jpg",
-    "answer": "LORD OF WAR",
-    "year": "2005",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587592/scoopcast_frames/At_Eternitys_Gate_2018.webp",
+    "answer": "AT ETERNITY'S GATE",
+    "year": "2018",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587828/scoopcast_frames/Bunny_Lake_Is_Missing_1965.jpg",
-    "answer": "BUNNY LAKE IS MISSING",
-    "year": "1965",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587592/scoopcast_frames/The_Life_and_Death_of_Colonel_Blimp_1943.webp",
+    "answer": "THE LIFE AND DEATH OF COLONEL BLIMP",
+    "year": "1943",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587830/scoopcast_frames/Snake_Eyes_1998.jpg",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587595/scoopcast_frames/The_Amityville_Horror_1979.webp",
+    "answer": "THE AMITYVILLE HORROR",
+    "year": "1979",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587608/scoopcast_frames/Stopmotion_2023.webp",
+    "answer": "STOPMOTION",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587610/scoopcast_frames/Snake_Eyes_1998.webp",
     "answer": "SNAKE EYES",
     "year": "1998",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587831/scoopcast_frames/Autumn_Tale_1998.jpg",
-    "answer": "AUTUMN TALE",
-    "year": "1998",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587832/scoopcast_frames/About_Dry_Grasses_2023.jpg",
-    "answer": "ABOUT DRY GRASSES",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587867/scoopcast_frames/Bend_of_the_River_1952.jpg",
-    "answer": "BEND OF THE RIVER",
-    "year": "1952",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587871/scoopcast_frames/Whispering_Corridors_1998.jpg",
-    "answer": "WHISPERING CORRIDORS",
-    "year": "1998",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587873/scoopcast_frames/Benedetta_2021.jpg",
-    "answer": "BENEDETTA",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587873/scoopcast_frames/La_Abuela_2021.jpg",
-    "answer": "LA ABUELA",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587875/scoopcast_frames/The_Scent_of_Green_Papaya_1993.jpg",
-    "answer": "THE SCENT OF GREEN PAPAYA",
-    "year": "1993",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587886/scoopcast_frames/Patton_1970.jpg",
-    "answer": "PATTON",
-    "year": "1970",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587888/scoopcast_frames/Christ_Stopped_at_Eboli_1979.jpg",
-    "answer": "CHRIST STOPPED AT EBOLI",
-    "year": "1979",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587888/scoopcast_frames/The_Tales_of_Hoffmann_1951.jpg",
-    "answer": "THE TALES OF HOFFMANN",
-    "year": "1951",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587890/scoopcast_frames/The_Fabelmans_2022.jpg",
-    "answer": "THE FABELMANS",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587891/scoopcast_frames/Mandabi_1968.jpg",
-    "answer": "MANDABI",
-    "year": "1968",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587893/scoopcast_frames/BirthRebirth_2023.jpg",
-    "answer": "BIRTH/REBIRTH",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587925/scoopcast_frames/Parasite_2019.jpg",
-    "answer": "PARASITE",
-    "year": "2019",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587926/scoopcast_frames/Monster_2023.jpg",
-    "answer": "MONSTER",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587927/scoopcast_frames/Beatrice_Cenci_1969.jpg",
-    "answer": "BEATRICE CENCI",
-    "year": "1969",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587932/scoopcast_frames/Playtime_1967.jpg",
-    "answer": "PLAYTIME",
-    "year": "1967",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587944/scoopcast_frames/Divinity_2023.jpg",
-    "answer": "DIVINITY",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587947/scoopcast_frames/Alien_Romulus_2024.jpg",
-    "answer": "ALIEN: ROMULUS",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587612/scoopcast_frames/Rebel_Ridge_2024.webp",
+    "answer": "REBEL RIDGE",
     "year": "2024",
     "tag": "new"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587949/scoopcast_frames/Universal_Soldier_The_Return_1999.jpg",
-    "answer": "UNIVERSAL SOLDIER: THE RETURN",
-    "year": "1999",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587951/scoopcast_frames/The_Chaser_2008.jpg",
-    "answer": "THE CHASER",
-    "year": "2008",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587992/scoopcast_frames/Fat_Girl_2001.jpg",
-    "answer": "FAT GIRL",
-    "year": "2001",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588006/scoopcast_frames/Poison_2023_2023.jpg",
-    "answer": "POISON (2023)",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588007/scoopcast_frames/Hotel_Monterey_1973.jpg",
-    "answer": "HOTEL MONTEREY",
-    "year": "1973",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588007/scoopcast_frames/The_Killing_of_a_Chinese_Bookie_1976.jpg",
-    "answer": "THE KILLING OF A CHINESE BOOKIE",
-    "year": "1976",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588007/scoopcast_frames/Rebel_Moon_Part_One_A_Child_of_Fire_2023.jpg",
-    "answer": "REBEL MOON - PART ONE: A CHILD OF FIRE",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588009/scoopcast_frames/The_Killer_2023.jpg",
-    "answer": "THE KILLER",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588010/scoopcast_frames/Celeste_2018.jpg",
-    "answer": "CELESTE",
-    "year": "2018",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588045/scoopcast_frames/Pulse_2001.jpg",
-    "answer": "PULSE",
-    "year": "2001",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588047/scoopcast_frames/Falling_2020.jpg",
-    "answer": "FALLING",
-    "year": "2020",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588050/scoopcast_frames/Tommy_1975.jpg",
-    "answer": "TOMMY",
-    "year": "1975",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588050/scoopcast_frames/Luce_2019.jpg",
-    "answer": "LUCE",
-    "year": "2019",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588052/scoopcast_frames/Out_of_the_Blue_1980.jpg",
-    "answer": "OUT OF THE BLUE",
-    "year": "1980",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588063/scoopcast_frames/The_Book_of_Eli_2010.jpg",
-    "answer": "THE BOOK OF ELI",
-    "year": "2010",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588065/scoopcast_frames/Kate_2021.jpg",
-    "answer": "KATE",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587618/scoopcast_frames/Inexorable_2021.webp",
+    "answer": "INEXORABLE",
     "year": "2021",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588069/scoopcast_frames/I_Came_By_2022.jpg",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587621/scoopcast_frames/White_River_2023.webp",
+    "answer": "WHITE RIVER",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587624/scoopcast_frames/I_Came_By_2022.webp",
     "answer": "I CAME BY",
     "year": "2022",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588074/scoopcast_frames/Pearls_of_the_Deep_1965.jpg",
-    "answer": "PEARLS OF THE DEEP",
-    "year": "1965",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587632/scoopcast_frames/Empire_Records_1995.webp",
+    "answer": "EMPIRE RECORDS",
+    "year": "1995",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588077/scoopcast_frames/Boy_Kills_World_2023.jpg",
-    "answer": "BOY KILLS WORLD",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587634/scoopcast_frames/Nandor_Fodor_and_the_Talking_Mongoose_2023.webp",
+    "answer": "NANDOR FODOR AND THE TALKING MONGOOSE",
     "year": "2023",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588079/scoopcast_frames/Terrified_2017.jpg",
-    "answer": "TERRIFIED",
-    "year": "2017",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588082/scoopcast_frames/George_Washington_2000.jpg",
-    "answer": "GEORGE WASHINGTON",
-    "year": "2000",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588105/scoopcast_frames/Doubt_2008.jpg",
-    "answer": "DOUBT",
-    "year": "2008",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588106/scoopcast_frames/Crazy_About_Her_2021.jpg",
-    "answer": "CRAZY ABOUT HER",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588109/scoopcast_frames/Fortress_1992.jpg",
-    "answer": "FORTRESS",
-    "year": "1992",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588111/scoopcast_frames/Asteroid_City_2023.jpg",
-    "answer": "ASTEROID CITY",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588115/scoopcast_frames/The_Lion_King_1994.jpg",
-    "answer": "THE LION KING",
-    "year": "1994",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588116/scoopcast_frames/All_The_Presidents_Men_1976.jpg",
-    "answer": "ALL THE PRESIDENT'S MEN",
-    "year": "1976",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587773/scoopcast_frames/Prospect_2018.jpg",
-    "answer": "PROSPECT",
-    "year": "2018",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588120/scoopcast_frames/Pain_and_Gain_2013.jpg",
-    "answer": "PAIN & GAIN",
-    "year": "2013",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588122/scoopcast_frames/Great_Expectations_1946_1946.jpg",
-    "answer": "GREAT EXPECTATIONS (1946)",
-    "year": "1946",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588129/scoopcast_frames/The_Suspicious_Death_of_a_Minor_1975.jpg",
-    "answer": "THE SUSPICIOUS DEATH OF A MINOR",
-    "year": "1975",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588131/scoopcast_frames/Macbeth_1971_1971.jpg",
-    "answer": "MACBETH (1971)",
-    "year": "1971",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588133/scoopcast_frames/My_Policeman_2022.jpg",
-    "answer": "MY POLICEMAN",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588134/scoopcast_frames/Immaculate_2024.jpg",
-    "answer": "IMMACULATE",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587638/scoopcast_frames/Vulcanizadora_2024.webp",
+    "answer": "VULCANIZADORA",
     "year": "2024",
     "tag": "new"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588136/scoopcast_frames/Taste_of_Cherry_1997.jpg",
-    "answer": "TASTE OF CHERRY",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587647/scoopcast_frames/Shoot_Em_Up_2007.webp",
+    "answer": "SHOOT 'EM UP",
+    "year": "2007",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587653/scoopcast_frames/The_Beyond_1981.webp",
+    "answer": "THE BEYOND",
+    "year": "1981",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587666/scoopcast_frames/When_Evil_Lurks_2023.webp",
+    "answer": "WHEN EVIL LURKS",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587688/scoopcast_frames/Monkey_Man_2024.webp",
+    "answer": "MONKEY MAN",
+    "year": "2024",
+    "tag": "new"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587691/scoopcast_frames/The_Strawberry_Blonde_1941.webp",
+    "answer": "THE STRAWBERRY BLONDE",
+    "year": "1941",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587693/scoopcast_frames/Lord_of_War_2005.webp",
+    "answer": "LORD OF WAR",
+    "year": "2005",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587694/scoopcast_frames/She_Said_2022.webp",
+    "answer": "SHE SAID",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587714/scoopcast_frames/Contact_1997.webp",
+    "answer": "CONTACT",
     "year": "1997",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588169/scoopcast_frames/The_Spy_Who_Loved_Me_1977.jpg",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587724/scoopcast_frames/Settlers_2021.webp",
+    "answer": "SETTLERS",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587727/scoopcast_frames/Inside_2023_2023.webp",
+    "answer": "INSIDE (2023)",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587731/scoopcast_frames/Elvis_2022.webp",
+    "answer": "ELVIS",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587745/scoopcast_frames/Kubi_2023.webp",
+    "answer": "KUBI",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587750/scoopcast_frames/The_Book_of_Clarence_2023.webp",
+    "answer": "THE BOOK OF CLARENCE",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/La_Abuela_2021.webp",
+    "answer": "LA ABUELA",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587754/scoopcast_frames/Charm_City_Kings_2020.webp",
+    "answer": "CHARM CITY KINGS",
+    "year": "2020",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587767/scoopcast_frames/Fatal_Attraction_1987.webp",
+    "answer": "FATAL ATTRACTION",
+    "year": "1987",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587770/scoopcast_frames/Opera_1987.webp",
+    "answer": "OPERA",
+    "year": "1987",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587809/scoopcast_frames/The_Empty_Man_2020.webp",
+    "answer": "THE EMPTY MAN",
+    "year": "2020",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587810/scoopcast_frames/Bringing_Up_Baby_1938.webp",
+    "answer": "BRINGING UP BABY",
+    "year": "1938",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587824/scoopcast_frames/Speed_1994.webp",
+    "answer": "SPEED",
+    "year": "1994",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587831/scoopcast_frames/The_Killer_1989_1989.webp",
+    "answer": "THE KILLER (1989)",
+    "year": "1989",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587836/scoopcast_frames/Long_Shot_2019.webp",
+    "answer": "LONG SHOT",
+    "year": "2019",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587867/scoopcast_frames/A_View_to_a_Kill_1985.webp",
+    "answer": "A VIEW TO A KILL",
+    "year": "1985",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587875/scoopcast_frames/Songs_For_A_Sloth_2021.webp",
+    "answer": "SONGS FOR A SLOTH",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587887/scoopcast_frames/The_Man_With_the_Golden_Gun_1974.webp",
+    "answer": "THE MAN WITH THE GOLDEN GUN",
+    "year": "1974",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587890/scoopcast_frames/Dream_Scenario_2023.webp",
+    "answer": "DREAM SCENARIO",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587893/scoopcast_frames/Night_of_the_Creeps_1986.webp",
+    "answer": "NIGHT OF THE CREEPS",
+    "year": "1986",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587928/scoopcast_frames/Starve_Acre_2023.webp",
+    "answer": "STARVE ACRE",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587930/scoopcast_frames/A_Generation_1955.webp",
+    "answer": "A GENERATION",
+    "year": "1955",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588010/scoopcast_frames/The_Spy_Who_Loved_Me_1977.webp",
     "answer": "THE SPY WHO LOVED ME",
     "year": "1977",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588170/scoopcast_frames/The_Mimic_2017.jpg",
-    "answer": "THE MIMIC",
-    "year": "2017",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588011/scoopcast_frames/The_Scent_of_Green_Papaya_1993.webp",
+    "answer": "THE SCENT OF GREEN PAPAYA",
+    "year": "1993",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588171/scoopcast_frames/Halloween_Kills_2021.jpg",
-    "answer": "HALLOWEEN KILLS",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588045/scoopcast_frames/Walk_Up_2022.webp",
+    "answer": "WALK UP",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588050/scoopcast_frames/Spencer_2021.webp",
+    "answer": "SPENCER",
     "year": "2021",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588173/scoopcast_frames/Bait_2019.jpg",
-    "answer": "BAIT",
-    "year": "2019",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588066/scoopcast_frames/A_Woman_Kills_1968.webp",
+    "answer": "A WOMAN KILLS",
+    "year": "1968",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588185/scoopcast_frames/Frankenhooker_1990.jpg",
-    "answer": "FRANKENHOOKER",
-    "year": "1990",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588067/scoopcast_frames/At_Midnight_Ill_Take_Your_Soul_1964.webp",
+    "answer": "AT MIDNIGHT I'LL TAKE YOUR SOUL",
+    "year": "1964",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588069/scoopcast_frames/One_Fine_Morning_2022.webp",
+    "answer": "ONE FINE MORNING",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588073/scoopcast_frames/Riceboy_Sleeps_2022.webp",
+    "answer": "RICEBOY SLEEPS",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588109/scoopcast_frames/A_Better_Tomorrow_1986.webp",
+    "answer": "A BETTER TOMORROW",
+    "year": "1986",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588132/scoopcast_frames/Thesis_1996.webp",
+    "answer": "THESIS",
+    "year": "1996",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588134/scoopcast_frames/Downfall_2004.webp",
+    "answer": "DOWNFALL",
+    "year": "2004",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588134/scoopcast_frames/Sleeping_Beauty_1959_2022.webp",
+    "answer": "SLEEPING BEAUTY (1959)",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588136/scoopcast_frames/Hagazussa_2017.webp",
+    "answer": "HAGAZUSSA",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588169/scoopcast_frames/Trim_Season_2023.webp",
+    "answer": "TRIM SEASON",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588173/scoopcast_frames/Space_is_the_Place_1974.webp",
+    "answer": "SPACE IS THE PLACE",
+    "year": "1974",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588185/scoopcast_frames/Nanny_2022.webp",
+    "answer": "NANNY",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588188/scoopcast_frames/The_Gift_2015.webp",
+    "answer": "THE GIFT",
+    "year": "2015",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588231/scoopcast_frames/Vesper_2022.webp",
+    "answer": "VESPER",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588251/scoopcast_frames/The_Margin_1976.webp",
+    "answer": "THE MARGIN",
+    "year": "1976",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588253/scoopcast_frames/Old_2021.webp",
+    "answer": "OLD",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588254/scoopcast_frames/As_In_Heaven_2021.webp",
+    "answer": "AS IN HEAVEN",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588295/scoopcast_frames/Tommy_1975.webp",
+    "answer": "TOMMY",
+    "year": "1975",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588297/scoopcast_frames/Benedetta_2021.webp",
+    "answer": "BENEDETTA",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588710/scoopcast_frames/Three_Colours_Blue_1993.webp",
+    "answer": "THREE COLOURS: BLUE",
+    "year": "1993",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588715/scoopcast_frames/Antichrist_2009.webp",
+    "answer": "ANTICHRIST",
+    "year": "2009",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588803/scoopcast_frames/The_Last_Boy_Scout_1991.jpg",
+    "answer": "THE LAST BOY SCOUT",
+    "year": "1991",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588805/scoopcast_frames/All_Dirt_Roads_Taste_of_Salt_2023.jpg",
+    "answer": "ALL DIRT ROADS TASTE OF SALT",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588808/scoopcast_frames/Bigger_Than_Life_1956.jpg",
+    "answer": "BIGGER THAN LIFE",
+    "year": "1956",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588810/scoopcast_frames/House_By_The_River_1950.jpg",
+    "answer": "HOUSE BY THE RIVER",
+    "year": "1950",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588817/scoopcast_frames/Last_Night_1998.jpg",
+    "answer": "LAST NIGHT",
+    "year": "1998",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588819/scoopcast_frames/Strawberry_Mansion_2021.jpg",
+    "answer": "STRAWBERRY MANSION",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588821/scoopcast_frames/The_Set_Up_1949.jpg",
+    "answer": "THE SET-UP",
+    "year": "1949",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588822/scoopcast_frames/Fortress_1992.jpg",
+    "answer": "FORTRESS",
+    "year": "1992",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588824/scoopcast_frames/Fremont_2023.jpg",
+    "answer": "FREMONT",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588827/scoopcast_frames/Infernal_Affairs_2002.jpg",
+    "answer": "INFERNAL AFFAIRS",
+    "year": "2002",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588829/scoopcast_frames/The_Magnificent_Seven_2016_2016.jpg",
+    "answer": "THE MAGNIFICENT SEVEN (2016)",
+    "year": "2016",
     "tag": "classic"
   },
   {
@@ -1422,205 +1296,205 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588187/scoopcast_frames/The_Incident_1967.jpg",
-    "answer": "THE INCIDENT",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588833/scoopcast_frames/Wonka_2023.jpg",
+    "answer": "WONKA",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588834/scoopcast_frames/Spectre_2015.jpg",
+    "answer": "SPECTRE",
+    "year": "2015",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588840/scoopcast_frames/The_Book_of_Eli_2010.jpg",
+    "answer": "THE BOOK OF ELI",
+    "year": "2010",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588842/scoopcast_frames/Phantom_of_the_Paradise_1974.jpg",
+    "answer": "PHANTOM OF THE PARADISE",
+    "year": "1974",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588845/scoopcast_frames/Point_Blank_1967.jpg",
+    "answer": "POINT BLANK",
     "year": "1967",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588188/scoopcast_frames/Poor_Things_2023.jpg",
-    "answer": "POOR THINGS",
-    "year": "2023",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588846/scoopcast_frames/The_Harder_They_Fall_2021.jpg",
+    "answer": "THE HARDER THEY FALL",
+    "year": "2021",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588191/scoopcast_frames/White_Noise_2022.jpg",
-    "answer": "WHITE NOISE",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588848/scoopcast_frames/Amanda_2022.jpg",
+    "answer": "AMANDA",
     "year": "2022",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588195/scoopcast_frames/Sometimes_I_Think_About_Dying_2023.jpg",
-    "answer": "SOMETIMES I THINK ABOUT DYING",
-    "year": "2023",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588851/scoopcast_frames/The_Whale_2022.jpg",
+    "answer": "THE WHALE",
+    "year": "2022",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588229/scoopcast_frames/The_Beast_2023_2023.jpg",
-    "answer": "THE BEAST (2023)",
-    "year": "2023",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588853/scoopcast_frames/Casino_Royale_1967_1967.jpg",
+    "answer": "CASINO ROYALE (1967)",
+    "year": "1967",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588231/scoopcast_frames/The_End_We_Start_From_2023.jpg",
-    "answer": "THE END WE START FROM",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588232/scoopcast_frames/Memoria_2021.jpg",
-    "answer": "MEMORIA",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588187/scoopcast_frames/Cmon_Cmon_2021.jpg",
-    "answer": "C'MON C'MON",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588235/scoopcast_frames/The_Wonderful_Story_of_Henry_Sugar_2023.jpg",
-    "answer": "THE WONDERFUL STORY OF HENRY SUGAR",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588236/scoopcast_frames/The_Lodge_2019.jpg",
-    "answer": "THE LODGE",
-    "year": "2019",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588244/scoopcast_frames/Red_River_1948.jpg",
-    "answer": "RED RIVER",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588856/scoopcast_frames/Letter_From_An_Unknown_Woman_1948.jpg",
+    "answer": "LETTER FROM AN UNKNOWN WOMAN",
     "year": "1948",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588248/scoopcast_frames/In_Which_We_Serve_1942.jpg",
-    "answer": "IN WHICH WE SERVE",
-    "year": "1942",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588868/scoopcast_frames/Safety_Last_1923.jpg",
+    "answer": "SAFETY LAST!",
+    "year": "1923",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587809/scoopcast_frames/The_House_That_Screamed_1969.jpg",
-    "answer": "THE HOUSE THAT SCREAMED",
-    "year": "1969",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588252/scoopcast_frames/Army_of_Darkness_1992.jpg",
-    "answer": "ARMY OF DARKNESS",
-    "year": "1992",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588253/scoopcast_frames/Le_Samoura%C3%AF_1967.jpg",
-    "answer": "LE SAMOURA\u00cf",
-    "year": "1967",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588254/scoopcast_frames/Australia_2008.jpg",
-    "answer": "AUSTRALIA",
-    "year": "2008",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588258/scoopcast_frames/The_Weather_Man_2005.jpg",
-    "answer": "THE WEATHER MAN",
-    "year": "2005",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588260/scoopcast_frames/Death_Walks_On_High_Heels_1971.jpg",
-    "answer": "DEATH WALKS ON HIGH HEELS",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588869/scoopcast_frames/The_Touch_1971.jpg",
+    "answer": "THE TOUCH",
     "year": "1971",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588285/scoopcast_frames/Sleeping_Beauty_1959_2022.jpg",
-    "answer": "SLEEPING BEAUTY (1959)",
-    "year": "2022",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588869/scoopcast_frames/The_Last_Emperor_1987.jpg",
+    "answer": "THE LAST EMPEROR",
+    "year": "1987",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588287/scoopcast_frames/The_Old_Dark_House_1932.jpg",
-    "answer": "THE OLD DARK HOUSE",
-    "year": "1932",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588290/scoopcast_frames/Hit_Man_2023.jpg",
-    "answer": "HIT MAN",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588291/scoopcast_frames/Seneca_On_The_Creation_Of_Earthquakes_2023.jpg",
-    "answer": "SENECA: ON THE CREATION OF EARTHQUAKES",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588292/scoopcast_frames/She_Is_Conann_2023.jpg",
-    "answer": "SHE IS CONANN",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588293/scoopcast_frames/Malignant_2021.jpg",
-    "answer": "MALIGNANT",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588875/scoopcast_frames/Mona_Lisa_and_the_Blood_Moon_2021.jpg",
+    "answer": "MONA LISA AND THE BLOOD MOON",
     "year": "2021",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588294/scoopcast_frames/Ballerina_2023.jpg",
-    "answer": "BALLERINA",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588879/scoopcast_frames/Random_Acts_of_Violence_2019.jpg",
+    "answer": "RANDOM ACTS OF VIOLENCE",
+    "year": "2019",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588885/scoopcast_frames/The_Others_2001.jpg",
+    "answer": "THE OTHERS",
+    "year": "2001",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588887/scoopcast_frames/From_Russia_With_Love_1963.jpg",
+    "answer": "FROM RUSSIA WITH LOVE",
+    "year": "1963",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588892/scoopcast_frames/Silver_Haze_2023.jpg",
+    "answer": "SILVER HAZE",
     "year": "2023",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588296/scoopcast_frames/The_Wonder_2022.jpg",
-    "answer": "THE WONDER",
-    "year": "2022",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588901/scoopcast_frames/Hellraiser_Revelations_2011.jpg",
+    "answer": "HELLRAISER: REVELATIONS",
+    "year": "2011",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588297/scoopcast_frames/Gasoline_Rainbow_2023.jpg",
-    "answer": "GASOLINE RAINBOW",
-    "year": "2023",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588903/scoopcast_frames/Millennium_Mambo_2001.jpg",
+    "answer": "MILLENNIUM MAMBO",
+    "year": "2001",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588305/scoopcast_frames/Teenage_Mutant_Ninja_Turtles_Mutant_Mayhem_2023.jpg",
-    "answer": "TEENAGE MUTANT NINJA TURTLES: MUTANT MAYHEM",
-    "year": "2023",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588907/scoopcast_frames/Hellraiser_Hellseeker_2002.jpg",
+    "answer": "HELLRAISER: HELLSEEKER",
+    "year": "2002",
     "tag": "classic"
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588309/scoopcast_frames/Prey_2022.jpg",
-    "answer": "PREY",
-    "year": "2022",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588909/scoopcast_frames/Ip_Man_2_2010.jpg",
+    "answer": "IP MAN 2",
+    "year": "2010",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588911/scoopcast_frames/One_And_Four_2021.jpg",
+    "answer": "ONE AND FOUR",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588914/scoopcast_frames/The_Sun_In_A_Net_1963.jpg",
+    "answer": "THE SUN IN A NET",
+    "year": "1963",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588929/scoopcast_frames/The_Baby_Carriage_1963.jpg",
+    "answer": "THE BABY CARRIAGE",
+    "year": "1963",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588931/scoopcast_frames/One_False_Move_1991.jpg",
+    "answer": "ONE FALSE MOVE",
+    "year": "1991",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588940/scoopcast_frames/The_War_of_the_Worlds_1953_1953.jpg",
+    "answer": "THE WAR OF THE WORLDS (1953)",
+    "year": "1953",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588959/scoopcast_frames/Demons_1985.jpg",
+    "answer": "DEMONS",
+    "year": "1985",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588960/scoopcast_frames/Anatomy_of_a_Murder_1959.jpg",
+    "answer": "ANATOMY OF A MURDER",
+    "year": "1959",
     "tag": "classic"
   }
 ]
