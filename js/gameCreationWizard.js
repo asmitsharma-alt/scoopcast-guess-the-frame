@@ -111,147 +111,6 @@
     </svg>`
   };
 
-  // ── Premium SVG Avatar Collection (Zero External Images) ──
-  const WIZARD_AVATARS = [
-    {
-      id: 'detective',
-      name: 'Detective',
-      color: '#38bdf8',
-      bgGrad: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="#0f172a"/>
-        <!-- Fedora Hat Brim -->
-        <ellipse cx="50" cy="38" rx="38" ry="11" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
-        <!-- Fedora Crown -->
-        <path d="M26 38 C28 20, 36 14, 50 14 C64 14, 72 20, 74 38 Z" fill="#334155" stroke="#38bdf8" stroke-width="2"/>
-        <path d="M27 34 C36 30, 64 30, 73 34" stroke="#0ea5e9" stroke-width="3" fill="none"/>
-        <!-- Face Shadow & Collar -->
-        <ellipse cx="50" cy="54" rx="20" ry="18" fill="#cbd5e1"/>
-        <!-- Trench Coat Lapels -->
-        <path d="M20 95 L34 62 L50 78 L66 62 L80 95 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-        <!-- Detective Sunglasses / Keen Eyes -->
-        <rect x="36" y="48" width="11" height="7" rx="2.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-        <rect x="53" y="48" width="11" height="7" rx="2.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-        <line x1="47" y1="51" x2="53" y2="51" stroke="#38bdf8" stroke-width="2"/>
-        <!-- Noir Cigarette / Shadow accent -->
-        <circle cx="68" cy="74" r="5" fill="#0284c7" opacity="0.6"/>
-        <circle cx="68" cy="74" r="3" fill="#38bdf8"/>
-      </svg>`
-    },
-    {
-      id: 'director',
-      name: 'Director',
-      color: '#facc15',
-      bgGrad: 'linear-gradient(135deg, #1c1917 0%, #292524 100%)',
-      svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="#1c1917"/>
-        <!-- Director Beret -->
-        <path d="M22 34 C24 16, 68 12, 78 28 C82 34, 76 40, 60 40 C35 40, 20 40, 22 34 Z" fill="#44403c" stroke="#facc15" stroke-width="2.5"/>
-        <circle cx="50" cy="16" r="3" fill="#facc15"/>
-        <!-- Head -->
-        <ellipse cx="50" cy="52" rx="20" ry="19" fill="#fde047"/>
-        <!-- Headset band -->
-        <path d="M28 50 C28 32, 72 32, 72 50" stroke="#a8a29e" stroke-width="3" fill="none"/>
-        <rect x="25" y="46" width="6" height="12" rx="3" fill="#f59e0b" stroke="#facc15" stroke-width="1.5"/>
-        <rect x="69" y="46" width="6" height="12" rx="3" fill="#f59e0b" stroke="#facc15" stroke-width="1.5"/>
-        <path d="M72 56 L64 68 L56 68" stroke="#facc15" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <!-- Director Specs -->
-        <circle cx="43" cy="52" r="5" stroke="#1c1917" stroke-width="2.5"/>
-        <circle cx="57" cy="52" r="5" stroke="#1c1917" stroke-width="2.5"/>
-        <line x1="48" y1="52" x2="52" y2="52" stroke="#1c1917" stroke-width="2"/>
-        <!-- Vest & Scarf -->
-        <path d="M24 95 L36 68 L50 82 L64 68 L76 95 Z" fill="#292524" stroke="#facc15" stroke-width="2"/>
-        <path d="M46 72 L50 84 L54 72 Z" fill="#eab308"/>
-      </svg>`
-    },
-    {
-      id: 'movielover',
-      name: 'Movie Lover',
-      color: '#ec4899',
-      bgGrad: 'linear-gradient(135deg, #1f1220 0%, #3b0764 100%)',
-      svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="#1f1220"/>
-        <!-- Trendy Messy Hair -->
-        <path d="M26 38 C24 20, 40 16, 50 16 C68 16, 76 22, 74 38 C70 28, 58 24, 50 25 C38 26, 30 32, 26 38 Z" fill="#f43f5e"/>
-        <!-- Face -->
-        <ellipse cx="50" cy="53" rx="21" ry="20" fill="#fbcfe8"/>
-        <!-- Retro 3D Glasses (Red & Cyan) -->
-        <rect x="30" y="46" width="17" height="12" rx="3" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
-        <rect x="53" y="46" width="17" height="12" rx="3" fill="#06b6d4" stroke="#ffffff" stroke-width="2"/>
-        <line x1="47" y1="52" x2="53" y2="52" stroke="#ffffff" stroke-width="2.5"/>
-        <!-- Big Smile -->
-        <path d="M43 68 C46 73, 54 73, 57 68" stroke="#831843" stroke-width="2.5" stroke-linecap="round"/>
-        <!-- Popcorn Tub Motif on Hoodie -->
-        <path d="M22 95 L34 72 L66 72 L78 95 Z" fill="#831843" stroke="#ec4899" stroke-width="2"/>
-        <path d="M42 80 L44 95 M48 80 L48 95 M52 80 L52 95 M56 80 L54 95" stroke="#f472b6" stroke-width="2"/>
-      </svg>`
-    },
-    {
-      id: 'gamer',
-      name: 'Gamer',
-      color: '#10b981',
-      bgGrad: 'linear-gradient(135deg, #022c22 0%, #064e3b 100%)',
-      svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="#022c22"/>
-        <!-- Cyber Cap / Hair -->
-        <path d="M28 36 C30 20, 70 20, 72 36 L78 40 L68 40 C64 26, 36 26, 32 40 L22 40 Z" fill="#10b981"/>
-        <!-- Head -->
-        <ellipse cx="50" cy="53" rx="20" ry="19" fill="#a7f3d0"/>
-        <!-- Over-ear Gaming Headset with RGB Glow -->
-        <path d="M24 50 C24 28, 76 28, 76 50" stroke="#34d399" stroke-width="4" fill="none"/>
-        <rect x="20" y="44" width="8" height="16" rx="4" fill="#047857" stroke="#10b981" stroke-width="2"/>
-        <rect x="72" y="44" width="8" height="16" rx="4" fill="#047857" stroke="#10b981" stroke-width="2"/>
-        <!-- Headset Mic Boom -->
-        <path d="M24 58 L36 68 L44 68" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-        <circle cx="45" cy="68" r="2.5" fill="#34d399"/>
-        <!-- Cyber Visor / Glasses -->
-        <polygon points="34,48 66,48 63,57 37,57" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-        <line x1="39" y1="52.5" x2="61" y2="52.5" stroke="#34d399" stroke-width="2"/>
-        <!-- Hoodie -->
-        <path d="M22 95 L34 72 L66 72 L78 95 Z" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
-      </svg>`
-    },
-    {
-      id: 'classic',
-      name: 'Classic Cinema',
-      color: '#e2e8f0',
-      bgGrad: 'linear-gradient(135deg, #09090b 0%, #18181b 100%)',
-      svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="#09090b"/>
-        <!-- Top Hat Brim -->
-        <ellipse cx="50" cy="38" rx="36" ry="8" fill="#18181b" stroke="#e2e8f0" stroke-width="2"/>
-        <!-- Tall Top Hat Body -->
-        <path d="M30 38 L32 14 L68 14 L70 38 Z" fill="#27272a" stroke="#e2e8f0" stroke-width="2"/>
-        <rect x="31" y="32" width="38" height="5" fill="#e2e8f0"/>
-        <!-- Face -->
-        <ellipse cx="50" cy="54" rx="19" ry="18" fill="#e4e4e7"/>
-        <!-- Monocle on Right Eye -->
-        <circle cx="42" cy="52" r="3" fill="#18181b"/>
-        <circle cx="58" cy="52" r="6" stroke="#fbbf24" stroke-width="2" fill="none"/>
-        <circle cx="58" cy="52" r="3" fill="#18181b"/>
-        <path d="M64 54 C68 62, 66 74, 58 78" stroke="#fbbf24" stroke-width="1.5" fill="none"/>
-        <!-- Dapper Moustache -->
-        <path d="M42 63 C46 61, 50 63, 50 65 C50 63, 54 61, 58 63 C60 65, 54 67, 50 66 C46 67, 40 65, 42 63 Z" fill="#18181b"/>
-        <!-- Tuxedo Suit & Bow Tie -->
-        <path d="M22 95 L34 72 L66 72 L78 95 Z" fill="#18181b" stroke="#e2e8f0" stroke-width="2"/>
-        <polygon points="50,73 45,77 45,71" fill="#e2e8f0"/>
-        <polygon points="50,73 55,77 55,71" fill="#e2e8f0"/>
-        <circle cx="50" cy="73.5" r="2" fill="#e2e8f0"/>
-      </svg>`
-    }
-  ];
-
-  // Helper: Convert inline SVG string to Data URI
-  function svgToDataUri(svgString) {
-    const cleaned = svgString.replace(/\n/g, '').replace(/\s+/g, ' ');
-    return 'data:image/svg+xml;utf8,' + encodeURIComponent(cleaned);
-  }
-
-  // Register avatars in global map for system compatibility
-  WIZARD_AVATARS.forEach(av => {
-    av.dataUri = svgToDataUri(av.svg);
-  });
-
   // ── Create Room Multi-Step Wizard Controller ──
   const CreateRoomWizard = {
     currentStep: 1,
@@ -264,19 +123,16 @@
         eyes: 5
       },
       playerName: '',
-      avatarId: 'detective'
+      avatarUrl: ''
     },
 
     init() {
       // Load saved preferences if available
-      const savedName = localStorage.getItem('gtf_player_name');
+      const savedName = localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
       if (savedName) this.state.playerName = savedName;
 
-      const savedAvatar = localStorage.getItem('gtf_player_avatar') || localStorage.getItem('gtf_wizard_avatar');
-      if (savedAvatar) {
-        const found = WIZARD_AVATARS.find(a => a.id === savedAvatar || a.id === savedAvatar.toLowerCase());
-        if (found) this.state.avatarId = found.id;
-      }
+      const savedAvatar = localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : '') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+      this.state.avatarUrl = savedAvatar;
     },
 
     open() {
@@ -325,10 +181,17 @@
       this.currentStep = stepNum;
       this.render();
 
-      // Focus name input when landing on Step 4
+      // Focus name input and render avatar picker when landing on Step 4
       if (this.currentStep === 4) {
+        if (typeof AvatarPicker !== 'undefined') {
+          const currentAvatar = this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : null) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+          AvatarPicker.selectedAvatar = currentAvatar;
+          AvatarPicker.updateAllPreviews();
+          AvatarPicker.renderCategories('hostCategoryBar');
+          AvatarPicker.renderGrid('hostAvatarGrid', 'hostLoadingIndicator');
+        }
         setTimeout(() => {
-          const input = document.getElementById('gwPlayerNameInput');
+          const input = document.getElementById('hostPlayerNameInput');
           if (input) {
             input.focus();
             input.select();
@@ -387,33 +250,27 @@
     },
 
     // ── STEP 4: Player Profile ──
-    selectAvatar(avatarId) {
-      const found = WIZARD_AVATARS.find(a => a.id === avatarId);
-      if (found) {
-        this.state.avatarId = found.id;
-        const nameInput = document.getElementById('gwPlayerNameInput');
-        if (nameInput && (!nameInput.value.trim() || ['Detective', 'Director', 'Movie Lover', 'Gamer', 'Classic Cinema'].includes(nameInput.value.trim()))) {
-          nameInput.value = found.name;
-          this.state.playerName = found.name;
-        }
-        this.renderStep4();
-      }
-    },
-
     setPlayerName(name) {
       this.state.playerName = (name || '').trim();
     },
 
     // ── STEP 5: Create Lobby & Lock Configuration ──
     async enterLobby() {
-      const nameInput = document.getElementById('gwPlayerNameInput');
-      const enteredName = nameInput ? nameInput.value.trim() : this.state.playerName;
-      const activeAvatar = WIZARD_AVATARS.find(a => a.id === this.state.avatarId) || WIZARD_AVATARS[0];
+      const nameInput = document.getElementById('hostPlayerNameInput');
+      const enteredName = (nameInput && nameInput.value.trim()) || this.state.playerName || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
 
-      this.state.playerName = enteredName || activeAvatar.name;
-      localStorage.setItem('gtf_player_name', this.state.playerName);
-      localStorage.setItem('gtf_player_avatar', activeAvatar.dataUri);
-      localStorage.setItem('gtf_wizard_avatar', activeAvatar.id);
+      const selectedAvatar = (typeof AvatarPicker !== 'undefined' ? AvatarPicker.selectedAvatar : null) || this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+
+      this.state.playerName = enteredName;
+      this.state.avatarUrl = selectedAvatar;
+
+      localStorage.setItem('gtf_player_name', enteredName);
+      localStorage.setItem('gtf_player_avatar', selectedAvatar);
+
+      if (typeof MultiplayerEngine !== 'undefined') {
+        MultiplayerEngine.playerName = enteredName;
+        MultiplayerEngine.playerAvatar = selectedAvatar;
+      }
 
       const totalRounds = this.getTotalRounds();
       if (totalRounds < 3 || totalRounds > 30) {
@@ -436,8 +293,8 @@
             sections: [...this.state.sections],
             rounds: { ...this.state.rounds },
             totalRounds: totalRounds,
-            playerName: this.state.playerName,
-            avatar: activeAvatar
+            playerName: enteredName,
+            avatar: selectedAvatar
           });
         }
         this.close();
@@ -588,30 +445,21 @@
     },
 
     renderStep4() {
-      const nameInput = document.getElementById('gwPlayerNameInput');
-      if (nameInput && !nameInput.value) {
-        const activeAvatar = WIZARD_AVATARS.find(a => a.id === this.state.avatarId);
-        nameInput.value = this.state.playerName || (activeAvatar ? activeAvatar.name : 'Player');
+      const nameInput = document.getElementById('hostPlayerNameInput');
+      if (nameInput) {
+        if (!nameInput.value || !nameInput.value.trim()) {
+          nameInput.value = this.state.playerName || localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
+        }
+        this.state.playerName = nameInput.value.trim();
       }
 
-      const grid = document.getElementById('gwAvatarGrid');
-      if (!grid) return;
-
-      grid.innerHTML = WIZARD_AVATARS.map(av => {
-        const isSelected = av.id === this.state.avatarId;
-        return `
-          <div class="gw-avatar-card ${isSelected ? 'selected' : ''}" 
-               onclick="CreateRoomWizard.selectAvatar('${av.id}')"
-               role="button" 
-               tabindex="0"
-               aria-label="Select ${av.name} avatar">
-            <div class="gw-avatar-svg-wrap" style="background:${av.bgGrad};">
-              ${av.svg}
-            </div>
-            <span class="gw-avatar-name" style="${isSelected ? 'color:var(--wizard-accent-gold); font-weight:800;' : ''}">${av.name}</span>
-          </div>
-        `;
-      }).join('');
+      if (typeof AvatarPicker !== 'undefined') {
+        const currentAvatar = this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : null) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+        AvatarPicker.selectedAvatar = currentAvatar;
+        AvatarPicker.updateAllPreviews();
+        AvatarPicker.renderCategories('hostCategoryBar');
+        AvatarPicker.renderGrid('hostAvatarGrid', 'hostLoadingIndicator');
+      }
     },
 
     updateNavigationButtons() {
@@ -708,7 +556,6 @@
 
   // Expose to window
   window.WIZARD_ICONS = WIZARD_ICONS;
-  window.WIZARD_AVATARS = WIZARD_AVATARS;
   window.CreateRoomWizard = CreateRoomWizard;
   window.AssetPreloader = AssetPreloader;
 

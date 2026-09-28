@@ -13593,34 +13593,109 @@
           <div class="gw-step-pane" id="gwStepPane-4">
             <div class="gw-step-title-group">
               <h2 class="gw-screen-title">Create Player Profile</h2>
-              <p class="gw-screen-subtitle">Enter your name and pick your cinematic vector persona.</p>
+              <p class="gw-screen-subtitle">Enter your name and pick your character avatar.</p>
             </div>
 
-            <div class="gw-profile-box">
-              <div class="gw-input-group">
-                <label class="gw-input-label" for="gwPlayerNameInput">Player Name</label>
-                <div class="gw-text-input-wrap">
-                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <input type="text" 
-                         id="gwPlayerNameInput" 
-                         class="gw-name-input" 
-                         maxlength="16" 
-                         placeholder="Enter your name..."
-                         oninput="CreateRoomWizard.setPlayerName(this.value)"
-                         onkeydown="if(event.key==='Enter') CreateRoomWizard.enterLobby();" />
-                </div>
+            <!-- Credentials Row: Player Name & Character Preview -->
+            <div class="mp-credentials-row-join">
+              <!-- 1. Player Name -->
+              <div class="mp-form-group" style="flex: 1;">
+                <label class="mp-label">Your Player Name</label>
+                <input
+                  type="text"
+                  id="hostPlayerNameInput"
+                  class="mp-input font-bold"
+                  placeholder="Enter your name (e.g. Maverick)"
+                  maxlength="16"
+                  value="Maverick"
+                  oninput="if(typeof MultiplayerEngine!=='undefined') MultiplayerEngine.playerName = this.value; CreateRoomWizard.setPlayerName(this.value);"
+                  onkeydown="if(event.key==='Enter') CreateRoomWizard.enterLobby();"
+                />
               </div>
 
-              <div class="gw-input-group">
-                <div class="gw-avatar-collection-title">
-                  <span class="gw-input-label">Avatar Selection (Vector SVG)</span>
-                  <span style="font-family:var(--font-mono, monospace); font-size:10px; color:var(--wizard-text-muted);">5 Custom Styles</span>
+              <!-- 2. Character Preview Badge -->
+              <div class="mp-form-group" id="hostPreviewContainer">
+                <label class="mp-label">Character Preview</label>
+                <div class="mp-inline-preview-badge" id="hostPreviewBadge">
+                  <div class="mp-hero-preview-frame" id="hostPreviewFrame" style="background-color: #facc15;">
+                    <img
+                      id="hostPreviewImg"
+                      src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg"
+                      alt="Aman"
+                      class="img-contain-fit"
+                      onerror="AvatarPicker.handleImgError(this)"
+                    />
+                    <span class="mp-hero-check-pill">
+                      <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                  </div>
+                  <div class="mp-hero-preview-info">
+                    <div class="mp-hero-char-name" id="hostCharName">Aman</div>
+                    <div class="mp-hero-tags-row">
+                      <span class="mp-hero-cat-tag" id="hostCatTag">Founders</span>
+                      <span class="mp-hero-format-tag" id="hostFormatTag">SVG</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="gw-avatar-grid" id="gwAvatarGrid">
-                  <!-- Dynamically rendered by CreateRoomWizard.renderStep4() -->
+              </div>
+            </div>
+
+            <!-- Choose Character From All Avatars Section -->
+            <div class="mp-form-group" style="flex: 1; min-height: 0;">
+              <label class="mp-label">Choose Character From All Avatars</label>
+              <div class="mp-avatar-picker-wrap">
+                <!-- Search & Actions Bar -->
+                <div class="mp-avatar-search-bar">
+                  <div class="mp-avatar-search-input-wrap">
+                    <span class="search-icon-slot">
+                      <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+                    </span>
+                    <input
+                      type="text"
+                      id="hostAvatarSearchInput"
+                      class="mp-avatar-search-input"
+                      placeholder="Search 1,800+ avatars (e.g. 'naruto', 'goku', 'walter', 'batman')..."
+                      oninput="AvatarPicker.handleSearch(this.value, 'hostSearchClearBtn')"
+                    />
+                    <button
+                      type="button"
+                      id="hostSearchClearBtn"
+                      class="mp-avatar-search-clear"
+                      style="display: none;"
+                      onclick="AvatarPicker.clearSearch('hostAvatarSearchInput', 'hostSearchClearBtn')"
+                    >
+                      <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+                    </button>
+                  </div>
+
+                  <button type="button" class="mp-shuffle-btn" onclick="AvatarPicker.handleShuffle('hostAvatarScrollArea')">
+                    <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><polyline points="16 3 21 3 21 8"/><line x1="4" x2="21" y1="20" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" x2="21" y1="15" y2="21"/><line x1="4" x2="9" y1="4" y2="9"/></svg>
+                    <span>Shuffle</span>
+                  </button>
+
+                  <button type="button" class="mp-custom-upload-btn" onclick="document.getElementById('hostFileUploadInput').click()">
+                    <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                    <span>Upload SVG / GIF</span>
+                  </button>
+                  <input
+                    type="file"
+                    id="hostFileUploadInput"
+                    accept=".svg,.gif,.png,.jpg,.jpeg,.webp,image/*"
+                    style="display: none;"
+                    onchange="AvatarPicker.handleFileUpload(event)"
+                  />
+                </div>
+
+                <!-- Category Filter Tabs Bar -->
+                <div class="mp-avatar-category-bar" id="hostCategoryBar"></div>
+
+                <!-- Avatar Scroll Area -->
+                <div class="mp-avatar-scroll-area" id="hostAvatarScrollArea" onscroll="AvatarPicker.handleInfiniteScroll('hostAvatarScrollArea')">
+                  <div class="mp-infinite-avatar-grid" id="hostAvatarGrid"></div>
+                  <div class="mp-infinite-loading-indicator" id="hostLoadingIndicator">
+                    <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>Scroll for more avatars...</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -13648,144 +13723,6 @@
           </button>
         </div>
 
-      </div>
-    </div>
-
-    <!-- PLAYER LOBBY -->
-    <!-- CREATE ROOM MODAL (EXACT REPLICA BADGE PASS) -->
-    <div class="mp-modal-overlay" id="createRoomModal">
-      <div class="mp-badge-modal-box" id="createModalBox">
-        
-        <!-- Header -->
-        <div class="mp-badge-pass-header">
-          <div class="mp-badge-pass-title">
-            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span>CREATE ONLINE ROOM</span>
-            <span class="mp-badge-pill-tag">BADGE PASS</span>
-          </div>
-          <button type="button" class="mp-modal-close" onclick="MultiplayerEngine.closeModals()" aria-label="Close modal">
-            <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
-          </button>
-        </div>
-
-        <!-- Credentials Row: Game Mode | Player Name | Character Preview -->
-        <div class="mp-credentials-row-join">
-          <!-- 1. Game Mode / Settings -->
-          <div class="mp-form-group">
-            <label class="mp-label">Game Mode</label>
-            <div style="height: 52px; min-height: 52px; max-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #FFFDF0; border: 3px solid #1a1a1a; border-radius: 12px; box-shadow: 3px 3px 0 rgba(0,0,0,0.1); font-family: var(--font-mono, monospace); font-weight: 800; font-size: 13px;">
-              <span style="display:flex; align-items:center; gap:6px;">
-                <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                TRIVIA MIX
-              </span>
-              <span style="background: #FACC15; border: 2px solid #1a1a1a; border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight:900;">40 ROUNDS</span>
-            </div>
-          </div>
-
-          <!-- 2. Player Name -->
-          <div class="mp-form-group">
-            <label class="mp-label">Your Player Name</label>
-            <input
-              type="text"
-              id="hostPlayerNameInput"
-              class="mp-input font-bold"
-              placeholder="Enter your name (e.g. Maverick)"
-              maxlength="16"
-              value="Maverick"
-              oninput="MultiplayerEngine.playerName = this.value;"
-            />
-          </div>
-
-          <!-- 3. Character Preview Badge -->
-          <div class="mp-form-group" id="hostPreviewContainer">
-            <label class="mp-label">Character Preview</label>
-            <div class="mp-inline-preview-badge" id="hostPreviewBadge">
-              <div class="mp-hero-preview-frame" id="hostPreviewFrame" style="background-color: #facc15;">
-                <img
-                  id="hostPreviewImg"
-                  src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg"
-                  alt="Aman"
-                  class="img-contain-fit"
-                  onerror="AvatarPicker.handleImgError(this)"
-                />
-                <span class="mp-hero-check-pill">
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>
-                </span>
-              </div>
-              <div class="mp-hero-preview-info">
-                <div class="mp-hero-char-name" id="hostCharName">Aman</div>
-                <div class="mp-hero-tags-row">
-                  <span class="mp-hero-cat-tag" id="hostCatTag">Founders</span>
-                  <span class="mp-hero-format-tag" id="hostFormatTag">SVG</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Choose Character From All Avatars Section -->
-        <div class="mp-form-group" style="flex: 1; min-height: 0;">
-          <label class="mp-label">Choose Character From All Avatars</label>
-          <div class="mp-avatar-picker-wrap">
-            <!-- Search & Actions Bar -->
-            <div class="mp-avatar-search-bar">
-              <div class="mp-avatar-search-input-wrap">
-                <span class="search-icon">
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
-                </span>
-                <input
-                  type="text"
-                  id="hostAvatarSearchInput"
-                  class="mp-avatar-search-input"
-                  placeholder="Search 1,800+ avatars (e.g. 'naruto', 'goku', 'walter', 'batman')..."
-                  oninput="AvatarPicker.handleSearch(this.value, 'hostSearchClearBtn')"
-                />
-                <button
-                  type="button"
-                  id="hostSearchClearBtn"
-                  class="mp-avatar-search-clear"
-                  style="display: none;"
-                  onclick="AvatarPicker.clearSearch('hostAvatarSearchInput', 'hostSearchClearBtn')"
-                >
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
-                </button>
-              </div>
-
-              <button type="button" class="mp-shuffle-btn" onclick="AvatarPicker.handleShuffle('hostAvatarScrollArea')">
-                <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><polyline points="16 3 21 3 21 8"/><line x1="4" x2="21" y1="20" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" x2="21" y1="15" y2="21"/><line x1="4" x2="9" y1="4" y2="9"/></svg>
-                <span>Shuffle</span>
-              </button>
-
-              <button type="button" class="mp-custom-upload-btn" onclick="document.getElementById('hostFileUploadInput').click()">
-                <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                <span>Upload SVG / GIF</span>
-              </button>
-              <input
-                type="file"
-                id="hostFileUploadInput"
-                accept=".svg,.gif,.png,.jpg,.jpeg,.webp,image/*"
-                style="display: none;"
-                onchange="AvatarPicker.handleFileUpload(event)"
-              />
-            </div>
-
-            <!-- Category Filter Tabs Bar -->
-            <div class="mp-avatar-category-bar" id="hostCategoryBar"></div>
-
-            <!-- Avatar Scroll Area -->
-            <div class="mp-avatar-scroll-area" id="hostAvatarScrollArea" onscroll="AvatarPicker.handleInfiniteScroll('hostAvatarScrollArea')">
-              <div class="mp-infinite-avatar-grid" id="hostAvatarGrid"></div>
-              <div class="mp-infinite-loading-indicator" id="hostLoadingIndicator">
-                <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span>Scroll for more avatars...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button id="createRoomConfirmBtn" class="mp-btn-primary" onclick="MultiplayerEngine.confirmCreateRoom()">
-          CREATE ROOM &amp; GET CODE →
-        </button>
       </div>
     </div>
 

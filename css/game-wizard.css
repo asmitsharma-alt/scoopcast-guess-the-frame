@@ -1,21 +1,23 @@
 /* ═══════════════════════════════════════════════════════════════════
    SCOOPCAST AAA GAME CREATION FLOW & LOBBY SYSTEM
-   Cinematic Glassmorphism UI | Responsive Desktop & Mobile | SVG Only
+   Pure Neobrutalism Design System | Bold 4px Borders | Hard Drop Shadows
+   Zero Blur | High-Contrast Retro Cinema Palette | Responsive Desktop & Mobile
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  --wizard-bg-dark: #0b0d14;
-  --wizard-card-bg: rgba(19, 23, 34, 0.85);
-  --wizard-card-border: rgba(255, 255, 255, 0.08);
-  --wizard-card-hover: rgba(250, 204, 21, 0.25);
-  --wizard-accent-gold: #facc15;
-  --wizard-accent-amber: #f59e0b;
-  --wizard-accent-emerald: #10b981;
-  --wizard-accent-ruby: #ef4444;
-  --wizard-accent-blue: #38bdf8;
-  --wizard-text-main: #f8fafc;
-  --wizard-text-muted: #94a3b8;
-  --wizard-glass-blur: blur(20px);
+  --neo-bg-cream: #fffdf5;
+  --neo-card-white: #ffffff;
+  --neo-border-black: #1a1a1a;
+  --neo-shadow-black: #1a1a1a;
+  --neo-yellow: #facc15;
+  --neo-yellow-light: #fef08a;
+  --neo-green: #22c55e;
+  --neo-green-light: #86efac;
+  --neo-blue-light: #cae6ff;
+  --neo-pink-light: #ffd8df;
+  --neo-purple: #c084fc;
+  --neo-text-main: #1a1a1a;
+  --neo-text-muted: #555555;
 }
 
 /* ── Modal Overlay ── */
@@ -23,16 +25,16 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(5, 7, 12, 0.88);
-  backdrop-filter: var(--wizard-glass-blur);
-  -webkit-backdrop-filter: var(--wizard-glass-blur);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gw-modal-overlay.active {
@@ -40,20 +42,20 @@
   pointer-events: auto;
 }
 
-/* ── Wizard Dialog Container ── */
+/* ── Wizard Dialog Container (Neobrutalism) ── */
 .gw-dialog {
   width: 100%;
   max-width: 740px;
   max-height: 92vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(175deg, rgba(23, 27, 40, 0.96) 0%, rgba(11, 13, 20, 0.98) 100%);
-  border: 1px solid rgba(250, 204, 21, 0.22);
-  border-radius: 24px;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(250, 204, 21, 0.08);
+  background: var(--neo-bg-cream);
+  border: 4px solid var(--neo-border-black);
+  border-radius: 20px;
+  box-shadow: 8px 8px 0px var(--neo-shadow-black);
   overflow: hidden;
-  transform: scale(0.96) translateY(8px);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .gw-modal-overlay.active .gw-dialog {
@@ -62,12 +64,12 @@
 
 /* ── Top Header & Progress Stepper ── */
 .gw-header {
-  padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(15, 18, 28, 0.6);
+  padding: 18px 24px 16px 24px;
+  border-bottom: 4px solid var(--neo-border-black);
+  background: var(--neo-yellow);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .gw-header-top {
@@ -82,40 +84,51 @@
   gap: 8px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--wizard-accent-gold);
+  background: var(--neo-border-black);
+  color: var(--neo-yellow);
+  padding: 4px 10px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
 .gw-brand-dot {
   width: 6px;
   height: 6px;
-  background: var(--wizard-accent-gold);
+  background: var(--neo-yellow);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--wizard-accent-gold);
-  animation: gwPulse 2s infinite;
+  animation: gwPulse 1.8s infinite;
 }
 
 .gw-close-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--wizard-text-muted);
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  color: var(--neo-text-main);
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 900;
+  font-size: 14px;
+  transition: all 0.15s ease;
 }
 
 .gw-close-btn:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
-  transform: scale(1.05);
+  background: #ff6b6b;
+  color: #ffffff;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+}
+
+.gw-close-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
 }
 
 /* ── Progress Stepper Bar ── */
@@ -137,21 +150,21 @@
 
 .gw-step-pill {
   width: 100%;
-  height: 6px;
+  height: 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.15);
+  border: 2px solid var(--neo-border-black);
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;
 }
 
 .gw-step-node.active .gw-step-pill {
-  background: linear-gradient(90deg, var(--wizard-accent-gold), var(--wizard-accent-amber));
-  box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+  background: var(--neo-border-black);
 }
 
 .gw-step-node.completed .gw-step-pill {
-  background: var(--wizard-accent-emerald);
+  background: var(--neo-green);
 }
 
 .gw-step-labels {
@@ -159,14 +172,16 @@
   justify-content: space-between;
   font-family: var(--font-mono, monospace);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 900;
   text-transform: uppercase;
-  color: var(--wizard-text-muted);
-  margin-top: -6px;
+  color: #333333;
+  margin-top: -4px;
 }
 
 .gw-step-labels span.active {
-  color: var(--wizard-accent-gold);
+  color: var(--neo-border-black);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 /* ── Content Viewport ── */
@@ -176,16 +191,19 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: var(--neo-bg-cream);
 }
 
 .gw-content-body::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 .gw-content-body::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f4f4ee;
+  border-left: 2px solid var(--neo-border-black);
 }
 .gw-content-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--neo-yellow);
+  border: 2px solid var(--neo-border-black);
   border-radius: 999px;
 }
 
@@ -193,7 +211,7 @@
   display: none;
   flex-direction: column;
   gap: 20px;
-  animation: gwFadeIn 0.25s ease-out forwards;
+  animation: gwFadeIn 0.2s ease-out forwards;
 }
 
 .gw-step-pane.active {
@@ -209,16 +227,18 @@
   font-family: 'Lilita One', var(--font-display, sans-serif);
   font-size: 26px;
   font-weight: 900;
-  letter-spacing: 0.03em;
-  color: var(--wizard-text-main);
+  letter-spacing: 0.02em;
+  color: var(--neo-text-main);
   margin: 0;
   line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .gw-screen-subtitle {
   font-family: 'DM Sans', sans-serif;
   font-size: 13.5px;
-  color: var(--wizard-text-muted);
+  font-weight: 700;
+  color: var(--neo-text-muted);
   margin: 6px 0 0 0;
 }
 
@@ -230,9 +250,10 @@
 }
 
 .gw-diff-card {
-  background: var(--wizard-card-bg);
-  border: 1.5px solid var(--wizard-card-border);
-  border-radius: 18px;
+  background: var(--neo-card-white);
+  border: 3px solid var(--neo-border-black);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
@@ -240,22 +261,31 @@
   text-align: center;
   cursor: pointer;
   position: relative;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
 .gw-diff-card:hover {
-  border-color: rgba(250, 204, 21, 0.4);
-  transform: translateY(-4px);
-  background: rgba(28, 33, 49, 0.9);
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(250, 204, 21, 0.12);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
 }
 
 .gw-diff-card.selected {
-  border-color: var(--wizard-accent-gold);
-  background: linear-gradient(180deg, rgba(40, 36, 18, 0.9) 0%, rgba(20, 24, 36, 0.95) 100%);
-  box-shadow: 0 0 0 2px var(--wizard-accent-gold), 0 16px 32px -8px rgba(250, 204, 21, 0.2);
-  transform: translateY(-3px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  border-color: var(--neo-border-black);
+}
+
+.gw-diff-card.popcorn.selected {
+  background: var(--neo-blue-light);
+}
+
+.gw-diff-card.cinephile.selected {
+  background: var(--neo-yellow-light);
+}
+
+.gw-diff-card.director.selected {
+  background: var(--neo-pink-light);
 }
 
 .gw-diff-card::before {
@@ -264,64 +294,66 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: transparent;
-  transition: all 0.25s ease;
 }
 
-.gw-diff-card.popcorn.selected::before { background: var(--wizard-accent-emerald); }
-.gw-diff-card.cinephile.selected::before { background: var(--wizard-accent-gold); }
-.gw-diff-card.director.selected::before { background: var(--wizard-accent-ruby); }
+.gw-diff-card.popcorn.selected::before { background: var(--neo-green); }
+.gw-diff-card.cinephile.selected::before { background: var(--neo-yellow); }
+.gw-diff-card.director.selected::before { background: #ef4444; }
 
 .gw-diff-icon-wrap {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
-  color: var(--wizard-accent-gold);
-  transition: all 0.25s ease;
+  color: var(--neo-text-main);
+  transition: transform 0.2s ease;
 }
 
 .gw-diff-card.selected .gw-diff-icon-wrap {
-  background: rgba(250, 204, 21, 0.15);
-  border-color: rgba(250, 204, 21, 0.4);
   transform: scale(1.08);
+  background: #ffffff;
 }
 
 .gw-diff-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 900;
   letter-spacing: 0.02em;
-  color: var(--wizard-text-main);
+  color: var(--neo-text-main);
   margin-bottom: 6px;
 }
 
 .gw-diff-badge {
   font-family: var(--font-mono, monospace);
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
-  padding: 3px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
   margin-bottom: 10px;
 }
 
-.gw-badge-easy { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-.gw-badge-medium { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-.gw-badge-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.gw-badge-easy { background: var(--neo-green-light); color: #14532d; }
+.gw-badge-medium { background: var(--neo-yellow); color: #713f12; }
+.gw-badge-hard { background: #fca5a5; color: #7f1d1d; }
 
 .gw-diff-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
   line-height: 1.4;
-  color: var(--wizard-text-muted);
+  color: var(--neo-text-muted);
 }
 
 /* ── STEP 2: Section Multi-Select Cards ── */
@@ -332,27 +364,28 @@
 }
 
 .gw-sec-card {
-  background: var(--wizard-card-bg);
-  border: 1.5px solid var(--wizard-card-border);
+  background: var(--neo-card-white);
+  border: 3px solid var(--neo-border-black);
   border-radius: 16px;
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
   padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gw-sec-card:hover {
-  border-color: rgba(250, 204, 21, 0.3);
-  background: rgba(25, 30, 46, 0.85);
-  transform: translateX(3px);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
 }
 
 .gw-sec-card.selected {
-  border-color: var(--wizard-accent-gold);
-  background: linear-gradient(90deg, rgba(40, 36, 18, 0.85) 0%, rgba(20, 25, 38, 0.9) 100%);
-  box-shadow: 0 0 0 1.5px var(--wizard-accent-gold), 0 8px 20px -6px rgba(250, 204, 21, 0.15);
+  background: var(--neo-yellow-light);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  border-color: var(--neo-border-black);
 }
 
 .gw-sec-left {
@@ -364,18 +397,18 @@
 .gw-sec-icon-wrap {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--wizard-accent-gold);
+  color: var(--neo-text-main);
 }
 
 .gw-sec-card.selected .gw-sec-icon-wrap {
-  background: rgba(250, 204, 21, 0.18);
-  border-color: rgba(250, 204, 21, 0.4);
+  background: #ffffff;
 }
 
 .gw-sec-info {
@@ -384,35 +417,36 @@
 
 .gw-sec-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--wizard-text-main);
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--neo-text-main);
   margin-bottom: 3px;
 }
 
 .gw-sec-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  color: var(--wizard-text-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--neo-text-muted);
 }
 
 .gw-checkbox-pill {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--neo-bg-cream);
   color: transparent;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .gw-sec-card.selected .gw-checkbox-pill {
-  background: var(--wizard-accent-gold);
-  border-color: var(--wizard-accent-gold);
-  color: #0b0d14;
+  background: var(--neo-green);
+  color: #ffffff;
 }
 
 .gw-selected-count-badge {
@@ -421,12 +455,13 @@
   gap: 6px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  background: rgba(250, 204, 21, 0.1);
-  border: 1px solid rgba(250, 204, 21, 0.25);
+  font-weight: 900;
+  padding: 4px 12px;
+  background: var(--neo-green-light);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
   border-radius: 999px;
-  color: var(--wizard-accent-gold);
+  color: #14532d;
   margin-top: 4px;
 }
 
@@ -438,9 +473,10 @@
 }
 
 .gw-round-row-card {
-  background: var(--wizard-card-bg);
-  border: 1px solid var(--wizard-card-border);
+  background: var(--neo-card-white);
+  border: 3px solid var(--neo-border-black);
   border-radius: 16px;
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -457,8 +493,9 @@
 
 .gw-round-sec-name {
   font-family: 'Lilita One', sans-serif;
-  font-size: 15px;
-  color: var(--wizard-text-main);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--neo-text-main);
 }
 
 .gw-round-stepper-wrap {
@@ -468,64 +505,73 @@
 }
 
 .gw-quick-chip {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--wizard-text-muted);
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  color: var(--neo-text-main);
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 900;
   padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .gw-quick-chip:hover {
-  background: rgba(250, 204, 21, 0.15);
-  color: var(--wizard-accent-gold);
-  border-color: rgba(250, 204, 21, 0.3);
+  background: var(--neo-yellow-light);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
 }
 
 .gw-quick-chip.active {
-  background: var(--wizard-accent-gold);
-  color: #0b0d14;
-  border-color: var(--wizard-accent-gold);
-  font-weight: 800;
+  background: var(--neo-yellow);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  transform: translate(1px, 1px);
 }
 
 .gw-step-btn {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--wizard-text-main);
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  color: var(--neo-text-main);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 900;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .gw-step-btn:hover {
-  background: rgba(250, 204, 21, 0.2);
-  border-color: var(--wizard-accent-gold);
-  color: var(--wizard-accent-gold);
+  background: var(--neo-yellow-light);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+}
+
+.gw-step-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
 }
 
 .gw-stepper-val {
   min-width: 38px;
   text-align: center;
-  font-family: var(--font-mono, monospace);
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--wizard-accent-gold);
+  font-family: 'Lilita One', var(--font-mono, monospace);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--neo-text-main);
 }
 
 .gw-rounds-summary-bar {
-  background: rgba(250, 204, 21, 0.08);
-  border: 1px solid rgba(250, 204, 21, 0.25);
-  border-radius: 14px;
+  background: var(--neo-blue-light);
+  border: 3px solid var(--neo-border-black);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  border-radius: 16px;
   padding: 14px 20px;
   display: flex;
   align-items: center;
@@ -536,149 +582,135 @@
 .gw-summary-label {
   font-family: var(--font-mono, monospace);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 900;
   text-transform: uppercase;
-  color: var(--wizard-text-muted);
+  color: var(--neo-text-main);
 }
 
 .gw-summary-count {
   font-family: 'Lilita One', sans-serif;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
-  color: var(--wizard-accent-gold);
+  color: var(--neo-text-main);
 }
 
-/* ── STEP 4: Player Profile & SVG Avatars ── */
-.gw-profile-box {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.gw-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-}
-
-.gw-input-label {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--wizard-accent-gold);
-}
-
-.gw-text-input-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.gw-text-input-wrap svg {
-  position: absolute;
-  left: 14px;
-  color: var(--wizard-text-muted);
-  pointer-events: none;
-}
-
-.gw-name-input {
-  width: 100%;
-  background: rgba(12, 14, 24, 0.9);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 12px 14px 12px 42px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--wizard-text-main);
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.gw-name-input:focus {
-  border-color: var(--wizard-accent-gold);
-  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
-  background: rgba(16, 20, 32, 0.95);
-}
-
-/* ── Custom SVG Avatar Collection ── */
-.gw-avatar-collection-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 4px;
-}
-
-.gw-avatar-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+/* ── STEP 4: ScoopCast Default Avatar & Profile System ── */
+#gwStepPane-4 {
   gap: 12px;
 }
 
-.gw-avatar-card {
-  background: var(--wizard-card-bg);
-  border: 2px solid var(--wizard-card-border);
-  border-radius: 16px;
-  padding: 12px 8px;
+#gwStepPane-4 .mp-credentials-row-join {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+#gwStepPane-4 .mp-form-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
+  gap: 6px;
+  text-align: left;
 }
 
-.gw-avatar-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(250, 204, 21, 0.4);
+#gwStepPane-4 .mp-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--neo-border-black);
+  letter-spacing: 0.05em;
 }
 
-.gw-avatar-card.selected {
-  border-color: var(--wizard-accent-gold);
-  background: rgba(40, 36, 18, 0.7);
-  box-shadow: 0 0 0 2px var(--wizard-accent-gold), 0 8px 18px rgba(250, 204, 21, 0.25);
-  transform: translateY(-2px);
+#gwStepPane-4 .mp-input {
+  height: 50px;
+  min-height: 50px;
+  background: #FFFFFF;
+  border: 3px solid var(--neo-border-black);
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--neo-text-main);
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  outline: none;
+  font-family: var(--font-mono, monospace);
+  transition: all 0.15s ease;
 }
 
-.gw-avatar-svg-wrap {
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  overflow: hidden;
+#gwStepPane-4 .mp-input:focus {
+  background: var(--neo-yellow-light);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+}
+
+#gwStepPane-4 .mp-inline-preview-badge {
+  height: 50px;
+  min-height: 50px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--neo-card-white);
+  border: 3px solid var(--neo-border-black);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
 }
 
-.gw-avatar-card.selected .gw-avatar-svg-wrap::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 16px;
-  border: 2px solid var(--wizard-accent-gold);
-  animation: gwRingPulse 1.8s infinite;
-  pointer-events: none;
+#gwStepPane-4 .mp-avatar-picker-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
-.gw-avatar-name {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--wizard-text-main);
-  text-align: center;
-  white-space: nowrap;
+#gwStepPane-4 .mp-avatar-scroll-area {
+  min-height: 200px;
+  max-height: 270px;
+  height: 240px;
+  overflow-y: auto;
+  border: 3px solid var(--neo-border-black);
+  border-radius: 14px;
+  padding: 10px;
+  background: #FFFFFF;
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 680px) {
+  #gwStepPane-4 .mp-credentials-row-join {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  #gwStepPane-4 .mp-avatar-search-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #gwStepPane-4 .mp-avatar-search-input-wrap {
+    min-width: 100%;
+    width: 100%;
+  }
+  #gwStepPane-4 .mp-shuffle-btn,
+  #gwStepPane-4 .mp-custom-upload-btn {
+    flex: 1;
+    font-size: 11px;
+    padding: 0 10px;
+    height: 38px;
+  }
+  #gwStepPane-4 .mp-avatar-scroll-area {
+    min-height: 150px;
+    max-height: 190px;
+  }
 }
 
 /* ── Bottom Navigation Bar ── */
 .gw-footer {
   padding: 16px 24px 20px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(15, 18, 28, 0.7);
+  border-top: 4px solid var(--neo-border-black);
+  background: var(--neo-bg-cream);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -686,12 +718,13 @@
 }
 
 .gw-btn-back {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--wizard-text-muted);
+  background: var(--neo-bg-cream);
+  border: 3px solid var(--neo-border-black);
+  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  color: var(--neo-text-main);
   font-family: var(--font-mono, monospace);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 12px 20px;
@@ -700,20 +733,27 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .gw-btn-back:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--wizard-text-main);
+  background: #f4f4ee;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+}
+
+.gw-btn-back:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
 }
 
 .gw-btn-primary {
-  background: linear-gradient(135deg, var(--wizard-accent-gold) 0%, var(--wizard-accent-amber) 100%);
-  border: none;
-  color: #0b0d14;
+  background: var(--neo-green);
+  border: 3px solid var(--neo-border-black);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  color: #1a1a1a;
   font-family: 'Lilita One', var(--font-display, sans-serif);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 900;
   letter-spacing: 0.04em;
   padding: 14px 28px;
@@ -723,41 +763,48 @@
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(250, 204, 21, 0.35);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   min-width: 160px;
 }
 
 .gw-btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(250, 204, 21, 0.5);
-  filter: brightness(1.05);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.gw-btn-primary:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
 .gw-btn-primary:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
-/* ── STEP 5: Locked Settings Badge in Lobby ── */
+/* ── STEP 5: Locked Settings Badge in Lobby (Neobrutalism) ── */
 .gw-locked-badge-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  background: rgba(250, 204, 21, 0.08);
-  border: 1px solid rgba(250, 204, 21, 0.28);
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--neo-yellow-light);
+  border: 3px solid var(--neo-border-black);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
   cursor: pointer;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
 }
 
 .gw-locked-badge-wrap:hover {
-  background: rgba(250, 204, 21, 0.14);
-  border-color: var(--wizard-accent-gold);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  background: var(--neo-yellow);
 }
 
 .gw-locked-title {
@@ -766,23 +813,24 @@
   gap: 6px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--wizard-accent-gold);
+  color: var(--neo-text-main);
 }
 
 .gw-locked-detail {
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--wizard-text-muted);
+  font-weight: 700;
+  color: #444444;
 }
 
-/* ── Unready Notice & Preload Progress in Lobby ── */
+/* ── Unready Notice & Preload Progress in Lobby (Neobrutalism) ── */
 .gw-asset-notice-box {
-  background: rgba(245, 158, 11, 0.1);
-  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  background: var(--neo-yellow-light);
+  border: 3px solid var(--neo-border-black);
+  box-shadow: 4px 4px 0px var(--neo-shadow-black);
   border-radius: 14px;
   padding: 12px 18px;
   display: flex;
@@ -798,9 +846,9 @@
   gap: 8px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
-  color: var(--wizard-accent-amber);
+  color: #854d0e;
 }
 
 .gw-asset-player-item {
@@ -809,47 +857,50 @@
   justify-content: space-between;
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
-  color: var(--wizard-text-main);
+  font-weight: 700;
+  color: var(--neo-text-main);
 }
 
 .gw-progress-track {
   width: 90px;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  background: var(--neo-bg-cream);
+  border: 2px solid var(--neo-border-black);
+  box-shadow: 1px 1px 0px var(--neo-shadow-black);
   border-radius: 999px;
   overflow: hidden;
 }
 
 .gw-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--wizard-accent-amber), var(--wizard-accent-emerald));
+  background: var(--neo-green);
+  border-right: 2px solid var(--neo-border-black);
   border-radius: 999px;
   transition: width 0.3s ease;
 }
 
-/* ── Toast Confirmation ── */
+/* ── Toast Confirmation (Neobrutalism) ── */
 .gw-toast {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(30px);
-  background: rgba(15, 18, 28, 0.95);
-  border: 1px solid rgba(250, 204, 21, 0.35);
-  backdrop-filter: blur(12px);
-  padding: 12px 20px;
+  background: var(--neo-border-black);
+  border: 3px solid var(--neo-yellow);
+  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  padding: 12px 22px;
   border-radius: 12px;
-  color: var(--wizard-text-main);
+  color: var(--neo-bg-cream);
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 800;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(250, 204, 21, 0.15);
   z-index: 10001;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gw-toast.active {
@@ -869,13 +920,7 @@
   50% { opacity: 0.5; transform: scale(0.85); }
 }
 
-@keyframes gwRingPulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.08); opacity: 0.4; }
-  100% { transform: scale(1); opacity: 0.8; }
-}
-
-/* ── Mobile Responsive Overrides ── */
+/* ── Mobile Responsive Overrides (Neobrutalism) ── */
 @media (max-width: 768px) {
   .gw-modal-overlay {
     padding: 0;
@@ -890,6 +935,7 @@
     border-left: none;
     border-right: none;
     border-bottom: none;
+    box-shadow: 0 -6px 0px var(--neo-shadow-black);
   }
 
   .gw-header {
@@ -921,7 +967,7 @@
     margin-bottom: 0;
     width: 46px;
     height: 46px;
-    shrink: 0;
+    flex-shrink: 0;
   }
 
   .gw-avatar-grid {
