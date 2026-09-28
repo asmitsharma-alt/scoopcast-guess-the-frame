@@ -457,6 +457,51 @@ input, textarea {
   color: #fff;
 }
 
+.avatar-chip-img-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--nb-ink);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #facc15;
+  flex-shrink: 0;
+}
+
+.avatar-chip-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.avatar-explore-btn {
+  width: 100%;
+  margin-top: 8px;
+  height: 36px;
+  border-radius: 10px;
+  border: var(--nb-border-sm);
+  background: #f1f5f9;
+  box-shadow: var(--nb-shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--nb-ink);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.avatar-explore-btn:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0 var(--nb-ink);
+}
+
 /* Home Action Buttons */
 .btn-action-col {
   width: 100%;
