@@ -1,40 +1,41 @@
 /* ═══════════════════════════════════════════════════════════════════
-   SCOOPCAST AAA GAME CREATION FLOW & LOBBY SYSTEM
-   Pure Neobrutalism Design System | Bold 4px Borders | Hard Drop Shadows
-   Zero Blur | High-Contrast Retro Cinema Palette | Responsive Desktop & Mobile
+   SCOOPCAST ANDROID MULTIPLAYER CREATION WIZARD
+   Pure Neobrutalism Design System | Tailored for Android OS
+   Bottom Sheet Architecture | 44px+ Touch Targets | Zero Emoji Policy
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  --neo-bg-cream: #fffdf5;
-  --neo-card-white: #ffffff;
-  --neo-border-black: #1a1a1a;
-  --neo-shadow-black: #1a1a1a;
-  --neo-yellow: #facc15;
-  --neo-yellow-light: #fef08a;
-  --neo-green: #22c55e;
-  --neo-green-light: #86efac;
-  --neo-blue-light: #cae6ff;
-  --neo-pink-light: #ffd8df;
-  --neo-purple: #c084fc;
-  --neo-text-main: #1a1a1a;
+  --neo-bg-cream: #FFFDF5;
+  --neo-card-white: #FFFFFF;
+  --neo-border-black: #1A1A1A;
+  --neo-shadow-black: #1A1A1A;
+  --neo-yellow: #FACC15;
+  --neo-yellow-light: #FEF08A;
+  --neo-green: #22C55E;
+  --neo-green-light: #86EFAC;
+  --neo-blue-light: #CAE6FF;
+  --neo-pink-light: #FFD8DF;
+  --neo-text-main: #1A1A1A;
   --neo-text-muted: #555555;
+  --wizard-accent-gold: #FACC15;
+  --wizard-text-muted: #555555;
 }
 
-/* ── Modal Overlay ── */
+/* ── Modal Overlay (Android Bottom Sheet Backdrop) ── */
 .gw-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* Docks to bottom on Android */
   justify-content: center;
-  padding: 16px;
+  padding: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gw-modal-overlay.active {
@@ -42,34 +43,50 @@
   pointer-events: auto;
 }
 
-/* ── Wizard Dialog Container (Neobrutalism) ── */
+/* ── Wizard Dialog Container (Android Bottom Sheet) ── */
 .gw-dialog {
   width: 100%;
-  max-width: 740px;
-  max-height: 92vh;
+  max-width: 520px;
+  max-height: 88vh;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   background: var(--neo-bg-cream);
   border: 4px solid var(--neo-border-black);
-  border-radius: 20px;
-  box-shadow: 8px 8px 0px var(--neo-shadow-black);
+  border-bottom: none;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 -8px 0px rgba(26, 26, 26, 0.9);
   overflow: hidden;
-  transform: scale(0.95) translateY(10px);
-  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .gw-modal-overlay.active .gw-dialog {
-  transform: scale(1) translateY(0);
+  transform: translateY(0);
+}
+
+/* ── Android Tactile Drag Handle ── */
+.gw-android-drag-handle {
+  width: 44px;
+  height: 5px;
+  background: var(--neo-border-black);
+  border-radius: 999px;
+  margin: 10px auto 4px auto;
+  flex-shrink: 0;
 }
 
 /* ── Top Header & Progress Stepper ── */
 .gw-header {
-  padding: 18px 24px 16px 24px;
-  border-bottom: 4px solid var(--neo-border-black);
+  padding: 12px 18px 14px 18px;
+  border-bottom: 3.5px solid var(--neo-border-black);
   background: var(--neo-yellow);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .gw-header-top {
@@ -81,7 +98,7 @@
 .gw-brand-tag {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 900;
@@ -89,14 +106,14 @@
   letter-spacing: 0.12em;
   background: var(--neo-border-black);
   color: var(--neo-yellow);
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 8px;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
 }
 
 .gw-brand-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   background: var(--neo-yellow);
   border-radius: 50%;
   animation: gwPulse 1.8s infinite;
@@ -104,46 +121,39 @@
 
 .gw-close-btn {
   background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
+  border: 2.5px solid var(--neo-border-black);
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
   color: var(--neo-text-main);
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-weight: 900;
-  font-size: 14px;
-  transition: all 0.15s ease;
-}
-
-.gw-close-btn:hover {
-  background: #ff6b6b;
-  color: #ffffff;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  transition: all 0.12s ease;
+  touch-action: manipulation;
 }
 
 .gw-close-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--neo-shadow-black);
 }
 
-/* ── Progress Stepper Bar ── */
+/* ── Progress Stepper Bar (3-Step Android Distribution) ── */
 .gw-stepper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
   gap: 8px;
+  width: 100%;
 }
 
 .gw-step-node {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex: 1;
   position: relative;
 }
@@ -152,11 +162,10 @@
   width: 100%;
   height: 8px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.16);
   border: 2px solid var(--neo-border-black);
   overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.22s ease;
 }
 
 .gw-step-node.active .gw-step-pill {
@@ -178,39 +187,48 @@
   margin-top: -4px;
 }
 
+.gw-step-labels span {
+  flex: 1;
+  text-align: center;
+  opacity: 0.6;
+}
+
 .gw-step-labels span.active {
   color: var(--neo-border-black);
+  opacity: 1;
+  font-weight: 900;
   text-decoration: underline;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 2.5px;
 }
 
 /* ── Content Viewport ── */
 .gw-content-body {
-  padding: 24px;
+  padding: 16px 18px;
   overflow-y: auto;
   flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--neo-bg-cream);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .gw-content-body::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 .gw-content-body::-webkit-scrollbar-track {
-  background: #f4f4ee;
-  border-left: 2px solid var(--neo-border-black);
+  background: transparent;
 }
 .gw-content-body::-webkit-scrollbar-thumb {
   background: var(--neo-yellow);
-  border: 2px solid var(--neo-border-black);
+  border: 1.5px solid var(--neo-border-black);
   border-radius: 999px;
 }
 
 .gw-step-pane {
   display: none;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
   animation: gwFadeIn 0.2s ease-out forwards;
 }
 
@@ -225,7 +243,7 @@
 
 .gw-screen-title {
   font-family: 'Lilita One', var(--font-display, sans-serif);
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 900;
   letter-spacing: 0.02em;
   color: var(--neo-text-main);
@@ -236,17 +254,17 @@
 
 .gw-screen-subtitle {
   font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--neo-text-muted);
-  margin: 6px 0 0 0;
+  margin: 4px 0 0 0;
 }
 
-/* ── STEP 1: Difficulty Cards ── */
+/* ── STEP 1: Difficulty Cards (Android List-Tile Format) ── */
 .gw-difficulty-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .gw-diff-card {
@@ -254,113 +272,105 @@
   border: 3px solid var(--neo-border-black);
   border-radius: 16px;
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 20px 16px;
+  padding: 13px 15px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
+  text-align: left;
+  gap: 13px;
   cursor: pointer;
   position: relative;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.gw-diff-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+.gw-diff-card:active {
+  transform: scale(0.98);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
 .gw-diff-card.selected {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  border-color: var(--neo-border-black);
+  background: var(--neo-yellow-light);
+  box-shadow: 5px 5px 0px var(--neo-shadow-black);
 }
 
 .gw-diff-card.popcorn.selected {
   background: var(--neo-blue-light);
 }
 
-.gw-diff-card.cinephile.selected {
-  background: var(--neo-yellow-light);
-}
-
 .gw-diff-card.director.selected {
   background: var(--neo-pink-light);
 }
 
-.gw-diff-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: transparent;
-}
-
-.gw-diff-card.popcorn.selected::before { background: var(--neo-green); }
-.gw-diff-card.cinephile.selected::before { background: var(--neo-yellow); }
-.gw-diff-card.director.selected::before { background: #ef4444; }
-
 .gw-diff-icon-wrap {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 12px;
   background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
+  border: 2.5px solid var(--neo-border-black);
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
   color: var(--neo-text-main);
-  transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .gw-diff-card.selected .gw-diff-icon-wrap {
-  transform: scale(1.08);
-  background: #ffffff;
+  background: #FFFFFF;
+}
+
+.gw-diff-info-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .gw-diff-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 900;
   letter-spacing: 0.02em;
   color: var(--neo-text-main);
-  margin-bottom: 6px;
+  margin: 0;
 }
 
 .gw-diff-badge {
+  display: inline-block;
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 900;
   text-transform: uppercase;
-  padding: 3px 10px;
+  padding: 2px 8px;
   border-radius: 999px;
-  letter-spacing: 0.06em;
-  border: 2px solid var(--neo-border-black);
+  letter-spacing: 0.05em;
+  border: 1.5px solid var(--neo-border-black);
   box-shadow: 1px 1px 0px var(--neo-shadow-black);
-  margin-bottom: 10px;
+  width: fit-content;
+  margin: 2px 0;
 }
 
-.gw-badge-easy { background: var(--neo-green-light); color: #14532d; }
-.gw-badge-medium { background: var(--neo-yellow); color: #713f12; }
-.gw-badge-hard { background: #fca5a5; color: #7f1d1d; }
+.gw-badge-easy { background: var(--neo-green-light); color: #14532D; }
+.gw-badge-medium { background: var(--neo-yellow); color: #713F12; }
+.gw-badge-hard { background: #FCA5A5; color: #7F1D1D; }
 
 .gw-diff-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--neo-text-muted);
+  margin: 0;
 }
 
-/* ── STEP 2: Section Multi-Select Cards ── */
+/* ── STEP 2: Section Multi-Select Cards (Android Format) ── */
 .gw-section-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .gw-sec-card {
@@ -368,47 +378,51 @@
   border: 3px solid var(--neo-border-black);
   border-radius: 16px;
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 16px 20px;
+  padding: 13px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.gw-sec-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+.gw-sec-card:active {
+  transform: scale(0.98);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
 .gw-sec-card.selected {
   background: var(--neo-yellow-light);
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  border-color: var(--neo-border-black);
+  box-shadow: 5px 5px 0px var(--neo-shadow-black);
 }
 
 .gw-sec-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .gw-sec-icon-wrap {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 12px;
   background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
+  border: 2.5px solid var(--neo-border-black);
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--neo-text-main);
+  flex-shrink: 0;
 }
 
 .gw-sec-card.selected .gw-sec-icon-wrap {
-  background: #ffffff;
+  background: #FFFFFF;
 }
 
 .gw-sec-info {
@@ -417,15 +431,15 @@
 
 .gw-sec-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 900;
   color: var(--neo-text-main);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .gw-sec-desc {
   font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--neo-text-muted);
 }
@@ -433,8 +447,9 @@
 .gw-checkbox-pill {
   width: 28px;
   height: 28px;
+  min-width: 28px;
   border-radius: 8px;
-  border: 2px solid var(--neo-border-black);
+  border: 2.5px solid var(--neo-border-black);
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
   display: flex;
   align-items: center;
@@ -446,7 +461,7 @@
 
 .gw-sec-card.selected .gw-checkbox-pill {
   background: var(--neo-green);
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .gw-selected-count-badge {
@@ -461,15 +476,16 @@
   border: 2px solid var(--neo-border-black);
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
   border-radius: 999px;
-  color: #14532d;
+  color: #14532D;
   margin-top: 4px;
+  width: fit-content;
 }
 
-/* ── STEP 3: Rounds Configuration ── */
+/* ── STEP 3: Rounds Configuration (Android Steppers) ── */
 .gw-rounds-config-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .gw-round-row-card {
@@ -477,65 +493,68 @@
   border: 3px solid var(--neo-border-black);
   border-radius: 16px;
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 16px 20px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
 .gw-round-row-left {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 170px;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 .gw-round-sec-name {
   font-family: 'Lilita One', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: var(--neo-text-main);
+  text-align: left;
 }
 
 .gw-round-stepper-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .gw-step-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px;
   background: var(--neo-bg-cream);
   border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2.5px 2.5px 0px var(--neo-shadow-black);
+  box-shadow: 2px 2px 0px var(--neo-shadow-black);
   color: var(--neo-text-main);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono, monospace);
   font-weight: 900;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: all 0.12s ease;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .gw-step-btn:hover {
   background: var(--neo-yellow);
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0px var(--neo-shadow-black);
 }
 
 .gw-step-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 0.5px 0.5px 0px var(--neo-shadow-black);
+  box-shadow: 0px 0px 0px var(--neo-shadow-black);
 }
 
 .gw-stepper-val {
-  min-width: 44px;
+  min-width: 40px;
   text-align: center;
   font-family: 'Lilita One', var(--font-mono, monospace);
   font-size: 22px;
@@ -549,16 +568,16 @@
   border: 3px solid var(--neo-border-black);
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
   border-radius: 16px;
-  padding: 14px 20px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .gw-summary-label {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
   color: var(--neo-text-main);
@@ -571,184 +590,64 @@
   color: var(--neo-text-main);
 }
 
-/* ── STEP 4: ScoopCast Default Avatar & Profile System ── */
-#gwStepPane-4 {
-  gap: 12px;
-}
-
-#gwStepPane-4 .mp-credentials-row-join {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  width: 100%;
-  flex-shrink: 0;
-}
-
-#gwStepPane-4 .mp-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  text-align: left;
-}
-
-#gwStepPane-4 .mp-label {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: var(--neo-border-black);
-  letter-spacing: 0.05em;
-}
-
-#gwStepPane-4 .mp-input {
-  height: 50px;
-  min-height: 50px;
-  background: #FFFFFF;
-  border: 3px solid var(--neo-border-black);
-  border-radius: 12px;
-  padding: 0 14px;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--neo-text-main);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
-  outline: none;
-  font-family: var(--font-mono, monospace);
-  transition: all 0.15s ease;
-}
-
-#gwStepPane-4 .mp-input:focus {
-  background: var(--neo-yellow-light);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-}
-
-#gwStepPane-4 .mp-inline-preview-badge {
-  height: 50px;
-  min-height: 50px;
+/* ── Sticky Bottom Action Bar (Thumb-Level Dock) ── */
+.gw-footer {
+  padding: 12px 18px max(14px, env(safe-area-inset-bottom, 0px)) 18px;
+  border-top: 3.5px solid var(--neo-border-black);
+  background: var(--neo-bg-cream);
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 12px;
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
-  border-radius: 12px;
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
-}
-
-#gwStepPane-4 .mp-avatar-picker-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-}
-
-#gwStepPane-4 .mp-avatar-scroll-area {
-  min-height: 200px;
-  max-height: 270px;
-  height: 240px;
-  overflow-y: auto;
-  border: 3px solid var(--neo-border-black);
-  border-radius: 14px;
-  padding: 10px;
-  background: #FFFFFF;
-  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 680px) {
-  #gwStepPane-4 .mp-credentials-row-join {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  #gwStepPane-4 .mp-avatar-search-bar {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  #gwStepPane-4 .mp-avatar-search-input-wrap {
-    min-width: 100%;
-    width: 100%;
-  }
-  #gwStepPane-4 .mp-shuffle-btn,
-  #gwStepPane-4 .mp-custom-upload-btn {
-    flex: 1;
-    font-size: 11px;
-    padding: 0 10px;
-    height: 38px;
-  }
-  #gwStepPane-4 .mp-avatar-scroll-area {
-    min-height: 150px;
-    max-height: 190px;
-  }
-}
-
-/* ── Bottom Navigation Bar ── */
-.gw-footer {
-  padding: 16px 24px 20px 24px;
-  border-top: 4px solid var(--neo-border-black);
-  background: var(--neo-bg-cream);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  flex-shrink: 0;
 }
 
 .gw-btn-back {
-  background: var(--neo-bg-cream);
+  background: #FFFFFF;
   border: 3px solid var(--neo-border-black);
   box-shadow: 3px 3px 0px var(--neo-shadow-black);
   color: var(--neo-text-main);
-  font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 12px 20px;
-  border-radius: 12px;
+  padding: 12px 18px;
+  min-height: 48px;
+  border-radius: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.gw-btn-back:hover {
-  background: #f4f4ee;
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  font-family: 'Lilita One', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.12s ease;
+  touch-action: manipulation;
 }
 
 .gw-btn-back:active {
-  transform: translate(1px, 1px);
+  transform: translate(2px, 2px);
   box-shadow: 1px 1px 0px var(--neo-shadow-black);
 }
 
 .gw-btn-primary {
+  flex: 1;
   background: var(--neo-green);
   border: 3px solid var(--neo-border-black);
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  color: #1a1a1a;
-  font-family: 'Lilita One', var(--font-display, sans-serif);
-  font-size: 17px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  padding: 14px 28px;
-  border-radius: 12px;
+  color: var(--neo-text-main);
+  padding: 12px 20px;
+  min-height: 48px;
+  border-radius: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  min-width: 160px;
-}
-
-.gw-btn-primary:hover:not(:disabled) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  background: #16a34a;
-  color: #ffffff;
+  font-family: 'Lilita One', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.12s ease;
+  touch-action: manipulation;
 }
 
 .gw-btn-primary:active:not(:disabled) {
@@ -763,99 +662,6 @@
   box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
-/* ── STEP 5: Locked Settings Badge in Lobby (Neobrutalism) ── */
-.gw-locked-badge-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  border-radius: 14px;
-  background: var(--neo-yellow-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.18s ease;
-}
-
-.gw-locked-badge-wrap:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  background: var(--neo-yellow);
-}
-
-.gw-locked-title {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--neo-text-main);
-}
-
-.gw-locked-detail {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: #444444;
-}
-
-/* ── Unready Notice & Preload Progress in Lobby (Neobrutalism) ── */
-.gw-asset-notice-box {
-  background: var(--neo-yellow-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  border-radius: 14px;
-  padding: 12px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: left;
-  margin-top: 10px;
-}
-
-.gw-asset-notice-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: #854d0e;
-}
-
-.gw-asset-player-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neo-text-main);
-}
-
-.gw-progress-track {
-  width: 90px;
-  height: 8px;
-  background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.gw-progress-fill {
-  height: 100%;
-  background: var(--neo-green);
-  border-right: 2px solid var(--neo-border-black);
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
-
 /* ── Toast Confirmation (Neobrutalism) ── */
 .gw-toast {
   position: fixed;
@@ -865,7 +671,7 @@
   background: var(--neo-border-black);
   border: 3px solid var(--neo-yellow);
   box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  padding: 12px 22px;
+  padding: 12px 20px;
   border-radius: 12px;
   color: var(--neo-bg-cream);
   font-family: 'DM Sans', sans-serif;
@@ -895,70 +701,4 @@
 @keyframes gwPulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-/* ── Mobile Responsive Overrides (Neobrutalism) ── */
-@media (max-width: 768px) {
-  .gw-modal-overlay {
-    padding: 0;
-    align-items: flex-end;
-  }
-  
-  .gw-dialog {
-    max-width: 100%;
-    max-height: 94vh;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    box-shadow: 0 -6px 0px var(--neo-shadow-black);
-  }
-
-  .gw-header {
-    padding: 16px 18px 12px 18px;
-  }
-
-  .gw-content-body {
-    padding: 16px 18px;
-  }
-
-  .gw-screen-title {
-    font-size: 22px;
-  }
-
-  .gw-difficulty-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .gw-diff-card {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    gap: 14px;
-    padding: 14px;
-  }
-
-  .gw-diff-icon-wrap {
-    margin-bottom: 0;
-    width: 46px;
-    height: 46px;
-    flex-shrink: 0;
-  }
-
-  .gw-avatar-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .gw-footer {
-    padding: 12px 18px 16px 18px;
-  }
-
-  .gw-btn-primary {
-    flex: 1;
-    padding: 12px 18px;
-    font-size: 15px;
-  }
 }

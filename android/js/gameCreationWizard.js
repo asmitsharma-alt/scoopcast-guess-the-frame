@@ -155,7 +155,9 @@
     },
 
     goToStep(stepNum) {
-      if (stepNum < 1 || stepNum > 4) return;
+      if (stepNum < 1 || stepNum > 3) return;
+
+      if (typeof Haptics !== 'undefined' && Haptics.tap) Haptics.tap();
 
       // Validation before leaving Step 2 (at least one section must be chosen)
       if (this.currentStep === 2 && stepNum > 2) {
@@ -165,39 +167,8 @@
         }
       }
 
-      // Validation before leaving Step 3 (rounds between 3 and 30)
-      if (this.currentStep === 3 && stepNum > 3) {
-        const total = this.getTotalRounds();
-        if (total < 3) {
-          this.showNotice('Minimum game length is 3 rounds.');
-          return;
-        }
-        if (total > 30) {
-          this.showNotice('Maximum game length is 30 rounds.');
-          return;
-        }
-      }
-
       this.currentStep = stepNum;
       this.render();
-
-      // Focus name input and render avatar picker when landing on Step 4
-      if (this.currentStep === 4) {
-        if (typeof AvatarPicker !== 'undefined') {
-          const currentAvatar = this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : null) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
-          AvatarPicker.selectedAvatar = currentAvatar;
-          AvatarPicker.updateAllPreviews();
-          AvatarPicker.renderCategories('hostCategoryBar');
-          AvatarPicker.renderGrid('hostAvatarGrid', 'hostLoadingIndicator');
-        }
-        setTimeout(() => {
-          const input = document.getElementById('hostPlayerNameInput');
-          if (input) {
-            input.focus();
-            input.select();
-          }
-        }, 150);
-      }
     },
 
     nextStep() {
@@ -249,17 +220,22 @@
       return this.state.sections.reduce((acc, sec) => acc + (this.state.rounds[sec] || 0), 0);
     },
 
-    // ── STEP 4: Player Profile ──
-    setPlayerName(name) {
-      this.state.playerName = (name || '').trim();
-    },
-
-    // ── STEP 5: Create Lobby & Lock Configuration ──
+    // ── STEP 3: Create Lobby & Lock Configuration ──
     async enterLobby() {
-      const nameInput = document.getElementById('hostPlayerNameInput');
-      const enteredName = (nameInput && nameInput.value.trim()) || this.state.playerName || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
+      if (typeof Haptics !== 'undefined' && Haptics.impact) Haptics.impact('medium');
 
-      const selectedAvatar = (typeof AvatarPicker !== 'undefined' ? AvatarPicker.selectedAvatar : null) || this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+      // Auto-retrieve player name and avatar from mobile home screen & storage
+      const nameInput = document.getElementById('playerNameInput');
+      const enteredName = (nameInput && nameInput.value.trim()) ||
+                          (typeof UI !== 'undefined' && UI.playerName) ||
+                          (typeof GameClient !== 'undefined' && GameClient.playerName) ||
+                          localStorage.getItem('gtf_player_name') ||
+                          'Player';
+
+      const selectedAvatar = (typeof UI !== 'undefined' && UI.selectedAvatar) ||
+                             (typeof GameClient !== 'undefined' && GameClient.playerAvatar) ||
+                             localStorage.getItem('gtf_player_avatar') ||
+                             'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
 
       this.state.playerName = enteredName;
       this.state.avatarUrl = selectedAvatar;
@@ -267,15 +243,14 @@
       localStorage.setItem('gtf_player_name', enteredName);
       localStorage.setItem('gtf_player_avatar', selectedAvatar);
 
-      if (typeof MultiplayerEngine !== 'undefined') {
-        MultiplayerEngine.playerName = enteredName;
-        MultiplayerEngine.playerAvatar = selectedAvatar;
+      if (typeof GameClient !== 'undefined') {
+        GameClient.playerName = enteredName;
+        GameClient.playerAvatar = selectedAvatar;
       }
 
       const totalRounds = this.getTotalRounds();
       if (totalRounds < 3 || totalRounds > 30) {
         this.showNotice('Please ensure total rounds are between 3 and 30.');
-        this.goToStep(3);
         return;
       }
 
@@ -286,9 +261,8 @@
       }
 
       try {
-        // Delegate to MultiplayerEngine (desktop) or GameClient (mobile/android)
-        if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.createRoomFromWizard) {
-          await MultiplayerEngine.createRoomFromWizard({
+        if (typeof GameClient !== 'undefined' && GameClient.createRoomFromWizard) {
+          await GameClient.createRoomFromWizard({
             mode: this.state.mode,
             sections: [...this.state.sections],
             rounds: { ...this.state.rounds },
@@ -296,8 +270,8 @@
             playerName: enteredName,
             avatar: selectedAvatar
           });
-        } else if (typeof GameClient !== 'undefined' && GameClient.createRoomFromWizard) {
-          await GameClient.createRoomFromWizard({
+        } else if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.createRoomFromWizard) {
+          await MultiplayerEngine.createRoomFromWizard({
             mode: this.state.mode,
             sections: [...this.state.sections],
             rounds: { ...this.state.rounds },
@@ -313,7 +287,7 @@
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerHTML = `<span>Enter Lobby</span> ${WIZARD_ICONS.arrowRight}`;
+          submitBtn.innerHTML = `<span>CREATE ROOM</span> ${WIZARD_ICONS.arrowRight}`;
         }
       }
     },
@@ -334,18 +308,17 @@
       }, 3200);
     },
 
-    // ── Render Methods ──
+    // ── Render Methods (3-Step Android Flow) ──
     render() {
       this.renderStepper();
       this.renderStep1();
       this.renderStep2();
       this.renderStep3();
-      this.renderStep4();
       this.updateNavigationButtons();
     },
 
     renderStepper() {
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 3; i++) {
         const node = document.getElementById(`gwStepNode-${i}`);
         const label = document.getElementById(`gwStepLabel-${i}`);
         const pane = document.getElementById(`gwStepPane-${i}`);
@@ -440,24 +413,8 @@
           <span class="gw-summary-count">${total}</span>
         </div>
       `;
-    },
 
-    renderStep4() {
-      const nameInput = document.getElementById('hostPlayerNameInput');
-      if (nameInput) {
-        if (!nameInput.value || !nameInput.value.trim()) {
-          nameInput.value = this.state.playerName || localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
-        }
-        this.state.playerName = nameInput.value.trim();
-      }
-
-      if (typeof AvatarPicker !== 'undefined') {
-        const currentAvatar = this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : null) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
-        AvatarPicker.selectedAvatar = currentAvatar;
-        AvatarPicker.updateAllPreviews();
-        AvatarPicker.renderCategories('hostCategoryBar');
-        AvatarPicker.renderGrid('hostAvatarGrid', 'hostLoadingIndicator');
-      }
+      this.updateNavigationButtons();
     },
 
     updateNavigationButtons() {
@@ -470,17 +427,16 @@
       }
 
       if (nextBtn) {
-        nextBtn.style.display = this.currentStep < 4 ? 'inline-flex' : 'none';
-        if (this.currentStep === 3) {
-          const total = this.getTotalRounds();
-          nextBtn.disabled = total < 3 || total > 30;
-        } else {
-          nextBtn.disabled = false;
-        }
+        nextBtn.style.display = this.currentStep < 3 ? 'inline-flex' : 'none';
+        nextBtn.disabled = false;
       }
 
       if (enterBtn) {
-        enterBtn.style.display = this.currentStep === 4 ? 'inline-flex' : 'none';
+        enterBtn.style.display = this.currentStep === 3 ? 'inline-flex' : 'none';
+        if (this.currentStep === 3) {
+          const total = this.getTotalRounds();
+          enterBtn.disabled = total < 3 || total > 30;
+        }
       }
     }
   };
