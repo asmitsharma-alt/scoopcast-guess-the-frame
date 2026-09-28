@@ -1,21 +1,26 @@
-name: Auto Collect Movie Frames (Cloudinary + Gemini AI)
+name: Auto Harvest 1080p Movie Frames (Cloudinary + Gemini AI)
 
 on:
-  # Allows triggering manually from the GitHub UI with custom runtime
+  # Allows triggering manually from the GitHub UI with custom runtime & limit
   workflow_dispatch:
     inputs:
       max_minutes:
-        description: 'Maximum runtime in minutes (e.g. 60)'
+        description: 'Maximum runtime in minutes'
         required: true
         default: '60'
         type: string
       limit:
         description: 'Maximum new frames to collect'
         required: false
-        default: '1000'
+        default: '600'
+        type: string
+      workers:
+        description: 'Number of concurrent worker threads'
+        required: false
+        default: '6'
         type: string
 
-  # Runs automatically 7 days a week, 3 times a day (every 8 hours: 00:00, 08:00, 16:00 UTC)
+  # Runs 3 times a day (every 8 hours: 00:00, 08:00, 16:00 UTC)
   schedule:
     - cron: '0 0,8,16 * * *'
 
@@ -23,48 +28,49 @@ permissions:
   contents: write
 
 jobs:
-  collect-frames:
+  harvest-frames:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 80
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Frame Auto-Collector
+      - name: Run 1-Hour 1080p Frame Harvester
         env:
           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_API_KEY_BACKUP: ${{ secrets.GEMINI_API_KEY_BACKUP }}
           PYTHONUNBUFFERED: "1"
         run: |
-          python scripts/auto_collect_frames.py \
+          python scripts/local_fast_farmer.py \
             --max-minutes "${{ github.event.inputs.max_minutes || '60' }}" \
-            --limit "${{ github.event.inputs.limit || '1000' }}"
+            --limit "${{ github.event.inputs.limit || '600' }}" \
+            --workers "${{ github.event.inputs.workers || '6' }}"
 
-      - name: Commit & Push New Frames
+      - name: Commit & Push Updated frames.json
         if: always()
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add data/frames.json
           if ! git diff-index --quiet HEAD; then
-            git commit -m "chore(data): auto-collect verified movie frames [skip ci]"
+            git commit -m "chore(data): auto-collect verified 1080p movie frames [skip ci]"
             git pull --rebase origin main
             git push origin main
           else

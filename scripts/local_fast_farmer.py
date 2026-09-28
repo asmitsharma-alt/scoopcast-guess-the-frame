@@ -241,9 +241,10 @@ Return strict JSON:
         "generationConfig": {"response_mime_type": "application/json"}
     }
 
-    # Try up to 2 keys
+    # Try with key rotation and jittered backoff for multi-worker scaling
     keys_tried = 0
-    while keys_tried < max(1, len(GEMINI_KEYS)):
+    max_attempts = max(4, len(GEMINI_KEYS) * 2)
+    while keys_tried < max_attempts:
         api_key = get_next_gemini_key()
         keys_tried += 1
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key={api_key}"
@@ -253,13 +254,15 @@ Return strict JSON:
                 data=json.dumps(payload).encode("utf-8"),
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=12) as resp:
+            with urllib.request.urlopen(req, timeout=15) as resp:
                 res = json.loads(resp.read().decode("utf-8"))
                 raw = res["candidates"][0]["content"]["parts"][0]["text"]
                 return json.loads(raw)
         except urllib.error.HTTPError as e:
-            if e.code in (429, 403, 503):
-                time.sleep(0.5)
+            if e.code in (429, 503):
+                time.sleep(1.0 + random.uniform(0.2, 0.8))
+                continue
+            if e.code == 403:
                 continue
             break
         except Exception:
@@ -426,17 +429,11 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         # Quality gate: 1080p + Zero Text + Middle Story Scene + Clear + Iconic
         if is_frame and no_text and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
             try:
-                # Convert to WebP in memory (pristine quality 90)
-                im = im.convert("RGB")
-                webp_buf = io.BytesIO()
-                im.save(webp_buf, format="WEBP", quality=90)
-                webp_bytes = webp_buf.getvalue()
-
                 public_id = sanitize_public_id(title, year)
 
-                # Upload to Cloudinary
+                # Upload 100% uncompressed raw master image directly to Cloudinary (zero compression, pure original quality)
                 upload_res = cloudinary.uploader.upload(
-                    webp_bytes,
+                    raw_bytes,
                     folder="scoopcast_frames",
                     public_id=public_id,
                     resource_type="image",
