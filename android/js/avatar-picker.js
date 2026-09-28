@@ -30,7 +30,7 @@
       if (options.initialAvatar) {
         this.selectedAvatar = options.initialAvatar;
       } else {
-        const saved = localStorage.getItem('gtf_m_avatar') || localStorage.getItem('gtf_player_avatar');
+        const saved = localStorage.getItem('gtf_player_avatar') || localStorage.getItem('gtf_m_avatar');
         if (saved) this.selectedAvatar = saved;
       }
       if (typeof options.onSelect === 'function') {

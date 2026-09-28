@@ -352,7 +352,11 @@ const UI = {
       hostBtn.addEventListener('click', () => {
         this.saveName();
         if (typeof Haptics !== 'undefined') Haptics.tap();
-        GameClient.hostGame();
+        if (typeof CreateRoomWizard !== 'undefined') {
+          CreateRoomWizard.open();
+        } else {
+          GameClient.hostGame();
+        }
       });
     }
 

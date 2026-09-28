@@ -591,6 +591,33 @@ const GameClient = {
     }
   },
 
+  async createRoomFromWizard(wizardConfig) {
+    const { mode, sections, rounds, totalRounds, playerName, avatar } = wizardConfig;
+    this.playerName = playerName || 'Player';
+    this.playerAvatar = (avatar && avatar.dataUri) || (typeof avatar === 'string' ? avatar : (avatar && avatar.url ? avatar.url : 'aman'));
+    
+    const modeCapitalized = mode === 'director' ? "Director's Cut" : (mode.charAt(0).toUpperCase() + mode.slice(1));
+    const counts = {
+      frames: (sections.includes('frame') ? (rounds.frame || 5) : 0),
+      eyes: (sections.includes('eyes') ? (rounds.eyes || 5) : 0),
+      dialogue: (sections.includes('dialogue') ? (rounds.dialogue || 5) : 0)
+    };
+    const totalR = totalRounds || (Object.values(counts).reduce((a, b) => a + b, 0)) || 15;
+
+    localStorage.setItem('gtf_player_name', this.playerName);
+    localStorage.setItem('gtf_player_avatar', this.playerAvatar);
+
+    return this.hostGame({
+      mode: modeCapitalized,
+      category: sections.length >= 3 ? 'all' : (sections.length === 1 ? sections[0] : 'mixed'),
+      categories: sections.map(s => s === 'frame' ? 'frames' : s),
+      roundsByMode: counts,
+      rounds: totalR,
+      timer: 30,
+      weeklyOnly: true
+    });
+  },
+
   async hostGame(options = {}) {
     this.init();
     this.cleanupTransport();
@@ -604,9 +631,9 @@ const GameClient = {
       ? { ...options.roundsByMode }
       : { frames: 20, eyes: 10, dialogue: 10 };
     const counts = {
-      frames: Math.min(20, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
-      dialogue: Math.min(10, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
-      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
+      frames: Math.min(30, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
+      dialogue: Math.min(30, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
+      eyes: Math.min(30, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
     };
     const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
 
