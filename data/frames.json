@@ -1496,5 +1496,68 @@
     "answer": "ANATOMY OF A MURDER",
     "year": "1959",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588963/scoopcast_frames/Rift_2017.jpg",
+    "answer": "RIFT",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588964/scoopcast_frames/The_Killing_of_a_Chinese_Bookie_1976.jpg",
+    "answer": "THE KILLING OF A CHINESE BOOKIE",
+    "year": "1976",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588988/scoopcast_frames/Autumn_Tale_1998.jpg",
+    "answer": "AUTUMN TALE",
+    "year": "1998",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588989/scoopcast_frames/Nekromantik_1988.jpg",
+    "answer": "NEKROMANTIK",
+    "year": "1988",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588991/scoopcast_frames/Fuzzy_Head_2023.jpg",
+    "answer": "FUZZY HEAD",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588996/scoopcast_frames/Sometimes_I_Think_About_Dying_2023.jpg",
+    "answer": "SOMETIMES I THINK ABOUT DYING",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588997/scoopcast_frames/Abigail_2024.jpg",
+    "answer": "ABIGAIL",
+    "year": "2024",
+    "tag": "new"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589006/scoopcast_frames/Curse_of_the_Crimson_Altar_1968.jpg",
+    "answer": "CURSE OF THE CRIMSON ALTAR",
+    "year": "1968",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589009/scoopcast_frames/Them_1954.jpg",
+    "answer": "THEM!",
+    "year": "1954",
+    "tag": "classic"
   }
 ]
