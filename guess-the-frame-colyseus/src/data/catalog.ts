@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (989 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (1000 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -8914,6 +8914,105 @@ export const CATALOG: CatalogItem[] = [
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790600456/scoopcast_frames/Return_Of_The_Jedi_1983.jpg",
     answer: "RETURN OF THE JEDI",
     year: "1983",
+    tag: "classic"
+  },
+  {
+    id: "f_990",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790604864/scoopcast_frames/28_Years_Later_2025.jpg",
+    answer: "28 YEARS LATER",
+    year: "2025",
+    tag: "new"
+  },
+  {
+    id: "f_991",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790604927/scoopcast_frames/A_Tale_of_Winter_1992.jpg",
+    answer: "A TALE OF WINTER",
+    year: "1992",
+    tag: "classic"
+  },
+  {
+    id: "f_992",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790604951/scoopcast_frames/Aftersun_2022.jpg",
+    answer: "AFTERSUN",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_993",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790604989/scoopcast_frames/Ambulance_2022.jpg",
+    answer: "AMBULANCE",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_994",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605035/scoopcast_frames/Angel_Face_1952.jpg",
+    answer: "ANGEL FACE",
+    year: "1952",
+    tag: "classic"
+  },
+  {
+    id: "f_995",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605161/scoopcast_frames/Beanpole_2019.jpg",
+    answer: "BEANPOLE",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_996",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605221/scoopcast_frames/Black_Hawk_Down_2001.jpg",
+    answer: "BLACK HAWK DOWN",
+    year: "2001",
+    tag: "classic"
+  },
+  {
+    id: "f_997",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605249/scoopcast_frames/Black_Tight_Killers_1966.jpg",
+    answer: "BLACK TIGHT KILLERS",
+    year: "1966",
+    tag: "classic"
+  },
+  {
+    id: "f_998",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605258/scoopcast_frames/Bleeder_1999.jpg",
+    answer: "BLEEDER",
+    year: "1999",
+    tag: "classic"
+  },
+  {
+    id: "f_999",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605275/scoopcast_frames/Blonde_2022.jpg",
+    answer: "BLONDE",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_1000",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605388/scoopcast_frames/Burst_City_1982.jpg",
+    answer: "BURST CITY",
+    year: "1982",
     tag: "classic"
   },
 
