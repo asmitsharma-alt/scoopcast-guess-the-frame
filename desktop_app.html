@@ -14095,10 +14095,6 @@
                         <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostFramesRoundsBtn">20</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
                       </div>
-                      <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
-                        <button type="button" onclick="PlayerLobby.adjustRounds('frames', -1)" class="w-full bg-[#ffd8df] hover:bg-[#ffb6c1] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Decrease Frame Rounds">−</button>
-                        <button type="button" onclick="PlayerLobby.adjustRounds('frames', 1)" class="w-full bg-[#cae6ff] hover:bg-[#a6d5ff] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Increase Frame Rounds">+</button>
-                      </div>
                     </div>
 
                     <!-- Eyes Stepper Card -->
@@ -14113,10 +14109,6 @@
                         <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostEyesRoundsBtn">10</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
                       </div>
-                      <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
-                        <button type="button" onclick="PlayerLobby.adjustRounds('eyes', -1)" class="w-full bg-[#ffd8df] hover:bg-[#ffb6c1] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Decrease Eyes Rounds">−</button>
-                        <button type="button" onclick="PlayerLobby.adjustRounds('eyes', 1)" class="w-full bg-[#cae6ff] hover:bg-[#a6d5ff] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Increase Eyes Rounds">+</button>
-                      </div>
                     </div>
 
                     <!-- Dialogue Stepper Card -->
@@ -14130,10 +14122,6 @@
                       <div class="flex flex-col items-center justify-center py-4 flex-1">
                         <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostDialogueRoundsBtn">10</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
-                      </div>
-                      <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
-                        <button type="button" onclick="PlayerLobby.adjustRounds('dialogue', -1)" class="w-full bg-[#ffd8df] hover:bg-[#ffb6c1] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Decrease Dialogue Rounds">−</button>
-                        <button type="button" onclick="PlayerLobby.adjustRounds('dialogue', 1)" class="w-full bg-[#cae6ff] hover:bg-[#a6d5ff] border-2 border-on-surface font-black text-sm py-1.5 rounded-lg flex items-center justify-center active:translate-y-[1px] transition-all cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" title="Increase Dialogue Rounds">+</button>
                       </div>
                     </div>
                   </div>
@@ -14150,12 +14138,8 @@
                     </span>
                     <span class="font-label-sm text-[10px] text-outline uppercase font-bold">Per movie frame</span>
                   </div>
-                  <div class="flex items-center bg-primary-container border-2 border-on-surface rounded-lg p-1.5 neo-shadow-sm">
-                    <button type="button" onclick="PlayerLobby.adjustTimer(-1)" class="w-8 h-8 bg-surface hover:bg-surface-variant border-2 border-on-surface font-black text-sm flex items-center justify-center rounded-lg cursor-pointer active:translate-y-[1px] transition-all shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]" title="Decrease Timer">−</button>
-                    <div class="px-3.5 font-headline-sm text-base uppercase font-black tracking-wide text-on-surface min-w-[55px] text-center" id="hostTimerBtn">
-                      <span id="hostTimerBtnText">30s</span>
-                    </div>
-                    <button type="button" onclick="PlayerLobby.adjustTimer(1)" class="w-8 h-8 bg-surface hover:bg-surface-variant border-2 border-on-surface font-black text-sm flex items-center justify-center rounded-lg cursor-pointer active:translate-y-[1px] transition-all shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]" title="Increase Timer">+</button>
+                  <div class="font-headline-sm text-base uppercase font-black tracking-wide text-on-surface bg-primary-container border-2 border-on-surface rounded-lg px-4 py-2 neo-shadow-sm" id="hostTimerBtn">
+                    <span id="hostTimerBtnText">30s</span>
                   </div>
                 </div>
 
