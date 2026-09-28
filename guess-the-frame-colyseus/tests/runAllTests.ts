@@ -16,6 +16,9 @@ async function runAll() {
   // 4. Cross-Network & Mobile Reconnection Simulation Tests
   await import("./crossNetworkSimulation.test");
 
+  // 5. Intelligent Frame Recommendation Engine & Persistence Tests
+  await import("./frameEngineTest");
+
   console.log("==================================================");
   console.log("🎉 ALL TESTS COMPLETED & VERIFIED SUCCESSFULLY!");
   console.log("==================================================");

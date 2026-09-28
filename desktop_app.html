@@ -17762,10 +17762,14 @@
         }
         const savedPlayerId = localStorage.getItem('gtf_player_id');
         if (savedPlayerId) {
+          this.persistentUserId = savedPlayerId;
           this.playerId = savedPlayerId;
         } else if (!this.playerId) {
-          this.playerId = 'p_' + Math.random().toString(36).substr(2, 9);
-          localStorage.setItem('gtf_player_id', this.playerId);
+          this.persistentUserId = 'p_' + Math.random().toString(36).substr(2, 9);
+          this.playerId = this.persistentUserId;
+          localStorage.setItem('gtf_player_id', this.persistentUserId);
+        } else {
+          this.persistentUserId = this.playerId;
         }
         this.checkUrlParams();
         this.prewarmServer();
@@ -17909,13 +17913,15 @@
               room = await client.joinById(resolvedRoomId, {
                 roomCode: code,
                 name: this.playerName,
-                avatar: this.playerAvatar
+                avatar: this.playerAvatar,
+                userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId
               });
             } else {
               room = await client.join('trivia_room', {
                 roomCode: code,
                 name: this.playerName,
-                avatar: this.playerAvatar
+                avatar: this.playerAvatar,
+                userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId
               });
             }
           }
@@ -18195,6 +18201,7 @@
             roomCode: this.roomCode,
             name: this.playerName,
             avatar: this.playerAvatar,
+            userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId,
             timer: this.hostSettings.timer || 30,
             rounds: totalR,
             category: this.hostSettings.category || 'all',
@@ -18314,13 +18321,15 @@
             room = await client.joinById(resolvedRoomId, {
               roomCode: this.roomCode,
               name: this.playerName,
-              avatar: this.playerAvatar
+              avatar: this.playerAvatar,
+              userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId
             });
           } else {
             room = await client.join('trivia_room', {
               roomCode: this.roomCode,
               name: this.playerName,
-              avatar: this.playerAvatar
+              avatar: this.playerAvatar,
+              userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId
             });
           }
 

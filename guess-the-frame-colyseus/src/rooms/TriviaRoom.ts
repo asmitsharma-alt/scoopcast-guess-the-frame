@@ -4,6 +4,8 @@ import { CATALOG, CatalogItem } from "../data/catalog";
 import { FuzzyMatcher } from "../utils/fuzzyMatcher";
 import { HintGenerator } from "../utils/hintGenerator";
 import { GAME_CONFIG } from "../config/gameConfig";
+import { FrameEngine } from "../engine/FrameEngine";
+import { GameDatabase, UserFrameHistoryRecord } from "../database/GameDatabase";
 
 export interface CreateRoomOptions {
   roomCode?: string;
@@ -21,6 +23,10 @@ export class TriviaRoom extends Room<GameState> {
   private currentSecretItem: CatalogItem | null = null;
   private roundTimerDuration: number = GAME_CONFIG.defaultTimerDuration;
   private autoAdvanceTimer: any = null;
+  private gameSeed: string = "";
+  private roundStartTime: number = 0;
+  private playerGuessTimes: Map<string, number> = new Map();
+  private playerCorrectCount: Map<string, number> = new Map();
 
   onCreate(options: CreateRoomOptions) {
     this.setState(new GameState());
@@ -29,6 +35,7 @@ export class TriviaRoom extends Room<GameState> {
     const code = (options.roomCode || this.generateRoomCode()).toUpperCase().trim();
     this.state.roomCode = code;
     this.roomId = code; // Joinable via room code
+    this.gameSeed = `${code}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
 
     // Set matchmaker metadata so /api/room/:code and queries find this room immediately
     this.setMetadata({
@@ -60,11 +67,12 @@ export class TriviaRoom extends Room<GameState> {
     return true;
   }
 
-  onJoin(client: Client, options: { name?: string; avatar?: string }) {
+  onJoin(client: Client, options: { name?: string; avatar?: string; userId?: string }) {
     const isFirst = this.state.players.size === 0;
 
     const player = new Player();
     player.id = client.sessionId;
+    player.userId = (options.userId || client.sessionId).trim();
     player.name = (options.name || `Player ${this.state.players.size + 1}`).trim().slice(0, 18);
     player.avatar = this.validateAvatar(options.avatar);
     player.isHost = isFirst;
@@ -284,6 +292,11 @@ export class TriviaRoom extends Room<GameState> {
 
       if (isMatch) {
         player.hasGuessedCorrectly = true;
+        const guessSeconds = Math.max(0.1, Number(((Date.now() - this.roundStartTime) / 1000).toFixed(2)));
+        this.playerGuessTimes.set(player.id, guessSeconds);
+        const prevCorrect = this.playerCorrectCount.get(player.id) || 0;
+        this.playerCorrectCount.set(player.id, prevCorrect + 1);
+
         const pos = this.state.currentRoundWinners.length + 1;
         let basePoints = 0;
         if (pos === 1) basePoints = GAME_CONFIG.scoring.firstPlace;
@@ -431,6 +444,9 @@ export class TriviaRoom extends Room<GameState> {
       return;
     }
 
+    this.roundStartTime = Date.now();
+    this.playerGuessTimes.clear();
+
     this.currentPlaylistIndex = index;
     const item = this.currentPlaylist[index];
     this.currentSecretItem = item;
@@ -470,6 +486,33 @@ export class TriviaRoom extends Room<GameState> {
         p.streak = 0;
       }
     });
+
+    // ── Permanently Record Shown Frame in Database for All Players ──
+    try {
+      const records: UserFrameHistoryRecord[] = [];
+      const now = Date.now();
+      const frameId = this.currentSecretItem?.id || `frame_${this.state.currentRound}`;
+      const title = (this.currentSecretItem?.answer || 'unknown').toLowerCase();
+      const movieId = `${title.replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, '-').trim()}-${this.currentSecretItem?.year || '2020'}`;
+
+      this.state.players.forEach((player) => {
+        const uid = player.userId || player.id;
+        const guessTime = this.playerGuessTimes.get(player.id) || this.roundTimerDuration;
+        records.push({
+          userId: uid,
+          frameId,
+          movieId,
+          gameId: this.roomId,
+          seenAt: now,
+          correctAnswer: player.hasGuessedCorrectly,
+          guessTime
+        });
+      });
+
+      GameDatabase.getInstance().recordRoundHistory(records);
+    } catch (err) {
+      console.error("[TriviaRoom] Failed to persist user frame history:", err);
+    }
 
     // Safety auto-advance timer (20 seconds)
     if (this.autoAdvanceTimer) clearTimeout(this.autoAdvanceTimer);
@@ -541,6 +584,18 @@ export class TriviaRoom extends Room<GameState> {
     this.state.phase = "game_over";
     this.setMetadata({ roomCode: this.state.roomCode, phase: "game_over", playerCount: this.state.players.size });
     this.addSystemChatMessage(`🏁 Game Over! Thanks for playing Scoopcast Guess The Frame!`);
+
+    // Update persistent user statistics in SQLite
+    try {
+      const totalRoundsPlayed = this.state.currentRound;
+      this.state.players.forEach((p) => {
+        const uId = p.userId || p.id;
+        const correct = this.playerCorrectCount.get(p.id) || 0;
+        GameDatabase.getInstance().updateUserMatchStats(uId, totalRoundsPlayed, correct, 5);
+      });
+    } catch (err) {
+      console.error("[TriviaRoom] Failed to update user match stats:", err);
+    }
   }
 
   private migrateHost() {
@@ -557,65 +612,29 @@ export class TriviaRoom extends Room<GameState> {
   }
 
   private buildPlaylist(category: string, count: number, weeklyOnly: boolean = false, roundsByMode?: { frames?: number; eyes?: number; dialogue?: number }) {
-    if (roundsByMode && (roundsByMode.frames || roundsByMode.dialogue || roundsByMode.eyes)) {
-      const fCount = Number(roundsByMode.frames) || 0;
-      const dCount = Number(roundsByMode.dialogue) || 0;
-      const eCount = Number(roundsByMode.eyes) || 0;
-      const selectItems = (items: CatalogItem[], cnt: number) => {
-        if (!Array.isArray(items) || cnt <= 0) return [];
-        if (weeklyOnly) {
-          const newItems = items.filter(i => i.tag === 'new').sort(() => 0.5 - Math.random());
-          if (newItems.length >= cnt) return newItems.slice(0, cnt);
-          const remaining = cnt - newItems.length;
-          const classic = items.filter(i => i.tag !== 'new').sort(() => 0.5 - Math.random()).slice(0, remaining);
-          return [...newItems, ...classic];
-        }
-        return [...items].sort(() => 0.5 - Math.random()).slice(0, cnt);
-      };
+    const playerIds = Array.from(this.state.players.values())
+      .map(p => p.userId || p.id)
+      .filter(Boolean);
 
-      const frames = selectItems(CATALOG.filter(c => c.category === 'frames'), fCount);
-      const dialogues = selectItems(CATALOG.filter(c => c.category === 'dialogue'), dCount);
-      const eyes = selectItems(CATALOG.filter(c => c.category === 'eyes'), eCount);
-      const combined = [...frames, ...dialogues, ...eyes];
-      if (combined.length > 0) {
-        this.currentPlaylist = combined;
-        return;
-      }
+    try {
+      this.currentPlaylist = FrameEngine.getInstance().generatePlaylist({
+        roomCode: this.state.roomCode,
+        playerIds,
+        rounds: count,
+        category: category as any,
+        weeklyOnly,
+        roundsByMode,
+        gameSeed: this.gameSeed
+      });
+    } catch (err) {
+      console.error("[TriviaRoom] FrameEngine recommendation error, falling back:", err);
     }
 
-    let pool: CatalogItem[] = [];
-    if (category === 'frames') {
-      pool = CATALOG.filter(c => c.category === 'frames');
-    } else if (category === 'dialogue') {
-      pool = CATALOG.filter(c => c.category === 'dialogue');
-    } else if (category === 'eyes') {
-      pool = CATALOG.filter(c => c.category === 'eyes');
-    } else {
-      // 'all' includes frames, dialogues, and eyes
-      pool = CATALOG.filter(c => c.category !== 'tie_breaker');
+    // Safety fallback only if engine returned nothing
+    if (!this.currentPlaylist || this.currentPlaylist.length === 0) {
+      const fallbackPool = CATALOG.filter(c => category === 'all' || c.category === category);
+      this.currentPlaylist = fallbackPool.slice(0, Math.min(count, fallbackPool.length));
     }
-
-    if (weeklyOnly) {
-      const weeklyItems = pool.filter(c => c.tag === 'new');
-      if (weeklyItems.length > 0) {
-        const shuffledWeekly = [...weeklyItems].sort(() => Math.random() - 0.5);
-        if (shuffledWeekly.length >= count) {
-          this.currentPlaylist = shuffledWeekly.slice(0, count);
-          return;
-        } else {
-          // If fewer weekly items than requested count, use all weekly items,
-          // then fill remaining slots with classic items so match doesn't fall short
-          const remainingCount = count - shuffledWeekly.length;
-          const classicPool = pool.filter(c => c.tag !== 'new').sort(() => Math.random() - 0.5);
-          this.currentPlaylist = [...shuffledWeekly, ...classicPool.slice(0, remainingCount)];
-          return;
-        }
-      }
-    }
-
-    // Shuffle pool
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    this.currentPlaylist = shuffled.slice(0, Math.min(count, shuffled.length));
   }
 
   private addSystemChatMessage(htmlOrText: string) {
