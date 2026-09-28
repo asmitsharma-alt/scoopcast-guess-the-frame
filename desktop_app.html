@@ -16228,22 +16228,32 @@
       framesLoaded: false
     };
 
-    // Auto-sync dynamic Cloudinary frames from data/frames.json
+    // Auto-sync dynamic Cloudinary frames from data/frames.json or GitHub CDN
     (async function syncDynamicFrames() {
-      try {
-        const res = await fetch('/data/frames.json');
-        if (res.ok) {
-          const dynamicFrames = await res.json();
-          if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
-            GS.sections[0].frames = dynamicFrames;
-            console.log('[Scoopcast] Successfully synced', dynamicFrames.length, 'frames from /data/frames.json');
-            if (window.AdminStudio && typeof AdminStudio.renderSections === 'function') {
-              AdminStudio.renderSections();
+      const sources = [
+        '/data/frames.json?v=' + Date.now(),
+        'https://raw.githubusercontent.com/asmitsharma-alt/scoopcast-guess-the-frame/main/data/frames.json?v=' + Date.now()
+      ];
+      for (const src of sources) {
+        try {
+          const res = await fetch(src);
+          if (res.ok) {
+            const dynamicFrames = await res.json();
+            if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
+              GS.sections[0].frames = dynamicFrames;
+              console.log('[Scoopcast] Successfully synced', dynamicFrames.length, 'frames from', src);
+              if (window.AdminStudio && typeof AdminStudio.renderSections === 'function') {
+                AdminStudio.renderSections();
+              }
+              if (typeof AdminPanel !== 'undefined' && typeof AdminPanel.renderSections === 'function') {
+                AdminPanel.renderSections();
+              }
+              break;
             }
           }
+        } catch (err) {
+          // Try next source
         }
-      } catch (err) {
-        // Keeps local fallback frames if fetch fails
       }
     })();
 
