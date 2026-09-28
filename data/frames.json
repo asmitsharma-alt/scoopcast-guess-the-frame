@@ -1895,5 +1895,19 @@
     "answer": "IP MAN",
     "year": "2008",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589232/scoopcast_frames/Kuroneko_1968.jpg",
+    "answer": "KURONEKO",
+    "year": "1968",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589233/scoopcast_frames/Crazy_About_Her_2021.jpg",
+    "answer": "CRAZY ABOUT HER",
+    "year": "2021",
+    "tag": "classic"
   }
 ]
