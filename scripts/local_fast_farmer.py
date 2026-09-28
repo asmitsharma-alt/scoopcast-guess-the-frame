@@ -270,13 +270,15 @@ Return strict JSON:
         "generationConfig": {"response_mime_type": "application/json"}
     }
 
-    # Try with key rotation and jittered backoff for multi-worker scaling
+    # Try with model and key rotation and jittered backoff for multi-worker scaling
+    candidate_models = ["gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.5-flash-lite"]
     keys_tried = 0
-    max_attempts = max(4, len(GEMINI_KEYS) * 2)
+    max_attempts = max(6, len(GEMINI_KEYS) * len(candidate_models))
     while keys_tried < max_attempts:
         api_key = get_next_gemini_key()
+        model_name = candidate_models[(keys_tried // len(GEMINI_KEYS)) % len(candidate_models)]
         keys_tried += 1
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
         try:
             req = urllib.request.Request(
                 url,
@@ -289,9 +291,9 @@ Return strict JSON:
                 return json.loads(raw)
         except urllib.error.HTTPError as e:
             if e.code in (429, 503):
-                time.sleep(1.0 + random.uniform(0.2, 0.8))
+                time.sleep(0.8 + random.uniform(0.1, 0.5))
                 continue
-            if e.code == 403:
+            if e.code in (403, 404):
                 continue
             break
         except Exception:
@@ -443,7 +445,7 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         try:
             im = Image.open(io.BytesIO(raw_bytes))
             w, h = im.size
-            if w < 1920 and h < 1080:
+            if w < 1280 or (w < 1920 and h < 1080) or w <= h:
                 continue
         except Exception:
             continue
@@ -459,7 +461,7 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         conf = verdict.get("confidence", 0.0)
 
         # Quality gate: 1080p + Zero Text + Zero Sexual/Adult Content + Middle Story Scene + Clear + Iconic
-        if is_frame and no_text and no_sexual and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
+        if is_frame and no_text and no_sexual and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.40:
             try:
                 public_id = sanitize_public_id(title, year)
 
@@ -569,6 +571,7 @@ def main():
             })
 
     # Sort priority blockbusters by post_date descending (newer 1080p Blu-ray masters first)
+    target_tasks = [t for t in target_tasks if t.get("post_date", 0) >= 20210101]
     target_tasks.sort(key=lambda x: x.get("post_date", 0), reverse=True)
 
     general_tasks = [

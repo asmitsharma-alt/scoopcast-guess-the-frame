@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (993 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (1000 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -8950,6 +8950,69 @@ export const CATALOG: CatalogItem[] = [
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605388/scoopcast_frames/Burst_City_1982.jpg",
     answer: "BURST CITY",
     year: "1982",
+    tag: "classic"
+  },
+  {
+    id: "f_994",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605954/scoopcast_frames/The_Lost_World_Jurassic_Park_1997.jpg",
+    answer: "THE LOST WORLD: JURASSIC PARK",
+    year: "1997",
+    tag: "classic"
+  },
+  {
+    id: "f_995",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605958/scoopcast_frames/Jurassic_World_2015.jpg",
+    answer: "JURASSIC WORLD",
+    year: "2015",
+    tag: "classic"
+  },
+  {
+    id: "f_996",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605962/scoopcast_frames/Godzilla_Vs_Kong_2021.jpg",
+    answer: "GODZILLA VS. KONG",
+    year: "2021",
+    tag: "classic"
+  },
+  {
+    id: "f_997",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605965/scoopcast_frames/Godzilla_King_of_the_Monsters_2019.jpg",
+    answer: "GODZILLA: KING OF THE MONSTERS",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_998",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605969/scoopcast_frames/The_Predator_2018.jpg",
+    answer: "THE PREDATOR",
+    year: "2018",
+    tag: "classic"
+  },
+  {
+    id: "f_999",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605989/scoopcast_frames/Godzilla_vs_Mechagodzilla_II_1993.jpg",
+    answer: "GODZILLA VS. MECHAGODZILLA II",
+    year: "1993",
+    tag: "classic"
+  },
+  {
+    id: "f_1000",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790605992/scoopcast_frames/Godzilla_vs_Destoroyah_1995.jpg",
+    answer: "GODZILLA VS. DESTOROYAH",
+    year: "1995",
     tag: "classic"
   },
 
