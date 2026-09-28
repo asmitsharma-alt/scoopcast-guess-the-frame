@@ -474,5 +474,481 @@
     "answer": "BLUEBEARD",
     "year": "2009",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585851/scoopcast_frames/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_2001.webp",
+    "answer": "THE LORD OF THE RINGS: THE FELLOWSHIP OF THE RING",
+    "year": "2001",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585852/scoopcast_frames/The_Lord_of_The_Rings_The_Two_Towers_2002.webp",
+    "answer": "THE LORD OF THE RINGS: THE TWO TOWERS",
+    "year": "2002",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585852/scoopcast_frames/The_Lord_of_The_Rings_The_Return_of_the_King_2003.webp",
+    "answer": "THE LORD OF THE RINGS: THE RETURN OF THE KING",
+    "year": "2003",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585852/scoopcast_frames/Star_Wars_1977.webp",
+    "answer": "STAR WARS",
+    "year": "1977",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585858/scoopcast_frames/Star_Wars_The_Force_Awakens_2015.webp",
+    "answer": "STAR WARS: THE FORCE AWAKENS",
+    "year": "2015",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585860/scoopcast_frames/Star_Wars_The_Last_Jedi_2017.webp",
+    "answer": "STAR WARS: THE LAST JEDI",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585860/scoopcast_frames/Star_Wars_Episode_I_The_Phantom_Menace_1999.webp",
+    "answer": "STAR WARS: EPISODE I - THE PHANTOM MENACE",
+    "year": "1999",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585860/scoopcast_frames/Star_Wars_Episode_II_Attack_of_the_Clones_2002.webp",
+    "answer": "STAR WARS: EPISODE II - ATTACK OF THE CLONES",
+    "year": "2002",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585866/scoopcast_frames/Star_Wars_Episode_III_Revenge_of_the_Sith_2005.webp",
+    "answer": "STAR WARS: EPISODE III - REVENGE OF THE SITH",
+    "year": "2005",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585939/scoopcast_frames/Harry_Potter_and_the_Chamber_of_Secrets_2002.webp",
+    "answer": "HARRY POTTER AND THE CHAMBER OF SECRETS",
+    "year": "2002",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585939/scoopcast_frames/Rogue_One_A_Star_Wars_Story_2016.webp",
+    "answer": "ROGUE ONE: A STAR WARS STORY",
+    "year": "2016",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585940/scoopcast_frames/Harry_Potter_and_the_Philosophers_Stone_2001.webp",
+    "answer": "HARRY POTTER AND THE PHILOSOPHER'S STONE",
+    "year": "2001",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585942/scoopcast_frames/Solo_A_Star_Wars_Story_2018.webp",
+    "answer": "SOLO: A STAR WARS STORY",
+    "year": "2018",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585946/scoopcast_frames/Harry_Potter_and_The_Goblet_of_Fire_2005.webp",
+    "answer": "HARRY POTTER & THE GOBLET OF FIRE",
+    "year": "2005",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585949/scoopcast_frames/Harry_Potter_and_the_Prisoner_of_Azkaban_2004.webp",
+    "answer": "HARRY POTTER AND THE PRISONER OF AZKABAN",
+    "year": "2004",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585950/scoopcast_frames/Harry_Potter_and_The_Half_Blood_Prince_2009.webp",
+    "answer": "HARRY POTTER & THE HALF BLOOD PRINCE",
+    "year": "2009",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585954/scoopcast_frames/Harry_Potter_and_The_Deathly_Hallows_Part_1_2010.webp",
+    "answer": "HARRY POTTER & THE DEATHLY HALLOWS PART 1",
+    "year": "2010",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585955/scoopcast_frames/Harry_Potter_and_The_Order_of_the_Phoenix_2007.webp",
+    "answer": "HARRY POTTER & THE ORDER OF THE PHOENIX",
+    "year": "2007",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585957/scoopcast_frames/Harry_Potter_and_The_Deathly_Hallows_Part_2_2011.webp",
+    "answer": "HARRY POTTER & THE DEATHLY HALLOWS PART 2",
+    "year": "2011",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585960/scoopcast_frames/Dune_Part_2_2021.webp",
+    "answer": "DUNE: PART 2",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585962/scoopcast_frames/Blade_Runner_1982.webp",
+    "answer": "BLADE RUNNER",
+    "year": "1982",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585963/scoopcast_frames/Dune_2021_2021.webp",
+    "answer": "DUNE (2021)",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585964/scoopcast_frames/Blade_Runner_2049_2017.webp",
+    "answer": "BLADE RUNNER 2049",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585967/scoopcast_frames/Pulp_Fiction_1994.webp",
+    "answer": "PULP FICTION",
+    "year": "1994",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585968/scoopcast_frames/Gladiator_2000.webp",
+    "answer": "GLADIATOR",
+    "year": "2000",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585970/scoopcast_frames/Fight_Club_1999.webp",
+    "answer": "FIGHT CLUB",
+    "year": "1999",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585974/scoopcast_frames/The_Terminator_1984.webp",
+    "answer": "THE TERMINATOR",
+    "year": "1984",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585976/scoopcast_frames/Terminator_2_Judgement_Day_1991.webp",
+    "answer": "TERMINATOR 2: JUDGEMENT DAY",
+    "year": "1991",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585978/scoopcast_frames/Titanic_1997.webp",
+    "answer": "TITANIC",
+    "year": "1997",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585984/scoopcast_frames/The_Godfather_2010.webp",
+    "answer": "THE GODFATHER",
+    "year": "2010",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585986/scoopcast_frames/The_Shawshank_Redemption_1994.webp",
+    "answer": "THE SHAWSHANK REDEMPTION",
+    "year": "1994",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585987/scoopcast_frames/Mad_Max_Fury_Road_2015.webp",
+    "answer": "MAD MAX: FURY ROAD",
+    "year": "2015",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585988/scoopcast_frames/The_Godfather_Part_II_1974.webp",
+    "answer": "THE GODFATHER PART II",
+    "year": "1974",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585993/scoopcast_frames/Django_Unchained_2012.webp",
+    "answer": "DJANGO UNCHAINED",
+    "year": "2012",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585995/scoopcast_frames/Alien_1979.webp",
+    "answer": "ALIEN",
+    "year": "1979",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585997/scoopcast_frames/Aliens_1986.webp",
+    "answer": "ALIENS",
+    "year": "1986",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790585997/scoopcast_frames/Inglourious_Basterds_2009.webp",
+    "answer": "INGLOURIOUS BASTERDS",
+    "year": "2009",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586001/scoopcast_frames/The_Shining_1980.webp",
+    "answer": "THE SHINING",
+    "year": "1980",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586003/scoopcast_frames/Goodfellas_1990.webp",
+    "answer": "GOODFELLAS",
+    "year": "1990",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586004/scoopcast_frames/The_Truman_Show_1998.webp",
+    "answer": "THE TRUMAN SHOW",
+    "year": "1998",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586006/scoopcast_frames/Back_to_the_Future_1985.webp",
+    "answer": "BACK TO THE FUTURE",
+    "year": "1985",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586012/scoopcast_frames/The_Iron_Claw_2023.webp",
+    "answer": "THE IRON CLAW",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586013/scoopcast_frames/Annihilation_2018.webp",
+    "answer": "ANNIHILATION",
+    "year": "2018",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586013/scoopcast_frames/Ma%C3%AEtresse_1975.webp",
+    "answer": "MA\u00ceTRESSE",
+    "year": "1975",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586018/scoopcast_frames/Spiral_2021.webp",
+    "answer": "SPIRAL",
+    "year": "2021",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586020/scoopcast_frames/The_Immigrant_2013.webp",
+    "answer": "THE IMMIGRANT",
+    "year": "2013",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586021/scoopcast_frames/Submergence_2017.webp",
+    "answer": "SUBMERGENCE",
+    "year": "2017",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586027/scoopcast_frames/Sunrise_1927.webp",
+    "answer": "SUNRISE",
+    "year": "1927",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586029/scoopcast_frames/Tiger_Stripes_2023.webp",
+    "answer": "TIGER STRIPES",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586030/scoopcast_frames/The_Funhouse_1981.webp",
+    "answer": "THE FUNHOUSE",
+    "year": "1981",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586034/scoopcast_frames/Sex_Lies_And_Videotape_1989.webp",
+    "answer": "SEX, LIES AND VIDEOTAPE",
+    "year": "1989",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586035/scoopcast_frames/Roadkill_1989.webp",
+    "answer": "ROADKILL",
+    "year": "1989",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586038/scoopcast_frames/Trap_2024.webp",
+    "answer": "TRAP",
+    "year": "2024",
+    "tag": "new"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586041/scoopcast_frames/The_Black_Belly_of_the_Tarantula_1971.webp",
+    "answer": "THE BLACK BELLY OF THE TARANTULA",
+    "year": "1971",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586044/scoopcast_frames/Furia_1999.webp",
+    "answer": "FURIA",
+    "year": "1999",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586047/scoopcast_frames/Godzilla_Vs_Mechagodzilla_1974.webp",
+    "answer": "GODZILLA VS MECHAGODZILLA",
+    "year": "1974",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586049/scoopcast_frames/The_Boy_and_The_Heron_2023.webp",
+    "answer": "THE BOY AND THE HERON",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586051/scoopcast_frames/Kimi_2022.webp",
+    "answer": "KIMI",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586053/scoopcast_frames/Viy_1967.webp",
+    "answer": "VIY",
+    "year": "1967",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586055/scoopcast_frames/Sweeney_Todd_The_Demon_Barber_of_Fleet_Street_2007.webp",
+    "answer": "SWEENEY TODD: THE DEMON BARBER OF FLEET STREET",
+    "year": "2007",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586056/scoopcast_frames/Oddity_2024.webp",
+    "answer": "ODDITY",
+    "year": "2024",
+    "tag": "new"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586060/scoopcast_frames/Colt_45_2014.webp",
+    "answer": "COLT 45",
+    "year": "2014",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586061/scoopcast_frames/Dance_of_Reality_2013.webp",
+    "answer": "DANCE OF REALITY",
+    "year": "2013",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586137/scoopcast_frames/Live_By_Night_2016.webp",
+    "answer": "LIVE BY NIGHT",
+    "year": "2016",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586141/scoopcast_frames/Ip_Man_4_The_Finale_2019.webp",
+    "answer": "IP MAN 4: THE FINALE",
+    "year": "2019",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586144/scoopcast_frames/Godzilla_Minus_One_2023.webp",
+    "answer": "GODZILLA MINUS ONE",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586148/scoopcast_frames/Tokyo_Godfathers_2003.webp",
+    "answer": "TOKYO GODFATHERS",
+    "year": "2003",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790586152/scoopcast_frames/The_New_Boy_2023.webp",
+    "answer": "THE NEW BOY",
+    "year": "2023",
+    "tag": "classic"
   }
 ]
