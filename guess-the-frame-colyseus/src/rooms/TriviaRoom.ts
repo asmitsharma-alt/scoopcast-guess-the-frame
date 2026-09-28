@@ -10,8 +10,14 @@ import { GameDatabase, UserFrameHistoryRecord } from "../database/GameDatabase";
 export interface CreateRoomOptions {
   roomCode?: string;
   category?: 'all' | 'frames' | 'dialogue' | 'eyes';
+  mode?: string; // "Popcorn" | "Cinephile" | "Director's Cut"
+  sections?: string[]; // ["frame", "dialogue", "eyes"]
   rounds?: number;
+  roundsByMode?: { frame?: number; dialogue?: number; eyes?: number; frames?: number };
   timer?: number;
+  userId?: string;
+  name?: string;
+  avatar?: string;
 }
 
 export class TriviaRoom extends Room<GameState> {
@@ -48,6 +54,44 @@ export class TriviaRoom extends Room<GameState> {
       this.roundTimerDuration = options.timer;
     }
 
+    // AAA Game Settings & Permanent Lock
+    const mode = options.mode || "Cinephile";
+    this.state.gameSettings.mode = mode;
+    this.state.gameSettings.sections.clear();
+    const rawSections = options.sections && options.sections.length > 0 ? options.sections : ['frame'];
+    rawSections.forEach(s => this.state.gameSettings.sections.push(s));
+
+    const rbm = options.roundsByMode || {};
+    this.state.gameSettings.frameRounds = Number(rbm.frame !== undefined ? rbm.frame : (rbm.frames !== undefined ? rbm.frames : 7));
+    this.state.gameSettings.dialogueRounds = Number(rbm.dialogue !== undefined ? rbm.dialogue : 5);
+    this.state.gameSettings.eyesRounds = Number(rbm.eyes !== undefined ? rbm.eyes : 0);
+
+    let totalRounds = options.rounds || (this.state.gameSettings.frameRounds + this.state.gameSettings.dialogueRounds + this.state.gameSettings.eyesRounds);
+    totalRounds = Math.max(3, Math.min(30, totalRounds));
+    this.state.gameSettings.totalRounds = totalRounds;
+    this.state.totalRounds = totalRounds;
+    this.state.gameSettings.isLocked = true;
+    this.state.settingsLocked = true;
+
+    // Persist Game Configuration in Database
+    try {
+      GameDatabase.getInstance().saveGameConfiguration({
+        roomId: code,
+        hostId: options.userId || "pending_host",
+        mode: mode,
+        sections: rawSections,
+        roundSettings: {
+          frameRounds: this.state.gameSettings.frameRounds,
+          dialogueRounds: this.state.gameSettings.dialogueRounds,
+          eyesRounds: this.state.gameSettings.eyesRounds,
+          totalRounds: totalRounds
+        },
+        createdAt: Date.now()
+      });
+    } catch (e) {
+      console.warn("[TriviaRoom] Could not save game config to database:", e);
+    }
+
     this.setupMessageHandlers();
 
     // 1-second authoritative simulation tick
@@ -76,14 +120,27 @@ export class TriviaRoom extends Room<GameState> {
     player.name = (options.name || `Player ${this.state.players.size + 1}`).trim().slice(0, 18);
     player.avatar = this.validateAvatar(options.avatar);
     player.isHost = isFirst;
-    player.score = 0;
     player.connected = true;
+    player.assetProgress = 0;
+    player.isReady = false;
+    player.assetStatus = "waiting";
 
     this.state.players.set(client.sessionId, player);
 
     if (isFirst) {
       this.state.currentHostId = client.sessionId;
     }
+
+    try {
+      GameDatabase.getInstance().saveOrUpdatePlayerSession({
+        playerId: player.id,
+        roomId: this.state.roomCode,
+        username: player.name,
+        avatarId: player.avatar,
+        assetStatus: player.assetStatus,
+        readyStatus: player.isReady
+      });
+    } catch(e) {}
 
     this.setMetadata({
       roomCode: this.state.roomCode,
@@ -158,11 +215,95 @@ export class TriviaRoom extends Room<GameState> {
       }
     });
 
+    // ── Asset Preloading Progress Updates ──
+    this.onMessage("asset_progress", (client, message?: { progress: number; status?: string }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player) return;
+
+      const progress = Math.min(100, Math.max(0, Math.round(Number(message?.progress) || 0)));
+      player.assetProgress = progress;
+      player.assetStatus = String(message?.status || (progress >= 100 ? 'ready' : 'downloading'));
+      if (progress >= 100) {
+        player.isReady = true;
+        player.assetStatus = 'ready';
+      }
+
+      try {
+        GameDatabase.getInstance().saveOrUpdatePlayerSession({
+          playerId: player.id,
+          roomId: this.state.roomCode,
+          username: player.name,
+          avatarId: player.avatar,
+          assetStatus: player.assetStatus,
+          readyStatus: player.isReady
+        });
+      } catch(e) {}
+
+      this.broadcast("player_asset_update", {
+        playerId: player.id,
+        name: player.name,
+        progress: player.assetProgress,
+        status: player.assetStatus,
+        isReady: player.isReady
+      });
+    });
+
+    // ── Explicit Player Ready ──
+    this.onMessage("player_ready", (client, message?: { ready?: boolean }) => {
+      const player = this.state.players.get(client.sessionId);
+      if (!player) return;
+
+      player.isReady = message?.ready !== undefined ? Boolean(message.ready) : true;
+      if (player.isReady) {
+        player.assetProgress = 100;
+        player.assetStatus = 'ready';
+      }
+
+      try {
+        GameDatabase.getInstance().saveOrUpdatePlayerSession({
+          playerId: player.id,
+          roomId: this.state.roomCode,
+          username: player.name,
+          avatarId: player.avatar,
+          assetStatus: player.assetStatus,
+          readyStatus: player.isReady
+        });
+      } catch(e) {}
+
+      this.broadcast("player_asset_update", {
+        playerId: player.id,
+        name: player.name,
+        progress: player.assetProgress,
+        status: player.assetStatus,
+        isReady: player.isReady
+      });
+    });
+
     // ── Host starts the game ──
     this.onMessage("start_game", (client, message?: { category?: string; rounds?: number; timer?: number; weeklyOnly?: boolean; roundsByMode?: { frames?: number; eyes?: number; dialogue?: number } }) => {
       const player = this.state.players.get(client.sessionId);
       if (!player || !player.isHost) return;
       if (this.state.phase !== "lobby" && this.state.phase !== "game_over") return;
+
+      // AAA Host Start Validation: ALL connected players must be ready!
+      const unreadyPlayers: Array<{ name: string; progress: number; status: string }> = [];
+      this.state.players.forEach((p) => {
+        if (p.connected && !p.isReady) {
+          unreadyPlayers.push({
+            name: p.name,
+            progress: p.assetProgress || 0,
+            status: p.assetStatus || 'downloading'
+          });
+        }
+      });
+
+      if (unreadyPlayers.length > 0) {
+        client.send("start_error", {
+          message: "Waiting for players to finish loading assets",
+          unreadyPlayers
+        });
+        return;
+      }
 
       const category = message?.category || 'all';
       const requestedRounds = Number(message?.rounds) || GAME_CONFIG.defaultRounds;
@@ -208,6 +349,14 @@ export class TriviaRoom extends Room<GameState> {
       const player = this.state.players.get(client.sessionId);
       if (!player || !player.isHost) return;
       if (this.state.phase !== "lobby") return;
+
+      // Enforce permanent lock on game settings after lobby creation
+      if (this.state.settingsLocked) {
+        client.send("settings_error", {
+          message: "Settings cannot be changed after lobby creation."
+        });
+        return;
+      }
 
       if (message?.timer) {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));

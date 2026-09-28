@@ -11,6 +11,11 @@ export class Player extends Schema {
   @type("boolean") hasUsedHint: boolean = false;
   @type("boolean") connected: boolean = true;
   @type("number") streak: number = 0;
+
+  // AAA Asset Preloading & Ready System
+  @type("number") assetProgress: number = 0; // 0 to 100%
+  @type("boolean") isReady: boolean = false;
+  @type("string") assetStatus: string = "waiting"; // waiting | downloading | verifying | ready
 }
 
 export class RoundWinner extends Schema {
@@ -32,6 +37,16 @@ export class ChatMessage extends Schema {
   @type("boolean") isSystem: boolean = false;
 }
 
+export class GameSettings extends Schema {
+  @type("string") mode: string = "Cinephile"; // Popcorn | Cinephile | Director's Cut
+  @type(["string"]) sections = new ArraySchema<string>(); // frame | dialogue | eyes
+  @type("number") frameRounds: number = 7;
+  @type("number") dialogueRounds: number = 5;
+  @type("number") eyesRounds: number = 0;
+  @type("number") totalRounds: number = 12;
+  @type("boolean") isLocked: boolean = true; // Permanently locked in lobby
+}
+
 export class GameState extends Schema {
   @type("string") roomCode: string = "";
   @type("string") phase: string = "lobby"; // lobby | countdown | playing | round_reveal | tie_breaker | game_over
@@ -43,6 +58,10 @@ export class GameState extends Schema {
   @type("string") currentYear: string = "";
   @type("string") currentHostId: string = "";
   @type("boolean") isPaused: boolean = false;
+
+  // AAA Game Creation & Locked Settings
+  @type(GameSettings) gameSettings = new GameSettings();
+  @type("boolean") settingsLocked: boolean = true;
 
   // Answer is kept completely blank during active play, only filled when round finishes!
   @type("string") revealedAnswer: string = "";

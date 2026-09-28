@@ -38,6 +38,10 @@ export class GameDatabase {
   private stmtGetFramesByCategory!: StatementSync;
   private stmtUpsertUserStats!: StatementSync;
   private stmtGetUserStats!: StatementSync;
+  private stmtUpsertGameConfig!: StatementSync;
+  private stmtUpsertPlayerSession!: StatementSync;
+  private stmtGetGameConfig!: StatementSync;
+  private stmtGetRoomPlayers!: StatementSync;
   private stmtSeenFrameByCount: Map<number, StatementSync> = new Map();
   private stmtSeenMovieByCount: Map<number, StatementSync> = new Map();
 
@@ -136,6 +140,26 @@ export class GameDatabase {
         preferred_difficulty INTEGER NOT NULL DEFAULT 5,
         last_played_at INTEGER NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS game_configurations (
+        room_id TEXT PRIMARY KEY,
+        host_id TEXT NOT NULL,
+        mode TEXT NOT NULL,
+        sections TEXT NOT NULL,
+        round_settings TEXT NOT NULL,
+        created_at INTEGER NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS game_players (
+        player_id TEXT NOT NULL,
+        room_id TEXT NOT NULL,
+        username TEXT NOT NULL,
+        avatar_id TEXT NOT NULL,
+        asset_status TEXT NOT NULL,
+        ready_status INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        PRIMARY KEY (player_id, room_id)
+      );
     `);
   }
 
@@ -201,6 +225,113 @@ export class GameDatabase {
         preferred_difficulty = excluded.preferred_difficulty,
         last_played_at = excluded.last_played_at
     `);
+
+    this.stmtUpsertGameConfig = this.db.prepare(`
+      INSERT INTO game_configurations (room_id, host_id, mode, sections, round_settings, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(room_id) DO UPDATE SET
+        host_id = excluded.host_id,
+        mode = excluded.mode,
+        sections = excluded.sections,
+        round_settings = excluded.round_settings
+    `);
+
+    this.stmtUpsertPlayerSession = this.db.prepare(`
+      INSERT INTO game_players (player_id, room_id, username, avatar_id, asset_status, ready_status, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(player_id, room_id) DO UPDATE SET
+        username = excluded.username,
+        avatar_id = excluded.avatar_id,
+        asset_status = excluded.asset_status,
+        ready_status = excluded.ready_status,
+        updated_at = excluded.updated_at
+    `);
+
+    this.stmtGetGameConfig = this.db.prepare(`
+      SELECT * FROM game_configurations WHERE room_id = ?
+    `);
+
+    this.stmtGetRoomPlayers = this.db.prepare(`
+      SELECT * FROM game_players WHERE room_id = ? ORDER BY updated_at ASC
+    `);
+  }
+
+  public saveGameConfiguration(config: {
+    roomId: string;
+    hostId: string;
+    mode: string;
+    sections: string[];
+    roundSettings: any;
+    createdAt?: number;
+  }): void {
+    try {
+      this.stmtUpsertGameConfig.run(
+        config.roomId,
+        config.hostId,
+        config.mode,
+        JSON.stringify(config.sections || []),
+        JSON.stringify(config.roundSettings || {}),
+        config.createdAt || Date.now()
+      );
+    } catch (e) {
+      console.warn("[GameDatabase] Failed to save game config:", e);
+    }
+  }
+
+  public saveOrUpdatePlayerSession(player: {
+    playerId: string;
+    roomId: string;
+    username: string;
+    avatarId: string;
+    assetStatus: string;
+    readyStatus: boolean;
+  }): void {
+    try {
+      this.stmtUpsertPlayerSession.run(
+        player.playerId,
+        player.roomId,
+        player.username,
+        player.avatarId,
+        player.assetStatus || "ready",
+        player.readyStatus ? 1 : 0,
+        Date.now()
+      );
+    } catch (e) {
+      console.warn("[GameDatabase] Failed to save player session:", e);
+    }
+  }
+
+  public getGameConfiguration(roomId: string): any {
+    try {
+      const row: any = this.stmtGetGameConfig.get(roomId);
+      if (!row) return null;
+      return {
+        roomId: row.room_id,
+        hostId: row.host_id,
+        mode: row.mode,
+        sections: JSON.parse(row.sections || "[]"),
+        roundSettings: JSON.parse(row.round_settings || "{}"),
+        createdAt: row.created_at
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  public getRoomPlayers(roomId: string): any[] {
+    try {
+      const rows: any = this.stmtGetRoomPlayers.all(roomId);
+      return rows.map((r: any) => ({
+        playerId: r.player_id,
+        roomId: r.room_id,
+        username: r.username,
+        avatarId: r.avatar_id,
+        assetStatus: r.asset_status,
+        readyStatus: Boolean(r.ready_status)
+      }));
+    } catch (e) {
+      return [];
+    }
   }
 
   /**

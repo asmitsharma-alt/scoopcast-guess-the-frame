@@ -70,6 +70,8 @@
   </script>
   <script src="/js/icons.js"></script>
   <link rel="stylesheet" href="/css/avatar-picker.css">
+  <link rel="stylesheet" href="/css/game-wizard.css">
+  <script src="/js/gameCreationWizard.js"></script>
   <!-- Vercel Web Analytics & Speed Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -13397,8 +13399,260 @@
     </div>
 
 
+    <!-- AAA GAME CREATION SETUP WIZARD (Cinematic Glassmorphism UI) -->
+    <div class="gw-modal-overlay" id="gameCreationWizardModal" aria-hidden="true">
+      <div class="gw-dialog" role="dialog" aria-modal="true" aria-labelledby="gwScreenTitle">
+        
+        <!-- Header & Stepper -->
+        <div class="gw-header">
+          <div class="gw-header-top">
+            <div class="gw-brand-tag">
+              <span class="gw-brand-dot"></span>
+              <span>ScoopCast Multiplayer</span>
+            </div>
+            <button type="button" class="gw-close-btn" onclick="CreateRoomWizard.close()" aria-label="Close setup wizard">
+              <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Progress Stepper -->
+          <div class="gw-stepper">
+            <div class="gw-step-node active" id="gwStepNode-1">
+              <div class="gw-step-pill"></div>
+            </div>
+            <div class="gw-step-node" id="gwStepNode-2">
+              <div class="gw-step-pill"></div>
+            </div>
+            <div class="gw-step-node" id="gwStepNode-3">
+              <div class="gw-step-pill"></div>
+            </div>
+            <div class="gw-step-node" id="gwStepNode-4">
+              <div class="gw-step-pill"></div>
+            </div>
+          </div>
+          <div class="gw-step-labels">
+            <span class="active" id="gwStepLabel-1">1. Mode</span>
+            <span id="gwStepLabel-2">2. Section</span>
+            <span id="gwStepLabel-3">3. Length</span>
+            <span id="gwStepLabel-4">4. Profile</span>
+          </div>
+        </div>
+
+        <!-- Body / Panes -->
+        <div class="gw-content-body">
+          
+          <!-- STEP 1: SELECT GAME MODE -->
+          <div class="gw-step-pane active" id="gwStepPane-1">
+            <div class="gw-step-title-group">
+              <h2 class="gw-screen-title" id="gwScreenTitle">Choose Your Challenge</h2>
+              <p class="gw-screen-subtitle">Select the difficulty tier for this multiplayer lobby.</p>
+            </div>
+
+            <div class="gw-difficulty-grid">
+              <!-- Popcorn Mode -->
+              <div class="gw-diff-card popcorn" id="gwDiffCard-popcorn" onclick="CreateRoomWizard.selectMode('popcorn')">
+                <div class="gw-diff-icon-wrap">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
+                    <path d="M18 8a3 3 0 0 0-3-3 3 3 0 0 0-6 0 3 3 0 0 0-3 3"/>
+                    <path d="M6 8l1.8 12.6A2 2 0 0 0 9.8 22h4.4a2 2 0 0 0 2-1.4L18 8"/>
+                    <line x1="10" y1="12" x2="9" y2="22"/>
+                    <line x1="14" y1="12" x2="15" y2="22"/>
+                    <circle cx="12" cy="4" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="gw-diff-title">Popcorn Mode</div>
+                <div class="gw-diff-badge gw-badge-easy">Difficulty: Easy</div>
+                <p class="gw-diff-desc">Popular movies and recognizable scenes.</p>
+              </div>
+
+              <!-- Cinephile Mode -->
+              <div class="gw-diff-card cinephile selected" id="gwDiffCard-cinephile" onclick="CreateRoomWizard.selectMode('cinephile')">
+                <div class="gw-diff-icon-wrap">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <circle cx="7" cy="8.5" r="1.5" fill="currentColor"/>
+                    <circle cx="17" cy="8.5" r="1.5" fill="currentColor"/>
+                    <circle cx="7" cy="15.5" r="1.5" fill="currentColor"/>
+                    <circle cx="17" cy="15.5" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="gw-diff-title">Cinephile Mode</div>
+                <div class="gw-diff-badge gw-badge-medium">Difficulty: Medium</div>
+                <p class="gw-diff-desc">For players who know movies beyond famous scenes.</p>
+              </div>
+
+              <!-- Director's Cut Mode -->
+              <div class="gw-diff-card director" id="gwDiffCard-director" onclick="CreateRoomWizard.selectMode('director')">
+                <div class="gw-diff-icon-wrap">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
+                    <path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8H4z"/>
+                    <path d="m4 11 16-4v4H4z"/>
+                    <path d="m7 7 3-3"/>
+                    <path d="m13 5.5 3-3"/>
+                    <path d="m4 11 3-3"/>
+                  </svg>
+                </div>
+                <div class="gw-diff-title">Director's Cut</div>
+                <div class="gw-diff-badge gw-badge-hard">Difficulty: Hard</div>
+                <p class="gw-diff-desc">Rare scenes and challenging frames.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: SELECT GAME SECTION -->
+          <div class="gw-step-pane" id="gwStepPane-2">
+            <div class="gw-step-title-group">
+              <h2 class="gw-screen-title">Choose Your Challenge Type</h2>
+              <p class="gw-screen-subtitle">Select one or multiple challenges to feature in the match playlist.</p>
+              <div class="gw-selected-count-badge" id="gwSelectedSectionsCount">
+                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Selected: 2 of 3</span>
+              </div>
+            </div>
+
+            <div class="gw-section-grid">
+              <!-- Guess The Frame -->
+              <div class="gw-sec-card selected" id="gwSecCard-frame" onclick="CreateRoomWizard.toggleSection('frame')">
+                <div class="gw-sec-left">
+                  <div class="gw-sec-icon-wrap">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                  <div class="gw-sec-info">
+                    <div class="gw-sec-title">Guess The Frame</div>
+                    <div class="gw-sec-desc">Identify the movie from a cinematic frame.</div>
+                  </div>
+                </div>
+                <div class="gw-checkbox-pill">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+              <!-- Guess The Dialogue -->
+              <div class="gw-sec-card selected" id="gwSecCard-dialogue" onclick="CreateRoomWizard.toggleSection('dialogue')">
+                <div class="gw-sec-left">
+                  <div class="gw-sec-icon-wrap">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                      <line x1="8" y1="9" x2="16" y2="9"/>
+                      <line x1="8" y1="13" x2="13" y2="13"/>
+                    </svg>
+                  </div>
+                  <div class="gw-sec-info">
+                    <div class="gw-sec-title">Guess The Dialogue</div>
+                    <div class="gw-sec-desc">Guess the movie from famous dialogues.</div>
+                  </div>
+                </div>
+                <div class="gw-checkbox-pill">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+
+              <!-- Guess The Eyes -->
+              <div class="gw-sec-card" id="gwSecCard-eyes" onclick="CreateRoomWizard.toggleSection('eyes')">
+                <div class="gw-sec-left">
+                  <div class="gw-sec-icon-wrap">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                      <circle cx="12" cy="12" r="3.2"/>
+                      <circle cx="13" cy="11" r="1" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <div class="gw-sec-info">
+                    <div class="gw-sec-title">Guess The Eyes</div>
+                    <div class="gw-sec-desc">Guess the character or movie from a close-up eye shot.</div>
+                  </div>
+                </div>
+                <div class="gw-checkbox-pill">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: ROUND CONFIGURATION -->
+          <div class="gw-step-pane" id="gwStepPane-3">
+            <div class="gw-step-title-group">
+              <h2 class="gw-screen-title">Set Your Game Length</h2>
+              <p class="gw-screen-subtitle">Configure the round distribution for your selected challenge modes.</p>
+            </div>
+
+            <div class="gw-rounds-config-list" id="gwRoundsContainer">
+              <!-- Dynamically rendered by CreateRoomWizard.renderStep3() -->
+            </div>
+          </div>
+
+          <!-- STEP 4: CREATE PLAYER PROFILE -->
+          <div class="gw-step-pane" id="gwStepPane-4">
+            <div class="gw-step-title-group">
+              <h2 class="gw-screen-title">Create Player Profile</h2>
+              <p class="gw-screen-subtitle">Enter your name and pick your cinematic vector persona.</p>
+            </div>
+
+            <div class="gw-profile-box">
+              <div class="gw-input-group">
+                <label class="gw-input-label" for="gwPlayerNameInput">Player Name</label>
+                <div class="gw-text-input-wrap">
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <input type="text" 
+                         id="gwPlayerNameInput" 
+                         class="gw-name-input" 
+                         maxlength="16" 
+                         placeholder="Enter your name..."
+                         oninput="CreateRoomWizard.setPlayerName(this.value)"
+                         onkeydown="if(event.key==='Enter') CreateRoomWizard.enterLobby();" />
+                </div>
+              </div>
+
+              <div class="gw-input-group">
+                <div class="gw-avatar-collection-title">
+                  <span class="gw-input-label">Avatar Selection (Vector SVG)</span>
+                  <span style="font-family:var(--font-mono, monospace); font-size:10px; color:var(--wizard-text-muted);">5 Custom Styles</span>
+                </div>
+                <div class="gw-avatar-grid" id="gwAvatarGrid">
+                  <!-- Dynamically rendered by CreateRoomWizard.renderStep4() -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="gw-footer">
+          <button type="button" class="gw-btn-back" id="gwPrevBtn" onclick="CreateRoomWizard.prevStep()" style="display:none;">
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            <span>Back</span>
+          </button>
+          
+          <div style="flex:1;"></div>
+
+          <button type="button" class="gw-btn-primary" id="gwNextBtn" onclick="CreateRoomWizard.nextStep()">
+            <span>Continue</span>
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+
+          <button type="button" class="gw-btn-primary" id="gwEnterLobbyBtn" onclick="CreateRoomWizard.enterLobby()" style="display:none;">
+            <span>Enter Lobby</span>
+            <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- PLAYER LOBBY -->
-            <!-- CREATE ROOM MODAL (EXACT REPLICA BADGE PASS) -->
+    <!-- CREATE ROOM MODAL (EXACT REPLICA BADGE PASS) -->
     <div class="mp-modal-overlay" id="createRoomModal">
       <div class="mp-badge-modal-box" id="createModalBox">
         
@@ -13752,10 +14006,14 @@
             </div>
             <span class="material-symbols-outlined text-4xl hidden md:block text-neo-yellow">bolt</span>
           </div>
-          <div class="flex items-center gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+          <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
             <button type="button" id="copyLinkBtn" class="bg-primary-container border-2 border-on-surface px-4 py-3 font-label-bold text-label-bold uppercase flex items-center gap-2 neo-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all whitespace-nowrap cursor-pointer font-bold" onclick="MultiplayerEngine.copyRoomLink(this)">
               <span class="material-symbols-outlined">content_copy</span>
               Copy Link
+            </button>
+            <button type="button" id="shareRoomBtn" class="bg-neo-yellow border-2 border-on-surface px-4 py-3 font-label-bold text-label-bold uppercase flex items-center gap-2 neo-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all whitespace-nowrap cursor-pointer font-bold" onclick="MultiplayerEngine.shareRoomLink(this)">
+              <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share
             </button>
             <div class="h-8 border-r-2 border-dashed border-outline hidden md:block"></div>
             <div class="bg-neo-green border-2 border-on-surface px-4 py-2 flex items-center gap-2 font-label-bold text-label-bold uppercase whitespace-nowrap font-bold" id="lobbyConnectionStatus">
@@ -13827,6 +14085,8 @@
                   </div>
                 </div>
               </div>
+              <!-- Preload Progress & Unready Notice Box -->
+              <div id="lobbyAssetNoticeContainer" class="px-6 pb-6 pt-0 hidden"></div>
             </section>
           </div>
 
@@ -13844,6 +14104,8 @@
               </div>
 
               <div class="p-5 flex flex-col justify-between flex-1 gap-4">
+                <!-- Locked Settings Banner (Online Mode) -->
+                <div id="lobbyLockedSettingsBanner" class="hidden"></div>
                 
                 <!-- Active Mode Toggle Badges -->
                 <div class="shrink-0">
@@ -13981,20 +14243,24 @@
         </div>
 
         <!-- Desktop Action Buttons -->
-        <div class="hidden md:flex gap-4 mt-6">
-          <button type="button" id="lobbyStartBtn" onclick="PlayerLobby.start()" class="w-1/2 bg-neo-green border-4 border-on-surface py-3.5 px-6 font-headline-lg text-headline-lg uppercase flex items-center justify-between shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group cursor-pointer font-black">
-            <span id="lobbyStartBtnText">Start Match</span>
-            <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
-          </button>
-          <button type="button" onclick="PlayerLobby.back()" class="w-1/2 bg-surface border-4 border-on-surface py-3.5 px-6 font-headline-sm text-headline-sm uppercase flex items-center justify-center gap-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer font-bold">
-            <span class="material-symbols-outlined">logout</span>
-            Leave Lobby
-          </button>
+        <div class="hidden md:flex flex-col gap-2 mt-6">
+          <div id="lobbyStartNotice" class="hidden font-mono text-xs font-bold text-amber-900 bg-amber-100/90 border-2 border-amber-400 p-2.5 rounded-xl flex items-center justify-center gap-2"></div>
+          <div class="flex gap-4">
+            <button type="button" id="lobbyStartBtn" onclick="PlayerLobby.start()" class="w-1/2 bg-neo-green border-4 border-on-surface py-3.5 px-6 font-headline-lg text-headline-lg uppercase flex items-center justify-between shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group cursor-pointer font-black">
+              <span id="lobbyStartBtnText">Start Match</span>
+              <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+            </button>
+            <button type="button" onclick="PlayerLobby.back()" class="w-1/2 bg-surface border-4 border-on-surface py-3.5 px-6 font-headline-sm text-headline-sm uppercase flex items-center justify-center gap-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer font-bold">
+              <span class="material-symbols-outlined">logout</span>
+              Leave Lobby
+            </button>
+          </div>
         </div>
       </main>
 
       <!-- Mobile Sticky Bottom Action Bar -->
       <div class="md:hidden fixed bottom-16 left-0 w-full p-4 bg-background/90 backdrop-blur border-t-4 border-on-surface z-20 flex flex-col gap-2">
+        <div id="mobileLobbyStartNotice" class="hidden font-mono text-xs font-bold text-amber-900 bg-amber-100/90 border-2 border-amber-400 p-2 rounded-lg text-center flex items-center justify-center gap-1.5"></div>
         <button type="button" id="mobileLobbyStartBtn" onclick="PlayerLobby.start()" class="w-full bg-neo-green border-4 border-on-surface py-3 px-6 font-headline-lg text-xl uppercase flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] cursor-pointer font-black">
           <span id="mobileLobbyStartBtnText">Start Match</span>
           <span class="material-symbols-outlined text-2xl">arrow_forward</span>
@@ -15184,6 +15450,11 @@
       const clean = String(av).trim().toLowerCase();
       const key = clean.replace(/[^a-z0-9]/g, '');
 
+      if (typeof window !== 'undefined' && window.WIZARD_AVATARS) {
+        const wiz = window.WIZARD_AVATARS.find(a => a.id === clean || a.id === key);
+        if (wiz) return wiz.dataUri;
+      }
+
       if (FOUNDER_AVATAR_URLS[key]) return FOUNDER_AVATAR_URLS[key];
       for (const [fKey, fUrl] of Object.entries(FOUNDER_AVATAR_URLS)) {
         if (clean === fKey || clean.endsWith('/' + fKey + '.svg') || clean === fKey + '.svg') {
@@ -15221,12 +15492,18 @@
     }
 
     function getPlayerAvatarBg(p, defaultColor = '#facc15') {
+      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
+      const key = String(raw || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      if (typeof window !== 'undefined' && window.WIZARD_AVATARS) {
+        const wiz = window.WIZARD_AVATARS.find(a => a.id === key || (p && (p.avatar === a.dataUri || p.avatar === a.id)));
+        if (wiz) return wiz.color;
+      }
+
       const meta = getPlayerAvatarMeta(p);
       if (meta) {
         return meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'));
       }
-      const raw = typeof p === 'string' ? p : (p && (p.avatar || p.avatarImg || (p.name && p.name.toLowerCase())));
-      const key = String(raw || 'aman').toLowerCase().replace(/[^a-z0-9]/g, '');
       const valid = ['aman', 'amish', 'aziz', 'vish'];
       const safeKey = valid.includes(key) ? key : 'aman';
       return (typeof AVATAR_MAP !== 'undefined' && AVATAR_MAP[safeKey] && AVATAR_MAP[safeKey].color) || defaultColor;
@@ -15302,26 +15579,46 @@
           codeDisplay.textContent = MultiplayerEngine.roomCode || '----';
         }
 
-        const bgOrder = ['bg-primary-fixed', 'bg-secondary-fixed', 'bg-tertiary-fixed', 'bg-primary-container'];
+        const isOnline = !!GameController._onlineMode;
+        const isHost = !isOnline || MultiplayerEngine.isHost;
+
+        // In local mode, ensure all players have loaded state
+        if (!isOnline && Array.isArray(GS.players)) {
+          GS.players.forEach(p => {
+            p.loaded = true;
+            p.isReady = true;
+            p.loadProgress = 100;
+            p.assetProgress = 100;
+            p.assetStatus = 'ready';
+          });
+        }
+
+        const allPlayersReady = GS.players.length >= 1 && GS.players.every(p => (p.isReady === true || p.loaded === true));
 
         if (list) {
           const playersHtml = GS.players.map((p, i) => {
-            const isH = GameController._onlineMode ? !!p.isHost : (p.isHost || i === 0);
+            const isH = isOnline ? !!p.isHost : (p.isHost || i === 0);
             const avColor = getPlayerAvatarBg(p, '#facc15');
             const avSrc = resolvePlayerAvatar(p, 'aman');
             const avFit = getPlayerAvatarFit(p);
             const avConfig = { color: avColor, img: avSrc };
             const safeName = SecurityUtil.escapeHtml(p.name || ('Player ' + (i+1)));
-            const isMe = !GameController._onlineMode ||
+            const isMe = !isOnline ||
               (MultiplayerEngine.isHost ? (p.isHost || p.id === MultiplayerEngine.playerId || i === 0) : (p.id === MultiplayerEngine.playerId || p.name === MultiplayerEngine.playerName));
-            const canRemove = (!GameController._onlineMode && GS.players.length > 1) ||
-              (GameController._onlineMode && MultiplayerEngine.isHost && GS.players.length > 1 && !p.isHost && p.id !== MultiplayerEngine.playerId);
+            const canRemove = (!isOnline && GS.players.length > 1) ||
+              (isOnline && MultiplayerEngine.isHost && GS.players.length > 1 && !p.isHost && p.id !== MultiplayerEngine.playerId);
+
+            const isPlayerReady = p.isReady === true || p.loaded === true;
+            const progress = p.assetProgress !== undefined ? p.assetProgress : (p.loadProgress || (isPlayerReady ? 100 : 0));
+            const statusLabel = isPlayerReady
+              ? 'READY'
+              : (p.assetStatus === 'verifying' ? 'VERIFYING...' : `DOWNLOADING ${progress}%`);
 
             return `
               <div class="bg-surface border-4 border-on-surface p-4 flex flex-col items-center justify-center relative neo-shadow rounded-xl transform transition-transform hover:-translate-y-1">
                 ${isH ? `
                   <div class="absolute -top-3 -left-3 bg-neo-yellow border-2 border-on-surface px-2 py-0.5 font-label-bold text-[10px] uppercase flex items-center gap-1 z-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
-                    <span class="material-symbols-outlined text-xs">workspace_premium</span> Host
+                    <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST
                   </div>
                 ` : ''}
                 ${canRemove ? `
@@ -15344,15 +15641,23 @@
                            onblur="PlayerLobby.renamePlayer(${i}, this.value)"
                            onkeydown="if(event.key==='Enter') this.blur();"
                     />
-                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
+                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
                   </div>
                 ` : `
                   <div class="border-2 border-on-surface px-3 py-1 rounded-lg font-headline-sm text-sm sm:text-base uppercase font-black tracking-wide text-on-surface truncate max-w-full text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" style="background-color: ${avConfig.color};">
                     ${safeName}
                   </div>
                 `}
-                <div class="mt-2.5 ${p.loaded ? 'bg-[#86EFAC] text-[#14532D]' : 'bg-[#FEF08A] text-[#854D0E]'} border-2 border-on-surface px-2.5 py-0.5 rounded-full font-label-bold text-[10px] uppercase font-black flex items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  ${p.loaded ? ('<span>' + (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ' READY</span>') : ('<span>' + (typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : '') + ` LOADING (${p.loadProgress || 0}%)...</span>`)}
+                <div class="mt-2.5 ${isPlayerReady ? 'bg-[#86EFAC] text-[#14532D]' : 'bg-[#FEF08A] text-[#854D0E]'} border-2 border-on-surface px-2.5 py-1 rounded-full font-label-bold text-[10px] uppercase font-black flex flex-col items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] w-full max-w-[140px]">
+                  <div class="flex items-center gap-1">
+                    ${isPlayerReady ? `<svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : `<svg class="ui-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`}
+                    <span>${statusLabel}</span>
+                  </div>
+                  ${!isPlayerReady ? `
+                    <div class="w-full bg-black/15 rounded-full h-1.5 overflow-hidden">
+                      <div class="bg-[#d97706] h-full rounded-full transition-all duration-300" style="width: ${progress}%;"></div>
+                    </div>
+                  ` : ''}
                 </div>
               </div>
             `;
@@ -15362,7 +15667,7 @@
           const emptySlotsHtml = Array.from({ length: emptySlotsCount }, (_, idx) => {
             const slotIdx = GS.players.length + idx;
             const hideOnMobile = slotIdx >= 2 ? 'hidden sm:flex' : '';
-            if (!GameController._onlineMode) {
+            if (!isOnline) {
               return `
                 <div onclick="PlayerLobby.addLocalPlayer()" class="border-4 border-dashed border-outline/40 hover:border-outline hover:bg-surface/50 rounded-xl p-4 flex flex-col items-center justify-center h-36 opacity-60 hover:opacity-100 transition-all cursor-pointer ${hideOnMobile}" title="Click to add player">
                   <span class="material-symbols-outlined text-4xl text-outline">person_add</span>
@@ -15385,8 +15690,6 @@
           count.textContent = `${GS.players.length} / 10 Players`;
         }
 
-        const isHost = !GameController._onlineMode || MultiplayerEngine.isHost;
-
         if (!MultiplayerEngine.hostSettings) {
           MultiplayerEngine.hostSettings = {
             category: 'all',
@@ -15401,6 +15704,29 @@
 
         const activeCategories = settings.categories || ['frames', 'eyes', 'dialogue'];
         const counts = settings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
+
+        // Render Locked Settings Banner if in online mode
+        const lockedBanner = document.getElementById('lobbyLockedSettingsBanner');
+        if (lockedBanner) {
+          if (isOnline) {
+            lockedBanner.classList.remove('hidden');
+            const modeName = settings.mode || (activeCategories.length >= 3 ? 'Mixed Mode' : (activeCategories.length === 1 ? (activeCategories[0] === 'frames' ? 'Frame Mode' : activeCategories[0] === 'eyes' ? 'Eyes Mode' : 'Dialogue Mode') : 'Custom Mode'));
+            const totalRoundsCount = (settings.roundsByMode ? Object.values(settings.roundsByMode).reduce((a, b) => a + b, 0) : settings.rounds) || 40;
+            const sectionsStr = activeCategories.map(c => c.charAt(0).toUpperCase() + c.slice(1)).join(' • ');
+            lockedBanner.innerHTML = `
+              <div class="gw-locked-badge-wrap" onclick="PlayerLobby.onLockedSettingClick()" title="Game settings are permanently locked">
+                <div class="gw-locked-title">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <span>Game Settings Locked</span>
+                </div>
+                <div class="gw-locked-detail">${modeName} &bull; ${sectionsStr} &bull; ${totalRoundsCount} Rounds</div>
+              </div>
+            `;
+          } else {
+            lockedBanner.classList.add('hidden');
+            lockedBanner.innerHTML = '';
+          }
+        }
 
         const modeColors = {
           frames: { active: '#cae6ff', inactive: '#f4f4ee' },
@@ -15417,7 +15743,7 @@
           if (badge) {
             if (isActive) {
               badge.style.backgroundColor = modeColors[mode].active;
-              badge.style.opacity = '1';
+              badge.style.opacity = isOnline ? '0.85' : '1';
               badge.classList.remove('opacity-50', 'border-dashed');
               badge.classList.add('neo-shadow-sm');
             } else {
@@ -15457,8 +15783,6 @@
         const totalBadge = document.getElementById('gameSettingsTotalBadge');
         if (totalBadge) totalBadge.textContent = `${totalR} Rounds`;
 
-        
-
         // Update Timer button
         const timerBtnText = document.getElementById('hostTimerBtnText');
         if (timerBtnText) timerBtnText.textContent = `${settings.timer || 30}s`;
@@ -15468,13 +15792,13 @@
         if (weeklyToggle) {
           const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
           weeklyToggle.checked = wVal;
-          weeklyToggle.disabled = !isHost;
+          weeklyToggle.disabled = isOnline || !isHost;
         }
         const weeklyToggleHta = document.getElementById('toggleWeeklyDropsDesktopHta');
         if (weeklyToggleHta) {
           const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
           weeklyToggleHta.checked = wVal;
-          weeklyToggleHta.disabled = !isHost;
+          weeklyToggleHta.disabled = isOnline || !isHost;
         }
         const weeklySubtext = document.getElementById('weeklySubtextDesktop');
         if (weeklySubtext) {
@@ -15485,6 +15809,85 @@
         if (weeklySubtextHta) {
           const wVal = settings.weeklyOnly !== undefined ? Boolean(settings.weeklyOnly) : true;
           weeklySubtextHta.textContent = wVal ? "Playing this week's fresh frames" : "Playing from all classic & new frames";
+        }
+
+        // Render Asset Notice Container & Match Prep Details
+        const noticeContainer = document.getElementById('lobbyAssetNoticeContainer');
+        const startNotice = document.getElementById('lobbyStartNotice');
+        const mobileStartNotice = document.getElementById('mobileLobbyStartNotice');
+
+        const loadTitleText = document.getElementById('loadTitleText');
+        const loadSubtitleText = document.getElementById('loadSubtitleText');
+        const loadPercent = document.getElementById('loadPercent');
+        const loadBar = document.getElementById('loadBar');
+
+        if (allPlayersReady) {
+          if (loadTitleText) loadTitleText.textContent = 'Match Ready!';
+          if (loadSubtitleText) loadSubtitleText.textContent = 'All Assets Loaded & Verified';
+          if (loadPercent) loadPercent.textContent = '100%';
+          if (loadBar) loadBar.style.width = '100%';
+          if (noticeContainer) {
+            noticeContainer.innerHTML = '';
+            noticeContainer.classList.add('hidden');
+          }
+          if (startNotice) startNotice.classList.add('hidden');
+          if (mobileStartNotice) mobileStartNotice.classList.add('hidden');
+        } else {
+          const unreadyList = GS.players.filter(p => !p.isReady && !p.loaded);
+          const avgProgress = Math.round(GS.players.reduce((sum, p) => sum + ((p.isReady || p.loaded) ? 100 : (p.assetProgress || p.loadProgress || 0)), 0) / Math.max(1, GS.players.length));
+          if (loadTitleText) loadTitleText.textContent = 'Preloading Assets...';
+          if (loadSubtitleText) loadSubtitleText.textContent = 'Downloading frames, audio, and visual challenges';
+          if (loadPercent) loadPercent.textContent = `${avgProgress}%`;
+          if (loadBar) loadBar.style.width = `${avgProgress}%`;
+
+          if (noticeContainer) {
+            const playerItemsHtml = GS.players.map(p => {
+              const isPReady = p.isReady === true || p.loaded === true;
+              const pProg = p.assetProgress !== undefined ? p.assetProgress : (p.loadProgress || (isPReady ? 100 : 0));
+              const pStat = isPReady ? 'Ready ✓' : (p.assetStatus === 'verifying' ? 'Verifying...' : `Downloading ${pProg}%`);
+              return `
+                <div class="gw-asset-player-item flex items-center justify-between text-xs py-1.5 border-b border-white/5">
+                  <span class="font-bold text-on-surface">${SecurityUtil.escapeHtml(p.name || 'Player')}</span>
+                  ${isPReady ? `
+                    <span class="text-neo-green font-bold flex items-center gap-1 font-mono text-[11px]">
+                      <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      Ready ✓
+                    </span>
+                  ` : `
+                    <div class="flex items-center gap-2">
+                      <div class="gw-progress-track">
+                        <div class="gw-progress-fill" style="width: ${pProg}%"></div>
+                      </div>
+                      <span class="text-amber-600 font-mono font-bold text-[11px]">${pStat}</span>
+                    </div>
+                  `}
+                </div>
+              `;
+            }).join('');
+
+            noticeContainer.innerHTML = `
+              <div class="gw-asset-notice-box">
+                <div class="gw-asset-notice-header">
+                  <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Waiting for players to finish loading assets</span>
+                </div>
+                <div class="gw-asset-players-list flex flex-col gap-0.5 mt-1">
+                  ${playerItemsHtml}
+                </div>
+              </div>
+            `;
+            noticeContainer.classList.remove('hidden');
+          }
+
+          const noticeText = `<svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Waiting for ${unreadyList.length} player${unreadyList.length > 1 ? 's' : ''} to finish loading assets before starting`;
+          if (startNotice) {
+            startNotice.innerHTML = noticeText;
+            startNotice.classList.remove('hidden');
+          }
+          if (mobileStartNotice) {
+            mobileStartNotice.innerHTML = noticeText;
+            mobileStartNotice.classList.remove('hidden');
+          }
         }
 
         // Update Match Info
@@ -15507,18 +15910,11 @@
           const estMins = Math.max(1, Math.ceil((totalR * ((settings.timer || 30) + 5)) / 60));
           infoDuration.textContent = `~ ${estMins} Min`;
         }
-        const readyCount = GS.players.filter(p => p.loaded === true || (!GameController._onlineMode && GS.framesLoaded)).length;
+        const readyCount = GS.players.filter(p => p.isReady === true || p.loaded === true).length;
         if (infoReady) infoReady.textContent = `${readyCount} / ${GS.players.length || 1}`;
 
-        // Update Start Buttons
-        // In local mode, ensure all players have loaded state
-        if (!GameController._onlineMode && Array.isArray(GS.players)) {
-          GS.players.forEach(p => {
-            p.loaded = true;
-            p.loadProgress = 100;
-          });
-        }
-        const canStart = isHost && GS.players.length >= 1;
+        // Host Start Validation
+        const canStart = isHost && GS.players.length >= 1 && allPlayersReady;
 
         [startBtn, mobileStartBtn].forEach(btn => {
           if (!btn) return;
@@ -15538,17 +15934,29 @@
 
         let label = 'Start Match';
         if (!isHost) {
-          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.hourglass : ''} WAITING FOR HOST TO START...`;
+          label = `<svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> WAITING FOR HOST TO START...`;
+        } else if (!allPlayersReady) {
+          label = `<svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> WAITING FOR PLAYERS TO LOAD ASSETS`;
         } else {
-          label = `${typeof SvgIcons !== 'undefined' ? SvgIcons.gamepad : ''} START MATCH ${typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : ''}`;
+          label = `<svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> START MATCH`;
         }
 
         if (startText) startText.innerHTML = label;
         if (mobileStartText) mobileStartText.innerHTML = label;
       },
 
+      onLockedSettingClick() {
+        if (typeof SoundManager !== 'undefined' && SoundManager.playSkip) SoundManager.playSkip();
+        if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.showNotice) {
+          CreateRoomWizard.showNotice("Settings cannot be changed after lobby creation.");
+        }
+      },
+
       applyPreset(preset) {
-        if (GameController._onlineMode && !MultiplayerEngine.isHost) return;
+        if (GameController._onlineMode) {
+          this.onLockedSettingClick();
+          return;
+        }
         SoundManager.playClick();
         if (!MultiplayerEngine.hostSettings) {
           MultiplayerEngine.hostSettings = {
@@ -15577,7 +15985,10 @@
       },
 
       toggleMode(mode) {
-        if (GameController._onlineMode && !MultiplayerEngine.isHost) return;
+        if (GameController._onlineMode) {
+          this.onLockedSettingClick();
+          return;
+        }
         SoundManager.playClick();
         if (!MultiplayerEngine.hostSettings) {
           MultiplayerEngine.hostSettings = {
@@ -15614,7 +16025,10 @@
       },
 
       adjustRounds(mode, delta) {
-        if (GameController._onlineMode && !MultiplayerEngine.isHost) return;
+        if (GameController._onlineMode) {
+          this.onLockedSettingClick();
+          return;
+        }
         SoundManager.playClick();
         if (!MultiplayerEngine.hostSettings) {
           MultiplayerEngine.hostSettings = {
@@ -15657,7 +16071,10 @@
       },
 
       adjustTimer(delta) {
-        if (GameController._onlineMode && !MultiplayerEngine.isHost) return;
+        if (GameController._onlineMode) {
+          this.onLockedSettingClick();
+          return;
+        }
         SoundManager.playClick();
         if (!MultiplayerEngine.hostSettings) {
           MultiplayerEngine.hostSettings = {
@@ -15750,6 +16167,13 @@
 
       start() {
         if (GameController._onlineMode && MultiplayerEngine.isHost) {
+          const unready = (GS.players || []).filter(p => !p.isReady && !p.loaded);
+          if (unready.length > 0) {
+            if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.showNotice) {
+              CreateRoomWizard.showNotice("Waiting for players to finish loading assets");
+            }
+            return;
+          }
           MultiplayerEngine.startMatch();
           return;
         }
@@ -17984,6 +18408,16 @@
       },
 
       openCreateModal() {
+        // Pre-warm Colyseus backend when modal is opened
+        try {
+          fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
+        } catch(e) {}
+
+        if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.open) {
+          CreateRoomWizard.open();
+          return;
+        }
+
         this.playerAvatar = this.playerAvatar || localStorage.getItem('gtf_player_avatar') || 'aman';
         this.selectedAvatarForModal = this.playerAvatar;
         const savedName = localStorage.getItem('gtf_player_name');
@@ -18000,11 +18434,6 @@
 
         document.getElementById('createRoomModal').classList.add('active');
         if (nameInput) setTimeout(() => nameInput.focus(), 150);
-
-        // Pre-warm Colyseus backend when modal is opened
-        try {
-          fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
-        } catch(e) {}
       },
 
       openJoinModal() {
@@ -18096,6 +18525,26 @@
         });
       },
 
+      shareRoomLink(btn) {
+        const joinUrl = window.location.origin + window.location.pathname + '?room=' + (this.roomCode || 'FILM');
+        if (typeof SoundManager !== 'undefined' && SoundManager.playClick) {
+          SoundManager.playClick();
+        }
+        if (navigator.share) {
+          navigator.share({
+            title: 'Join my ScoopCast Match!',
+            text: `Join my ScoopCast movie trivia game! Room Code: ${this.roomCode || 'FILM'}`,
+            url: joinUrl
+          }).catch(err => {
+            if (err.name !== 'AbortError') {
+              this.copyRoomLink(btn);
+            }
+          });
+        } else {
+          this.copyRoomLink(btn);
+        }
+      },
+
       _fallbackCopy(text) {
         try {
           const ta = document.createElement('textarea');
@@ -18160,6 +18609,137 @@
         return code;
       },
 
+      async createRoomFromWizard(wizardConfig) {
+        const { mode, sections, rounds, totalRounds, playerName, avatar } = wizardConfig;
+        this.playerName = playerName || 'Player';
+        this.playerAvatar = (avatar && avatar.dataUri) || (typeof avatar === 'string' ? avatar : 'aman');
+        this.isHost = true;
+        this.roomCode = this.generateRoomCode();
+        this.roomId = 'room_' + this.roomCode;
+
+        const modeCapitalized = mode === 'director' ? "Director's Cut" : (mode.charAt(0).toUpperCase() + mode.slice(1));
+        const counts = {
+          frames: (sections.includes('frame') ? (rounds.frame || 5) : 0),
+          eyes: (sections.includes('eyes') ? (rounds.eyes || 5) : 0),
+          dialogue: (sections.includes('dialogue') ? (rounds.dialogue || 5) : 0)
+        };
+        const totalR = totalRounds || (Object.values(counts).reduce((a, b) => a + b, 0)) || 15;
+
+        this.hostSettings = {
+          mode: modeCapitalized,
+          category: sections.length >= 3 ? 'all' : (sections.length === 1 ? sections[0] : 'mixed'),
+          categories: sections.map(s => s === 'frame' ? 'frames' : s),
+          roundsByMode: counts,
+          rounds: totalR,
+          timer: 30,
+          weeklyOnly: true,
+          isLocked: true
+        };
+
+        localStorage.setItem('gtf_player_name', this.playerName);
+        localStorage.setItem('gtf_player_avatar', this.playerAvatar);
+
+        await this.wakeServerIfNeeded();
+
+        const endpoint = this.getColyseusEndpoint();
+        console.log('[Colyseus] Creating room via AAA Wizard on', endpoint, this.hostSettings);
+        const client = new Colyseus.Client(endpoint);
+        this.colyseusClient = client;
+
+        const room = await client.create('trivia_room', {
+          roomCode: this.roomCode,
+          name: this.playerName,
+          avatar: this.playerAvatar,
+          userId: this.persistentUserId || localStorage.getItem('gtf_player_id') || this.playerId,
+          timer: 30,
+          rounds: totalR,
+          mode: modeCapitalized,
+          sections: sections.map(s => s === 'frame' ? 'frames' : s),
+          roundsByMode: counts,
+          weeklyOnly: true
+        });
+
+        this.colyseusRoom = room;
+        this.playerId = room.sessionId;
+        this.isHost = true;
+        this.bindColyseusGame(room);
+
+        this.saveActiveSession();
+        this.closeModals();
+
+        GS.players = [{
+          id: room.sessionId,
+          name: this.playerName,
+          avatar: this.playerAvatar,
+          score: 0,
+          isHost: true,
+          loaded: false,
+          isReady: false,
+          assetProgress: 0,
+          assetStatus: 'downloading',
+          color: (avatar && avatar.color) || '#facc15'
+        }];
+
+        GameController._onlineMode = true;
+        GameController._isRemoteSession = false;
+
+        UI.showScreen('playerLobbyScreen');
+        this.renderLobbyUI();
+        this.updateConnectionStatus(true);
+
+        this.startAssetPreloading();
+      },
+
+      startAssetPreloading() {
+        const me = GS.players.find(p => p.id === this.playerId);
+        if (me) {
+          me.assetProgress = 0;
+          me.assetStatus = 'downloading';
+          me.isReady = false;
+          me.loaded = false;
+        }
+        this.renderLobbyUI();
+
+        const reportProgress = (pct, status) => {
+          const validPct = Math.max(0, Math.min(100, Math.round(pct)));
+          if (me) {
+            me.assetProgress = validPct;
+            me.assetStatus = status || (validPct >= 100 ? 'ready' : (validPct >= 90 ? 'verifying' : 'downloading'));
+            me.isReady = validPct >= 100;
+            me.loaded = validPct >= 100;
+          }
+          if (typeof UI !== 'undefined' && UI.updateLoadProgress) {
+            UI.updateLoadProgress(validPct, 'lobby');
+          }
+          if (this.colyseusRoom) {
+            this.colyseusRoom.send('asset_progress', { progress: validPct, status: me ? me.assetStatus : status });
+            if (validPct >= 100) {
+              this.colyseusRoom.send('player_ready', { isReady: true });
+            }
+          }
+          this.renderLobbyUI();
+        };
+
+        if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
+          FrameDisplay.preloadAll(p => {
+            const pct = typeof p === 'number' ? p : (p && p.percent !== undefined ? p.percent : 0);
+            const status = pct >= 100 ? 'ready' : (pct >= 85 ? 'verifying' : 'downloading');
+            reportProgress(pct, status);
+          });
+        } else {
+          let step = 15;
+          const interval = setInterval(() => {
+            step += 25;
+            if (step >= 100) {
+              clearInterval(interval);
+              reportProgress(100, 'ready');
+            } else {
+              reportProgress(step, step >= 85 ? 'verifying' : 'downloading');
+            }
+          }, 180);
+        }
+      },
+
       async confirmCreateRoom() {
         const nameInput = document.getElementById('hostPlayerNameInput');
         const typedName = (nameInput ? nameInput.value : '').trim();
@@ -18169,7 +18749,7 @@
         this.roomCode = this.generateRoomCode();
         this.roomId = 'room_' + this.roomCode;
         if (!this.hostSettings) {
-          this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30, weeklyOnly: true };
+          this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30, weeklyOnly: true, isLocked: true };
         }
 
         localStorage.setItem('gtf_player_name', this.playerName);
@@ -18223,7 +18803,10 @@
             avatar: this.playerAvatar,
             score: 0,
             isHost: true,
-            loaded: true,
+            loaded: false,
+            isReady: false,
+            assetProgress: 0,
+            assetStatus: 'downloading',
             color: '#ff7eb6'
           }];
 
@@ -18234,9 +18817,7 @@
           this.renderLobbyUI();
           this.updateConnectionStatus(true);
 
-          if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
-            FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
-          }
+          this.startAssetPreloading();
         } catch (err) {
           console.error('[Colyseus] Failed to create room:', err);
           alert('Failed to connect to multiplayer server: ' + (err.message || 'Server offline. Try again in a few moments.'));
@@ -18346,9 +18927,7 @@
           this.renderLobbyUI();
           this.updateConnectionStatus(true);
 
-          if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
-            FrameDisplay.preloadAll(p => { if (typeof UI !== 'undefined' && UI.updateLoadProgress) UI.updateLoadProgress(p, 'lobby'); });
-          }
+          this.startAssetPreloading();
         } catch (err) {
           console.error('[Colyseus] Failed to join room:', err);
           const notFound = err.message && (err.message.includes('no rooms') || err.message.includes('not found') || err.message.includes('closed'));
@@ -18492,6 +19071,14 @@
         if (!this.colyseusRoom) {
           console.error('[MultiplayerEngine] Cannot start match: not connected to Colyseus room');
           alert('Multiplayer room is not connected. Please create or rejoin the room.');
+          return;
+        }
+
+        const unready = (GS.players || []).filter(p => !p.isReady && !p.loaded);
+        if (unready.length > 0) {
+          if (typeof CreateRoomWizard !== 'undefined') {
+            CreateRoomWizard.showNotice("Waiting for players to finish loading assets");
+          }
           return;
         }
 
@@ -19574,10 +20161,34 @@
       bindColyseusGame(room) {
         this.colyseusRoom = room;
 
+        room.onMessage("player_asset_update", (data) => {
+          if (!data) return;
+          const target = GS.players.find(p => p.id === data.playerId);
+          if (target) {
+            target.assetProgress = data.progress !== undefined ? data.progress : target.assetProgress;
+            target.assetStatus = data.status || target.assetStatus;
+            target.isReady = !!data.isReady;
+            target.loaded = !!data.isReady;
+            this.renderLobbyUI();
+          }
+        });
+
+        room.onMessage("start_error", (data) => {
+          if (data) {
+            const msg = data.message || "Waiting for players to finish loading assets";
+            if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.showNotice) {
+              CreateRoomWizard.showNotice(msg);
+            } else {
+              alert(msg);
+            }
+            this.renderLobbyUI();
+          }
+        });
+
         room.onMessage("guess_result", (res) => {
           if (res && res.isCorrect) {
             SoundManager.play('correct');
-            const streakBonus = res.streak && res.streak > 1 ? ` 🔥 ${res.streak}x STREAK!` : '';
+            const streakBonus = res.streak && res.streak > 1 ? ` ${(typeof SvgIcons !== 'undefined' ? SvgIcons.zap : '')} ${res.streak}x STREAK!` : '';
             this.showGuessFeedback(true, (typeof SvgIcons !== 'undefined' ? SvgIcons.check : '') + ` Correct! (+${res.points} pts)` + streakBonus);
             const input = document.getElementById('onlineGuessInput');
             const submitBtn = document.getElementById('onlineGuessSubmitBtn');
@@ -19656,7 +20267,7 @@
           }
           if (becameHost && !wasHost) {
             if (typeof ScorecardShare !== 'undefined' && ScorecardShare.showToast) {
-              ScorecardShare.showToast('👑 You are now the Host!');
+              ScorecardShare.showToast((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' You are now the Host!');
             }
           }
         });
@@ -19695,7 +20306,7 @@
               if (chat.isSystem && typeof chat.text === 'string' && (
                 chat.text.includes('guessed correctly') || 
                 chat.text.includes('guessed the answer') ||
-                (chat.text.includes('pts') && (chat.text.includes('🥇') || chat.text.includes('🥈') || chat.text.includes('🥉')))
+                (chat.text.includes('pts') && (chat.text.includes('1st') || chat.text.includes('2nd') || chat.text.includes('3rd')))
               )) {
                 return;
               }
@@ -19719,7 +20330,7 @@
         room.onStateChange((state) => {
           if (!state) return;
 
-          // 1. Sync players, hosts & scores
+          // 1. Sync players, hosts & scores & asset status
           if (state.players) {
             const currentIds = new Set();
             state.players.forEach((p, sessionId) => {
@@ -19732,7 +20343,10 @@
                   avatar: p.avatar,
                   score: p.score,
                   isHost: p.isHost,
-                  loaded: true
+                  assetProgress: p.assetProgress || 0,
+                  assetStatus: p.assetStatus || (p.isReady ? 'ready' : 'waiting'),
+                  isReady: !!p.isReady,
+                  loaded: !!p.isReady
                 };
                 GS.players.push(localP);
               } else {
@@ -19740,6 +20354,12 @@
                 localP.avatar = p.avatar;
                 localP.score = p.score;
                 localP.isHost = p.isHost;
+                if (p.assetProgress !== undefined) localP.assetProgress = p.assetProgress;
+                if (p.assetStatus) localP.assetStatus = p.assetStatus;
+                if (p.isReady !== undefined) {
+                  localP.isReady = !!p.isReady;
+                  localP.loaded = !!p.isReady;
+                }
               }
               if (sessionId === this.playerId) {
                 const hostChanged = (this.isHost !== p.isHost);
@@ -19747,7 +20367,7 @@
                 if (hostChanged) {
                   this.updateHostControls();
                   if (this.isHost && typeof ScorecardShare !== 'undefined' && ScorecardShare.showToast) {
-                    ScorecardShare.showToast('👑 You are now the Host!');
+                    ScorecardShare.showToast((typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '') + ' You are now the Host!');
                   }
                 }
               }
@@ -19755,6 +20375,24 @@
             GS.players = GS.players.filter(lp => currentIds.has(lp.id));
             UI.renderLB();
             this.renderLobbyUI();
+          }
+
+          // Sync gameSettings from room state
+          if (state.gameSettings) {
+            if (!this.hostSettings) this.hostSettings = {};
+            this.hostSettings.mode = state.gameSettings.mode;
+            this.hostSettings.sections = Array.from(state.gameSettings.sections || []);
+            this.hostSettings.roundsByMode = {
+              frames: state.gameSettings.frameRounds,
+              dialogue: state.gameSettings.dialogueRounds,
+              eyes: state.gameSettings.eyesRounds
+            };
+            this.hostSettings.rounds = state.gameSettings.totalRounds;
+            this.hostSettings.isLocked = true;
+          }
+          if (state.settingsLocked !== undefined) {
+            if (!this.hostSettings) this.hostSettings = {};
+            this.hostSettings.isLocked = !!state.settingsLocked;
           }
 
           // Sync pause state

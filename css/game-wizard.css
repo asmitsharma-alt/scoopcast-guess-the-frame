@@ -1,0 +1,941 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SCOOPCAST AAA GAME CREATION FLOW & LOBBY SYSTEM
+   Cinematic Glassmorphism UI | Responsive Desktop & Mobile | SVG Only
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --wizard-bg-dark: #0b0d14;
+  --wizard-card-bg: rgba(19, 23, 34, 0.85);
+  --wizard-card-border: rgba(255, 255, 255, 0.08);
+  --wizard-card-hover: rgba(250, 204, 21, 0.25);
+  --wizard-accent-gold: #facc15;
+  --wizard-accent-amber: #f59e0b;
+  --wizard-accent-emerald: #10b981;
+  --wizard-accent-ruby: #ef4444;
+  --wizard-accent-blue: #38bdf8;
+  --wizard-text-main: #f8fafc;
+  --wizard-text-muted: #94a3b8;
+  --wizard-glass-blur: blur(20px);
+}
+
+/* ── Modal Overlay ── */
+.gw-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(5, 7, 12, 0.88);
+  backdrop-filter: var(--wizard-glass-blur);
+  -webkit-backdrop-filter: var(--wizard-glass-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gw-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Wizard Dialog Container ── */
+.gw-dialog {
+  width: 100%;
+  max-width: 740px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(175deg, rgba(23, 27, 40, 0.96) 0%, rgba(11, 13, 20, 0.98) 100%);
+  border: 1px solid rgba(250, 204, 21, 0.22);
+  border-radius: 24px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(250, 204, 21, 0.08);
+  overflow: hidden;
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gw-modal-overlay.active .gw-dialog {
+  transform: scale(1) translateY(0);
+}
+
+/* ── Top Header & Progress Stepper ── */
+.gw-header {
+  padding: 20px 24px 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 18, 28, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gw-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gw-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--wizard-accent-gold);
+}
+
+.gw-brand-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--wizard-accent-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--wizard-accent-gold);
+  animation: gwPulse 2s infinite;
+}
+
+.gw-close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--wizard-text-muted);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gw-close-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  transform: scale(1.05);
+}
+
+/* ── Progress Stepper Bar ── */
+.gw-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  gap: 8px;
+}
+
+.gw-step-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+}
+
+.gw-step-pill {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.gw-step-node.active .gw-step-pill {
+  background: linear-gradient(90deg, var(--wizard-accent-gold), var(--wizard-accent-amber));
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+}
+
+.gw-step-node.completed .gw-step-pill {
+  background: var(--wizard-accent-emerald);
+}
+
+.gw-step-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--wizard-text-muted);
+  margin-top: -6px;
+}
+
+.gw-step-labels span.active {
+  color: var(--wizard-accent-gold);
+}
+
+/* ── Content Viewport ── */
+.gw-content-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.gw-content-body::-webkit-scrollbar {
+  width: 6px;
+}
+.gw-content-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.gw-content-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+.gw-step-pane {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: gwFadeIn 0.25s ease-out forwards;
+}
+
+.gw-step-pane.active {
+  display: flex;
+}
+
+/* ── Step Headings ── */
+.gw-step-title-group {
+  text-align: left;
+}
+
+.gw-screen-title {
+  font-family: 'Lilita One', var(--font-display, sans-serif);
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  color: var(--wizard-text-main);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.gw-screen-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--wizard-text-muted);
+  margin: 6px 0 0 0;
+}
+
+/* ── STEP 1: Difficulty Cards ── */
+.gw-difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.gw-diff-card {
+  background: var(--wizard-card-bg);
+  border: 1.5px solid var(--wizard-card-border);
+  border-radius: 18px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.gw-diff-card:hover {
+  border-color: rgba(250, 204, 21, 0.4);
+  transform: translateY(-4px);
+  background: rgba(28, 33, 49, 0.9);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(250, 204, 21, 0.12);
+}
+
+.gw-diff-card.selected {
+  border-color: var(--wizard-accent-gold);
+  background: linear-gradient(180deg, rgba(40, 36, 18, 0.9) 0%, rgba(20, 24, 36, 0.95) 100%);
+  box-shadow: 0 0 0 2px var(--wizard-accent-gold), 0 16px 32px -8px rgba(250, 204, 21, 0.2);
+  transform: translateY(-3px);
+}
+
+.gw-diff-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.gw-diff-card.popcorn.selected::before { background: var(--wizard-accent-emerald); }
+.gw-diff-card.cinephile.selected::before { background: var(--wizard-accent-gold); }
+.gw-diff-card.director.selected::before { background: var(--wizard-accent-ruby); }
+
+.gw-diff-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  color: var(--wizard-accent-gold);
+  transition: all 0.25s ease;
+}
+
+.gw-diff-card.selected .gw-diff-icon-wrap {
+  background: rgba(250, 204, 21, 0.15);
+  border-color: rgba(250, 204, 21, 0.4);
+  transform: scale(1.08);
+}
+
+.gw-diff-title {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--wizard-text-main);
+  margin-bottom: 6px;
+}
+
+.gw-diff-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.gw-badge-easy { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.gw-badge-medium { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+.gw-badge-hard { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.gw-diff-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--wizard-text-muted);
+}
+
+/* ── STEP 2: Section Multi-Select Cards ── */
+.gw-section-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.gw-sec-card {
+  background: var(--wizard-card-bg);
+  border: 1.5px solid var(--wizard-card-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gw-sec-card:hover {
+  border-color: rgba(250, 204, 21, 0.3);
+  background: rgba(25, 30, 46, 0.85);
+  transform: translateX(3px);
+}
+
+.gw-sec-card.selected {
+  border-color: var(--wizard-accent-gold);
+  background: linear-gradient(90deg, rgba(40, 36, 18, 0.85) 0%, rgba(20, 25, 38, 0.9) 100%);
+  box-shadow: 0 0 0 1.5px var(--wizard-accent-gold), 0 8px 20px -6px rgba(250, 204, 21, 0.15);
+}
+
+.gw-sec-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gw-sec-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wizard-accent-gold);
+}
+
+.gw-sec-card.selected .gw-sec-icon-wrap {
+  background: rgba(250, 204, 21, 0.18);
+  border-color: rgba(250, 204, 21, 0.4);
+}
+
+.gw-sec-info {
+  text-align: left;
+}
+
+.gw-sec-title {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--wizard-text-main);
+  margin-bottom: 3px;
+}
+
+.gw-sec-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--wizard-text-muted);
+}
+
+.gw-checkbox-pill {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  color: transparent;
+  transition: all 0.2s ease;
+}
+
+.gw-sec-card.selected .gw-checkbox-pill {
+  background: var(--wizard-accent-gold);
+  border-color: var(--wizard-accent-gold);
+  color: #0b0d14;
+}
+
+.gw-selected-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  background: rgba(250, 204, 21, 0.1);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 999px;
+  color: var(--wizard-accent-gold);
+  margin-top: 4px;
+}
+
+/* ── STEP 3: Rounds Configuration ── */
+.gw-rounds-config-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gw-round-row-card {
+  background: var(--wizard-card-bg);
+  border: 1px solid var(--wizard-card-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gw-round-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 170px;
+}
+
+.gw-round-sec-name {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 15px;
+  color: var(--wizard-text-main);
+}
+
+.gw-round-stepper-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gw-quick-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--wizard-text-muted);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gw-quick-chip:hover {
+  background: rgba(250, 204, 21, 0.15);
+  color: var(--wizard-accent-gold);
+  border-color: rgba(250, 204, 21, 0.3);
+}
+
+.gw-quick-chip.active {
+  background: var(--wizard-accent-gold);
+  color: #0b0d14;
+  border-color: var(--wizard-accent-gold);
+  font-weight: 800;
+}
+
+.gw-step-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--wizard-text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gw-step-btn:hover {
+  background: rgba(250, 204, 21, 0.2);
+  border-color: var(--wizard-accent-gold);
+  color: var(--wizard-accent-gold);
+}
+
+.gw-stepper-val {
+  min-width: 38px;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--wizard-accent-gold);
+}
+
+.gw-rounds-summary-bar {
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.gw-summary-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--wizard-text-muted);
+}
+
+.gw-summary-count {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--wizard-accent-gold);
+}
+
+/* ── STEP 4: Player Profile & SVG Avatars ── */
+.gw-profile-box {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gw-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.gw-input-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wizard-accent-gold);
+}
+
+.gw-text-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.gw-text-input-wrap svg {
+  position: absolute;
+  left: 14px;
+  color: var(--wizard-text-muted);
+  pointer-events: none;
+}
+
+.gw-name-input {
+  width: 100%;
+  background: rgba(12, 14, 24, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px 14px 12px 42px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--wizard-text-main);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.gw-name-input:focus {
+  border-color: var(--wizard-accent-gold);
+  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.25);
+  background: rgba(16, 20, 32, 0.95);
+}
+
+/* ── Custom SVG Avatar Collection ── */
+.gw-avatar-collection-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.gw-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.gw-avatar-card {
+  background: var(--wizard-card-bg);
+  border: 2px solid var(--wizard-card-border);
+  border-radius: 16px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.gw-avatar-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(250, 204, 21, 0.4);
+}
+
+.gw-avatar-card.selected {
+  border-color: var(--wizard-accent-gold);
+  background: rgba(40, 36, 18, 0.7);
+  box-shadow: 0 0 0 2px var(--wizard-accent-gold), 0 8px 18px rgba(250, 204, 21, 0.25);
+  transform: translateY(-2px);
+}
+
+.gw-avatar-svg-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.gw-avatar-card.selected .gw-avatar-svg-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  border: 2px solid var(--wizard-accent-gold);
+  animation: gwRingPulse 1.8s infinite;
+  pointer-events: none;
+}
+
+.gw-avatar-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--wizard-text-main);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── Bottom Navigation Bar ── */
+.gw-footer {
+  padding: 16px 24px 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 18, 28, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.gw-btn-back {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--wizard-text-muted);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gw-btn-back:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--wizard-text-main);
+}
+
+.gw-btn-primary {
+  background: linear-gradient(135deg, var(--wizard-accent-gold) 0%, var(--wizard-accent-amber) 100%);
+  border: none;
+  color: #0b0d14;
+  font-family: 'Lilita One', var(--font-display, sans-serif);
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  padding: 14px 28px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(250, 204, 21, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 160px;
+}
+
+.gw-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(250, 204, 21, 0.5);
+  filter: brightness(1.05);
+}
+
+.gw-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── STEP 5: Locked Settings Badge in Lobby ── */
+.gw-locked-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.gw-locked-badge-wrap:hover {
+  background: rgba(250, 204, 21, 0.14);
+  border-color: var(--wizard-accent-gold);
+}
+
+.gw-locked-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wizard-accent-gold);
+}
+
+.gw-locked-detail {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wizard-text-muted);
+}
+
+/* ── Unready Notice & Preload Progress in Lobby ── */
+.gw-asset-notice-box {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.gw-asset-notice-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--wizard-accent-amber);
+}
+
+.gw-asset-player-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--wizard-text-main);
+}
+
+.gw-progress-track {
+  width: 90px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.gw-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--wizard-accent-amber), var(--wizard-accent-emerald));
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* ── Toast Confirmation ── */
+.gw-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  background: rgba(15, 18, 28, 0.95);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: var(--wizard-text-main);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(250, 204, 21, 0.15);
+  z-index: 10001;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gw-toast.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Keyframe Animations ── */
+@keyframes gwFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gwPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes gwRingPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* ── Mobile Responsive Overrides ── */
+@media (max-width: 768px) {
+  .gw-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  
+  .gw-dialog {
+    max-width: 100%;
+    max-height: 94vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .gw-header {
+    padding: 16px 18px 12px 18px;
+  }
+
+  .gw-content-body {
+    padding: 16px 18px;
+  }
+
+  .gw-screen-title {
+    font-size: 22px;
+  }
+
+  .gw-difficulty-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gw-diff-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .gw-diff-icon-wrap {
+    margin-bottom: 0;
+    width: 46px;
+    height: 46px;
+    shrink: 0;
+  }
+
+  .gw-avatar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .gw-footer {
+    padding: 12px 18px 16px 18px;
+  }
+
+  .gw-btn-primary {
+    flex: 1;
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+}
