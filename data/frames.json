@@ -124,5 +124,33 @@
     "answer": "EMBRACE OF THE SERPENT",
     "year": "2015",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790565003/scoopcast_frames/Bluebeard_2009.webp",
+    "answer": "BLUEBEARD",
+    "year": "2009",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790565236/scoopcast_frames/Insomnia_1997_1997.webp",
+    "answer": "INSOMNIA (1997)",
+    "year": "1997",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790566115/scoopcast_frames/Casino_Royale_2006.webp",
+    "answer": "CASINO ROYALE",
+    "year": "2006",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790566992/scoopcast_frames/Black_Christmas_2019_2019.webp",
+    "answer": "BLACK CHRISTMAS (2019)",
+    "year": "2019",
+    "tag": "classic"
   }
 ]
