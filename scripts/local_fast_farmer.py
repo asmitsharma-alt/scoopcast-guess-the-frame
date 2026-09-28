@@ -147,6 +147,28 @@ PRIORITY_FRANCHISES = [
     "Alien", "Aliens", "The Shining", "Goodfellas", "Back to the Future", "The Truman Show"
 ]
 
+SEXUAL_AND_ADULT_EXCLUSIONS = {
+    "erotic", "sex", "nude", "nudity", "porn", "nekromantik", "lolita", "sensual",
+    "lust", "passion", "orgy", "strip", "prostitut", "brothel", "fetish", "bdsm",
+    "sadomasochis", "antichrist", "benedetta", "nymphomaniac", "caligula", "flesh",
+    "salò", "salo", "emmanuelle", "showgirls", "fatal attraction", "basic instinct",
+    "wild things", "eyes wide shut", "blue is the warmest", "50 shades", "fifty shades",
+    "shortbus", "love (2015)", "crash (1996)", "tie me up", "bad education", "quills",
+    "secretary", "the dreamers", "lie with me", "lust, caution", "intimacy", "polyester",
+    "pink flamingos", "sweet movie", "deep water", "titane", "happiness", "lifeforce",
+    "kokomo city", "infinity pool", "red rocket", "desert hearts", "the margin",
+    "babylon", "love lies bleeding", "the whip and the body", "the naked kiss",
+    "femme fatale", "the night porter", "the untamed", "xxxholic", "flashdance"
+}
+
+def is_sexual_or_adult_movie(title, url=""):
+    t_low = title.lower()
+    u_low = url.lower()
+    for kw in SEXUAL_AND_ADULT_EXCLUSIONS:
+        if kw in t_low or kw in u_low:
+            return True
+    return False
+
 def is_indian_movie(title, url=""):
     t_low = title.lower()
     u_low = url.lower()
@@ -213,10 +235,15 @@ CRITICAL EVALUATION CRITERIA:
    - Must depict an important, iconic, or memorable moment (key characters, intense dialogue beats, climactic set pieces, iconic locations, or signature cinematography).
    - Reject boring filler frames (empty wall, blurry foot, transitional highway, nondescript door).
 
+5. ZERO SEXUAL / NSFW / ADULT CONTENT:
+   - ABSOLUTELY ZERO nudity (full or partial, male or female), zero lingerie/underwear exposure, zero sexual acts, zero erotic posing, zero suggestive intimate scenes, zero sexually explicit themes.
+   - If ANY sexual content, nudity, or adult theme is present in the frame, set 'has_sexual_content': true immediately.
+
 Rate:
 - 'is_clear_and_sharp': true if high visual clarity and crisp detail, false otherwise.
 - 'is_middle_scene': true if from the core narrative middle of the movie, false if intro/outro/credits.
 - 'has_text_or_logos': true if ANY text, subtitles, credits, titles, or logos exist.
+- 'has_sexual_content': true if ANY nudity, sexual acts, or suggestive adult content exists, false otherwise.
 - 'scene_importance': "high" | "medium" | "low".
 - 'iconic_score': 0.0 to 1.0.
 
@@ -225,11 +252,12 @@ Return strict JSON:
   "is_movie_frame": boolean,
   "confidence": number,
   "has_text_or_logos": boolean,
+  "has_sexual_content": boolean,
   "is_middle_scene": boolean,
   "is_clear_and_sharp": boolean,
   "scene_importance": "high" | "medium" | "low",
   "iconic_score": number,
-  "reason": "1 concise sentence explaining the visual content and confirming zero text and middle scene"
+  "reason": "1 concise sentence explaining the visual content and confirming zero text, zero sexual content, and middle scene"
 }}"""
 
     payload = {
@@ -287,7 +315,7 @@ def fetch_filmgrab_catalog():
         seen_urls.add(post_url)
         clean_title = clean_movie_title(raw_title)
 
-        if is_indian_movie(clean_title, post_url):
+        if is_indian_movie(clean_title, post_url) or is_sexual_or_adult_movie(clean_title, post_url):
             continue
 
         m_date = re.search(r'film-grab\.com/(\d{4})/(\d{2})/(\d{2})/', post_url)
@@ -315,7 +343,7 @@ def extract_filmgrab_details(post_url):
         h1 = re.search(r'<h1 class="entry-title">([^<]+)</h1>', post_html)
         title = clean_movie_title(h1.group(1)) if h1 else ""
 
-    if not title or is_indian_movie(title, post_url):
+    if not title or is_indian_movie(title, post_url) or is_sexual_or_adult_movie(title, post_url):
         return None
 
     year = ""
@@ -374,6 +402,8 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         return None
 
     movie_title = task["title"]
+    if is_sexual_or_adult_movie(movie_title, task.get("url", "")):
+        return None
     norm_k = normalize_key(movie_title)
 
     with db_lock:
@@ -421,14 +451,15 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         verdict = verify_with_gemini(raw_bytes, title, year)
         is_frame = verdict.get("is_movie_frame", False)
         no_text = not verdict.get("has_text_or_logos", True)
+        no_sexual = not verdict.get("has_sexual_content", False)
         is_middle = verdict.get("is_middle_scene", True)
         is_clear = verdict.get("is_clear_and_sharp", True)
         importance = str(verdict.get("scene_importance", "medium")).lower()
         score = verdict.get("iconic_score", 0.0)
         conf = verdict.get("confidence", 0.0)
 
-        # Quality gate: 1080p + Zero Text + Middle Story Scene + Clear + Iconic
-        if is_frame and no_text and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
+        # Quality gate: 1080p + Zero Text + Zero Sexual/Adult Content + Middle Story Scene + Clear + Iconic
+        if is_frame and no_text and no_sexual and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
             try:
                 public_id = sanitize_public_id(title, year)
 
@@ -470,12 +501,14 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
 
                     if current_added % 50 == 0:
                         try:
-                            subprocess.run(["git", "add", "data/frames.json"], timeout=10)
-                            subprocess.run(["git", "commit", "-m", f"feat(frames): milestone +{current_added} frames (total: {len(frames_data)}) [skip ci]"], timeout=10)
-                            subprocess.run(["git", "push", "origin", "main"], timeout=20)
+                            catalog_script = os.path.join(os.path.dirname(__file__), "update_backend_catalog.py")
+                            subprocess.run([sys.executable, catalog_script], timeout=30)
+                            subprocess.run(["git", "add", "data/frames.json", "guess-the-frame-colyseus/src/data/catalog.ts"], timeout=15)
+                            subprocess.run(["git", "commit", "-m", f"feat(frames): milestone +{current_added} frames (total: {len(frames_data)}) [skip ci]"], timeout=15)
+                            subprocess.run(["git", "push", "origin", "main"], timeout=30)
                             print(f"📦 [Milestone Sync] Synced +{current_added} frames to GitHub main!")
-                        except Exception:
-                            pass
+                        except Exception as sync_err:
+                            print(f"Milestone sync note: {sync_err}")
 
                 print(f"[+{current_added}] '{title} ({year})' [{w}x{h} HD] UPLOADED! ({rpm:.1f} frames/min) -> {secure_url}")
                 return entry
@@ -583,7 +616,9 @@ def main():
     # Final git sync upon completion
     if added_count > 0:
         try:
-            subprocess.run(["git", "add", "data/frames.json"], timeout=15)
+            catalog_script = os.path.join(os.path.dirname(__file__), "update_backend_catalog.py")
+            subprocess.run([sys.executable, catalog_script], timeout=30)
+            subprocess.run(["git", "add", "data/frames.json", "guess-the-frame-colyseus/src/data/catalog.ts"], timeout=15)
             subprocess.run(["git", "commit", "-m", f"feat(frames): successfully harvested {added_count} new 1080p frames (total: {len(frames_data)}) [skip ci]"], timeout=15)
             subprocess.run(["git", "push", "origin", "main"], timeout=30)
             print("📦 Successfully pushed all newly farmed frames to GitHub main!")

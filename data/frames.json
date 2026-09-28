@@ -295,13 +295,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587184/scoopcast_frames/Desert_Hearts_1985.webp",
-    "answer": "DESERT HEARTS",
-    "year": "1985",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587185/scoopcast_frames/Renfield_2023.webp",
     "answer": "RENFIELD",
     "year": "2023",
@@ -333,20 +326,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587198/scoopcast_frames/Mayday_2021.webp",
     "answer": "MAYDAY",
     "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587201/scoopcast_frames/Lifeforce_1985.webp",
-    "answer": "LIFEFORCE",
-    "year": "1985",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587202/scoopcast_frames/Kokomo_City_2023.webp",
-    "answer": "KOKOMO CITY",
-    "year": "2023",
     "tag": "classic"
   },
   {
@@ -533,20 +512,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587420/scoopcast_frames/Infinity_Pool_2023.webp",
-    "answer": "INFINITY POOL",
-    "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587423/scoopcast_frames/Red_Rocket_2021.webp",
-    "answer": "RED ROCKET",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587426/scoopcast_frames/An_Angel_At_My_Table_1990.webp",
     "answer": "AN ANGEL AT MY TABLE",
     "year": "1990",
@@ -690,13 +655,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587544/scoopcast_frames/Breaker_Morant_1980.webp",
     "answer": "BREAKER MORANT",
     "year": "1980",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587547/scoopcast_frames/Flashdance_1983.webp",
-    "answer": "FLASHDANCE",
-    "year": "1983",
     "tag": "classic"
   },
   {
@@ -939,13 +897,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587767/scoopcast_frames/Fatal_Attraction_1987.webp",
-    "answer": "FATAL ATTRACTION",
-    "year": "1987",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587770/scoopcast_frames/Opera_1987.webp",
     "answer": "OPERA",
     "year": "1987",
@@ -1163,13 +1114,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588251/scoopcast_frames/The_Margin_1976.webp",
-    "answer": "THE MARGIN",
-    "year": "1976",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588253/scoopcast_frames/Old_2021.webp",
     "answer": "OLD",
     "year": "2021",
@@ -1191,23 +1135,9 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588297/scoopcast_frames/Benedetta_2021.webp",
-    "answer": "BENEDETTA",
-    "year": "2021",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588710/scoopcast_frames/Three_Colours_Blue_1993.webp",
     "answer": "THREE COLOURS: BLUE",
     "year": "1993",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588715/scoopcast_frames/Antichrist_2009.webp",
-    "answer": "ANTICHRIST",
-    "year": "2009",
     "tag": "classic"
   },
   {
@@ -1520,13 +1450,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588989/scoopcast_frames/Nekromantik_1988.jpg",
-    "answer": "NEKROMANTIK",
-    "year": "1988",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588991/scoopcast_frames/Fuzzy_Head_2023.jpg",
     "answer": "FUZZY HEAD",
     "year": "2023",
@@ -1585,13 +1508,6 @@
     "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589050/scoopcast_frames/Christmas_Bloody_Christmas_2022.jpg",
     "answer": "CHRISTMAS BLOODY CHRISTMAS",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589052/scoopcast_frames/Babylon_2022.jpg",
-    "answer": "BABYLON",
     "year": "2022",
     "tag": "classic"
   },
@@ -1779,13 +1695,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589176/scoopcast_frames/Femme_Fatale_2002.jpg",
-    "answer": "FEMME FATALE",
-    "year": "2002",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589177/scoopcast_frames/Ikarie_XB_1_1963.jpg",
     "answer": "IKARIE XB 1",
     "year": "1963",
@@ -1877,20 +1786,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589206/scoopcast_frames/The_Night_Porter_1974.jpg",
-    "answer": "THE NIGHT PORTER",
-    "year": "1974",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587805/scoopcast_frames/The_Whip_and_The_Body_1963.jpg",
-    "answer": "THE WHIP AND THE BODY",
-    "year": "1963",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589230/scoopcast_frames/Ip_Man_2008.jpg",
     "answer": "IP MAN",
     "year": "2008",
@@ -1933,13 +1828,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589246/scoopcast_frames/Crimes_of_Passion_1984.jpg",
-    "answer": "CRIMES OF PASSION",
-    "year": "1984",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589246/scoopcast_frames/Immaculate_2024.jpg",
     "answer": "IMMACULATE",
     "year": "2024",
@@ -1971,13 +1859,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589253/scoopcast_frames/The_Thin_Man_1934.jpg",
     "answer": "THE THIN MAN",
     "year": "1934",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589256/scoopcast_frames/Happiness_1998.jpg",
-    "answer": "HAPPINESS",
-    "year": "1998",
     "tag": "classic"
   },
   {
@@ -2034,13 +1915,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589301/scoopcast_frames/The_Misfits_1961.jpg",
     "answer": "THE MISFITS",
     "year": "1961",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589302/scoopcast_frames/Deep_Water_2022.jpg",
-    "answer": "DEEP WATER",
-    "year": "2022",
     "tag": "classic"
   },
   {
@@ -2115,13 +1989,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589317/scoopcast_frames/The_Untamed_2016.jpg",
-    "answer": "THE UNTAMED",
-    "year": "2016",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589318/scoopcast_frames/Life_Is_Sweet_1990.jpg",
     "answer": "LIFE IS SWEET",
     "year": "1990",
@@ -2178,13 +2045,6 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/xxxHolic_2022.jpg",
-    "answer": "XXXHOLIC",
-    "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/The_Black_Phone_2021.jpg",
     "answer": "THE BLACK PHONE",
     "year": "2021",
@@ -2220,23 +2080,9 @@
   },
   {
     "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589363/scoopcast_frames/Love_Lies_Bleeding_2024.jpg",
-    "answer": "LOVE LIES BLEEDING",
-    "year": "2024",
-    "tag": "new"
-  },
-  {
-    "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589367/scoopcast_frames/Bullet_Train_2022.jpg",
     "answer": "BULLET TRAIN",
     "year": "2022",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587815/scoopcast_frames/The_Naked_Kiss_1964.jpg",
-    "answer": "THE NAKED KISS",
-    "year": "1964",
     "tag": "classic"
   },
   {
@@ -2312,7 +2158,7 @@
   {
     "type": "image",
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589408/scoopcast_frames/T%C3%A1r_2022.jpg",
-    "answer": "T\u00c1R",
+    "answer": "TÁR",
     "year": "2022",
     "tag": "classic"
   },
@@ -2342,13 +2188,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589413/scoopcast_frames/Anselm_2023.jpg",
     "answer": "ANSELM",
     "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589414/scoopcast_frames/Titane_2021.jpg",
-    "answer": "TITANE",
-    "year": "2021",
     "tag": "classic"
   },
   {
@@ -2552,13 +2391,6 @@
     "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589476/scoopcast_frames/The_Holdovers_2023.jpg",
     "answer": "THE HOLDOVERS",
     "year": "2023",
-    "tag": "classic"
-  },
-  {
-    "type": "image",
-    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589477/scoopcast_frames/Lolita_1997_1997.jpg",
-    "answer": "LOLITA (1997)",
-    "year": "1997",
     "tag": "classic"
   },
   {

@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (377 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (353 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -397,22 +397,13 @@ export const CATALOG: CatalogItem[] = [
     id: "f_43",
     category: "frames",
     type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587184/scoopcast_frames/Desert_Hearts_1985.webp",
-    answer: "DESERT HEARTS",
-    year: "1985",
-    tag: "classic"
-  },
-  {
-    id: "f_44",
-    category: "frames",
-    type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587185/scoopcast_frames/Renfield_2023.webp",
     answer: "RENFIELD",
     year: "2023",
     tag: "classic"
   },
   {
-    id: "f_45",
+    id: "f_44",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587186/scoopcast_frames/Women_Talking_2022.webp",
@@ -421,7 +412,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_46",
+    id: "f_45",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587191/scoopcast_frames/Branded_To_Kill_1967.webp",
@@ -430,7 +421,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_47",
+    id: "f_46",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587194/scoopcast_frames/Mon_Crime_2023.webp",
@@ -439,7 +430,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_48",
+    id: "f_47",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587198/scoopcast_frames/Mayday_2021.webp",
@@ -448,25 +439,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_49",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587201/scoopcast_frames/Lifeforce_1985.webp",
-    answer: "LIFEFORCE",
-    year: "1985",
-    tag: "classic"
-  },
-  {
-    id: "f_50",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587202/scoopcast_frames/Kokomo_City_2023.webp",
-    answer: "KOKOMO CITY",
-    year: "2023",
-    tag: "classic"
-  },
-  {
-    id: "f_51",
+    id: "f_48",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587204/scoopcast_frames/The_Wages_of_Fear_1953.webp",
@@ -475,7 +448,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_52",
+    id: "f_49",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587206/scoopcast_frames/Wild_Zero_1999.webp",
@@ -484,7 +457,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_53",
+    id: "f_50",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587207/scoopcast_frames/Challengers_2024.webp",
@@ -493,7 +466,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_54",
+    id: "f_51",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587213/scoopcast_frames/The_Frighteners_1996.webp",
@@ -502,7 +475,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_55",
+    id: "f_52",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587215/scoopcast_frames/The_Pod_Generation_2023.webp",
@@ -511,7 +484,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_56",
+    id: "f_53",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587219/scoopcast_frames/She_Came_To_Me_2023.webp",
@@ -520,7 +493,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_57",
+    id: "f_54",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587229/scoopcast_frames/Once_Within_A_Time_2022.webp",
@@ -529,7 +502,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_58",
+    id: "f_55",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587230/scoopcast_frames/The_Rocketeer_1991.webp",
@@ -538,7 +511,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_59",
+    id: "f_56",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587231/scoopcast_frames/The_Sky_Is_Everywhere_2022.webp",
@@ -547,7 +520,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_60",
+    id: "f_57",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587235/scoopcast_frames/Live_and_Let_Die_1973.webp",
@@ -556,7 +529,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_61",
+    id: "f_58",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587241/scoopcast_frames/Something_Wild_1961_1961.webp",
@@ -565,7 +538,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_62",
+    id: "f_59",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587243/scoopcast_frames/Forrest_Gump_1994.webp",
@@ -574,7 +547,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_63",
+    id: "f_60",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587244/scoopcast_frames/Octopussy_1983.webp",
@@ -583,7 +556,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_64",
+    id: "f_61",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587249/scoopcast_frames/Invention_For_Destruction_1958.webp",
@@ -592,7 +565,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_65",
+    id: "f_62",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587251/scoopcast_frames/Red_Rooms_2023.webp",
@@ -601,7 +574,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_66",
+    id: "f_63",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587252/scoopcast_frames/The_Peasants_2023.webp",
@@ -610,7 +583,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_67",
+    id: "f_64",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587253/scoopcast_frames/France_2021.webp",
@@ -619,7 +592,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_68",
+    id: "f_65",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587387/scoopcast_frames/Le_Plaisir_1952.webp",
@@ -628,7 +601,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_69",
+    id: "f_66",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587389/scoopcast_frames/Kiss_of_Death_1947.webp",
@@ -637,7 +610,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_70",
+    id: "f_67",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587393/scoopcast_frames/Fiddler_On_The_Roof_1971.webp",
@@ -646,7 +619,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_71",
+    id: "f_68",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587394/scoopcast_frames/The_Prince_of_Tides_1991.webp",
@@ -655,7 +628,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_72",
+    id: "f_69",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587396/scoopcast_frames/The_Creator_2023.webp",
@@ -664,7 +637,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_73",
+    id: "f_70",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587403/scoopcast_frames/Encounter_of_the_Spooky_Kind_1980.webp",
@@ -673,7 +646,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_74",
+    id: "f_71",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587405/scoopcast_frames/Triple_Frontier_2019.webp",
@@ -682,7 +655,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_75",
+    id: "f_72",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587410/scoopcast_frames/The_Cranes_Are_Flying_1957.webp",
@@ -691,7 +664,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_76",
+    id: "f_73",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587419/scoopcast_frames/The_Spider_Labyrinth_1988.webp",
@@ -700,25 +673,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_77",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587420/scoopcast_frames/Infinity_Pool_2023.webp",
-    answer: "INFINITY POOL",
-    year: "2023",
-    tag: "classic"
-  },
-  {
-    id: "f_78",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587423/scoopcast_frames/Red_Rocket_2021.webp",
-    answer: "RED ROCKET",
-    year: "2021",
-    tag: "classic"
-  },
-  {
-    id: "f_79",
+    id: "f_74",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587426/scoopcast_frames/An_Angel_At_My_Table_1990.webp",
@@ -727,7 +682,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_80",
+    id: "f_75",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587428/scoopcast_frames/Lingua_Franca_2019.webp",
@@ -736,7 +691,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_81",
+    id: "f_76",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587428/scoopcast_frames/Wildcat_2023.webp",
@@ -745,7 +700,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_82",
+    id: "f_77",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587432/scoopcast_frames/The_Dark_Crystal_1982.webp",
@@ -754,7 +709,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_83",
+    id: "f_78",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587435/scoopcast_frames/Pandora_and_the_Flying_Dutchman_1951.webp",
@@ -763,7 +718,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_84",
+    id: "f_79",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587438/scoopcast_frames/Dont_Breathe_2_2021.webp",
@@ -772,7 +727,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_85",
+    id: "f_80",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587440/scoopcast_frames/Beetlejuice_Beetlejuice_2024.webp",
@@ -781,7 +736,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_86",
+    id: "f_81",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587442/scoopcast_frames/Falcon_Lake_2022.webp",
@@ -790,7 +745,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_87",
+    id: "f_82",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587443/scoopcast_frames/Opening_Night_1977.webp",
@@ -799,7 +754,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_88",
+    id: "f_83",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587465/scoopcast_frames/The_Sacrifice_Game_2023.webp",
@@ -808,7 +763,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_89",
+    id: "f_84",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587466/scoopcast_frames/StageFright_1950.webp",
@@ -817,7 +772,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_90",
+    id: "f_85",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587474/scoopcast_frames/Swing_Kids_2018.webp",
@@ -826,7 +781,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_91",
+    id: "f_86",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587482/scoopcast_frames/Under_The_Sand_2000.webp",
@@ -835,7 +790,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_92",
+    id: "f_87",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587484/scoopcast_frames/Legend_1985.webp",
@@ -844,7 +799,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_93",
+    id: "f_88",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587497/scoopcast_frames/Teen_Spirit_2023.webp",
@@ -853,7 +808,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_94",
+    id: "f_89",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587515/scoopcast_frames/Girlfight_2000.webp",
@@ -862,7 +817,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_95",
+    id: "f_90",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587527/scoopcast_frames/The_Many_Saints_of_Newark_2021.webp",
@@ -871,7 +826,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_96",
+    id: "f_91",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587528/scoopcast_frames/Black_Widow_2021.webp",
@@ -880,7 +835,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_97",
+    id: "f_92",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587529/scoopcast_frames/Diary_of_a_Mad_Housewife_1970.webp",
@@ -889,7 +844,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_98",
+    id: "f_93",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587543/scoopcast_frames/Flash_Gordon_1980.webp",
@@ -898,7 +853,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_99",
+    id: "f_94",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587544/scoopcast_frames/Breaker_Morant_1980.webp",
@@ -907,16 +862,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_100",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587547/scoopcast_frames/Flashdance_1983.webp",
-    answer: "FLASHDANCE",
-    year: "1983",
-    tag: "classic"
-  },
-  {
-    id: "f_101",
+    id: "f_95",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587553/scoopcast_frames/True_Lies_1994.webp",
@@ -925,7 +871,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_102",
+    id: "f_96",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587557/scoopcast_frames/The_Lost_Boys_1987.webp",
@@ -934,7 +880,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_103",
+    id: "f_97",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587562/scoopcast_frames/Fallen_Leaves_2023.webp",
@@ -943,7 +889,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_104",
+    id: "f_98",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587573/scoopcast_frames/Peggy_Sue_Got_Married_1986.webp",
@@ -952,7 +898,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_105",
+    id: "f_99",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587575/scoopcast_frames/Planet_Terror_2007.webp",
@@ -961,7 +907,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_106",
+    id: "f_100",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587576/scoopcast_frames/Do_Revenge_2022.webp",
@@ -970,7 +916,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_107",
+    id: "f_101",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587583/scoopcast_frames/The_Golem_1920.webp",
@@ -979,7 +925,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_108",
+    id: "f_102",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587592/scoopcast_frames/At_Eternitys_Gate_2018.webp",
@@ -988,7 +934,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_109",
+    id: "f_103",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587592/scoopcast_frames/The_Life_and_Death_of_Colonel_Blimp_1943.webp",
@@ -997,7 +943,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_110",
+    id: "f_104",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587595/scoopcast_frames/The_Amityville_Horror_1979.webp",
@@ -1006,7 +952,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_111",
+    id: "f_105",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587608/scoopcast_frames/Stopmotion_2023.webp",
@@ -1015,7 +961,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_112",
+    id: "f_106",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587610/scoopcast_frames/Snake_Eyes_1998.webp",
@@ -1024,7 +970,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_113",
+    id: "f_107",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587612/scoopcast_frames/Rebel_Ridge_2024.webp",
@@ -1033,7 +979,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_114",
+    id: "f_108",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587618/scoopcast_frames/Inexorable_2021.webp",
@@ -1042,7 +988,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_115",
+    id: "f_109",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587621/scoopcast_frames/White_River_2023.webp",
@@ -1051,7 +997,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_116",
+    id: "f_110",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587624/scoopcast_frames/I_Came_By_2022.webp",
@@ -1060,7 +1006,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_117",
+    id: "f_111",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587632/scoopcast_frames/Empire_Records_1995.webp",
@@ -1069,7 +1015,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_118",
+    id: "f_112",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587634/scoopcast_frames/Nandor_Fodor_and_the_Talking_Mongoose_2023.webp",
@@ -1078,7 +1024,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_119",
+    id: "f_113",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587638/scoopcast_frames/Vulcanizadora_2024.webp",
@@ -1087,7 +1033,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_120",
+    id: "f_114",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587647/scoopcast_frames/Shoot_Em_Up_2007.webp",
@@ -1096,7 +1042,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_121",
+    id: "f_115",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587653/scoopcast_frames/The_Beyond_1981.webp",
@@ -1105,7 +1051,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_122",
+    id: "f_116",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587666/scoopcast_frames/When_Evil_Lurks_2023.webp",
@@ -1114,7 +1060,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_123",
+    id: "f_117",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587688/scoopcast_frames/Monkey_Man_2024.webp",
@@ -1123,7 +1069,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_124",
+    id: "f_118",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587691/scoopcast_frames/The_Strawberry_Blonde_1941.webp",
@@ -1132,7 +1078,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_125",
+    id: "f_119",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587693/scoopcast_frames/Lord_of_War_2005.webp",
@@ -1141,7 +1087,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_126",
+    id: "f_120",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587694/scoopcast_frames/She_Said_2022.webp",
@@ -1150,7 +1096,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_127",
+    id: "f_121",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587714/scoopcast_frames/Contact_1997.webp",
@@ -1159,7 +1105,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_128",
+    id: "f_122",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587724/scoopcast_frames/Settlers_2021.webp",
@@ -1168,7 +1114,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_129",
+    id: "f_123",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587727/scoopcast_frames/Inside_2023_2023.webp",
@@ -1177,7 +1123,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_130",
+    id: "f_124",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587731/scoopcast_frames/Elvis_2022.webp",
@@ -1186,7 +1132,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_131",
+    id: "f_125",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587745/scoopcast_frames/Kubi_2023.webp",
@@ -1195,7 +1141,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_132",
+    id: "f_126",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587750/scoopcast_frames/The_Book_of_Clarence_2023.webp",
@@ -1204,7 +1150,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_133",
+    id: "f_127",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587752/scoopcast_frames/La_Abuela_2021.webp",
@@ -1213,7 +1159,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_134",
+    id: "f_128",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587754/scoopcast_frames/Charm_City_Kings_2020.webp",
@@ -1222,16 +1168,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_135",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587767/scoopcast_frames/Fatal_Attraction_1987.webp",
-    answer: "FATAL ATTRACTION",
-    year: "1987",
-    tag: "classic"
-  },
-  {
-    id: "f_136",
+    id: "f_129",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587770/scoopcast_frames/Opera_1987.webp",
@@ -1240,7 +1177,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_137",
+    id: "f_130",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587809/scoopcast_frames/The_Empty_Man_2020.webp",
@@ -1249,7 +1186,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_138",
+    id: "f_131",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587810/scoopcast_frames/Bringing_Up_Baby_1938.webp",
@@ -1258,7 +1195,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_139",
+    id: "f_132",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587824/scoopcast_frames/Speed_1994.webp",
@@ -1267,7 +1204,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_140",
+    id: "f_133",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587831/scoopcast_frames/The_Killer_1989_1989.webp",
@@ -1276,7 +1213,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_141",
+    id: "f_134",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587836/scoopcast_frames/Long_Shot_2019.webp",
@@ -1285,7 +1222,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_142",
+    id: "f_135",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587867/scoopcast_frames/A_View_to_a_Kill_1985.webp",
@@ -1294,7 +1231,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_143",
+    id: "f_136",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587875/scoopcast_frames/Songs_For_A_Sloth_2021.webp",
@@ -1303,7 +1240,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_144",
+    id: "f_137",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587887/scoopcast_frames/The_Man_With_the_Golden_Gun_1974.webp",
@@ -1312,7 +1249,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_145",
+    id: "f_138",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587890/scoopcast_frames/Dream_Scenario_2023.webp",
@@ -1321,7 +1258,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_146",
+    id: "f_139",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587893/scoopcast_frames/Night_of_the_Creeps_1986.webp",
@@ -1330,7 +1267,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_147",
+    id: "f_140",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587928/scoopcast_frames/Starve_Acre_2023.webp",
@@ -1339,7 +1276,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_148",
+    id: "f_141",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587930/scoopcast_frames/A_Generation_1955.webp",
@@ -1348,7 +1285,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_149",
+    id: "f_142",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588010/scoopcast_frames/The_Spy_Who_Loved_Me_1977.webp",
@@ -1357,7 +1294,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_150",
+    id: "f_143",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588011/scoopcast_frames/The_Scent_of_Green_Papaya_1993.webp",
@@ -1366,7 +1303,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_151",
+    id: "f_144",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588045/scoopcast_frames/Walk_Up_2022.webp",
@@ -1375,7 +1312,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_152",
+    id: "f_145",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588050/scoopcast_frames/Spencer_2021.webp",
@@ -1384,7 +1321,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_153",
+    id: "f_146",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588066/scoopcast_frames/A_Woman_Kills_1968.webp",
@@ -1393,7 +1330,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_154",
+    id: "f_147",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588067/scoopcast_frames/At_Midnight_Ill_Take_Your_Soul_1964.webp",
@@ -1402,7 +1339,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_155",
+    id: "f_148",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588069/scoopcast_frames/One_Fine_Morning_2022.webp",
@@ -1411,7 +1348,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_156",
+    id: "f_149",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588073/scoopcast_frames/Riceboy_Sleeps_2022.webp",
@@ -1420,7 +1357,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_157",
+    id: "f_150",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588109/scoopcast_frames/A_Better_Tomorrow_1986.webp",
@@ -1429,7 +1366,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_158",
+    id: "f_151",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588132/scoopcast_frames/Thesis_1996.webp",
@@ -1438,7 +1375,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_159",
+    id: "f_152",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588134/scoopcast_frames/Downfall_2004.webp",
@@ -1447,7 +1384,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_160",
+    id: "f_153",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588134/scoopcast_frames/Sleeping_Beauty_1959_2022.webp",
@@ -1456,7 +1393,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_161",
+    id: "f_154",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588136/scoopcast_frames/Hagazussa_2017.webp",
@@ -1465,7 +1402,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_162",
+    id: "f_155",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588169/scoopcast_frames/Trim_Season_2023.webp",
@@ -1474,7 +1411,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_163",
+    id: "f_156",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588173/scoopcast_frames/Space_is_the_Place_1974.webp",
@@ -1483,7 +1420,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_164",
+    id: "f_157",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588185/scoopcast_frames/Nanny_2022.webp",
@@ -1492,7 +1429,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_165",
+    id: "f_158",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588188/scoopcast_frames/The_Gift_2015.webp",
@@ -1501,7 +1438,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_166",
+    id: "f_159",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588231/scoopcast_frames/Vesper_2022.webp",
@@ -1510,16 +1447,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_167",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588251/scoopcast_frames/The_Margin_1976.webp",
-    answer: "THE MARGIN",
-    year: "1976",
-    tag: "classic"
-  },
-  {
-    id: "f_168",
+    id: "f_160",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588253/scoopcast_frames/Old_2021.webp",
@@ -1528,7 +1456,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_169",
+    id: "f_161",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588254/scoopcast_frames/As_In_Heaven_2021.webp",
@@ -1537,7 +1465,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_170",
+    id: "f_162",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588295/scoopcast_frames/Tommy_1975.webp",
@@ -1546,16 +1474,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_171",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588297/scoopcast_frames/Benedetta_2021.webp",
-    answer: "BENEDETTA",
-    year: "2021",
-    tag: "classic"
-  },
-  {
-    id: "f_172",
+    id: "f_163",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588710/scoopcast_frames/Three_Colours_Blue_1993.webp",
@@ -1564,16 +1483,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_173",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588715/scoopcast_frames/Antichrist_2009.webp",
-    answer: "ANTICHRIST",
-    year: "2009",
-    tag: "classic"
-  },
-  {
-    id: "f_174",
+    id: "f_164",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588803/scoopcast_frames/The_Last_Boy_Scout_1991.jpg",
@@ -1582,7 +1492,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_175",
+    id: "f_165",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588805/scoopcast_frames/All_Dirt_Roads_Taste_of_Salt_2023.jpg",
@@ -1591,7 +1501,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_176",
+    id: "f_166",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588808/scoopcast_frames/Bigger_Than_Life_1956.jpg",
@@ -1600,7 +1510,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_177",
+    id: "f_167",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588810/scoopcast_frames/House_By_The_River_1950.jpg",
@@ -1609,7 +1519,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_178",
+    id: "f_168",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588817/scoopcast_frames/Last_Night_1998.jpg",
@@ -1618,7 +1528,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_179",
+    id: "f_169",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588819/scoopcast_frames/Strawberry_Mansion_2021.jpg",
@@ -1627,7 +1537,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_180",
+    id: "f_170",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588821/scoopcast_frames/The_Set_Up_1949.jpg",
@@ -1636,7 +1546,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_181",
+    id: "f_171",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588822/scoopcast_frames/Fortress_1992.jpg",
@@ -1645,7 +1555,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_182",
+    id: "f_172",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588824/scoopcast_frames/Fremont_2023.jpg",
@@ -1654,7 +1564,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_183",
+    id: "f_173",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588827/scoopcast_frames/Infernal_Affairs_2002.jpg",
@@ -1663,7 +1573,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_184",
+    id: "f_174",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588829/scoopcast_frames/The_Magnificent_Seven_2016_2016.jpg",
@@ -1672,7 +1582,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_185",
+    id: "f_175",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588186/scoopcast_frames/Napoleon_2023_2023.jpg",
@@ -1681,7 +1591,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_186",
+    id: "f_176",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588833/scoopcast_frames/Wonka_2023.jpg",
@@ -1690,7 +1600,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_187",
+    id: "f_177",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588834/scoopcast_frames/Spectre_2015.jpg",
@@ -1699,7 +1609,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_188",
+    id: "f_178",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588840/scoopcast_frames/The_Book_of_Eli_2010.jpg",
@@ -1708,7 +1618,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_189",
+    id: "f_179",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588842/scoopcast_frames/Phantom_of_the_Paradise_1974.jpg",
@@ -1717,7 +1627,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_190",
+    id: "f_180",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588845/scoopcast_frames/Point_Blank_1967.jpg",
@@ -1726,7 +1636,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_191",
+    id: "f_181",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588846/scoopcast_frames/The_Harder_They_Fall_2021.jpg",
@@ -1735,7 +1645,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_192",
+    id: "f_182",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588848/scoopcast_frames/Amanda_2022.jpg",
@@ -1744,7 +1654,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_193",
+    id: "f_183",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588851/scoopcast_frames/The_Whale_2022.jpg",
@@ -1753,7 +1663,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_194",
+    id: "f_184",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588853/scoopcast_frames/Casino_Royale_1967_1967.jpg",
@@ -1762,7 +1672,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_195",
+    id: "f_185",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588856/scoopcast_frames/Letter_From_An_Unknown_Woman_1948.jpg",
@@ -1771,7 +1681,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_196",
+    id: "f_186",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588868/scoopcast_frames/Safety_Last_1923.jpg",
@@ -1780,7 +1690,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_197",
+    id: "f_187",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588869/scoopcast_frames/The_Touch_1971.jpg",
@@ -1789,7 +1699,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_198",
+    id: "f_188",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588869/scoopcast_frames/The_Last_Emperor_1987.jpg",
@@ -1798,7 +1708,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_199",
+    id: "f_189",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588875/scoopcast_frames/Mona_Lisa_and_the_Blood_Moon_2021.jpg",
@@ -1807,7 +1717,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_200",
+    id: "f_190",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588879/scoopcast_frames/Random_Acts_of_Violence_2019.jpg",
@@ -1816,7 +1726,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_201",
+    id: "f_191",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588885/scoopcast_frames/The_Others_2001.jpg",
@@ -1825,7 +1735,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_202",
+    id: "f_192",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588887/scoopcast_frames/From_Russia_With_Love_1963.jpg",
@@ -1834,7 +1744,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_203",
+    id: "f_193",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588892/scoopcast_frames/Silver_Haze_2023.jpg",
@@ -1843,7 +1753,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_204",
+    id: "f_194",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588901/scoopcast_frames/Hellraiser_Revelations_2011.jpg",
@@ -1852,7 +1762,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_205",
+    id: "f_195",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588903/scoopcast_frames/Millennium_Mambo_2001.jpg",
@@ -1861,7 +1771,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_206",
+    id: "f_196",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588907/scoopcast_frames/Hellraiser_Hellseeker_2002.jpg",
@@ -1870,7 +1780,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_207",
+    id: "f_197",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588909/scoopcast_frames/Ip_Man_2_2010.jpg",
@@ -1879,7 +1789,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_208",
+    id: "f_198",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588911/scoopcast_frames/One_And_Four_2021.jpg",
@@ -1888,7 +1798,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_209",
+    id: "f_199",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588914/scoopcast_frames/The_Sun_In_A_Net_1963.jpg",
@@ -1897,7 +1807,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_210",
+    id: "f_200",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588929/scoopcast_frames/The_Baby_Carriage_1963.jpg",
@@ -1906,7 +1816,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_211",
+    id: "f_201",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588931/scoopcast_frames/One_False_Move_1991.jpg",
@@ -1915,7 +1825,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_212",
+    id: "f_202",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588940/scoopcast_frames/The_War_of_the_Worlds_1953_1953.jpg",
@@ -1924,7 +1834,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_213",
+    id: "f_203",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588959/scoopcast_frames/Demons_1985.jpg",
@@ -1933,7 +1843,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_214",
+    id: "f_204",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588960/scoopcast_frames/Anatomy_of_a_Murder_1959.jpg",
@@ -1942,7 +1852,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_215",
+    id: "f_205",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588963/scoopcast_frames/Rift_2017.jpg",
@@ -1951,7 +1861,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_216",
+    id: "f_206",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588964/scoopcast_frames/The_Killing_of_a_Chinese_Bookie_1976.jpg",
@@ -1960,7 +1870,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_217",
+    id: "f_207",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588988/scoopcast_frames/Autumn_Tale_1998.jpg",
@@ -1969,16 +1879,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_218",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588989/scoopcast_frames/Nekromantik_1988.jpg",
-    answer: "NEKROMANTIK",
-    year: "1988",
-    tag: "classic"
-  },
-  {
-    id: "f_219",
+    id: "f_208",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588991/scoopcast_frames/Fuzzy_Head_2023.jpg",
@@ -1987,7 +1888,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_220",
+    id: "f_209",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588996/scoopcast_frames/Sometimes_I_Think_About_Dying_2023.jpg",
@@ -1996,7 +1897,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_221",
+    id: "f_210",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588997/scoopcast_frames/Abigail_2024.jpg",
@@ -2005,7 +1906,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_222",
+    id: "f_211",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589006/scoopcast_frames/Curse_of_the_Crimson_Altar_1968.jpg",
@@ -2014,7 +1915,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_223",
+    id: "f_212",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589009/scoopcast_frames/Them_1954.jpg",
@@ -2023,7 +1924,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_224",
+    id: "f_213",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589018/scoopcast_frames/Robot_Dreams_2023.jpg",
@@ -2032,7 +1933,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_225",
+    id: "f_214",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589021/scoopcast_frames/Flowers_of_Shanghai_1998.jpg",
@@ -2041,7 +1942,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_226",
+    id: "f_215",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589049/scoopcast_frames/Touch_1997.jpg",
@@ -2050,7 +1951,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_227",
+    id: "f_216",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589050/scoopcast_frames/Christmas_Bloody_Christmas_2022.jpg",
@@ -2059,16 +1960,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_228",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589052/scoopcast_frames/Babylon_2022.jpg",
-    answer: "BABYLON",
-    year: "2022",
-    tag: "classic"
-  },
-  {
-    id: "f_229",
+    id: "f_217",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589055/scoopcast_frames/Halloween_Kills_2021.jpg",
@@ -2077,7 +1969,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_230",
+    id: "f_218",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589057/scoopcast_frames/Fahrenheit_451_2018_2018.jpg",
@@ -2086,7 +1978,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_231",
+    id: "f_219",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589061/scoopcast_frames/The_Good_Nurse_2022.jpg",
@@ -2095,7 +1987,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_232",
+    id: "f_220",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589068/scoopcast_frames/Universal_Soldier_Day_of_Reckoning_2012.jpg",
@@ -2104,7 +1996,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_233",
+    id: "f_221",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589070/scoopcast_frames/Kingdom_of_Heaven_2005.jpg",
@@ -2113,7 +2005,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_234",
+    id: "f_222",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589072/scoopcast_frames/Barbie_2023.jpg",
@@ -2122,7 +2014,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_235",
+    id: "f_223",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589076/scoopcast_frames/Canoa_A_Shameful_Memory_1976.jpg",
@@ -2131,7 +2023,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_236",
+    id: "f_224",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589081/scoopcast_frames/The_Naked_City_1948.jpg",
@@ -2140,7 +2032,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_237",
+    id: "f_225",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589083/scoopcast_frames/Gasoline_Rainbow_2023.jpg",
@@ -2149,7 +2041,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_238",
+    id: "f_226",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589085/scoopcast_frames/Village_of_the_Damned_1960.jpg",
@@ -2158,7 +2050,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_239",
+    id: "f_227",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589113/scoopcast_frames/Domain_2016.jpg",
@@ -2167,7 +2059,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_240",
+    id: "f_228",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589114/scoopcast_frames/Altered_States_1980.jpg",
@@ -2176,7 +2068,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_241",
+    id: "f_229",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589115/scoopcast_frames/Starred_Up_2013.jpg",
@@ -2185,7 +2077,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_242",
+    id: "f_230",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589127/scoopcast_frames/The_Host_2006.jpg",
@@ -2194,7 +2086,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_243",
+    id: "f_231",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589128/scoopcast_frames/Creed_III_2023.jpg",
@@ -2203,7 +2095,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_244",
+    id: "f_232",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589131/scoopcast_frames/Leave_The_World_Behind_2023.jpg",
@@ -2212,7 +2104,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_245",
+    id: "f_233",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589134/scoopcast_frames/Inside_The_Yellow_Cocoon_Shell_2023.jpg",
@@ -2221,7 +2113,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_246",
+    id: "f_234",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589137/scoopcast_frames/The_Tragedy_of_Macbeth_2021.jpg",
@@ -2230,7 +2122,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_247",
+    id: "f_235",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589139/scoopcast_frames/Macbeth_1971_1971.jpg",
@@ -2239,7 +2131,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_248",
+    id: "f_236",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589142/scoopcast_frames/Babel_2006.jpg",
@@ -2248,7 +2140,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_249",
+    id: "f_237",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588133/scoopcast_frames/My_Policeman_2022.jpg",
@@ -2257,7 +2149,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_250",
+    id: "f_238",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589145/scoopcast_frames/Straight_Time_1978.jpg",
@@ -2266,7 +2158,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_251",
+    id: "f_239",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589147/scoopcast_frames/Key_Largo_1948.jpg",
@@ -2275,7 +2167,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_252",
+    id: "f_240",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589168/scoopcast_frames/Teenage_Mutant_Ninja_Turtles_Mutant_Mayhem_2023.jpg",
@@ -2284,7 +2176,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_253",
+    id: "f_241",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589172/scoopcast_frames/Copshop_2021.jpg",
@@ -2293,7 +2185,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_254",
+    id: "f_242",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589175/scoopcast_frames/The_Lodge_2019.jpg",
@@ -2302,16 +2194,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_255",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589176/scoopcast_frames/Femme_Fatale_2002.jpg",
-    answer: "FEMME FATALE",
-    year: "2002",
-    tag: "classic"
-  },
-  {
-    id: "f_256",
+    id: "f_243",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589177/scoopcast_frames/Ikarie_XB_1_1963.jpg",
@@ -2320,7 +2203,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_257",
+    id: "f_244",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589181/scoopcast_frames/Chevalier_2015.jpg",
@@ -2329,7 +2212,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_258",
+    id: "f_245",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589184/scoopcast_frames/The_World_of_Kanako_2014.jpg",
@@ -2338,7 +2221,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_259",
+    id: "f_246",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589187/scoopcast_frames/Linoleum_2022.jpg",
@@ -2347,7 +2230,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_260",
+    id: "f_247",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589189/scoopcast_frames/3_Godfathers_1948.jpg",
@@ -2356,7 +2239,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_261",
+    id: "f_248",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589193/scoopcast_frames/Ma_Vie_En_Rose_1997.jpg",
@@ -2365,7 +2248,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_262",
+    id: "f_249",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589196/scoopcast_frames/The_Bikeriders_2023.jpg",
@@ -2374,7 +2257,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_263",
+    id: "f_250",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589197/scoopcast_frames/Come_and_See_1985.jpg",
@@ -2383,7 +2266,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_264",
+    id: "f_251",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589198/scoopcast_frames/The_Bride_Wore_Black_1968.jpg",
@@ -2392,7 +2275,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_265",
+    id: "f_252",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589199/scoopcast_frames/The_World_is_Not_Enough_1999.jpg",
@@ -2401,7 +2284,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_266",
+    id: "f_253",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589200/scoopcast_frames/The_Ruins_2008.jpg",
@@ -2410,7 +2293,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_267",
+    id: "f_254",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589201/scoopcast_frames/Insidious_Chapter_2_2013.jpg",
@@ -2419,7 +2302,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_268",
+    id: "f_255",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589204/scoopcast_frames/You_Are_Not_My_Mother_2021.jpg",
@@ -2428,25 +2311,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_269",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589206/scoopcast_frames/The_Night_Porter_1974.jpg",
-    answer: "THE NIGHT PORTER",
-    year: "1974",
-    tag: "classic"
-  },
-  {
-    id: "f_270",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587805/scoopcast_frames/The_Whip_and_The_Body_1963.jpg",
-    answer: "THE WHIP AND THE BODY",
-    year: "1963",
-    tag: "classic"
-  },
-  {
-    id: "f_271",
+    id: "f_256",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589230/scoopcast_frames/Ip_Man_2008.jpg",
@@ -2455,7 +2320,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_272",
+    id: "f_257",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589232/scoopcast_frames/Kuroneko_1968.jpg",
@@ -2464,7 +2329,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_273",
+    id: "f_258",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589233/scoopcast_frames/Crazy_About_Her_2021.jpg",
@@ -2473,7 +2338,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_274",
+    id: "f_259",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589235/scoopcast_frames/Alex_Wheatle_2020.jpg",
@@ -2482,7 +2347,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_275",
+    id: "f_260",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589237/scoopcast_frames/Tomorrow_Never_Dies_1997.jpg",
@@ -2491,7 +2356,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_276",
+    id: "f_261",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589244/scoopcast_frames/Anna_and_the_Apocalypse_2017.jpg",
@@ -2500,16 +2365,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_277",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589246/scoopcast_frames/Crimes_of_Passion_1984.jpg",
-    answer: "CRIMES OF PASSION",
-    year: "1984",
-    tag: "classic"
-  },
-  {
-    id: "f_278",
+    id: "f_262",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589246/scoopcast_frames/Immaculate_2024.jpg",
@@ -2518,7 +2374,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_279",
+    id: "f_263",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589250/scoopcast_frames/LaRoy_Texas_2023.jpg",
@@ -2527,7 +2383,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_280",
+    id: "f_264",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589251/scoopcast_frames/Knock_at_the_Cabin_2023.jpg",
@@ -2536,7 +2392,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_281",
+    id: "f_265",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589253/scoopcast_frames/Dont_Worry_Darling_2022.jpg",
@@ -2545,7 +2401,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_282",
+    id: "f_266",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589253/scoopcast_frames/The_Thin_Man_1934.jpg",
@@ -2554,16 +2410,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_283",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589256/scoopcast_frames/Happiness_1998.jpg",
-    answer: "HAPPINESS",
-    year: "1998",
-    tag: "classic"
-  },
-  {
-    id: "f_284",
+    id: "f_267",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589260/scoopcast_frames/Serie_Noire_1979.jpg",
@@ -2572,7 +2419,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_285",
+    id: "f_268",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589262/scoopcast_frames/A_Day_At_The_Races_1937.jpg",
@@ -2581,7 +2428,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_286",
+    id: "f_269",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589288/scoopcast_frames/Bardo_False_Chronicle_of_a_Handful_of_Truths_2022.jpg",
@@ -2590,7 +2437,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_287",
+    id: "f_270",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589289/scoopcast_frames/The_Card_Counter_2021.jpg",
@@ -2599,7 +2446,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_288",
+    id: "f_271",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589293/scoopcast_frames/Mouchette_1967.jpg",
@@ -2608,7 +2455,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_289",
+    id: "f_272",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589296/scoopcast_frames/The_Adjuster_1991.jpg",
@@ -2617,7 +2464,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_290",
+    id: "f_273",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589298/scoopcast_frames/Shang_Chi_and_the_Legend_of_the_Ten_Rings_2021.jpg",
@@ -2626,7 +2473,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_291",
+    id: "f_274",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589301/scoopcast_frames/The_Misfits_1961.jpg",
@@ -2635,16 +2482,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_292",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589302/scoopcast_frames/Deep_Water_2022.jpg",
-    answer: "DEEP WATER",
-    year: "2022",
-    tag: "classic"
-  },
-  {
-    id: "f_293",
+    id: "f_275",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589302/scoopcast_frames/Glass_Onion_2022.jpg",
@@ -2653,7 +2491,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_294",
+    id: "f_276",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589303/scoopcast_frames/The_Little_Mermaid_1989.jpg",
@@ -2662,7 +2500,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_295",
+    id: "f_277",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589304/scoopcast_frames/A_Confucian_Confusion_1994.jpg",
@@ -2671,7 +2509,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_296",
+    id: "f_278",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589306/scoopcast_frames/Last_Action_Hero_1993.jpg",
@@ -2680,7 +2518,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_297",
+    id: "f_279",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589308/scoopcast_frames/Thelma_and_Louise_1991.jpg",
@@ -2689,7 +2527,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_298",
+    id: "f_280",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589309/scoopcast_frames/The_Mask_1994.jpg",
@@ -2698,7 +2536,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_299",
+    id: "f_281",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589313/scoopcast_frames/Outland_1981.jpg",
@@ -2707,7 +2545,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_300",
+    id: "f_282",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589315/scoopcast_frames/Shirley_2020.jpg",
@@ -2716,7 +2554,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_301",
+    id: "f_283",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587828/scoopcast_frames/Bunny_Lake_Is_Missing_1965.jpg",
@@ -2725,7 +2563,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_302",
+    id: "f_284",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589316/scoopcast_frames/Grave_of_the_Fireflies_1988.jpg",
@@ -2734,16 +2572,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_303",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589317/scoopcast_frames/The_Untamed_2016.jpg",
-    answer: "THE UNTAMED",
-    year: "2016",
-    tag: "classic"
-  },
-  {
-    id: "f_304",
+    id: "f_285",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589318/scoopcast_frames/Life_Is_Sweet_1990.jpg",
@@ -2752,7 +2581,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_305",
+    id: "f_286",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589322/scoopcast_frames/Triangle_of_Sadness_2022.jpg",
@@ -2761,7 +2590,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_306",
+    id: "f_287",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589324/scoopcast_frames/Gaslight_1944.jpg",
@@ -2770,7 +2599,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_307",
+    id: "f_288",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589327/scoopcast_frames/Top_Gun_Maverick_2022.jpg",
@@ -2779,7 +2608,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_308",
+    id: "f_289",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589330/scoopcast_frames/Reds_1981.jpg",
@@ -2788,7 +2617,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_309",
+    id: "f_290",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589332/scoopcast_frames/Mississippi_Masala_1991.jpg",
@@ -2797,7 +2626,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_310",
+    id: "f_291",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589350/scoopcast_frames/3_Iron_2004.jpg",
@@ -2806,7 +2635,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_311",
+    id: "f_292",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/Snowbound_2017.jpg",
@@ -2815,16 +2644,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_312",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/xxxHolic_2022.jpg",
-    answer: "XXXHOLIC",
-    year: "2022",
-    tag: "classic"
-  },
-  {
-    id: "f_313",
+    id: "f_293",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589352/scoopcast_frames/The_Black_Phone_2021.jpg",
@@ -2833,7 +2653,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_314",
+    id: "f_294",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589354/scoopcast_frames/Faust_1994_1994.jpg",
@@ -2842,7 +2662,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_315",
+    id: "f_295",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589356/scoopcast_frames/A_Room_With_A_View_1985.jpg",
@@ -2851,7 +2671,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_316",
+    id: "f_296",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589358/scoopcast_frames/Visible_Secret_2001.jpg",
@@ -2860,7 +2680,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_317",
+    id: "f_297",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589362/scoopcast_frames/Monster_2023.jpg",
@@ -2869,16 +2689,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_318",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589363/scoopcast_frames/Love_Lies_Bleeding_2024.jpg",
-    answer: "LOVE LIES BLEEDING",
-    year: "2024",
-    tag: "new"
-  },
-  {
-    id: "f_319",
+    id: "f_298",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589367/scoopcast_frames/Bullet_Train_2022.jpg",
@@ -2887,16 +2698,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_320",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587815/scoopcast_frames/The_Naked_Kiss_1964.jpg",
-    answer: "THE NAKED KISS",
-    year: "1964",
-    tag: "classic"
-  },
-  {
-    id: "f_321",
+    id: "f_299",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589368/scoopcast_frames/For_Your_Eyes_Only_1981.jpg",
@@ -2905,7 +2707,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_322",
+    id: "f_300",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589370/scoopcast_frames/Ferrari_2023.jpg",
@@ -2914,7 +2716,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_323",
+    id: "f_301",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589370/scoopcast_frames/The_Big_Easy_1986.jpg",
@@ -2923,7 +2725,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_324",
+    id: "f_302",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589371/scoopcast_frames/Sasquatch_Sunset_2024.jpg",
@@ -2932,7 +2734,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_325",
+    id: "f_303",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589371/scoopcast_frames/The_Duellists_1977.jpg",
@@ -2941,7 +2743,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_326",
+    id: "f_304",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589373/scoopcast_frames/The_Spirit_2008.jpg",
@@ -2950,7 +2752,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_327",
+    id: "f_305",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589376/scoopcast_frames/The_Karate_Kid_1984.jpg",
@@ -2959,7 +2761,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_328",
+    id: "f_306",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589382/scoopcast_frames/Abuse_of_Weakness_2013.jpg",
@@ -2968,7 +2770,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_329",
+    id: "f_307",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589386/scoopcast_frames/Maggie_Moores_2023.jpg",
@@ -2977,7 +2779,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_330",
+    id: "f_308",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589388/scoopcast_frames/Prey_2022.jpg",
@@ -2986,7 +2788,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_331",
+    id: "f_309",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589408/scoopcast_frames/T%C3%A1r_2022.jpg",
@@ -2995,7 +2797,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_332",
+    id: "f_310",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589409/scoopcast_frames/Criss_Cross_1949.jpg",
@@ -3004,7 +2806,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_333",
+    id: "f_311",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589411/scoopcast_frames/Azrael_2024.jpg",
@@ -3013,7 +2815,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_334",
+    id: "f_312",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589411/scoopcast_frames/Sidonie_in_Japan_2023.jpg",
@@ -3022,7 +2824,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_335",
+    id: "f_313",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589413/scoopcast_frames/Anselm_2023.jpg",
@@ -3031,16 +2833,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_336",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589414/scoopcast_frames/Titane_2021.jpg",
-    answer: "TITANE",
-    year: "2021",
-    tag: "classic"
-  },
-  {
-    id: "f_337",
+    id: "f_314",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589415/scoopcast_frames/Peppermint_Candy_1999.jpg",
@@ -3049,7 +2842,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_338",
+    id: "f_315",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589417/scoopcast_frames/National_Anthem_2023.jpg",
@@ -3058,7 +2851,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_339",
+    id: "f_316",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589418/scoopcast_frames/Evil_Does_Not_Exist_2023.jpg",
@@ -3067,7 +2860,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_340",
+    id: "f_317",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589419/scoopcast_frames/Priscilla_2023.jpg",
@@ -3076,7 +2869,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_341",
+    id: "f_318",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589420/scoopcast_frames/Outside_Satan_2011.jpg",
@@ -3085,7 +2878,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_342",
+    id: "f_319",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589422/scoopcast_frames/The_Legend_of_the_7_Golden_Vampires_1974.jpg",
@@ -3094,7 +2887,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_343",
+    id: "f_320",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589424/scoopcast_frames/City_of_the_Living_Dead_1980.jpg",
@@ -3103,7 +2896,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_344",
+    id: "f_321",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589426/scoopcast_frames/Body_of_Lies_2008.jpg",
@@ -3112,7 +2905,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_345",
+    id: "f_322",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589426/scoopcast_frames/Medium_Cool_1969.jpg",
@@ -3121,7 +2914,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_346",
+    id: "f_323",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589427/scoopcast_frames/The_Texas_Chainsaw_Massacre_2003.jpg",
@@ -3130,7 +2923,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_347",
+    id: "f_324",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589426/scoopcast_frames/Typhoon_Club_1985.jpg",
@@ -3139,7 +2932,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_348",
+    id: "f_325",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589428/scoopcast_frames/The_Worst_Person_in_the_World_2021.jpg",
@@ -3148,7 +2941,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_349",
+    id: "f_326",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589428/scoopcast_frames/Life_and_Nothing_More_1992.jpg",
@@ -3157,7 +2950,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_350",
+    id: "f_327",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589433/scoopcast_frames/Anatomy_of_a_Fall_2023.jpg",
@@ -3166,7 +2959,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_351",
+    id: "f_328",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589435/scoopcast_frames/Mami_Wata_2023.jpg",
@@ -3175,7 +2968,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_352",
+    id: "f_329",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589435/scoopcast_frames/Westworld_1973.jpg",
@@ -3184,7 +2977,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_353",
+    id: "f_330",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589437/scoopcast_frames/Red_River_1948.jpg",
@@ -3193,7 +2986,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_354",
+    id: "f_331",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589438/scoopcast_frames/Hidden_Away_2020.jpg",
@@ -3202,7 +2995,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_355",
+    id: "f_332",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589439/scoopcast_frames/RMN_2022.jpg",
@@ -3211,7 +3004,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_356",
+    id: "f_333",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589439/scoopcast_frames/Showing_Up_2022.jpg",
@@ -3220,7 +3013,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_357",
+    id: "f_334",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589440/scoopcast_frames/Amores_Perros_2000.jpg",
@@ -3229,7 +3022,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_358",
+    id: "f_335",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589468/scoopcast_frames/The_Woman_King_2022.jpg",
@@ -3238,7 +3031,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_359",
+    id: "f_336",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589470/scoopcast_frames/The_Hunt_2020.jpg",
@@ -3247,7 +3040,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_360",
+    id: "f_337",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589470/scoopcast_frames/Three_Thousand_Years_of_Longing_2022.jpg",
@@ -3256,7 +3049,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_361",
+    id: "f_338",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587646/scoopcast_frames/Kinds_of_Kindness_2024.jpg",
@@ -3265,7 +3058,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "new"
   },
   {
-    id: "f_362",
+    id: "f_339",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589471/scoopcast_frames/Candyman_2021_2021.jpg",
@@ -3274,7 +3067,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_363",
+    id: "f_340",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589472/scoopcast_frames/Master_Gardener_2022.jpg",
@@ -3283,7 +3076,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_364",
+    id: "f_341",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589473/scoopcast_frames/Nostalghia_1983.jpg",
@@ -3292,7 +3085,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_365",
+    id: "f_342",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589476/scoopcast_frames/The_Holdovers_2023.jpg",
@@ -3301,16 +3094,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_366",
-    category: "frames",
-    type: "image",
-    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589477/scoopcast_frames/Lolita_1997_1997.jpg",
-    answer: "LOLITA (1997)",
-    year: "1997",
-    tag: "classic"
-  },
-  {
-    id: "f_367",
+    id: "f_343",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589480/scoopcast_frames/Perfect_Days_2023.jpg",
@@ -3319,7 +3103,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_368",
+    id: "f_344",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589480/scoopcast_frames/Death_Sentence_2007.jpg",
@@ -3328,7 +3112,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_369",
+    id: "f_345",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589481/scoopcast_frames/American_Fiction_2023.jpg",
@@ -3337,7 +3121,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_370",
+    id: "f_346",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589482/scoopcast_frames/Ip_Man_3_2015.jpg",
@@ -3346,7 +3130,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_371",
+    id: "f_347",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589484/scoopcast_frames/We_Are_Zombies_2023.jpg",
@@ -3355,7 +3139,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_372",
+    id: "f_348",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589484/scoopcast_frames/God_Told_Me_To_1976.jpg",
@@ -3364,7 +3148,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_373",
+    id: "f_349",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589485/scoopcast_frames/Sid_and_Nancy_1986.jpg",
@@ -3373,7 +3157,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_374",
+    id: "f_350",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589527/scoopcast_frames/Out_of_Darkness_2022.jpg",
@@ -3382,7 +3166,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_375",
+    id: "f_351",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589529/scoopcast_frames/A_Man_Escaped_1956.jpg",
@@ -3391,7 +3175,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_376",
+    id: "f_352",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588007/scoopcast_frames/Rebel_Moon_Part_One_A_Child_of_Fire_2023.jpg",
@@ -3400,7 +3184,7 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
   {
-    id: "f_377",
+    id: "f_353",
     category: "frames",
     type: "image",
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589532/scoopcast_frames/The_Big_Heat_1953.jpg",
