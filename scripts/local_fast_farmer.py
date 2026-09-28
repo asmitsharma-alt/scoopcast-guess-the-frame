@@ -197,18 +197,25 @@ def verify_with_gemini(img_bytes, movie_title, year):
 Determine if this image is a high-quality, authentic, pure MOVIE PLAYBACK FRAME from: "{movie_title} ({year})".
 
 CRITICAL EVALUATION CRITERIA:
-1. PURE PLAYBACK FRAME:
+1. PURE PLAYBACK FRAME WITH STRICT ZERO TEXT:
    - Genuine screenshot captured directly from film video playback.
-   - ZERO marketing text, ZERO title typography, ZERO credit overlays, ZERO watermarks, and ZERO subtitles.
+   - ABSOLUTELY ZERO TEXT: ZERO marketing text, ZERO title cards, ZERO actor/crew credits, ZERO subtitles, ZERO closed captions, ZERO location/time overlays (e.g. 'Paris, 1999', 'Chapter 1'), ZERO studio logos, and ZERO watermarks.
+   - If ANY overlay text, subtitles, or credits appear anywhere in the frame, set 'has_text_or_logos': true immediately.
    - NOT promotional art, NOT a poster, NOT concept art, NOT behind-the-scenes film crew photo.
-2. VISUAL CLARITY & AESTHETICS:
+2. MIDDLE OF MOVIE ONLY (NO INTRO / NO OUTRO):
+   - MUST be a live narrative scene from the body/middle of the movie.
+   - REJECT opening title sequences, studio logo cards, intro credits, ending resolution cards, and closing/end credits.
+   - If from the intro or outro, set 'is_middle_scene': false.
+3. VISUAL CLARITY & AESTHETICS:
    - Crisp, sharp, well-exposed, and in focus. Reject pitch-black, severely underexposed, muddy, or pixelated.
-3. SCENE IMPORTANCE & MEMORABILITY:
+4. SCENE IMPORTANCE & MEMORABILITY:
    - Must depict an important, iconic, or memorable moment (key characters, intense dialogue beats, climactic set pieces, iconic locations, or signature cinematography).
    - Reject boring filler frames (empty wall, blurry foot, transitional highway, nondescript door).
 
 Rate:
 - 'is_clear_and_sharp': true if high visual clarity and crisp detail, false otherwise.
+- 'is_middle_scene': true if from the core narrative middle of the movie, false if intro/outro/credits.
+- 'has_text_or_logos': true if ANY text, subtitles, credits, titles, or logos exist.
 - 'scene_importance': "high" | "medium" | "low".
 - 'iconic_score': 0.0 to 1.0.
 
@@ -217,10 +224,11 @@ Return strict JSON:
   "is_movie_frame": boolean,
   "confidence": number,
   "has_text_or_logos": boolean,
+  "is_middle_scene": boolean,
   "is_clear_and_sharp": boolean,
   "scene_importance": "high" | "medium" | "low",
   "iconic_score": number,
-  "reason": "1 concise sentence explaining the visual content and why this scene is iconic"
+  "reason": "1 concise sentence explaining the visual content and confirming zero text and middle scene"
 }}"""
 
     payload = {
@@ -374,12 +382,14 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
     answer_key = title.upper().strip()
 
     # Pick 4 well-spread candidate stills across the movie
+    # Pick candidate stills STRICTLY from the deep narrative middle (38% to 65%)
+    # This completely eliminates beginning (intro, studio logos, title cards) and outro (ending, credits)
     n = len(stills)
     if n <= 4:
         candidates = stills
     else:
-        indices = [int(n * 0.25), int(n * 0.45), int(n * 0.65), int(n * 0.80)]
-        candidates = [stills[i] for i in dict.fromkeys(indices) if i < n]
+        indices = [int(n * 0.38), int(n * 0.46), int(n * 0.54), int(n * 0.62)]
+        candidates = [stills[i] for i in dict.fromkeys(indices) if 0 <= i < n]
 
     for cand_url in candidates:
         if time.time() - start_time >= max_seconds:
@@ -403,13 +413,14 @@ def process_single_movie(task, frames_data, existing_keys, max_seconds):
         verdict = verify_with_gemini(raw_bytes, title, year)
         is_frame = verdict.get("is_movie_frame", False)
         no_text = not verdict.get("has_text_or_logos", True)
+        is_middle = verdict.get("is_middle_scene", True)
         is_clear = verdict.get("is_clear_and_sharp", True)
         importance = str(verdict.get("scene_importance", "medium")).lower()
         score = verdict.get("iconic_score", 0.0)
         conf = verdict.get("confidence", 0.0)
 
-        # Quality gate
-        if is_frame and no_text and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
+        # Quality gate: 1080p + Zero Text + Middle Story Scene + Clear + Iconic
+        if is_frame and no_text and is_middle and is_clear and (importance in ("high", "medium")) and conf >= 0.70 and score >= 0.65:
             try:
                 # Convert to WebP in memory (pristine quality 90)
                 im = im.convert("RGB")
