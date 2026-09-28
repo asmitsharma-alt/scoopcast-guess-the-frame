@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (655 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (705 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -5908,6 +5908,456 @@ export const CATALOG: CatalogItem[] = [
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598215/scoopcast_frames/Boy_Kills_World_2023.jpg",
     answer: "BOY KILLS WORLD",
     year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_656",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598221/scoopcast_frames/To_Leslie_2022.jpg",
+    answer: "TO LESLIE",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_657",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598223/scoopcast_frames/Some_Kind_Of_Heaven_2020.jpg",
+    answer: "SOME KIND OF HEAVEN",
+    year: "2020",
+    tag: "classic"
+  },
+  {
+    id: "f_658",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598225/scoopcast_frames/Comanche_Station_1960.jpg",
+    answer: "COMANCHE STATION",
+    year: "1960",
+    tag: "classic"
+  },
+  {
+    id: "f_659",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598225/scoopcast_frames/Double_Blind_2023.jpg",
+    answer: "DOUBLE BLIND",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_660",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598227/scoopcast_frames/The_Goldfinch_2019.jpg",
+    answer: "THE GOLDFINCH",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_661",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598227/scoopcast_frames/George_Washington_2000.jpg",
+    answer: "GEORGE WASHINGTON",
+    year: "2000",
+    tag: "classic"
+  },
+  {
+    id: "f_662",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598228/scoopcast_frames/8_Women_2002.jpg",
+    answer: "8 WOMEN",
+    year: "2002",
+    tag: "classic"
+  },
+  {
+    id: "f_663",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598231/scoopcast_frames/Water_Drops_on_Burning_Rocks_2000.jpg",
+    answer: "WATER DROPS ON BURNING ROCKS",
+    year: "2000",
+    tag: "classic"
+  },
+  {
+    id: "f_664",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598234/scoopcast_frames/The_Royal_Hotel_2023.jpg",
+    answer: "THE ROYAL HOTEL",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_665",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598236/scoopcast_frames/DOA_1949.jpg",
+    answer: "D.O.A.",
+    year: "1949",
+    tag: "classic"
+  },
+  {
+    id: "f_666",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587748/scoopcast_frames/My_Animal_2023.jpg",
+    answer: "MY ANIMAL",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_667",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598238/scoopcast_frames/Dark_Water_2002_2002.jpg",
+    answer: "DARK WATER (2002)",
+    year: "2002",
+    tag: "classic"
+  },
+  {
+    id: "f_668",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598238/scoopcast_frames/The_Fearmakers_1958.jpg",
+    answer: "THE FEARMAKERS",
+    year: "1958",
+    tag: "classic"
+  },
+  {
+    id: "f_669",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598240/scoopcast_frames/Evil_Dead_Trap_2020.jpg",
+    answer: "EVIL DEAD TRAP",
+    year: "2020",
+    tag: "classic"
+  },
+  {
+    id: "f_670",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598246/scoopcast_frames/Close_Up_1990.jpg",
+    answer: "CLOSE-UP",
+    year: "1990",
+    tag: "classic"
+  },
+  {
+    id: "f_671",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598263/scoopcast_frames/The_Reckless_Moment_1949.jpg",
+    answer: "THE RECKLESS MOMENT",
+    year: "1949",
+    tag: "classic"
+  },
+  {
+    id: "f_672",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598264/scoopcast_frames/The_Machine_Girl_2008.jpg",
+    answer: "THE MACHINE GIRL",
+    year: "2008",
+    tag: "classic"
+  },
+  {
+    id: "f_673",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588079/scoopcast_frames/Terrified_2017.jpg",
+    answer: "TERRIFIED",
+    year: "2017",
+    tag: "classic"
+  },
+  {
+    id: "f_674",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598267/scoopcast_frames/The_Cook_The_Thief_His_Wife_and_Her_Lover_1989.jpg",
+    answer: "THE COOK, THE THIEF, HIS WIFE & HER LOVER",
+    year: "1989",
+    tag: "classic"
+  },
+  {
+    id: "f_675",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598269/scoopcast_frames/Magic_Mikes_Last_Dance_2023.jpg",
+    answer: "MAGIC MIKE'S LAST DANCE",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_676",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598271/scoopcast_frames/Barbarian_2022.jpg",
+    answer: "BARBARIAN",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_677",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598271/scoopcast_frames/Round_Midnight_1986.jpg",
+    answer: "ROUND MIDNIGHT",
+    year: "1986",
+    tag: "classic"
+  },
+  {
+    id: "f_678",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598272/scoopcast_frames/Glass_2019.jpg",
+    answer: "GLASS",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_679",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790587828/scoopcast_frames/Shane_1953.jpg",
+    answer: "SHANE",
+    year: "1953",
+    tag: "classic"
+  },
+  {
+    id: "f_680",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598274/scoopcast_frames/Eyimofe_This_Is_My_Desire_2020.jpg",
+    answer: "EYIMOFE (THIS IS MY DESIRE)",
+    year: "2020",
+    tag: "classic"
+  },
+  {
+    id: "f_681",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598273/scoopcast_frames/The_Last_Stop_in_Yuma_County_2023.jpg",
+    answer: "THE LAST STOP IN YUMA COUNTY",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_682",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598275/scoopcast_frames/Witness_In_The_City_1959.jpg",
+    answer: "WITNESS IN THE CITY",
+    year: "1959",
+    tag: "classic"
+  },
+  {
+    id: "f_683",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598279/scoopcast_frames/In_The_Heat_Of_The_Night_1967.jpg",
+    answer: "IN THE HEAT OF THE NIGHT",
+    year: "1967",
+    tag: "classic"
+  },
+  {
+    id: "f_684",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598283/scoopcast_frames/I_Wanna_Hold_Your_Hand_1978.jpg",
+    answer: "I WANNA HOLD YOUR HAND",
+    year: "1978",
+    tag: "classic"
+  },
+  {
+    id: "f_685",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598285/scoopcast_frames/Under_The_Light_2023.jpg",
+    answer: "UNDER THE LIGHT",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_686",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598285/scoopcast_frames/The_Housemaid_2010_2010.jpg",
+    answer: "THE HOUSEMAID (2010)",
+    year: "2010",
+    tag: "classic"
+  },
+  {
+    id: "f_687",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598285/scoopcast_frames/Uzumaki_2000.jpg",
+    answer: "UZUMAKI",
+    year: "2000",
+    tag: "classic"
+  },
+  {
+    id: "f_688",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598286/scoopcast_frames/Your_Name_2016.jpg",
+    answer: "YOUR NAME.",
+    year: "2016",
+    tag: "classic"
+  },
+  {
+    id: "f_689",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598286/scoopcast_frames/The_Doom_Generation_1995.jpg",
+    answer: "THE DOOM GENERATION",
+    year: "1995",
+    tag: "classic"
+  },
+  {
+    id: "f_690",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598286/scoopcast_frames/Luce_2019.jpg",
+    answer: "LUCE",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_691",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598286/scoopcast_frames/Festen_1998.jpg",
+    answer: "FESTEN",
+    year: "1998",
+    tag: "classic"
+  },
+  {
+    id: "f_692",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598293/scoopcast_frames/Orgasmo_1969.jpg",
+    answer: "ORGASMO",
+    year: "1969",
+    tag: "classic"
+  },
+  {
+    id: "f_693",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598295/scoopcast_frames/Project_Power_2020.jpg",
+    answer: "PROJECT POWER",
+    year: "2020",
+    tag: "classic"
+  },
+  {
+    id: "f_694",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598296/scoopcast_frames/Harakiri_1962.jpg",
+    answer: "HARAKIRI",
+    year: "1962",
+    tag: "classic"
+  },
+  {
+    id: "f_695",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598297/scoopcast_frames/Daliland_2022.jpg",
+    answer: "DALILAND",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_696",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598298/scoopcast_frames/Malignant_2021.jpg",
+    answer: "MALIGNANT",
+    year: "2021",
+    tag: "classic"
+  },
+  {
+    id: "f_697",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598325/scoopcast_frames/The_Lady_Vanishes_1938.jpg",
+    answer: "THE LADY VANISHES",
+    year: "1938",
+    tag: "classic"
+  },
+  {
+    id: "f_698",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598327/scoopcast_frames/Radioactive_2019.jpg",
+    answer: "RADIOACTIVE",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_699",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598330/scoopcast_frames/Io_Capitano_2023.jpg",
+    answer: "IO CAPITANO",
+    year: "2023",
+    tag: "classic"
+  },
+  {
+    id: "f_700",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598331/scoopcast_frames/It_Chapter_Two_2019.jpg",
+    answer: "IT CHAPTER TWO",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_701",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598332/scoopcast_frames/His_House_2020.jpg",
+    answer: "HIS HOUSE",
+    year: "2020",
+    tag: "classic"
+  },
+  {
+    id: "f_702",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588122/scoopcast_frames/Great_Expectations_1946_1946.jpg",
+    answer: "GREAT EXPECTATIONS (1946)",
+    year: "1946",
+    tag: "classic"
+  },
+  {
+    id: "f_703",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598335/scoopcast_frames/Test_Pattern_2019.jpg",
+    answer: "TEST PATTERN",
+    year: "2019",
+    tag: "classic"
+  },
+  {
+    id: "f_704",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598337/scoopcast_frames/Addams_Family_Values_1993.jpg",
+    answer: "ADDAMS FAMILY VALUES",
+    year: "1993",
+    tag: "classic"
+  },
+  {
+    id: "f_705",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598337/scoopcast_frames/Hundreds_of_Beavers_2022.jpg",
+    answer: "HUNDREDS OF BEAVERS",
+    year: "2022",
     tag: "classic"
   },
 
