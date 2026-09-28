@@ -439,22 +439,26 @@ const UI = {
       startMatchBtn.addEventListener('click', () => {
         if (typeof Haptics !== 'undefined') Haptics.tap();
         if (startMatchBtn.disabled) return;
-        startMatchBtn.disabled = true;
-        startMatchBtn.innerHTML = `STARTING MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
-        const counts = UI.hostSettings.roundsByMode;
-        const totalRounds = Object.values(counts).reduce((a, b) => a + b, 0);
-        if (totalRounds <= 0) {
-          startMatchBtn.disabled = false;
-          UI.showToast('Please select at least 1 round to start!');
-          return;
+
+        if (typeof GameClient !== 'undefined' && GameClient.isHost) {
+          const unready = (GameClient.players || []).filter(p => !p.isReady && !p.loaded);
+          if (unready.length > 0) {
+            UI.showToast('Waiting for players to finish loading assets');
+            UI.updateLobbyStartBtn();
+            return;
+          }
         }
+
         startMatchBtn.disabled = true;
         startMatchBtn.innerHTML = `STARTING MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
-        const timer = UI.hostSettings.timer || 30;
-        const activeModes = Object.keys(counts).filter(k => counts[k] > 0);
-        const category = activeModes.length === 1 ? activeModes[0] : (activeModes.length === 3 ? 'all' : 'mixed');
-        const weeklyToggle = document.getElementById('toggleWeeklyDropsMobile');
-        const weeklyOnly = weeklyToggle ? weeklyToggle.checked : true;
+
+        const s = (typeof GameClient !== 'undefined' && GameClient.hostSettings) ? GameClient.hostSettings : UI.hostSettings;
+        const counts = s.roundsByMode || { frames: 5, eyes: 5, dialogue: 5 };
+        const totalRounds = s.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;
+        const timer = s.timer || 30;
+        const category = s.category || 'all';
+        const weeklyOnly = s.weeklyOnly !== undefined ? s.weeklyOnly : true;
+
         GameClient.startGame({ roundsByMode: counts, rounds: totalRounds, timer, category, weeklyOnly });
       });
     }
@@ -582,78 +586,114 @@ const UI = {
     }
   },
 
-  setLobbyActiveTab(tab) {
-    this.hostSettings.activeTab = tab;
-    document.querySelectorAll('.mode-tab-btn').forEach(b => {
-      const isCurrent = b.dataset.tab === tab;
-      b.classList.toggle('active', isCurrent);
-      b.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
-    });
-    this.renderLobbyControls();
-  },
-
-  adjustLobbyRounds(delta) {
-    const tab = this.hostSettings.activeTab || 'frames';
-    const MAX_ROUNDS_BY_MODE = { frames: 20, dialogue: 10, eyes: 10 };
-    const maxVal = MAX_ROUNDS_BY_MODE[tab] || 10;
-    let current = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : (tab === 'frames' ? 20 : 10);
-    current = Math.max(0, Math.min(maxVal, current + delta));
-    this.hostSettings.roundsByMode[tab] = current;
-    this.renderLobbyControls();
-    this.syncHostSettings();
-  },
-
-  adjustLobbyTimer(delta) {
-    let current = Number(this.hostSettings.timer) || 30;
-    current = Math.max(5, Math.min(90, current + delta));
-    this.hostSettings.timer = current;
-    this.renderLobbyControls();
-    this.syncHostSettings();
-  },
-
   renderLobbyControls() {
-    const tab = this.hostSettings.activeTab || 'frames';
-    const MAX_ROUNDS_BY_MODE = { frames: 20, dialogue: 10, eyes: 10 };
-    const maxVal = MAX_ROUNDS_BY_MODE[tab] || 10;
-    const currentRounds = this.hostSettings.roundsByMode[tab] !== undefined ? this.hostSettings.roundsByMode[tab] : (tab === 'frames' ? 20 : 10);
+    const s = (typeof GameClient !== 'undefined' && GameClient.hostSettings) ? GameClient.hostSettings : this.hostSettings;
+    if (!s) return;
 
-    // Update tab badges & classes
-    ['frames', 'eyes', 'dialogue'].forEach(m => {
-      const count = this.hostSettings.roundsByMode[m] !== undefined ? this.hostSettings.roundsByMode[m] : (m === 'frames' ? 20 : 10);
-      const pill = document.getElementById(`tabPill${m.charAt(0).toUpperCase() + m.slice(1)}`);
-      if (pill) pill.textContent = count;
-      const btn = document.getElementById(`tabBtn${m.charAt(0).toUpperCase() + m.slice(1)}`);
-      if (btn) btn.classList.toggle('mode-off', count === 0);
-    });
+    const counts = s.roundsByMode || { frames: 5, eyes: 5, dialogue: 5 };
+    const totalRounds = s.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;
+    const timer = s.timer || 30;
 
-    // Update current round stepper title & value
-    const roundTitle = document.getElementById('currentTabRoundsTitle');
-    if (roundTitle) roundTitle.textContent = `${tab.toUpperCase()} ROUNDS`;
-    const roundVal = document.getElementById('currentRoundValue');
-    if (roundVal) roundVal.textContent = currentRounds;
-
-    // Enable / disable round stepper buttons based on bounds
-    const btnRoundMinus = document.getElementById('btnRoundMinus');
-    const btnRoundPlus = document.getElementById('btnRoundPlus');
-    if (btnRoundMinus) {
-      btnRoundMinus.disabled = currentRounds <= 0;
-      btnRoundMinus.style.opacity = currentRounds <= 0 ? '0.35' : '1';
-      btnRoundMinus.style.cursor = currentRounds <= 0 ? 'not-allowed' : 'pointer';
-    }
-    if (btnRoundPlus) {
-      btnRoundPlus.disabled = currentRounds >= maxVal;
-      btnRoundPlus.style.opacity = currentRounds >= maxVal ? '0.35' : '1';
-      btnRoundPlus.style.cursor = currentRounds >= maxVal ? 'not-allowed' : 'pointer';
+    // Mode badge
+    const modeBadge = document.getElementById('lobbyLockedModeBadge');
+    if (modeBadge) {
+      let modeText = 'POPCORN MODE';
+      if (s.mode) {
+        modeText = s.mode.toUpperCase();
+      } else if (counts.frames > 0 && counts.eyes > 0 && counts.dialogue > 0) {
+        modeText = 'POPCORN MODE';
+      } else if (counts.frames > 0 && !counts.eyes && !counts.dialogue) {
+        modeText = 'FRAMES ONLY';
+      } else if (counts.eyes > 0 && !counts.frames && !counts.dialogue) {
+        modeText = 'EYES ONLY';
+      } else if (counts.dialogue > 0 && !counts.frames && !counts.eyes) {
+        modeText = 'DIALOGUE ONLY';
+      } else {
+        modeText = 'CUSTOM MATCH';
+      }
+      modeBadge.textContent = modeText;
     }
 
-    // Total rounds summary
-    const total = Object.values(this.hostSettings.roundsByMode).reduce((a, b) => a + b, 0);
-    const summary = document.getElementById('totalRoundsSummary');
-    if (summary) summary.textContent = `Total: ${total}`;
+    // Metric Chips
+    const roundsEl = document.getElementById('lobbyMetricRoundsText');
+    if (roundsEl) roundsEl.textContent = `${totalRounds} Rounds`;
 
-    // Update timer stepper
-    const timerVal = document.getElementById('currentTimerValue');
-    if (timerVal) timerVal.textContent = this.hostSettings.timer || 30;
+    const timerEl = document.getElementById('lobbyMetricTimerText');
+    if (timerEl) timerEl.textContent = `${timer}s / Turn`;
+
+    // Breakdown Pills
+    const breakdownEl = document.getElementById('lobbyLockedBreakdown');
+    if (breakdownEl) {
+      const pills = [];
+      if (counts.frames) pills.push(`<span class="breakdown-pill">🎬 ${counts.frames} Frames</span>`);
+      if (counts.eyes) pills.push(`<span class="breakdown-pill">👀 ${counts.eyes} Eyes</span>`);
+      if (counts.dialogue) pills.push(`<span class="breakdown-pill">💬 ${counts.dialogue} Dialogue</span>`);
+      breakdownEl.innerHTML = pills.join('');
+    }
+
+    this.updateLobbyStartBtn();
+  },
+
+  updateLobbyStartBtn() {
+    const isHost = (typeof GameClient !== 'undefined' && Boolean(GameClient.isHost));
+    const startBtn = document.getElementById('btnStartMatch');
+    const banner = document.getElementById('lobbyAssetStatusBanner');
+    const bannerText = document.getElementById('lobbyAssetStatusBannerText');
+    const waitingNotice = document.getElementById('lobbyWaitingNotice');
+    const waitingText = document.getElementById('lobbyWaitingNoticeText');
+
+    const players = (typeof GameClient !== 'undefined' && Array.isArray(GameClient.players)) ? GameClient.players : [];
+    const myId = (typeof GameClient !== 'undefined') ? GameClient.playerId : null;
+    const me = players.find(p => p.id === myId);
+
+    const unreadyPlayers = players.filter(p => !p.isReady && !p.loaded);
+    const hasUnready = unreadyPlayers.length > 0;
+
+    if (banner) {
+      if (hasUnready) {
+        banner.style.display = 'flex';
+        if (me && !me.isReady && !me.loaded) {
+          const pct = me.assetProgress || 0;
+          if (bannerText) bannerText.textContent = `Downloading match assets (${pct}%)...`;
+        } else {
+          if (bannerText) bannerText.textContent = `Waiting for players to finish downloading...`;
+        }
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    if (startBtn && isHost) {
+      if (hasUnready) {
+        startBtn.disabled = true;
+        startBtn.style.opacity = '0.65';
+        startBtn.style.cursor = 'not-allowed';
+        const myPct = me ? (me.assetProgress || 0) : 0;
+        if (me && !me.isReady && !me.loaded) {
+          startBtn.innerHTML = `<span>PRELOADING ASSETS (${myPct}%)</span>`;
+        } else {
+          startBtn.innerHTML = `<span>WAITING FOR PLAYERS...</span>`;
+        }
+      } else {
+        startBtn.disabled = false;
+        startBtn.style.opacity = '1';
+        startBtn.style.cursor = 'pointer';
+        startBtn.innerHTML = `
+          <span>START MATCH</span>
+          <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        `;
+      }
+    }
+
+    if (waitingNotice && !isHost) {
+      if (me && !me.isReady && !me.loaded) {
+        if (waitingText) waitingText.textContent = `Downloading assets (${me.assetProgress || 0}%)...`;
+      } else if (hasUnready) {
+        if (waitingText) waitingText.textContent = `Assets ready! Waiting for others...`;
+      } else {
+        if (waitingText) waitingText.textContent = `Ready! Waiting for Host to start match...`;
+      }
+    }
   },
 
   syncHostSettings() {
@@ -877,22 +917,12 @@ const UI = {
     const startBtn = document.getElementById('btnStartMatch');
     const waitingNotice = document.getElementById('lobbyWaitingNotice');
     const hostNextBtn = document.getElementById('btnNextRound');
+    const hostRevealEndBtn = document.getElementById('btnRevealEndMatch');
 
     if (hostControls) hostControls.style.display = isHost ? 'flex' : 'none';
-    if (startBtn) {
-      startBtn.style.display = isHost ? 'flex' : 'none';
-      startBtn.disabled = false;
-      startBtn.innerHTML = `START MATCH <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
-    }
-    if (waitingNotice) {
-      waitingNotice.style.display = isHost ? 'none' : 'block';
-      const s = (typeof GameClient !== 'undefined' && GameClient.hostSettings) ? GameClient.hostSettings : null;
-      if (s && s.roundsByMode) {
-        waitingNotice.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="font-size:0.85rem; font-weight:900;"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Waiting for Host to start match...</span><span style="font-size:0.75rem; color:#64748b; font-family:var(--font-mono);">${s.roundsByMode.frames || 0} Frames • ${s.roundsByMode.eyes || 0} Eyes • ${s.roundsByMode.dialogue || 0} Dialogue • ${s.timer || 30}s Timer</span></div>`;
-      }
-    }
+    if (startBtn) startBtn.style.display = isHost ? 'flex' : 'none';
+    if (waitingNotice) waitingNotice.style.display = isHost ? 'none' : 'block';
     if (hostNextBtn) hostNextBtn.style.display = isHost ? 'flex' : 'none';
-    const hostRevealEndBtn = document.getElementById('btnRevealEndMatch');
     if (hostRevealEndBtn) hostRevealEndBtn.style.display = isHost ? 'flex' : 'none';
 
     const hostBar = document.getElementById('inGameHostBar');
@@ -900,9 +930,8 @@ const UI = {
       hostBar.style.display = (this.currentScreen === 'gameScreen' && isHost) ? 'flex' : 'none';
     }
 
-    if (isHost) {
-      this.renderLobbyControls();
-    }
+    this.renderLobbyControls();
+    this.updateLobbyStartBtn();
   },
 
   updateTimer(timeRemaining) {
@@ -1304,6 +1333,23 @@ const UI = {
       const avSrc = this.getAvatarSrc(p.avatar);
       const avBg = this.getAvatarBg(p.avatar);
       const avFit = this.getAvatarFit(p.avatar);
+      const isReady = !!(p.isReady || p.loaded || (p.assetProgress !== undefined && p.assetProgress >= 100));
+      const progress = p.assetProgress !== undefined ? p.assetProgress : 0;
+      const statusText = (p.assetStatus === 'verifying' || progress >= 90) ? 'VERIFYING' : `DOWNLOADING ${progress}%`;
+
+      const assetRowHtml = isReady
+        ? `<div class="player-asset-status-row">
+             <span class="asset-ready-badge">✓ READY</span>
+           </div>`
+        : `<div class="player-asset-status-row">
+             <div class="asset-loading-wrap">
+               <span class="asset-loading-text">${statusText}</span>
+               <div class="asset-progress-track">
+                 <div class="asset-progress-fill" style="width: ${progress}%;"></div>
+               </div>
+             </div>
+           </div>`;
+
       return `
         <div class="player-chip-nb">
           <div style="width:36px; height:36px; min-width:36px; border-radius:10px; border:2px solid #1a1a1a; background:${avBg}; display:flex; align-items:center; justify-content:center; overflow:hidden;">
@@ -1312,10 +1358,13 @@ const UI = {
           <div style="overflow:hidden; flex:1;">
             <div class="player-chip-name">${this.formatName(p.name)}</div>
             <div class="player-chip-badge">${p.isHost ? `${crownIcon} HOST` : 'PLAYER'}</div>
+            ${assetRowHtml}
           </div>
         </div>
       `;
     }).join('');
+
+    this.updateLobbyStartBtn();
   },
 
   renderScoreboard() {

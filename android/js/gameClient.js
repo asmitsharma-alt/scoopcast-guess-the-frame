@@ -669,16 +669,20 @@ const GameClient = {
     const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
 
     this.hostSettings = {
+      mode: options.mode || 'Popcorn',
       category: options.category || 'all',
       roundsByMode: counts,
       rounds: totalR,
       timer: options.timer || 30,
-      weeklyOnly: options.weeklyOnly !== undefined ? options.weeklyOnly : true
+      weeklyOnly: options.weeklyOnly !== undefined ? options.weeklyOnly : true,
+      isLocked: true
     };
 
     if (typeof UI !== 'undefined' && UI.hostSettings) {
+      UI.hostSettings.mode = this.hostSettings.mode;
       UI.hostSettings.roundsByMode = { ...this.hostSettings.roundsByMode };
       UI.hostSettings.timer = this.hostSettings.timer;
+      UI.hostSettings.rounds = totalR;
     }
 
     if (typeof UI !== 'undefined' && UI.showLoading) {
@@ -720,7 +724,10 @@ const GameClient = {
         avatar: this.playerAvatar,
         score: 0,
         isHost: true,
-        loaded: true
+        loaded: false,
+        isReady: false,
+        assetProgress: 0,
+        assetStatus: 'downloading'
       }];
 
       this.bindColyseusGame(room);
@@ -736,6 +743,8 @@ const GameClient = {
         const crownIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.crown : '';
         UI.showToast(`${crownIcon} Room ${this.roomCode} created! Share the code with friends.`);
       }
+
+      this.startAssetPreloading();
     } catch(err) {
       console.error('[Colyseus] Failed to create room:', err);
       if (typeof UI !== 'undefined') {
@@ -831,7 +840,10 @@ const GameClient = {
         avatar: this.playerAvatar,
         score: 0,
         isHost: false,
-        loaded: true
+        loaded: false,
+        isReady: false,
+        assetProgress: 0,
+        assetStatus: 'downloading'
       }];
 
       this.bindColyseusGame(room);
@@ -847,6 +859,8 @@ const GameClient = {
         const rocketIcon = typeof SvgIcons !== 'undefined' ? SvgIcons.rocket : '';
         UI.showToast(`${rocketIcon} Connected to room ${this.roomCode}!`);
       }
+
+      this.startAssetPreloading();
     } catch(err) {
       console.error('[Colyseus] Failed to join room:', err);
       this.isJoining = false;
@@ -859,21 +873,101 @@ const GameClient = {
     }
   },
 
+  startAssetPreloading() {
+    const me = (this.players || []).find(p => p.id === this.playerId);
+    if (me) {
+      me.assetProgress = 0;
+      me.assetStatus = 'downloading';
+      me.isReady = false;
+      me.loaded = false;
+    }
+    if (typeof UI !== 'undefined') {
+      if (UI.renderLobbyPlayers) UI.renderLobbyPlayers();
+      if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+    }
+
+    const reportProgress = (pct, status) => {
+      const validPct = Math.max(0, Math.min(100, Math.round(pct)));
+      const isComplete = validPct >= 100;
+      if (me) {
+        me.assetProgress = validPct;
+        me.assetStatus = status || (isComplete ? 'ready' : (validPct >= 90 ? 'verifying' : 'downloading'));
+        me.isReady = isComplete;
+        me.loaded = isComplete;
+      }
+      if (this.colyseusRoom) {
+        try {
+          this.colyseusRoom.send('asset_progress', { progress: validPct, status: me ? me.assetStatus : status });
+          if (isComplete) {
+            this.colyseusRoom.send('player_ready', { isReady: true });
+          }
+        } catch (e) {
+          console.warn('[Colyseus] Failed to send asset progress:', e);
+        }
+      }
+      if (typeof UI !== 'undefined') {
+        if (UI.renderLobbyPlayers) UI.renderLobbyPlayers();
+        if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+      }
+    };
+
+    // Gather assets to preload from GAME_SECTIONS
+    const items = [];
+    if (typeof GAME_SECTIONS !== 'undefined' && Array.isArray(GAME_SECTIONS)) {
+      GAME_SECTIONS.forEach(sec => {
+        if (Array.isArray(sec.frames)) {
+          sec.frames.forEach(f => {
+            if (f.content) items.push({ content: f.content, type: f.type || 'image', revealContent: f.revealContent });
+            if (f.revealContent && !items.some(it => it.content === f.revealContent)) {
+              items.push({ content: f.revealContent, type: 'image' });
+            }
+          });
+        }
+      });
+    }
+
+    if (typeof AssetPreloader !== 'undefined' && AssetPreloader.preloadRoomAssets) {
+      AssetPreloader.preloadRoomAssets(items, (pct, status) => {
+        reportProgress(pct, status);
+      });
+    } else {
+      let step = 15;
+      const interval = setInterval(() => {
+        step += 25;
+        if (step >= 100) {
+          clearInterval(interval);
+          reportProgress(100, 'ready');
+        } else {
+          reportProgress(step, step >= 85 ? 'verifying' : 'downloading');
+        }
+      }, 150);
+    }
+  },
+
   startGame(options = {}) {
     if (!this.isHost || !this.colyseusRoom) return;
 
-    const rawCounts = options.roundsByMode || this.hostSettings.roundsByMode || { frames: 20, eyes: 10, dialogue: 10 };
+    const unready = (this.players || []).filter(p => !p.isReady && !p.loaded);
+    if (unready.length > 0) {
+      if (typeof UI !== 'undefined') {
+        if (UI.showToast) UI.showToast("Waiting for players to finish loading assets");
+        if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+      }
+      return;
+    }
+
+    const rawCounts = options.roundsByMode || this.hostSettings.roundsByMode || { frames: 5, eyes: 5, dialogue: 5 };
     const counts = {
-      frames: Math.min(20, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
-      dialogue: Math.min(10, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
-      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
+      frames: Math.min(30, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 5))),
+      dialogue: Math.min(30, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 5))),
+      eyes: Math.min(30, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 5)))
     };
     const cat = options.category || this.hostSettings.category || 'all';
-    const totalRounds = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
+    const totalRounds = options.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;
     const timer = Number(options.timer) || this.hostSettings.timer || 30;
     const weeklyOnly = options.weeklyOnly !== undefined ? Boolean(options.weeklyOnly) : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : true);
 
-    this.hostSettings = { category: cat, rounds: totalRounds, timer, roundsByMode: counts, weeklyOnly };
+    this.hostSettings = { ...this.hostSettings, category: cat, rounds: totalRounds, timer, roundsByMode: counts, weeklyOnly };
 
     this.colyseusRoom.send('start_game', {
       category: cat,
@@ -1026,6 +1120,48 @@ const GameClient = {
   bindColyseusGame(room) {
     this.colyseusRoom = room;
 
+    room.onMessage("player_asset_update", (data) => {
+      if (!data) return;
+      const target = (this.players || []).find(p => p.id === data.playerId);
+      if (target) {
+        target.assetProgress = data.progress !== undefined ? data.progress : target.assetProgress;
+        target.assetStatus = data.status || target.assetStatus;
+        target.isReady = !!data.isReady;
+        target.loaded = !!data.isReady;
+        if (typeof UI !== 'undefined') {
+          if (UI.renderLobbyPlayers) UI.renderLobbyPlayers();
+          if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+        }
+      }
+    });
+
+    room.onMessage("player_ready", (data) => {
+      if (!data) return;
+      const target = (this.players || []).find(p => p.id === (data.playerId || this.playerId));
+      if (target) {
+        target.isReady = true;
+        target.loaded = true;
+        target.assetProgress = 100;
+        target.assetStatus = 'ready';
+        if (typeof UI !== 'undefined') {
+          if (UI.renderLobbyPlayers) UI.renderLobbyPlayers();
+          if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+        }
+      }
+    });
+
+    room.onMessage("start_error", (data) => {
+      if (data) {
+        const msg = data.message || "Waiting for players to finish loading assets";
+        if (typeof UI !== 'undefined' && UI.showToast) {
+          UI.showToast(msg);
+          if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
+        } else {
+          alert(msg);
+        }
+      }
+    });
+
     room.onMessage("guess_result", (res) => {
       if (res && res.isCorrect) {
         this.hasGuessedThisRound = true;
@@ -1175,13 +1311,33 @@ const GameClient = {
           currentIds.add(sessionId);
           let localP = this.players.find(lp => lp.id === sessionId);
           if (!localP) {
-            localP = { id: sessionId, name: p.name, avatar: p.avatar, score: p.score, isHost: p.isHost, loaded: true };
+            localP = {
+              id: sessionId,
+              name: p.name,
+              avatar: p.avatar,
+              score: p.score,
+              isHost: p.isHost,
+              loaded: p.isReady || false,
+              isReady: p.isReady || false,
+              assetProgress: p.assetProgress || 0,
+              assetStatus: p.assetStatus || 'downloading'
+            };
             this.players.push(localP);
           } else {
             localP.name = p.name;
             localP.avatar = p.avatar;
             localP.score = p.score;
             localP.isHost = p.isHost;
+            if (p.isReady !== undefined) {
+              localP.isReady = p.isReady;
+              localP.loaded = p.isReady;
+            }
+            if (p.assetProgress !== undefined) {
+              localP.assetProgress = p.assetProgress;
+            }
+            if (p.assetStatus) {
+              localP.assetStatus = p.assetStatus;
+            }
           }
           if (sessionId === this.playerId) {
             const hostChanged = (this.isHost !== p.isHost);
@@ -1198,6 +1354,7 @@ const GameClient = {
         if (typeof UI !== 'undefined') {
           if (UI.renderLobbyPlayers) UI.renderLobbyPlayers();
           if (UI.renderScoreboard) UI.renderScoreboard();
+          if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
         }
       }
 
