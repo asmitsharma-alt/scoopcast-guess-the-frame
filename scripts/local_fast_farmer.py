@@ -286,10 +286,14 @@ def fetch_filmgrab_catalog():
         if is_indian_movie(clean_title, post_url):
             continue
 
+        m_date = re.search(r'film-grab\.com/(\d{4})/(\d{2})/(\d{2})/', post_url)
+        post_date = int(m_date.group(1) + m_date.group(2) + m_date.group(3)) if m_date else 0
+
         if clean_title and len(clean_title) >= 2:
             catalog.append({
                 "title": clean_title,
-                "url": post_url
+                "url": post_url,
+                "post_date": post_date
             })
 
     print(f"[1/3] Discovered {len(catalog)} eligible non-Indian films in Film-Grab archive.")
@@ -516,18 +520,31 @@ def main():
         if k in existing_keys:
             continue
         if k in catalog_by_norm:
-            target_tasks.append({"title": catalog_by_norm[k]["title"], "url": catalog_by_norm[k]["url"]})
+            target_tasks.append({
+                "title": catalog_by_norm[k]["title"],
+                "url": catalog_by_norm[k]["url"],
+                "post_date": catalog_by_norm[k].get("post_date", 0)
+            })
+
+    # Sort priority blockbusters by post_date descending (newer 1080p Blu-ray masters first)
+    target_tasks.sort(key=lambda x: x.get("post_date", 0), reverse=True)
 
     general_tasks = [
-        {"title": m["title"], "url": m["url"]}
+        {"title": m["title"], "url": m["url"], "post_date": m.get("post_date", 0)}
         for m in catalog
         if normalize_key(m["title"]) not in existing_keys and normalize_key(m["title"]) not in {normalize_key(t["title"]) for t in target_tasks}
     ]
-    random.seed(42)
-    random.shuffle(general_tasks)
 
-    all_tasks = target_tasks + general_tasks
-    print(f"[2/3] Built queue: {len(target_tasks)} priority blockbusters + {len(general_tasks)} catalog films ({len(all_tasks)} total).")
+    # Split into pristine modern HD era (2021-2026: 100% 1080p) and earlier posts
+    recent_general = [m for m in general_tasks if m.get("post_date", 0) >= 20210101]
+    older_general = [m for m in general_tasks if m.get("post_date", 0) < 20210101]
+
+    random.seed(42)
+    random.shuffle(recent_general)
+    random.shuffle(older_general)
+
+    all_tasks = target_tasks + recent_general + older_general
+    print(f"[2/3] Built queue: {len(target_tasks)} priority blockbusters + {len(recent_general)} modern 1080p masters + {len(older_general)} archive films ({len(all_tasks)} total).")
     print(f"[3/3] Launching ThreadPoolExecutor with {args.workers} workers...\n")
 
     # Launch parallel threads
