@@ -2609,5 +2609,33 @@
     "answer": "SID AND NANCY",
     "year": "1986",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589527/scoopcast_frames/Out_of_Darkness_2022.jpg",
+    "answer": "OUT OF DARKNESS",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589529/scoopcast_frames/A_Man_Escaped_1956.jpg",
+    "answer": "A MAN ESCAPED",
+    "year": "1956",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790588007/scoopcast_frames/Rebel_Moon_Part_One_A_Child_of_Fire_2023.jpg",
+    "answer": "REBEL MOON - PART ONE: A CHILD OF FIRE",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589532/scoopcast_frames/The_Big_Heat_1953.jpg",
+    "answer": "THE BIG HEAT",
+    "year": "1953",
+    "tag": "classic"
   }
 ]

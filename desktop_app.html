@@ -16228,6 +16228,17 @@
       framesLoaded: false
     };
 
+    // Fisher-Yates frame shuffler to ensure diverse gameplay across all 300+ movie frames
+    function shuffleArray(arr) {
+      if (!Array.isArray(arr)) return arr;
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+    window.shuffleFrames = shuffleArray;
+
     // Auto-sync dynamic Cloudinary frames from data/frames.json or GitHub CDN
     (async function syncDynamicFrames() {
       const sources = [
@@ -16240,8 +16251,9 @@
           if (res.ok) {
             const dynamicFrames = await res.json();
             if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
-              GS.sections[0].frames = dynamicFrames;
-              console.log('[Scoopcast] Successfully synced', dynamicFrames.length, 'frames from', src);
+              // Thoroughly randomize so players immediately get fresh 1080p frames from the start
+              GS.sections[0].frames = shuffleArray([...dynamicFrames]);
+              console.log('[Scoopcast] Successfully synced and randomized', dynamicFrames.length, 'frames from', src);
               if (window.AdminStudio && typeof AdminStudio.renderSections === 'function') {
                 AdminStudio.renderSections();
               }
@@ -21606,6 +21618,9 @@
         if (!isOnline && !GS.players.length) { alert('Add at least one player!'); return; }
         this._onlineMode = isOnline || false;
         this._isRemoteSession = false;
+        if (!isOnline && GS.sections[0] && Array.isArray(GS.sections[0].frames) && typeof window.shuffleFrames === 'function') {
+          window.shuffleFrames(GS.sections[0].frames);
+        }
         SoundManager.playGameStart();
         GS.players.forEach(p => p.score = 0);
         GS.currentSection = 0; GS.currentSectionRound = 0;
