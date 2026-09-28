@@ -2964,3 +2964,221 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   background: #10B981;
   color: #FFFFFF;
 }
+
+/* ═══════════ ANDROID AVATAR STUDIO MODAL ═══════════ */
+.mp-android-avatar-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.6);
+  align-items: flex-end;
+  justify-content: center;
+}
+.mp-android-avatar-modal.active {
+  display: flex;
+}
+
+.mp-android-avatar-sheet {
+  background: #fffdf5;
+  border-radius: 20px 20px 0 0;
+  border-top: 3px solid #121212;
+  border-left: 3px solid #121212;
+  border-right: 3px solid #121212;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -6px 0 #121212;
+}
+
+/* Sheet Header */
+.mp-android-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 2px solid #121212;
+  flex-shrink: 0;
+  background: #facc15;
+}
+
+.mp-android-sheet-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: #121212;
+  letter-spacing: 0.04em;
+}
+
+.mp-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  padding: 0 12px;
+  border: 2px solid #121212;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: #121212;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #121212;
+}
+.mp-back-btn:active {
+  transform: translate(1px,1px);
+  box-shadow: 1px 1px 0 #121212;
+}
+
+.mp-done-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  padding: 0 12px;
+  border: 2px solid #121212;
+  border-radius: 8px;
+  background: #10b981;
+  font-size: 0.72rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #121212;
+}
+.mp-done-btn:active {
+  transform: translate(1px,1px);
+  box-shadow: 1px 1px 0 #121212;
+}
+
+/* Search Bar */
+.mp-avatar-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.mp-avatar-search-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon-slot {
+  position: absolute;
+  left: 10px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+}
+
+.mp-avatar-search-input {
+  width: 100%;
+  height: 38px;
+  border: 2px solid #121212;
+  border-radius: 10px;
+  padding: 0 36px 0 34px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: #f8fafc;
+  color: #121212;
+  outline: none;
+  box-shadow: 2px 2px 0 #121212;
+}
+.mp-avatar-search-input::placeholder { color: #9ca3af; }
+.mp-avatar-search-input:focus { background: #fff; }
+
+.mp-avatar-search-clear {
+  position: absolute;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mp-shuffle-btn,
+.mp-custom-upload-btn {
+  height: 38px;
+  padding: 0 10px;
+  border: 2px solid #121212;
+  border-radius: 10px;
+  background: #f1f5f9;
+  font-size: 0.65rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: #121212;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 #121212;
+}
+.mp-shuffle-btn:active,
+.mp-custom-upload-btn:active {
+  transform: translate(1px,1px);
+  box-shadow: 1px 1px 0 #121212;
+}
+
+/* Category Pills Bar */
+.mp-avatar-category-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 14px;
+  border-bottom: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  background: #fff;
+}
+.mp-avatar-category-bar::-webkit-scrollbar { display: none; }
+
+/* Avatar Scroll Grid */
+.mp-avatar-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px 24px;
+  background: #f8fafc;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mp-infinite-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mp-infinite-loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #9ca3af;
+  font-family: var(--font-mono);
+}

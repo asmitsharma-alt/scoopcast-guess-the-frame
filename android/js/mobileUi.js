@@ -226,11 +226,34 @@ const UI = {
         initialAvatar: this.selectedAvatar,
         onSelect: (url, meta) => {
           this.selectAvatar(url);
+          // Auto-close studio after picking — update chip preview on home screen
+          this.closeAvatarStudio();
+          // Update the first chip to show the chosen avatar as a preview hint
+          this._updateExplorePreview(url, meta);
         }
       });
       AvatarPicker.renderCategories('androidCategoryBar');
       AvatarPicker.renderGrid('androidAvatarGrid', 'androidLoadingIndicator');
     }
+  },
+
+  // Shows the selected studio avatar as a mini preview chip next to "Explore" button
+  _updateExplorePreview(url, meta) {
+    const btn = document.querySelector('.avatar-explore-btn');
+    if (!btn) return;
+    // Show a tiny preview image inside the explore button
+    let img = btn.querySelector('.explore-preview-img');
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'explore-preview-img';
+      img.style.cssText = 'width:18px;height:18px;border-radius:5px;border:1.5px solid #121212;object-fit:contain;background:#facc15;flex-shrink:0;';
+      btn.insertBefore(img, btn.firstChild);
+    }
+    img.src = url;
+    // Highlight the explore button to show a custom avatar is active
+    btn.style.background = '#fef9c3';
+    btn.style.borderColor = '#facc15';
+    btn.style.boxShadow = '2px 2px 0 #121212';
   },
 
   openAvatarStudio() {
