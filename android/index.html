@@ -434,67 +434,78 @@
           <!-- STEP 1: SELECT GAME MODE -->
           <div class="gw-step-pane active" id="gwStepPane-1">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title" id="gwScreenTitle">Choose Your Challenge</h2>
-              <p class="gw-screen-subtitle">Select the difficulty tier for this multiplayer lobby.</p>
+              <h2 class="gw-screen-title" id="gwScreenTitle">Choose Difficulty</h2>
             </div>
 
             <div class="gw-difficulty-grid">
               <!-- Popcorn Mode -->
               <div class="gw-diff-card popcorn" id="gwDiffCard-popcorn" onclick="CreateRoomWizard.selectMode('popcorn')">
                 <div class="gw-diff-icon-wrap">
-                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
-                    <path d="M18 8a3 3 0 0 0-3-3 3 3 0 0 0-6 0 3 3 0 0 0-3 3"/>
-                    <path d="M6 8l1.8 12.6A2 2 0 0 0 9.8 22h4.4a2 2 0 0 0 2-1.4L18 8"/>
-                    <line x1="10" y1="12" x2="9" y2="22"/>
-                    <line x1="14" y1="12" x2="15" y2="22"/>
-                    <circle cx="12" cy="4" r="1.5" fill="currentColor"/>
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+                    <path d="M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4"/>
+                    <path d="M6 8 8 21h8l2-13H6Z"/>
+                    <line x1="10" y1="8" x2="10.5" y2="21"/>
+                    <line x1="14" y1="8" x2="13.5" y2="21"/>
                   </svg>
                 </div>
-                <div class="gw-diff-title">Popcorn Mode</div>
-                <div class="gw-diff-badge gw-badge-easy">Difficulty: Easy</div>
-                <p class="gw-diff-desc">Popular movies and recognizable scenes.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Popcorn Mode</div>
+                  <span class="gw-diff-badge gw-badge-easy">Easy</span>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
 
               <!-- Cinephile Mode -->
               <div class="gw-diff-card cinephile selected" id="gwDiffCard-cinephile" onclick="CreateRoomWizard.selectMode('cinephile')">
                 <div class="gw-diff-icon-wrap">
-                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="3"/>
-                    <circle cx="7" cy="8.5" r="1.5" fill="currentColor"/>
-                    <circle cx="17" cy="8.5" r="1.5" fill="currentColor"/>
-                    <circle cx="7" cy="15.5" r="1.5" fill="currentColor"/>
-                    <circle cx="17" cy="15.5" r="1.5" fill="currentColor"/>
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+                    <rect width="20" height="20" x="2" y="2" rx="2.5"/>
+                    <line x1="7" x2="7" y1="2" y2="22"/>
+                    <line x1="17" x2="17" y1="2" y2="22"/>
+                    <line x1="2" x2="22" y1="12" y2="12"/>
+                    <line x1="2" x2="7" y1="7" y2="7"/>
+                    <line x1="2" x2="7" y1="17" y2="17"/>
+                    <line x1="17" x2="22" y1="7" y2="7"/>
+                    <line x1="17" x2="22" y1="17" y2="17"/>
                   </svg>
                 </div>
-                <div class="gw-diff-title">Cinephile Mode</div>
-                <div class="gw-diff-badge gw-badge-medium">Difficulty: Medium</div>
-                <p class="gw-diff-desc">For players who know movies beyond famous scenes.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Cinephile Mode</div>
+                  <span class="gw-diff-badge gw-badge-medium">Medium</span>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
 
               <!-- Director's Cut Mode -->
               <div class="gw-diff-card director" id="gwDiffCard-director" onclick="CreateRoomWizard.selectMode('director')">
                 <div class="gw-diff-icon-wrap">
-                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;">
-                    <path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8H4z"/>
-                    <path d="m4 11 16-4v4H4z"/>
-                    <path d="m7 7 3-3"/>
-                    <path d="m13 5.5 3-3"/>
-                    <path d="m4 11 3-3"/>
+                  <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;">
+                    <rect width="20" height="14" x="2" y="7" rx="2"/>
+                    <path d="M2 11h20"/>
+                    <path d="m6 7 2 4"/>
+                    <path d="m12 7 2 4"/>
+                    <path d="m18 7 2 4"/>
                   </svg>
                 </div>
-                <div class="gw-diff-title">Director's Cut</div>
-                <div class="gw-diff-badge gw-badge-hard">Difficulty: Hard</div>
-                <p class="gw-diff-desc">Rare scenes and challenging frames.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Director's Cut</div>
+                  <span class="gw-diff-badge gw-badge-hard">Hard</span>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- STEP 2: SELECT GAME SECTION -->
           <div class="gw-step-pane" id="gwStepPane-2">
-            <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">Choose Your Challenge Type</h2>
-              <p class="gw-screen-subtitle">Select one or multiple challenges to feature in the match playlist.</p>
+            <div class="gw-step-title-group" style="display:flex; justify-content:space-between; align-items:center;">
+              <h2 class="gw-screen-title">Challenge Types</h2>
               <div class="gw-selected-count-badge" id="gwSelectedSectionsCount">
                 <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>Selected: 2 of 3</span>
@@ -506,16 +517,13 @@
               <div class="gw-sec-card selected" id="gwSecCard-frame" onclick="CreateRoomWizard.toggleSection('frame')">
                 <div class="gw-sec-left">
                   <div class="gw-sec-icon-wrap">
-                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
-                      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                       <circle cx="8.5" cy="8.5" r="1.5"/>
                       <polyline points="21 15 16 10 5 21"/>
                     </svg>
                   </div>
-                  <div class="gw-sec-info">
-                    <div class="gw-sec-title">Guess The Frame</div>
-                    <div class="gw-sec-desc">Identify the movie from a cinematic frame.</div>
-                  </div>
+                  <div class="gw-sec-title">Guess The Frame</div>
                 </div>
                 <div class="gw-checkbox-pill">
                   <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -526,16 +534,13 @@
               <div class="gw-sec-card selected" id="gwSecCard-dialogue" onclick="CreateRoomWizard.toggleSection('dialogue')">
                 <div class="gw-sec-left">
                   <div class="gw-sec-icon-wrap">
-                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                       <line x1="8" y1="9" x2="16" y2="9"/>
                       <line x1="8" y1="13" x2="13" y2="13"/>
                     </svg>
                   </div>
-                  <div class="gw-sec-info">
-                    <div class="gw-sec-title">Guess The Dialogue</div>
-                    <div class="gw-sec-desc">Guess the movie from famous dialogues.</div>
-                  </div>
+                  <div class="gw-sec-title">Guess The Dialogue</div>
                 </div>
                 <div class="gw-checkbox-pill">
                   <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -546,16 +551,12 @@
               <div class="gw-sec-card" id="gwSecCard-eyes" onclick="CreateRoomWizard.toggleSection('eyes')">
                 <div class="gw-sec-left">
                   <div class="gw-sec-icon-wrap">
-                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
-                      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
-                      <circle cx="12" cy="12" r="3.2"/>
-                      <circle cx="13" cy="11" r="1" fill="currentColor"/>
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                      <circle cx="12" cy="12" r="3"/>
                     </svg>
                   </div>
-                  <div class="gw-sec-info">
-                    <div class="gw-sec-title">Guess The Eyes</div>
-                    <div class="gw-sec-desc">Guess the character or movie from a close-up eye shot.</div>
-                  </div>
+                  <div class="gw-sec-title">Guess The Eyes</div>
                 </div>
                 <div class="gw-checkbox-pill">
                   <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -567,8 +568,7 @@
           <!-- STEP 3: ROUND CONFIGURATION -->
           <div class="gw-step-pane" id="gwStepPane-3">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">Set Your Game Length</h2>
-              <p class="gw-screen-subtitle">Configure the round distribution for your selected challenge modes.</p>
+              <h2 class="gw-screen-title">Game Length</h2>
             </div>
 
             <div class="gw-rounds-config-list" id="gwRoundsContainer">

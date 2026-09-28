@@ -272,16 +272,17 @@
   border: 3px solid var(--neo-border-black);
   border-radius: 16px;
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 13px 15px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   text-align: left;
-  gap: 13px;
+  gap: 12px;
   cursor: pointer;
   position: relative;
   transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
   touch-action: manipulation;
   user-select: none;
+  min-height: 64px;
 }
 
 .gw-diff-card:active {
@@ -303,9 +304,9 @@
 }
 
 .gw-diff-icon-wrap {
-  width: 46px;
-  height: 46px;
-  min-width: 46px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 12px;
   background: var(--neo-bg-cream);
   border: 2.5px solid var(--neo-border-black);
@@ -326,7 +327,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .gw-diff-title {
@@ -336,12 +338,13 @@
   letter-spacing: 0.02em;
   color: var(--neo-text-main);
   margin: 0;
+  line-height: 1.1;
 }
 
 .gw-diff-badge {
   display: inline-block;
   font-family: var(--font-mono, monospace);
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   padding: 2px 8px;
@@ -350,20 +353,42 @@
   border: 1.5px solid var(--neo-border-black);
   box-shadow: 1px 1px 0px var(--neo-shadow-black);
   width: fit-content;
-  margin: 2px 0;
+  line-height: 1.2;
 }
 
 .gw-badge-easy { background: var(--neo-green-light); color: #14532D; }
 .gw-badge-medium { background: var(--neo-yellow); color: #713F12; }
 .gw-badge-hard { background: #FCA5A5; color: #7F1D1D; }
 
-.gw-diff-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--neo-text-muted);
-  margin: 0;
+.gw-radio-pill {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 999px;
+  border: 2.5px solid var(--neo-border-black);
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.gw-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.gw-diff-card.selected .gw-radio-pill {
+  background: var(--neo-border-black);
+}
+
+.gw-diff-card.selected .gw-radio-dot {
+  background: #FFFFFF;
 }
 
 /* ── STEP 2: Section Multi-Select Cards (Android Format) ── */
@@ -378,7 +403,7 @@
   border: 3px solid var(--neo-border-black);
   border-radius: 16px;
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 13px 15px;
+  padding: 12px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -386,6 +411,7 @@
   transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
   touch-action: manipulation;
   user-select: none;
+  min-height: 64px;
 }
 
 .gw-sec-card:active {
@@ -425,23 +451,14 @@
   background: #FFFFFF;
 }
 
-.gw-sec-info {
-  text-align: left;
-}
-
 .gw-sec-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 900;
+  letter-spacing: 0.02em;
   color: var(--neo-text-main);
-  margin-bottom: 2px;
-}
-
-.gw-sec-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neo-text-muted);
+  line-height: 1.1;
+  margin: 0;
 }
 
 .gw-checkbox-pill {

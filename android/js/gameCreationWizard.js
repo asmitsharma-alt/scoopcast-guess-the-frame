@@ -11,32 +11,33 @@
   // ── Custom SVG Icons Library (Strict Zero-Emoji Policy) ──
   const WIZARD_ICONS = {
     popcorn: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M18 8a3 3 0 0 0-3-3 3 3 0 0 0-6 0 3 3 0 0 0-3 3"/>
-      <path d="M6 8l1.8 12.6A2 2 0 0 0 9.8 22h4.4a2 2 0 0 0 2-1.4L18 8"/>
-      <line x1="10" y1="12" x2="9" y2="22"/>
-      <line x1="14" y1="12" x2="15" y2="22"/>
-      <circle cx="12" cy="4" r="1.5" fill="currentColor"/>
+      <path d="M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4"/>
+      <path d="M6 8 8 21h8l2-13H6Z"/>
+      <line x1="10" y1="8" x2="10.5" y2="21"/>
+      <line x1="14" y1="8" x2="13.5" y2="21"/>
     </svg>`,
 
     filmReel: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <circle cx="12" cy="12" r="3"/>
-      <circle cx="7" cy="8.5" r="1.5" fill="currentColor"/>
-      <circle cx="17" cy="8.5" r="1.5" fill="currentColor"/>
-      <circle cx="7" cy="15.5" r="1.5" fill="currentColor"/>
-      <circle cx="17" cy="15.5" r="1.5" fill="currentColor"/>
+      <rect width="20" height="20" x="2" y="2" rx="2.5"/>
+      <line x1="7" x2="7" y1="2" y2="22"/>
+      <line x1="17" x2="17" y1="2" y2="22"/>
+      <line x1="2" x2="22" y1="12" y2="12"/>
+      <line x1="2" x2="7" y1="7" y2="7"/>
+      <line x1="2" x2="7" y1="17" y2="17"/>
+      <line x1="17" x2="22" y1="7" y2="7"/>
+      <line x1="17" x2="22" y1="17" y2="17"/>
     </svg>`,
 
     clapperboard: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8H4z"/>
-      <path d="m4 11 16-4v4H4z"/>
-      <path d="m7 7 3-3"/>
-      <path d="m13 5.5 3-3"/>
-      <path d="m4 11 3-3"/>
+      <rect width="20" height="14" x="2" y="7" rx="2"/>
+      <path d="M2 11h20"/>
+      <path d="m6 7 2 4"/>
+      <path d="m12 7 2 4"/>
+      <path d="m18 7 2 4"/>
     </svg>`,
 
     frame: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
       <circle cx="8.5" cy="8.5" r="1.5"/>
       <polyline points="21 15 16 10 5 21"/>
     </svg>`,
@@ -48,9 +49,8 @@
     </svg>`,
 
     eyes: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
-      <circle cx="12" cy="12" r="3.2"/>
-      <circle cx="13" cy="11" r="1" fill="currentColor"/>
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+      <circle cx="12" cy="12" r="3"/>
     </svg>`,
 
     lock: `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -384,7 +384,7 @@
         return `
           <div class="gw-round-row-card">
             <div class="gw-round-row-left">
-              <span class="gw-sec-icon-wrap" style="width:36px;height:36px;border-radius:10px;">
+              <span class="gw-sec-icon-wrap" style="width:40px;height:40px;border-radius:10px;">
                 ${meta.icon}
               </span>
               <span class="gw-round-sec-name">${meta.name}</span>
@@ -406,8 +406,8 @@
         <div class="gw-rounds-summary-bar">
           <div class="flex flex-col text-left">
             <span class="gw-summary-label">Total Match Rounds</span>
-            <span style="font-size:11px; color:${isValid ? 'var(--wizard-text-muted)' : '#f87171'};">
-              ${isValid ? 'Min 3 rounds • Max 30 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 30 rounds')}
+            <span style="font-size:11px; font-weight:700; color:${isValid ? 'var(--neo-text-muted)' : '#dc2626'};">
+              ${isValid ? '3 to 30 rounds' : (total < 3 ? 'Min 3 rounds required' : 'Max 30 rounds exceeded')}
             </span>
           </div>
           <span class="gw-summary-count">${total}</span>
