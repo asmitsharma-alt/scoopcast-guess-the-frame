@@ -1610,6 +1610,11 @@
       teamUsers: [],
 
       init() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(regs => {
+            regs.forEach(r => r.update());
+          }).catch(() => {});
+        }
         this.loadSettings();
         this.loadTeamUsers();
         this.checkAuth();
