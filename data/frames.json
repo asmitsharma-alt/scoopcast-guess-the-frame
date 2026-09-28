@@ -432,5 +432,47 @@
     "answer": "JURASSIC WORLD: FALLEN KINGDOM",
     "year": "2018",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790575285/scoopcast_frames/Jane_Eyre_2011.webp",
+    "answer": "JANE EYRE",
+    "year": "2011",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790575598/scoopcast_frames/Mad_Fate_2023.webp",
+    "answer": "MAD FATE",
+    "year": "2023",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790575676/scoopcast_frames/Black_Christmas_2019_2019.webp",
+    "answer": "BLACK CHRISTMAS (2019)",
+    "year": "2019",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790576259/scoopcast_frames/A_Summers_Tale_1996.webp",
+    "answer": "A SUMMER'S TALE",
+    "year": "1996",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790576591/scoopcast_frames/Insomnia_1997_1997.webp",
+    "answer": "INSOMNIA (1997)",
+    "year": "1997",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790576805/scoopcast_frames/Bluebeard_2009.webp",
+    "answer": "BLUEBEARD",
+    "year": "2009",
+    "tag": "classic"
   }
 ]
