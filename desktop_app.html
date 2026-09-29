@@ -4260,7 +4260,7 @@
     #playerLobbyScreen {
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 28px;
       background: radial-gradient(ellipse at 30% 30%, rgba(179, 71, 234, .12) 0%, transparent 50%),
         radial-gradient(ellipse at 70% 70%, rgba(0, 212, 255, .08) 0%, transparent 50%),
@@ -13044,6 +13044,9 @@
       vertical-align: -0.18em;
       flex-shrink: 0;
     }
+    /* Room Setup Wizard: prevent .ui-icon from squashing card icons */
+    .gw-diff-icon-wrap svg, .gw-diff-icon-wrap .ui-icon { width: 28px !important; height: 28px !important; }
+    .gw-sec-icon-wrap svg,  .gw-sec-icon-wrap .ui-icon  { width: 24px !important; height: 24px !important; }
     .ui-icon-zap { fill: #FACC15; stroke: none; }
     .ui-icon-crown { fill: #F59E0B; stroke: none; }
     .ui-icon-trophy { stroke: #D97706; }
