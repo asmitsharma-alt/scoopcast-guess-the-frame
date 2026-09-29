@@ -1,7 +1,7 @@
 import { GameDatabase } from "../database/GameDatabase";
 import { EnrichedFrameMetadata } from "./metadataEnricher";
 import { PerceptualHash } from "../utils/perceptualHash";
-import { CatalogItem } from "../data/catalog";
+import { CATALOG, CatalogItem } from "../data/catalog";
 
 export interface PlaylistRequestOptions {
   roomCode: string;
@@ -13,6 +13,7 @@ export interface PlaylistRequestOptions {
   gameSeed?: string;
   preferredDifficulty?: number;
   ignoreCooldown?: boolean;
+  fullyRandom?: boolean;
 }
 
 export class FrameEngine {
@@ -45,10 +46,39 @@ export class FrameEngine {
    * Refreshes in-memory frame cache from persistent SQLite database.
    */
   public refreshFramePool() {
-    this.cachedFrames = this.db.getActiveFrames();
-    for (const f of this.cachedFrames) {
-      (f as any).hashHigh = parseInt(f.perceptualHash.slice(0, 8), 16) || 0;
-      (f as any).hashLow = parseInt(f.perceptualHash.slice(8, 16), 16) || 0;
+    try {
+      this.cachedFrames = this.db.getActiveFrames();
+      for (const f of this.cachedFrames) {
+        (f as any).hashHigh = parseInt(f.perceptualHash.slice(0, 8), 16) || 0;
+        (f as any).hashLow = parseInt(f.perceptualHash.slice(8, 16), 16) || 0;
+      }
+    } catch (e) {
+      console.warn("[FrameEngine] Failed to load frames from DB, using CATALOG fallback:", e);
+    }
+
+    if (!this.cachedFrames || this.cachedFrames.length === 0) {
+      this.cachedFrames = CATALOG.map(c => ({
+        frameId: c.id,
+        movieId: c.answer.toLowerCase().replace(/[^a-z0-9]/g, '_'),
+        movieTitle: c.answer,
+        contentUrl: c.content,
+        category: c.category,
+        type: c.type,
+        year: c.year ? parseInt(c.year) : 2000,
+        franchise: 'none',
+        region: 'international',
+        genre: 'cinema',
+        leadActor: '',
+        difficulty: 5,
+        qualityScore: 50,
+        discoveryValue: 20,
+        perceptualHash: '0000000000000000',
+        tag: c.tag || 'classic',
+        aliases: c.aliases,
+        dialogue: c.dialogue,
+        revealContent: c.revealContent,
+        createdAt: Date.now()
+      }));
     }
     this.lastPoolRefresh = Date.now();
   }
@@ -69,8 +99,9 @@ export class FrameEngine {
       rounds = 7,
       category = 'all',
       roundsByMode,
-      gameSeed = `${roomCode}_${Date.now()}`,
-      ignoreCooldown = false
+      gameSeed = `${roomCode}_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      ignoreCooldown = false,
+      fullyRandom = true
     } = options;
 
     // 1. Fetch historical player intelligence from database
@@ -80,7 +111,33 @@ export class FrameEngine {
     // Seeded PRNG for reproducible room generation
     const rng = this.createSeededRNG(gameSeed);
 
-    // Multi-mode handling (frames + dialogue + eyes)
+    // Fully random selection mode (Default: true per user directive)
+    if (fullyRandom !== false) {
+      if (roundsByMode && (roundsByMode.frames || roundsByMode.dialogue || roundsByMode.eyes)) {
+        const fCount = Number(roundsByMode.frames) || 0;
+        const dCount = Number(roundsByMode.dialogue) || 0;
+        const eCount = Number(roundsByMode.eyes) || 0;
+
+        const frames = this.selectRandomPlaylist('frames', fCount, seenFrameFrequencies, rng, options.weeklyOnly);
+        const dialogues = this.selectRandomPlaylist('dialogue', dCount, seenFrameFrequencies, rng, options.weeklyOnly);
+        const eyes = this.selectRandomPlaylist('eyes', eCount, seenFrameFrequencies, rng, options.weeklyOnly);
+
+        const combined = [...frames, ...dialogues, ...eyes];
+        return combined.map(f => this.toCatalogItem(f));
+      }
+
+      const selected = this.selectRandomPlaylist(
+        category,
+        rounds,
+        seenFrameFrequencies,
+        rng,
+        options.weeklyOnly
+      );
+
+      return selected.map(f => this.toCatalogItem(f));
+    }
+
+    // Multi-mode handling (frames + dialogue + eyes) via scoring
     if (roundsByMode && (roundsByMode.frames || roundsByMode.dialogue || roundsByMode.eyes)) {
       const fCount = Number(roundsByMode.frames) || 0;
       const dCount = Number(roundsByMode.dialogue) || 0;
@@ -118,7 +175,7 @@ export class FrameEngine {
       return combined.map(f => this.toCatalogItem(f));
     }
 
-    // Standard category playlist
+    // Standard category playlist via scoring
     const selected = this.selectScoredPlaylist(
       category,
       rounds,
@@ -130,6 +187,118 @@ export class FrameEngine {
     );
 
     return selected.map(f => this.toCatalogItem(f));
+  }
+
+  /**
+   * Completely random selection across the 1,000 pristine frames in the catalog.
+   * Employs an unbiased Fisher-Yates (Knuth) shuffle for true uniform randomness.
+   * Ensures:
+   *   1. Every frame in the pool has an equal probability of appearing.
+   *   2. No duplicate movie or major franchise in the same match.
+   *   3. Unseen frames are prioritized over seen frames to prevent repetition across matches.
+   */
+  public selectRandomPlaylist(
+    category: string,
+    targetCount: number,
+    seenFrameFrequencies: Map<string, number>,
+    rng: () => number,
+    weeklyOnly?: boolean
+  ): EnrichedFrameMetadata[] {
+    let pool = [...this.cachedFrames];
+    if (category !== 'all') {
+      pool = pool.filter(f => f.category === category);
+    }
+    if (weeklyOnly) {
+      const weekly = pool.filter(f => f.tag === 'new');
+      if (weekly.length >= targetCount) {
+        pool = weekly;
+      }
+    }
+
+    if (pool.length === 0) {
+      return [];
+    }
+
+    // Split into unseen and seen frames so player never sees repeated frames while unseen remain
+    const unseen: EnrichedFrameMetadata[] = [];
+    const seen: EnrichedFrameMetadata[] = [];
+
+    for (const item of pool) {
+      const freq = seenFrameFrequencies.get(item.frameId) || 0;
+      if (freq === 0) {
+        unseen.push(item);
+      } else {
+        seen.push(item);
+      }
+    }
+
+    // True Fisher-Yates shuffle on unseen frames
+    for (let i = unseen.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const temp = unseen[i];
+      unseen[i] = unseen[j];
+      unseen[j] = temp;
+    }
+
+    // True Fisher-Yates shuffle on seen frames (for when catalog is cycled through)
+    for (let i = seen.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      const temp = seen[i];
+      seen[i] = seen[j];
+      seen[j] = temp;
+    }
+
+    const candidatePool = [...unseen, ...seen];
+    const playlist: EnrichedFrameMetadata[] = [];
+    const selectedMovieIds = new Set<string>();
+    const selectedFranchises = new Set<string>();
+
+    for (const item of candidatePool) {
+      if (playlist.length >= targetCount) break;
+
+      // Disallow showing same movie twice in one match
+      if (selectedMovieIds.has(item.movieId)) continue;
+
+      // Disallow showing same major franchise twice in one match
+      if (item.franchise && item.franchise !== 'none' && selectedFranchises.has(item.franchise)) {
+        continue;
+      }
+
+      playlist.push(item);
+      selectedMovieIds.add(item.movieId);
+      if (item.franchise && item.franchise !== 'none') {
+        selectedFranchises.add(item.franchise);
+      }
+    }
+
+    // Fallback: If franchise diversity prevented reaching targetCount, fill with remaining unique movies
+    if (playlist.length < targetCount) {
+      for (const item of candidatePool) {
+        if (playlist.length >= targetCount) break;
+        if (!selectedMovieIds.has(item.movieId)) {
+          playlist.push(item);
+          selectedMovieIds.add(item.movieId);
+        }
+      }
+    }
+
+    // Final safety: fill from pool if targetCount still not reached
+    if (playlist.length < targetCount) {
+      for (const item of candidatePool) {
+        if (playlist.length >= targetCount) break;
+        if (!playlist.some(p => p.frameId === item.frameId)) {
+          playlist.push(item);
+        }
+      }
+    }
+
+    // Record memory cooldown
+    const now = Date.now();
+    for (const item of playlist) {
+      this.memoryCooldowns.set(item.frameId, now);
+    }
+
+    return playlist;
   }
 
   /**

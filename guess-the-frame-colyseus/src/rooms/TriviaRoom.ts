@@ -312,6 +312,9 @@ export class TriviaRoom extends Room<GameState> {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
       }
 
+      // Generate a fresh random game seed for this match
+      this.gameSeed = `${this.state.roomCode}_${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
+
       this.buildPlaylist(category, requestedRounds, weeklyOnly, message?.roundsByMode);
       if (this.currentPlaylist.length === 0) return;
 
@@ -773,7 +776,8 @@ export class TriviaRoom extends Room<GameState> {
         category: category as any,
         weeklyOnly,
         roundsByMode,
-        gameSeed: this.gameSeed
+        gameSeed: this.gameSeed,
+        fullyRandom: true
       });
     } catch (err) {
       console.error("[TriviaRoom] FrameEngine recommendation error, falling back:", err);
@@ -781,7 +785,13 @@ export class TriviaRoom extends Room<GameState> {
 
     // Safety fallback only if engine returned nothing
     if (!this.currentPlaylist || this.currentPlaylist.length === 0) {
-      const fallbackPool = CATALOG.filter(c => category === 'all' || c.category === category);
+      const fallbackPool = [...CATALOG].filter(c => category === 'all' || c.category === category);
+      for (let i = fallbackPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = fallbackPool[i];
+        fallbackPool[i] = fallbackPool[j];
+        fallbackPool[j] = temp;
+      }
       this.currentPlaylist = fallbackPool.slice(0, Math.min(count, fallbackPool.length));
     }
   }
