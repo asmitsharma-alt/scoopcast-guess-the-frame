@@ -226,15 +226,17 @@ const UI = {
         initialAvatar: this.selectedAvatar,
         onSelect: (url, meta) => {
           this.selectAvatar(url);
-          // Auto-close studio after picking — update chip preview on home screen
           this.closeAvatarStudio();
-          // Update the first chip to show the chosen avatar as a preview hint
-          this._updateExplorePreview(url, meta);
+          if (typeof this.showToast === 'function') {
+            this.showToast('Selected ' + (meta?.name || 'Avatar') + '!');
+          }
         }
       });
       AvatarPicker.renderCategories('androidCategoryBar');
       AvatarPicker.renderGrid('androidAvatarGrid', 'androidLoadingIndicator');
     }
+    // Ensure home preview and chips are fully initialized
+    this.selectAvatar(this.selectedAvatar);
   },
 
   // Shows the selected studio avatar as a mini preview chip next to "Explore" button
@@ -350,22 +352,104 @@ const UI = {
   selectAvatar(av) {
     this.selectedAvatar = av;
     localStorage.setItem('gtf_m_avatar', av);
+    localStorage.setItem('gtf_player_avatar', av);
     if (typeof GameClient !== 'undefined') GameClient.playerAvatar = av;
 
+    let meta = null;
     if (typeof AvatarPicker !== 'undefined') {
       AvatarPicker.selectedAvatar = av;
+      meta = AvatarPicker.getAvatarMeta(av);
       AvatarPicker.updateAllPreviews();
     } else {
-      const mobImg = document.getElementById('mobileTriggerImg');
-      const mobName = document.getElementById('mobileTriggerName');
-      if (mobImg) mobImg.src = this.getAvatarSrc(av);
-      if (mobName) mobName.innerText = av ? (av.charAt(0).toUpperCase() + av.slice(1)) : 'Aman';
+      meta = {
+        id: av,
+        name: av ? (av.charAt(0).toUpperCase() + av.slice(1)) : 'Aman',
+        categoryLabel: 'Founders',
+        url: this.getAvatarSrc(av),
+        color: 'facc15'
+      };
     }
 
-    document.querySelectorAll('.avatar-chip').forEach(chip => {
+    this._updateSelectedAvatarUI(av, meta);
+  },
+
+  _updateSelectedAvatarUI(av, meta) {
+    if (!meta) meta = { name: 'Player', url: this.getAvatarSrc(av), color: 'facc15' };
+
+    // 1. Update Preview Card
+    const previewImg = document.getElementById('selectedAvatarPreviewImg');
+    const previewFrame = document.getElementById('selectedAvatarPreviewFrame');
+    const previewName = document.getElementById('selectedAvatarName');
+    const previewTag = document.getElementById('selectedAvatarCategoryTag');
+
+    if (previewImg) {
+      previewImg.src = meta.url;
+      previewImg.alt = meta.name || 'Avatar';
+    }
+    if (previewFrame) {
+      previewFrame.style.backgroundColor = meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'));
+    }
+    if (previewName) {
+      previewName.textContent = (meta.name || 'Selected').toUpperCase();
+    }
+    if (previewTag) {
+      previewTag.textContent = (meta.categoryLabel || meta.category || 'Character').toUpperCase();
+    }
+
+    // 2. Update Founder Chips
+    const isFounder = ['aman', 'amish', 'aziz', 'vish'].some(k => 
+      av === k || (av && (av.includes('/' + k + '.') || av.toLowerCase() === k))
+    );
+
+    document.querySelectorAll('.avatar-chip:not(.custom-chip)').forEach(chip => {
       const chipAv = chip.dataset.avatar;
-      chip.classList.toggle('selected', chipAv === av || (av && av.includes('/' + chipAv + '.')));
+      const isSelected = chipAv === av || (av && av.includes('/' + chipAv + '.'));
+      chip.classList.toggle('selected', isSelected);
     });
+
+    // 3. Update or Insert Custom 5th Chip
+    let customChip = document.getElementById('customAvatarChip');
+    if (!isFounder && av) {
+      if (!customChip) {
+        customChip = document.createElement('div');
+        customChip.id = 'customAvatarChip';
+        customChip.className = 'avatar-chip selected custom-chip';
+        customChip.onclick = () => {
+          this.selectAvatar(av);
+          if (typeof Haptics !== 'undefined') Haptics.tap();
+        };
+        const picker = document.getElementById('avatarPicker');
+        if (picker) picker.appendChild(customChip);
+      }
+      customChip.dataset.avatar = av;
+      customChip.classList.add('selected');
+      const bg = meta.isKnownDark ? '#111827' : ('#' + (meta.color || 'facc15'));
+      const displayName = (meta.name || 'Hero').split(' ')[0].slice(0, 7);
+      customChip.innerHTML = `
+        <div class="avatar-chip-img-wrap" style="background-color: ${bg};">
+          <img src="${meta.url}" alt="${meta.name}" referrerpolicy="no-referrer" onerror="AvatarPicker.handleImgError(this)" />
+        </div>
+        <span class="avatar-chip-name">${displayName}</span>
+      `;
+    } else if (customChip) {
+      customChip.classList.remove('selected');
+    }
+
+    // 4. Update Explore Button Label & Accent
+    const exploreBtn = document.getElementById('avatarExploreBtn') || document.querySelector('.avatar-explore-btn');
+    const exploreLabel = document.getElementById('exploreBtnLabel');
+    if (exploreBtn) {
+      if (!isFounder && av) {
+        const shortName = (meta.name || 'Custom').split(' ')[0].toUpperCase();
+        if (exploreLabel) exploreLabel.textContent = `Active: ${shortName} • Change (1,800+) →`;
+        exploreBtn.style.background = '#fef9c3';
+        exploreBtn.style.borderColor = '#121212';
+      } else {
+        if (exploreLabel) exploreLabel.textContent = '1,800+ Avatars Studio →';
+        exploreBtn.style.background = '#f1f5f9';
+        exploreBtn.style.borderColor = '';
+      }
+    }
   },
 
   bindButtons() {

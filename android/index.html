@@ -343,7 +343,29 @@
           <label class="input-label" for="playerNameInput">Your Nickname</label>
           <input type="text" id="playerNameInput" class="nb-input" placeholder="e.g. Cinephile" maxlength="16" autocomplete="off" autocorrect="off">
 
-          <label class="input-label">Choose Avatar</label>
+          <label class="input-label">Selected Avatar</label>
+          <div class="mp-selected-avatar-preview-card" id="selectedAvatarPreviewCard" onclick="UI.openAvatarStudio()">
+            <div class="mp-selected-avatar-frame" id="selectedAvatarPreviewFrame">
+              <img id="selectedAvatarPreviewImg" src="/avvtar/aman.svg" onerror="this.onerror=null; this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';" alt="Aman" referrerpolicy="no-referrer" onerror="AvatarPicker.handleImgError(this)" />
+              <span class="mp-selected-check-badge">
+                <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </div>
+            <div class="mp-selected-avatar-info">
+              <div class="mp-selected-avatar-label-row">
+                <span class="mp-selected-avatar-badge-tag" id="selectedAvatarCategoryTag">FOUNDERS</span>
+                <span class="mp-selected-avatar-hint">Tap to explore 1,800+</span>
+              </div>
+              <div class="mp-selected-avatar-name" id="selectedAvatarName">AMAN</div>
+            </div>
+            <div class="mp-selected-avatar-action-btn">
+              <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
+              <span>1,800+</span>
+              <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <label class="input-label" style="margin-top: 10px;">Quick Pick</label>
           <div class="avatar-grid-row" id="avatarPicker">
             <div class="avatar-chip selected" data-avatar="aman">
               <div class="avatar-chip-img-wrap">
@@ -353,26 +375,26 @@
             </div>
             <div class="avatar-chip" data-avatar="amish">
               <div class="avatar-chip-img-wrap">
-                <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg" alt="Amish" />
+                <img src="/avvtar/amish.svg" onerror="this.onerror=null; this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799904/scoopcast/avvtar/amish.svg';" alt="Amish" />
               </div>
               <span class="avatar-chip-name">Amish</span>
             </div>
             <div class="avatar-chip" data-avatar="aziz">
               <div class="avatar-chip-img-wrap">
-                <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg" alt="Aziz" />
+                <img src="/avvtar/aziz.svg" onerror="this.onerror=null; this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799958/scoopcast/avvtar/aziz.svg';" alt="Aziz" />
               </div>
               <span class="avatar-chip-name">Aziz</span>
             </div>
             <div class="avatar-chip" data-avatar="vish">
               <div class="avatar-chip-img-wrap">
-                <img src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg" alt="Vish" />
+                <img src="/avvtar/vish.svg" onerror="this.onerror=null; this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799966/scoopcast/avvtar/vish.svg';" alt="Vish" />
               </div>
               <span class="avatar-chip-name">Vish</span>
             </div>
           </div>
-          <button class="avatar-explore-btn" onclick="UI.openAvatarStudio()" type="button">
+          <button class="avatar-explore-btn" id="avatarExploreBtn" onclick="UI.openAvatarStudio()" type="button">
             <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
-            1,800+ Avatars →
+            <span id="exploreBtnLabel">1,800+ Avatars Studio →</span>
           </button>
         </div>
 

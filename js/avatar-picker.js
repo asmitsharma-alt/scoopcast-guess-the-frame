@@ -224,13 +224,16 @@
           btn.title = `${item.name} (${item.categoryLabel || item.category})`;
           btn.onclick = () => this.selectAvatar(item.url);
 
+          const initialLetter = (item.name.replace(/[^a-zA-Z0-9]/g, '').charAt(0) || '★').toUpperCase();
           btn.innerHTML = `
+            <span class="mp-avatar-initial">${initialLetter}</span>
             <img
               src="${item.url}"
               alt="${item.name}"
-              loading="lazy"
               decoding="async"
+              referrerpolicy="no-referrer"
               class="${zoomClass}"
+              onload="if(this.previousElementSibling) this.previousElementSibling.style.display='none';"
               onerror="AvatarPicker.handleImgError(this)"
             />
             ${isSelected ? `<span class="mp-avatar-item-check">${CHECK_SVG}</span>` : ''}
@@ -280,7 +283,7 @@
       const bg = meta.isKnownDark ? '#111827' : `#${meta.color || 'facc15'}`;
 
       // Update preview images
-      ['heroPreviewImg', 'hostPreviewImg', 'mobileTriggerImg', 'androidTriggerImg'].forEach(id => {
+      ['heroPreviewImg', 'hostPreviewImg', 'mobileTriggerImg', 'androidTriggerImg', 'selectedAvatarPreviewImg'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           el.src = meta.url;
@@ -290,19 +293,19 @@
       });
 
       // Update frame background colors
-      ['heroPreviewFrame', 'hostPreviewFrame', 'mobileTriggerFrame', 'androidTriggerFrame'].forEach(id => {
+      ['heroPreviewFrame', 'hostPreviewFrame', 'mobileTriggerFrame', 'androidTriggerFrame', 'selectedAvatarPreviewFrame'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.backgroundColor = bg;
       });
 
       // Update character names
-      ['heroCharName', 'hostCharName', 'mobileTriggerName', 'androidTriggerName'].forEach(id => {
+      ['heroCharName', 'hostCharName', 'mobileTriggerName', 'androidTriggerName', 'selectedAvatarName'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = meta.name || 'Selected';
       });
 
       // Update category tags
-      ['heroCatTag', 'hostCatTag', 'mobileTriggerCat', 'androidTriggerCategory'].forEach(id => {
+      ['heroCatTag', 'hostCatTag', 'mobileTriggerCat', 'androidTriggerCategory', 'selectedAvatarCategoryTag'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = meta.categoryLabel || meta.category || 'Character';
       });
@@ -426,7 +429,13 @@
         img.className = 'img-contain-fit';
         return;
       }
-      img.src = `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(seed)}&backgroundColor=facc15`;
+      // Instant Neobrutalist Initial SVG Fallback (0 network delay, 100% reliable)
+      const cleanChar = (seed.replace(/[^a-zA-Z0-9]/g, '').charAt(0) || '★').toUpperCase();
+      const palette = ['facc15', 'ff6b9d', '38bdf8', '84cc16', 'fb923c', 'a855f7', 'ec4899', '14b8a6'];
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+      const bg = palette[Math.abs(hash) % palette.length];
+      img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="16" fill="%23${bg}"/><circle cx="50" cy="50" r="32" fill="%23121212" opacity="0.1"/><text x="50" y="64" font-family="-apple-system,BlinkMacSystemFont,monospace" font-size="46" font-weight="900" text-anchor="middle" fill="%23121212">${encodeURIComponent(cleanChar)}</text></svg>`;
       img.className = 'img-contain-fit';
     },
 

@@ -627,3 +627,23 @@
     gap: 6px !important;
   }
 }
+
+/* Character Initial Placeholder while avatar image loads */
+.mp-avatar-initial {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  color: rgba(18, 18, 18, 0.45);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.mp-circular-avatar-btn img {
+  position: relative;
+  z-index: 1;
+}
