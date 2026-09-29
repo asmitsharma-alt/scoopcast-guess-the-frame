@@ -824,6 +824,11 @@ const UI = {
 
   showScreen(screenId) {
     this.currentScreen = screenId;
+    if (screenId === 'gameScreen') {
+      document.body.classList.add('in-game');
+    } else {
+      document.body.classList.remove('in-game');
+    }
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(screenId);
     if (target) {

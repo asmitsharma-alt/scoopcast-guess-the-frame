@@ -7,15 +7,15 @@
 :root {
   --neo-bg-cream: #FFFDF5;
   --neo-card-white: #FFFFFF;
-  --neo-border-black: #1A1A1A;
-  --neo-shadow-black: #1A1A1A;
+  --neo-border-black: #121212;
+  --neo-shadow-black: #121212;
   --neo-yellow: #FACC15;
   --neo-yellow-light: #FEF08A;
   --neo-green: #22C55E;
   --neo-green-light: #86EFAC;
   --neo-blue-light: #CAE6FF;
   --neo-pink-light: #FFD8DF;
-  --neo-text-main: #1A1A1A;
+  --neo-text-main: #121212;
   --neo-text-muted: #555555;
   --wizard-accent-gold: #FACC15;
   --wizard-text-muted: #555555;

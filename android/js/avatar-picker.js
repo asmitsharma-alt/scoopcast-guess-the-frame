@@ -435,7 +435,8 @@
       let hash = 0;
       for (let i = 0; i < seed.length; i++) hash = seed.charCodeAt(i) + ((hash << 5) - hash);
       const bg = palette[Math.abs(hash) % palette.length];
-      img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="16" fill="%23${bg}"/><circle cx="50" cy="50" r="32" fill="%23121212" opacity="0.1"/><text x="50" y="64" font-family="-apple-system,BlinkMacSystemFont,monospace" font-size="46" font-weight="900" text-anchor="middle" fill="%23121212">${encodeURIComponent(cleanChar)}</text></svg>`;
+      const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="16" fill="#${bg}"/><circle cx="50" cy="50" r="32" fill="#121212" opacity="0.12"/><text x="50" y="64" font-family="Lilita One, DM Sans, sans-serif" font-size="46" font-weight="900" text-anchor="middle" fill="#121212">${cleanChar}</text></svg>`;
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgContent);
       img.className = 'img-contain-fit';
     },
 

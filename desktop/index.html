@@ -322,6 +322,23 @@
     }
 
     :root {
+      /* ── NEOBRUTALISM DESIGN SYSTEM TOKENS ── */
+      --nb-bg: #FFFDF5;
+      --nb-ink: #121212;
+      --nb-yellow: #FACC15;
+      --nb-pink: #FF6B9D;
+      --nb-blue: #38BDF8;
+      --nb-green: #22C55E;
+      --nb-purple: #A855F7;
+      --nb-orange: #FB923C;
+      --nb-card: #FFFFFF;
+      --nb-border: 3px solid #121212;
+      --nb-border-sm: 2px solid #121212;
+      --nb-border-lg: 4px solid #121212;
+      --nb-shadow: 4px 4px 0px #121212;
+      --nb-shadow-sm: 2px 2px 0px #121212;
+      --nb-shadow-lg: 8px 8px 0px #121212;
+      --nb-shadow-press: 1px 1px 0px #121212;
       /* ── CLAYMORPHISM PALETTE (light pastel) ── */
       --bg-dark: #e9e4ff;
       --bg-light: #ffe9f3;
@@ -6454,7 +6471,7 @@
       animation: nbTimerUrgent 0.5s infinite alternate !important;
     }
     @keyframes nbTimerUrgent {
-      0% { transform: scale(1); box-shadow: 4px 4px 0 #1a1a1a; }
+      0% { transform: scale(1); box-shadow: 4px 4px 0 #121212; }
       100% { transform: scale(1.08); box-shadow: 6px 6px 0 #ef4444; }
     }
     #gameScreen .timer-circle .tbg {
@@ -8762,7 +8779,7 @@
       flex: 0 1 auto;
       min-width: 160px;
       height: 50px;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 14px;
       padding: 0 22px;
       cursor: pointer;
@@ -8787,31 +8804,31 @@
     }
     .h-card-create {
       background: #FF6B9D;
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
       color: #FFFFFF;
     }
     .h-card-create:hover {
       transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 #1a1a1a;
+      box-shadow: 6px 6px 0 #121212;
     }
     .h-card-join {
       background: #3B82F6;
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
       color: #FFFFFF;
     }
     .h-card-join:hover {
       transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 #1a1a1a;
+      box-shadow: 6px 6px 0 #121212;
     }
     .h-card-local {
       display: none !important;
       background: #FACC15;
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
       color: #1a1a1a;
     }
     .h-card-mp:active {
       transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 #1a1a1a;
+      box-shadow: 1px 1px 0 #121212;
     }
     .h-card-title-lg {
       font-size: 16px;
@@ -8929,7 +8946,7 @@
     .mp-modal-close:hover {
       background: #ff529a;
       transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .mp-form-group {
       margin-bottom: 18px;
@@ -8946,7 +8963,7 @@
     .mp-input {
       width: 100%;
       padding: 14px 16px;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 12px;
       font-size: 16px;
       font-weight: 700;
@@ -8977,7 +8994,7 @@
       gap: 10px;
     }
     .mp-avatar-option {
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 12px;
       padding: 10px;
       text-align: center;
@@ -8988,7 +9005,7 @@
     }
     .mp-avatar-option:hover {
       transform: translateY(-2px);
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
     }
     .mp-avatar-option.selected {
       background: #ffe9f3;
@@ -9011,7 +9028,7 @@
     .mp-btn-primary {
       width: 100%;
       padding: 16px;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 14px;
       background: #ff7eb6;
       font-size: 18px;
@@ -9019,14 +9036,14 @@
       font-family: inherit;
       color: #1a1a1a;
       cursor: pointer;
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
       transition: all 0.15s ease;
       margin-top: 10px;
     }
     .mp-btn-primary:hover {
       background: #ff65a8;
       transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 #1a1a1a;
+      box-shadow: 6px 6px 0 #121212;
     }
     .mp-btn-primary:active {
       transform: translate(2px, 2px);
@@ -9041,7 +9058,7 @@
       justify-content: space-between;
       gap: 12px;
       background: #fff;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 16px;
       padding: 14px 20px;
       box-shadow: 5px 5px 0 #1a1a1a;
@@ -9092,17 +9109,17 @@
     }
     .room-btn:hover {
       transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .room-btn:active {
       transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0 #1a1a1a;
+      box-shadow: 1px 1px 0 #121212;
     }
 
     /* Host Settings in Lobby */
     .host-settings-box {
       background: #F3EAFF;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 16px;
       padding: 16px 20px;
       box-shadow: 4px 4px 0 #a06bd6;
@@ -9173,7 +9190,7 @@
       border: 4px solid #1a1a1a;
       border-radius: 18px;
       padding: 6px;
-      box-shadow: 6px 6px 0 #1a1a1a;
+      box-shadow: 6px 6px 0 #121212;
     }
     .online-guess-input {
       flex: 1;
@@ -9192,7 +9209,7 @@
     }
     .online-guess-btn {
       background: #ff7eb6;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 12px;
       padding: 0 24px;
       font-size: 16px;
@@ -9207,11 +9224,11 @@
     .online-guess-btn:hover {
       background: #ff60a5;
       transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .online-guess-btn:active {
       transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0 #1a1a1a;
+      box-shadow: 1px 1px 0 #121212;
     }
     .guess-feedback-pill {
       padding: 6px 16px;
@@ -9230,19 +9247,19 @@
       display: inline-flex;
       background: #3FBF8F;
       color: #fff;
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .guess-feedback-wrong {
       display: inline-flex;
       background: #FF6B6B;
       color: #fff;
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .guess-feedback-warning {
       display: inline-flex;
       background: #FFE066;
       color: #1a1a1a;
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
     }
     .shake-input {
       animation: shakeAnim 0.35s ease;
@@ -9269,10 +9286,10 @@
       left: 50%;
       transform: translateX(-50%);
       background: #FFF9DB;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 14px;
       padding: 6px 16px;
-      box-shadow: 4px 4px 0 #1a1a1a;
+      box-shadow: 4px 4px 0 #121212;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -9292,7 +9309,7 @@
       font-family: inherit;
       cursor: pointer;
       background: #fff;
-      box-shadow: 1px 1px 0 #1a1a1a;
+      box-shadow: 1px 1px 0 #121212;
     }
     .hfb-btn:hover {
       background: #eee;
@@ -9348,9 +9365,9 @@
       width: 340px;
       flex-shrink: 0;
       background: #ffffff;
-      border: 3px solid #1a1a1a;
+      border: 3px solid #121212;
       border-radius: 20px;
-      box-shadow: 6px 6px 0 #1a1a1a;
+      box-shadow: 6px 6px 0 #121212;
       display: flex;
       flex-direction: column;
       height: calc(100vh - 160px);
@@ -10604,7 +10621,7 @@
       border-radius: 10px;
       padding: 8px 12px;
       margin: 6px 0;
-      box-shadow: 3px 3px 0 #1a1a1a;
+      box-shadow: 3px 3px 0 #121212;
       text-align: center;
       animation: ansSlideUp 0.3s ease both;
     }
@@ -13414,7 +13431,7 @@
           <!-- 1. Game Mode / Settings -->
           <div class="mp-form-group">
             <label class="mp-label">Game Mode</label>
-            <div style="height: 52px; min-height: 52px; max-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #FFFDF0; border: 3px solid #1a1a1a; border-radius: 12px; box-shadow: 3px 3px 0 rgba(0,0,0,0.1); font-family: var(--font-mono, monospace); font-weight: 800; font-size: 13px;">
+            <div style="height: 52px; min-height: 52px; max-height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; background: #FFFDF0; border: 3px solid #121212; border-radius: 12px; box-shadow: 3px 3px 0 rgba(0,0,0,0.1); font-family: var(--font-mono, monospace); font-weight: 800; font-size: 13px;">
               <span style="display:flex; align-items:center; gap:6px;">
                 <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 TRIVIA MIX
@@ -13686,9 +13703,9 @@
         </p>
 
         <!-- Room Code & Character Summary Card -->
-        <div style="background: #fafaf4; border: 3px solid #1a1a1a; border-radius: 12px; padding: 14px; margin-bottom: 16px; box-shadow: 4px 4px 0 #1a1a1a; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <div style="background: #fafaf4; border: 3px solid #121212; border-radius: 12px; padding: 14px; margin-bottom: 16px; box-shadow: 4px 4px 0 #121212; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div id="rejoinAvatarContainer" style="width: 52px; height: 52px; border-radius: 12px; border: 3px solid #1a1a1a; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #FF6B9D;">
+            <div id="rejoinAvatarContainer" style="width: 52px; height: 52px; border-radius: 12px; border: 3px solid #121212; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #FF6B9D;">
               <img id="rejoinAvatarImg" src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar" />
             </div>
             <div style="text-align: left;">

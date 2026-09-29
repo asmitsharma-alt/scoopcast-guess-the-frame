@@ -7,8 +7,8 @@
 :root {
   --neo-bg-cream: #fffdf5;
   --neo-card-white: #ffffff;
-  --neo-border-black: #1a1a1a;
-  --neo-shadow-black: #1a1a1a;
+  --neo-border-black: #121212;
+  --neo-shadow-black: #121212;
   --neo-yellow: #facc15;
   --neo-yellow-light: #fef08a;
   --neo-green: #22c55e;
@@ -16,7 +16,7 @@
   --neo-blue-light: #cae6ff;
   --neo-pink-light: #ffd8df;
   --neo-purple: #c084fc;
-  --neo-text-main: #1a1a1a;
+  --neo-text-main: #121212;
   --neo-text-muted: #555555;
 }
 
@@ -743,7 +743,7 @@
   background: var(--neo-green);
   border: 3px solid var(--neo-border-black);
   box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  color: #1a1a1a;
+  color: #121212;
   font-family: 'Lilita One', var(--font-display, sans-serif);
   font-size: 17px;
   font-weight: 900;
