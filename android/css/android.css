@@ -2879,25 +2879,29 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
 /* Toast */
 #mobileToast {
   position: fixed;
-  top: 72px;
+  bottom: 96px;
   left: 50%;
-  transform: translateX(-50%) translateY(-20px);
+  transform: translateX(-50%) translateY(20px);
   background: var(--nb-ink);
   border: 2px solid var(--nb-yellow);
   color: #fff;
   font-weight: 800;
   font-size: 0.88rem;
   padding: 8px 16px;
-  border-radius: 8px;
-  box-shadow: var(--nb-shadow);
-  z-index: 999;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
   pointer-events: none;
   opacity: 0;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  max-width: 90vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #mobileToast.visible {

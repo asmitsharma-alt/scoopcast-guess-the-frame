@@ -266,7 +266,7 @@
   <link rel="stylesheet" href="/android/css/game-wizard.css">
   <script defer src="/android/js/avatars-data.js"></script>
   <script defer src="/android/js/avatar-picker.js"></script>
-  <script src="avvtar/avatar_data.js"></script>
+  <script defer src="/android/avvtar/avatar_data.js"></script>
   
   <!-- Lucide Icons Engine (Local Bundle + CDN Fallback: https://lucide.dev/guide/) -->
   <script src="/android/js/lucide.min.js"></script>
@@ -277,15 +277,6 @@
   </script>
   <!-- SVG Icon Library -->
   <script src="/android/js/icons.js"></script>
-
-  <!-- Colyseus Realtime Multiplayer Engine -->
-  <!-- Colyseus Game Engine (Bundled Locally + CDN Fallback) -->
-  <script src="/android/js/colyseus.js"></script>
-  <script>
-    if (typeof Colyseus === 'undefined') {
-      document.write('<script src="https://unpkg.com/colyseus.js@^0.15.0/dist/colyseus.js"><\/script>');
-    }
-  </script>
   <!-- Preload Cinema Wallpaper Background -->
   <link rel="preload" as="image" href="bg/guess_the_frame.png" type="image/png">
   <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp" type="image/webp">

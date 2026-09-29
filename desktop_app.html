@@ -14177,20 +14177,6 @@
                   </div>
                 </div>
 
-                <!-- New Weekly Drops Toggle Card (Default ON) -->
-                <div id="weeklyToggleDesktopCard" class="flex items-center justify-between bg-neo-yellow border-2 border-on-surface rounded-xl p-3.5 neo-shadow-sm shrink-0">
-                  <div class="flex items-center gap-2.5">
-                    <span class="material-symbols-outlined text-xl text-on-surface">bolt</span>
-                    <div class="flex flex-col text-left">
-                      <span class="font-label-bold text-xs uppercase font-black text-on-surface tracking-wide">New Weekly Drops</span>
-                      <span id="weeklySubtextDesktop" class="font-label-sm text-[10px] text-on-surface/80 font-bold">Playing this week's fresh frames</span>
-                    </div>
-                  </div>
-                  <label class="nb-switch" style="position:relative; display:inline-block; width:44px; height:24px; margin:0; cursor:pointer;">
-                    <input type="checkbox" id="toggleWeeklyDropsDesktop" checked style="opacity:0; width:0; height:0;" onchange="MultiplayerEngine.onWeeklyToggleChange(this.checked)">
-                    <span class="nb-slider"></span>
-                  </label>
-                </div>
 
               </div>
             </section>
@@ -14458,15 +14444,6 @@
           <div id="htaClientStatus" class="hta-client-status" style="display:none;">
             <span class="hta-spinner"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
             <span id="htaClientStatusText">Reading rules... Waiting for host (10s)</span>
-          </div>
-
-          <!-- WEEKLY DROPS TOGGLE -->
-          <div class="weekly-toggle-desktop-wrapper" id="weeklyToggleDesktopWrapper" style="margin-bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
-            <label class="nb-switch-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; background: #111; padding: 7px 16px; border: 2.5px solid #00ff66; border-radius: 999px; box-shadow: 0 4px 0 #00aa44; user-select: none;">
-              <input type="checkbox" id="toggleWeeklyDropsDesktopHta" checked style="accent-color: #00ff66; width: 18px; height: 18px; cursor: pointer;" onchange="MultiplayerEngine.onWeeklyToggleChange(this.checked)">
-              <span style="font-family: 'Space Grotesk', -apple-system, sans-serif; font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px;">✨ New Weekly Drops (Default: ON)</span>
-            </label>
-            <span id="weeklySubtextDesktopHta" style="font-size: 11px; color: #888; font-weight: 700;">Playing this week's fresh frames</span>
           </div>
 
           <div class="hta-btn-container">
@@ -18091,7 +18068,7 @@
         if (param) return param;
         const saved = localStorage.getItem('gtf_colyseus_url');
         if (saved) return saved;
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        if (urlParams.has('local')) {
           return 'ws://localhost:2567';
         }
         return 'wss://guess-the-frame-colyseus.onrender.com';
@@ -18101,7 +18078,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const param = urlParams.get('colyseus_http');
         if (param) return param;
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        if (urlParams.has('local')) {
           return 'http://localhost:2567';
         }
         return 'https://guess-the-frame-colyseus.onrender.com';
@@ -18109,17 +18086,17 @@
 
       async wakeServerIfNeeded(onProgress) {
         const httpEndpoint = this.getHttpEndpoint();
-        const maxRetries = 10;
+        const maxRetries = 4;
         for (let i = 0; i < maxRetries; i++) {
           try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
-            const res = await fetch(`${httpEndpoint}/ping`, { signal: controller.signal, cache: 'no-store' });
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+            const res = await fetch(`${httpEndpoint}/health`, { signal: controller.signal, cache: 'no-store' });
             clearTimeout(timeoutId);
             if (res.ok) return true;
           } catch (e) {
             if (onProgress) onProgress(i + 1, maxRetries);
-            await new Promise(r => setTimeout(r, 2000));
+            await new Promise(r => setTimeout(r, 1500));
           }
         }
         return false;
@@ -18127,7 +18104,7 @@
 
       prewarmServer() {
         try {
-          fetch(`${this.getHttpEndpoint()}/ping`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+          fetch(`${this.getHttpEndpoint()}/health`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
         } catch (e) {}
       },
 
@@ -18365,7 +18342,7 @@
       openCreateModal() {
         // Pre-warm Colyseus backend when modal is opened
         try {
-          fetch('https://guess-the-frame-colyseus.onrender.com/ping', { mode: 'no-cors' }).catch(() => {});
+          fetch('https://guess-the-frame-colyseus.onrender.com/health', { mode: 'no-cors' }).catch(() => {});
         } catch(e) {}
 
         if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.open) {

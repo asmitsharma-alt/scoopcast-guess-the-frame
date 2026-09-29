@@ -732,9 +732,12 @@ const UI = {
     const breakdownEl = document.getElementById('lobbyLockedBreakdown');
     if (breakdownEl) {
       const pills = [];
-      if (counts.frames) pills.push(`<span class="breakdown-pill">🎬 ${counts.frames} Frames</span>`);
-      if (counts.eyes) pills.push(`<span class="breakdown-pill">👀 ${counts.eyes} Eyes</span>`);
-      if (counts.dialogue) pills.push(`<span class="breakdown-pill">💬 ${counts.dialogue} Dialogue</span>`);
+      const clapperIcon = (typeof SvgIcons !== "undefined" && SvgIcons.get) ? SvgIcons.get("clapper", "", "13px") : "";
+      const eyeIcon = (typeof SvgIcons !== "undefined" && SvgIcons.get) ? SvgIcons.get("eye", "", "13px") : "";
+      const quoteIcon = (typeof SvgIcons !== "undefined" && SvgIcons.get) ? SvgIcons.get("quote", "", "13px") : "";
+      if (counts.frames) pills.push(`<span class="breakdown-pill frames">${clapperIcon}<span>${counts.frames} Frames</span></span>`);
+      if (counts.eyes) pills.push(`<span class="breakdown-pill eyes">${eyeIcon}<span>${counts.eyes} Eyes</span></span>`);
+      if (counts.dialogue) pills.push(`<span class="breakdown-pill dialogue">${quoteIcon}<span>${counts.dialogue} Dialogue</span></span>`);
       breakdownEl.innerHTML = pills.join('');
     }
 

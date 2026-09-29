@@ -469,21 +469,31 @@
       this.totalAssets = Math.max(1, assetUrls.length);
 
       // Report initial download state
-      if (onProgress) onProgress(5, 'downloading');
+      if (onProgress) onProgress(15, 'downloading');
 
-      // Preload in batches of 4 for low latency
-      const BATCH_SIZE = 4;
-      for (let i = 0; i < assetUrls.length; i += BATCH_SIZE) {
-        const batch = assetUrls.slice(i, i + BATCH_SIZE);
-        await Promise.allSettled(batch.map(item => this.verifySingleAsset(item)));
-        
-        const currentProgress = Math.min(92, Math.round(((i + batch.length) / this.totalAssets) * 90));
-        if (onProgress) onProgress(currentProgress, 'downloading');
+      // Preload in batches with overall maximum timeout of 2 seconds
+      const BATCH_SIZE = 6;
+      let isTimedOut = false;
+      const overallTimer = setTimeout(() => {
+        isTimedOut = true;
+      }, 2000);
+
+      try {
+        for (let i = 0; i < assetUrls.length; i += BATCH_SIZE) {
+          if (isTimedOut) break;
+          const batch = assetUrls.slice(i, i + BATCH_SIZE);
+          await Promise.allSettled(batch.map(item => this.verifySingleAsset(item)));
+          
+          const currentProgress = Math.min(92, Math.round(((i + batch.length) / this.totalAssets) * 90));
+          if (onProgress) onProgress(currentProgress, 'downloading');
+        }
+      } finally {
+        clearTimeout(overallTimer);
       }
 
-      // Verification phase
+      // Quick verification phase
       if (onProgress) onProgress(95, 'verifying');
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 100));
 
       this.isPreloading = false;
       if (onProgress) onProgress(100, 'ready');
@@ -492,16 +502,26 @@
 
     verifySingleAsset(item) {
       return new Promise(resolve => {
+        let settled = false;
+        const done = (ok) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timeoutId);
+          if (ok) this.verifiedCount++; else this.failedCount++;
+          resolve(ok);
+        };
+        const timeoutId = setTimeout(() => done(false), 1200);
+
         if (item.type === 'audio') {
           const audio = new Audio();
           audio.preload = 'auto';
-          audio.oncanplaythrough = () => { this.verifiedCount++; resolve(true); };
-          audio.onerror = () => { this.failedCount++; resolve(false); };
+          audio.oncanplaythrough = () => done(true);
+          audio.onerror = () => done(false);
           audio.src = item.url;
         } else {
           const img = new Image();
-          img.onload = () => { this.verifiedCount++; resolve(true); };
-          img.onerror = () => { this.failedCount++; resolve(false); };
+          img.onload = () => done(true);
+          img.onerror = () => done(false);
           img.src = item.url;
         }
       });

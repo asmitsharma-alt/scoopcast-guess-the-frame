@@ -419,12 +419,11 @@ const GameClient = {
                            window.location.protocol === 'file:' ||
                            /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    if (isMobileDevice && !urlParams.has('local')) {
-      return 'wss://guess-the-frame-colyseus.onrender.com';
+    if (urlParams.has('local')) {
+      return 'ws://localhost:2567';
     }
 
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return isLocal ? 'ws://localhost:2567' : 'wss://guess-the-frame-colyseus.onrender.com';
+    return 'wss://guess-the-frame-colyseus.onrender.com';
   },
 
   getHttpEndpoint() {
@@ -434,32 +433,26 @@ const GameClient = {
     const saved = localStorage.getItem('gtf_colyseus_http_url');
     if (saved) return saved;
 
-    const isMobileDevice = window.Capacitor !== undefined ||
-                           window.location.protocol === 'capacitor:' ||
-                           window.location.protocol === 'file:' ||
-                           /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobileDevice && !urlParams.has('local')) {
-      return 'https://guess-the-frame-colyseus.onrender.com';
+    if (urlParams.has('local')) {
+      return 'http://localhost:2567';
     }
 
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return isLocal ? 'http://localhost:2567' : 'https://guess-the-frame-colyseus.onrender.com';
+    return 'https://guess-the-frame-colyseus.onrender.com';
   },
 
   async wakeServerIfNeeded(onProgress) {
     const httpEndpoint = this.getHttpEndpoint();
-    const maxRetries = 10;
+    const maxRetries = 4;
     for (let i = 0; i < maxRetries; i++) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
-        const res = await fetch(`${httpEndpoint}/ping`, { signal: controller.signal, cache: 'no-store' });
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch(`${httpEndpoint}/health`, { signal: controller.signal, cache: 'no-store' });
         clearTimeout(timeoutId);
         if (res.ok) return true;
       } catch (e) {
         if (onProgress) onProgress(i + 1, maxRetries);
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 1500));
       }
     }
     return false;
@@ -467,7 +460,7 @@ const GameClient = {
 
   prewarmServer() {
     try {
-      fetch(`${this.getHttpEndpoint()}/ping`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+      fetch(`${this.getHttpEndpoint()}/health`, { mode: 'no-cors', cache: 'no-store' }).catch(() => {});
     } catch (e) {}
   },
 
@@ -701,10 +694,14 @@ const GameClient = {
       const client = new Colyseus.Client(endpoint);
       this.colyseusClient = client;
 
+      const activeSections = options.sections || (options.categories ? options.categories : ['frames']);
       const room = await client.create('trivia_room', {
         roomCode: this.roomCode,
         name: this.playerName,
         avatar: this.playerAvatar,
+        userId: this.playerId,
+        mode: this.hostSettings.mode || options.mode || 'Popcorn',
+        sections: activeSections,
         timer: this.hostSettings.timer || 30,
         rounds: totalR,
         category: this.hostSettings.category || 'all',
@@ -732,6 +729,10 @@ const GameClient = {
 
       this.bindColyseusGame(room);
       this.saveActiveSession();
+
+      if (typeof CreateRoomWizard !== 'undefined' && CreateRoomWizard.close) {
+        CreateRoomWizard.close();
+      }
 
       if (typeof UI !== 'undefined') {
         if (UI.hideLoading) UI.hideLoading();
@@ -874,7 +875,8 @@ const GameClient = {
   },
 
   startAssetPreloading() {
-    const me = (this.players || []).find(p => p.id === this.playerId);
+    const getMe = () => (this.players || []).find(p => p.id === this.playerId);
+    let me = getMe();
     if (me) {
       me.assetProgress = 0;
       me.assetStatus = 'downloading';
@@ -887,17 +889,22 @@ const GameClient = {
     }
 
     const reportProgress = (pct, status) => {
+      const currentMe = getMe();
+      if (currentMe && currentMe.isReady && currentMe.assetProgress >= 100) {
+        return;
+      }
       const validPct = Math.max(0, Math.min(100, Math.round(pct)));
       const isComplete = validPct >= 100;
-      if (me) {
-        me.assetProgress = validPct;
-        me.assetStatus = status || (isComplete ? 'ready' : (validPct >= 90 ? 'verifying' : 'downloading'));
-        me.isReady = isComplete;
-        me.loaded = isComplete;
+      if (currentMe) {
+        if (validPct < (currentMe.assetProgress || 0)) return;
+        currentMe.assetProgress = validPct;
+        currentMe.assetStatus = status || (isComplete ? 'ready' : (validPct >= 90 ? 'verifying' : 'downloading'));
+        currentMe.isReady = isComplete;
+        currentMe.loaded = isComplete;
       }
       if (this.colyseusRoom) {
         try {
-          this.colyseusRoom.send('asset_progress', { progress: validPct, status: me ? me.assetStatus : status });
+          this.colyseusRoom.send('asset_progress', { progress: validPct, status: currentMe ? currentMe.assetStatus : status });
           if (isComplete) {
             this.colyseusRoom.send('player_ready', { isReady: true });
           }
@@ -911,7 +918,7 @@ const GameClient = {
       }
     };
 
-    // Gather assets to preload from GAME_SECTIONS
+    // Gather assets to preload in background
     const items = [];
     if (typeof GAME_SECTIONS !== 'undefined' && Array.isArray(GAME_SECTIONS)) {
       GAME_SECTIONS.forEach(sec => {
@@ -926,31 +933,46 @@ const GameClient = {
       });
     }
 
+    // Failsafe timer: guarantee full readiness within 1.8s max so host is never stuck
+    const failsafe = setTimeout(() => {
+      reportProgress(100, 'ready');
+    }, 1800);
+
     if (typeof AssetPreloader !== 'undefined' && AssetPreloader.preloadRoomAssets) {
       AssetPreloader.preloadRoomAssets(items, (pct, status) => {
+        if (pct >= 100) clearTimeout(failsafe);
         reportProgress(pct, status);
       });
     } else {
-      let step = 15;
+      let step = 20;
       const interval = setInterval(() => {
         step += 25;
         if (step >= 100) {
           clearInterval(interval);
+          clearTimeout(failsafe);
           reportProgress(100, 'ready');
         } else {
           reportProgress(step, step >= 85 ? 'verifying' : 'downloading');
         }
-      }, 150);
+      }, 160);
     }
   },
 
   startGame(options = {}) {
     if (!this.isHost || !this.colyseusRoom) return;
 
-    const unready = (this.players || []).filter(p => !p.isReady && !p.loaded);
-    if (unready.length > 0) {
+    // Ensure host is always ready
+    const me = (this.players || []).find(p => p.id === this.playerId);
+    if (me && !me.isReady) {
+      me.isReady = true;
+      me.loaded = true;
+      try { this.colyseusRoom.send('player_ready', { isReady: true }); } catch (e) {}
+    }
+
+    const otherUnready = (this.players || []).filter(p => p.id !== this.playerId && !p.isReady && !p.loaded);
+    if (otherUnready.length > 0) {
       if (typeof UI !== 'undefined') {
-        if (UI.showToast) UI.showToast("Waiting for players to finish loading assets");
+        if (UI.showToast) UI.showToast("Waiting for other players to finish loading assets");
         if (UI.updateLobbyStartBtn) UI.updateLobbyStartBtn();
       }
       return;

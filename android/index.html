@@ -239,6 +239,7 @@
   <link rel="stylesheet" href="/android/css/game-wizard.css">
   <script defer src="/android/js/avatars-data.js"></script>
   <script defer src="/android/js/avatar-picker.js"></script>
+  <script defer src="/android/avvtar/avatar_data.js"></script>
   
   <!-- Lucide Icons Engine (Local Bundle + CDN Fallback: https://lucide.dev/guide/) -->
   <script src="/android/js/lucide.min.js"></script>
@@ -249,15 +250,6 @@
   </script>
   <!-- SVG Icon Library -->
   <script src="/android/js/icons.js"></script>
-
-  <!-- Colyseus Realtime Multiplayer Engine -->
-  <!-- Colyseus Game Engine (Bundled Locally + CDN Fallback) -->
-  <script src="/android/js/colyseus.js"></script>
-  <script>
-    if (typeof Colyseus === 'undefined') {
-      document.write('<script src="https://unpkg.com/colyseus.js@^0.15.0/dist/colyseus.js"><\/script>');
-    }
-  </script>
   <!-- Preload Cinema Wallpaper Background -->
   <link rel="preload" as="image" href="bg/guess_the_frame.png" type="image/png">
   <link rel="preload" as="image" href="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799979/scoopcast/bg/cinema_bg.webp" type="image/webp">
@@ -905,6 +897,10 @@
             <button type="button" id="btnModalShare" class="share-action-btn btn-action-share" onclick="ScorecardShare.share();">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
               <span>SHARE</span>
+            </button>
+            <button type="button" id="btnModalCopy" class="share-action-btn btn-action-copy" onclick="ScorecardShare.copy();">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>COPY</span>
             </button>
             <button type="button" id="btnModalDownload" class="share-action-btn btn-action-download" onclick="ScorecardShare.download();">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
