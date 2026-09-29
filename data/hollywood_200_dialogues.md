@@ -48,8 +48,8 @@ A curated, production-ready dataset of the **200 most iconic, universally recogn
 | hd_42 | **"I know kung fu."** | The Matrix | 1999 | Keanu Reeves (*Neo*) | ⭐ 8.7 | Action / Sci-Fi |
 | hd_43 | **"Welcome to the real world."** | The Matrix | 1999 | Laurence Fishburne (*Morpheus*) | ⭐ 8.7 | Action / Sci-Fi |
 | hd_44 | **"Dodge this."** | The Matrix | 1999 | Carrie-Anne Moss (*Trinity*) | ⭐ 8.7 | Action / Sci-Fi |
-| hd_45 | **"The first rule of Fight Club is: you do not talk about Fight Club."** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
-| hd_46 | **"The second rule of Fight Club is: you DO NOT talk about Fight Club!"** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
+| hd_45 | **"The first rule of ***** **** is: you do not talk about ***** ****."** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
+| hd_46 | **"The second rule of ***** **** is: you DO NOT talk about ***** ****!"** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
 | hd_47 | **"It's only after we've lost everything that we're free to do anything."** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
 | hd_48 | **"The things you own end up owning you."** | Fight Club | 1999 | Brad Pitt (*Tyler Durden*) | ⭐ 8.8 | Drama |
 | hd_49 | **"His name is Robert Paulson."** | Fight Club | 1999 | Meat Loaf & Edward Norton (*Project Mayhem Members*) | ⭐ 8.8 | Drama |

@@ -460,7 +460,7 @@ hollywood_dialogues = [
 
     # Fight Club (1999) - IMDb: 8.8
     {
-        "dialogue": "The first rule of Fight Club is: you do not talk about Fight Club.",
+        "dialogue": "The first rule of ***** **** is: you do not talk about ***** ****.",
         "movie": "Fight Club",
         "year": "1999",
         "actor": "Brad Pitt",
@@ -470,7 +470,7 @@ hollywood_dialogues = [
         "tag": "classic"
     },
     {
-        "dialogue": "The second rule of Fight Club is: you DO NOT talk about Fight Club!",
+        "dialogue": "The second rule of ***** **** is: you DO NOT talk about ***** ****!",
         "movie": "Fight Club",
         "year": "1999",
         "actor": "Brad Pitt",
