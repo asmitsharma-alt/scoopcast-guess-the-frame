@@ -330,7 +330,7 @@
 
       const msgEl = document.getElementById('gwRoundsValidationMsg');
       if (msgEl) {
-        msgEl.style.color = isValid ? 'var(--wizard-text-muted, #64748b)' : '#f87171';
+        msgEl.style.color = isValid ? 'var(--wizard-text-muted, #4B5563)' : '#EF4444';
         msgEl.textContent = isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds');
       }
 
@@ -491,9 +491,9 @@
       if (!container) return;
 
       const secMeta = {
-        frame: { name: 'Guess The Frame', icon: WIZARD_ICONS.frame },
-        dialogue: { name: 'Guess The Dialogue', icon: WIZARD_ICONS.dialogue },
-        eyes: { name: 'Guess The Eyes', icon: WIZARD_ICONS.eyes }
+        frame: { name: 'FRAMES', icon: WIZARD_ICONS.frame },
+        dialogue: { name: 'DIALOGUES', icon: WIZARD_ICONS.dialogue },
+        eyes: { name: 'EYES', icon: WIZARD_ICONS.eyes }
       };
 
       const html = this.state.sections.map(secKey => {
@@ -504,7 +504,7 @@
         return `
           <div class="gw-round-row-card">
             <div class="gw-round-row-left">
-              <span class="gw-sec-icon-wrap" style="width:36px;height:36px;border-radius:10px;">
+              <span class="gw-sec-icon-wrap" style="width:44px;height:44px;border-radius:10px;">
                 ${meta.icon}
               </span>
               <span class="gw-round-sec-name">${meta.name}</span>
@@ -540,8 +540,8 @@
       container.innerHTML = html + `
         <div class="gw-rounds-summary-bar">
           <div class="flex flex-col text-left">
-            <span class="gw-summary-label">Total Match Rounds</span>
-            <span id="gwRoundsValidationMsg" style="font-size:11px; color:${isValid ? 'var(--wizard-text-muted)' : '#f87171'};">
+            <span class="gw-summary-label">TOTAL ROUNDS</span>
+            <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:900; color:${isValid ? 'var(--wizard-text-muted)' : '#ef4444'};">
               ${isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds')}
             </span>
           </div>

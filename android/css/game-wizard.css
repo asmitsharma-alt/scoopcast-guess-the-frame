@@ -5,20 +5,24 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  --neo-bg-cream: #FFFDF5;
-  --neo-card-white: #FFFFFF;
-  --neo-border-black: #121212;
-  --neo-shadow-black: #121212;
-  --neo-yellow: #FACC15;
+  --neo-bg-canvas: #FFFDF0;
+  --neo-card-surface: #FFFFFF;
+  --neo-black: #111827;
+  --neo-yellow: #FFE600;
   --neo-yellow-light: #FEF08A;
+  --neo-cyan: #38BDF8;
+  --neo-cyan-light: #BAE6FD;
   --neo-green: #22C55E;
   --neo-green-light: #86EFAC;
-  --neo-blue-light: #CAE6FF;
-  --neo-pink-light: #FFD8DF;
-  --neo-text-main: #121212;
-  --neo-text-muted: #555555;
-  --wizard-accent-gold: #FACC15;
-  --wizard-text-muted: #555555;
+  --neo-coral: #FF5376;
+  --neo-coral-light: #FECDD3;
+  --neo-border-width: 3.5px;
+  --neo-border: var(--neo-border-width) solid var(--neo-black);
+  --neo-shadow-sm: 2px 2px 0px var(--neo-black);
+  --neo-shadow-md: 4px 4px 0px var(--neo-black);
+  --neo-shadow-lg: 0px -8px 0px var(--neo-black);
+  --wizard-accent-gold: var(--neo-yellow);
+  --wizard-text-muted: #4B5563;
 }
 
 /* ── Modal Overlay (Android Bottom Sheet Backdrop) ── */
@@ -26,11 +30,11 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(17, 24, 39, 0.75);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
-  align-items: flex-end; /* Docks to bottom on Android */
+  align-items: flex-end;
   justify-content: center;
   padding: 0;
   opacity: 0;
@@ -47,21 +51,19 @@
 .gw-dialog {
   width: 100%;
   max-width: 520px;
-  max-height: 88vh;
+  max-height: 90vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  background: var(--neo-bg-cream);
-  border: 4px solid var(--neo-border-black);
+  background: var(--neo-bg-canvas);
+  border: 4px solid var(--neo-black);
   border-bottom: none;
-  border-top-left-radius: 26px;
-  border-top-right-radius: 26px;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  box-shadow: 0 -8px 0px rgba(26, 26, 26, 0.9);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -8px 0px var(--neo-black);
   overflow: hidden;
   transform: translateY(100%);
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -71,9 +73,9 @@
 
 /* ── Android Tactile Drag Handle ── */
 .gw-android-drag-handle {
-  width: 44px;
-  height: 5px;
-  background: var(--neo-border-black);
+  width: 48px;
+  height: 6px;
+  background: var(--neo-black);
   border-radius: 999px;
   margin: 10px auto 4px auto;
   flex-shrink: 0;
@@ -82,7 +84,7 @@
 /* ── Top Header & Progress Stepper ── */
 .gw-header {
   padding: 12px 18px 14px 18px;
-  border-bottom: 3.5px solid var(--neo-border-black);
+  border-bottom: 3.5px solid var(--neo-black);
   background: var(--neo-yellow);
   display: flex;
   flex-direction: column;
@@ -98,107 +100,93 @@
 .gw-brand-tag {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  background: var(--neo-border-black);
+  letter-spacing: 0.14em;
+  background: var(--neo-black);
   color: var(--neo-yellow);
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 8px;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--neo-black);
 }
 
-.gw-brand-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--neo-yellow);
-  border-radius: 50%;
-  animation: gwPulse 1.8s infinite;
+.gw-brand-tag svg {
+  color: var(--neo-yellow);
+  width: 14px;
+  height: 14px;
 }
 
 .gw-close-btn {
-  background: var(--neo-bg-cream);
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 10px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
+  color: var(--neo-black);
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-weight: 900;
   transition: all 0.12s ease;
-  touch-action: manipulation;
 }
 
 .gw-close-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 0px 0px 0px var(--neo-shadow-black);
+  box-shadow: 0.5px 0.5px 0px var(--neo-black);
 }
 
-/* ── Progress Stepper Bar (3-Step Android Distribution) ── */
+/* ── Cartridge Stepper Rack ── */
+.gw-stepper-rack,
 .gw-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
 }
 
+.gw-step-tab,
 .gw-step-node {
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  border-radius: 9px;
+  box-shadow: 2px 2px 0px var(--neo-black);
+  padding: 7px 4px;
   display: flex;
   align-items: center;
-  flex: 1;
-  position: relative;
-}
-
-.gw-step-pill {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.16);
-  border: 2px solid var(--neo-border-black);
-  overflow: hidden;
-  transition: all 0.22s ease;
-}
-
-.gw-step-node.active .gw-step-pill {
-  background: var(--neo-border-black);
-}
-
-.gw-step-node.completed .gw-step-pill {
-  background: var(--neo-green);
-}
-
-.gw-step-labels {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 5px;
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #333333;
-  margin-top: -4px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.gw-step-labels span {
-  flex: 1;
-  text-align: center;
-  opacity: 0.6;
+.gw-step-tab.active,
+.gw-step-node.active {
+  background: var(--neo-black);
+  color: var(--neo-yellow);
+  box-shadow: 2.5px 2.5px 0px rgba(0, 0, 0, 0.25);
+  transform: translate(-1px, -1px);
 }
 
-.gw-step-labels span.active {
-  color: var(--neo-border-black);
-  opacity: 1;
-  font-weight: 900;
-  text-decoration: underline;
-  text-decoration-thickness: 2.5px;
+.gw-step-tab.completed,
+.gw-step-node.completed {
+  background: var(--neo-green-light);
+  color: #14532D;
+}
+
+/* Fallback legacy stepper support */
+.gw-step-pill,
+.gw-step-labels {
+  display: none;
 }
 
 /* ── Content Viewport ── */
@@ -208,59 +196,44 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--neo-bg-cream);
+  background: var(--neo-bg-canvas);
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-
-.gw-content-body::-webkit-scrollbar {
-  width: 6px;
-}
-.gw-content-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-.gw-content-body::-webkit-scrollbar-thumb {
-  background: var(--neo-yellow);
-  border: 1.5px solid var(--neo-border-black);
-  border-radius: 999px;
 }
 
 .gw-step-pane {
   display: none;
   flex-direction: column;
-  gap: 14px;
-  animation: gwFadeIn 0.2s ease-out forwards;
+  gap: 16px;
+  animation: gwPaneIn 0.18s ease-out forwards;
 }
 
 .gw-step-pane.active {
   display: flex;
 }
 
-/* ── Step Headings ── */
+@keyframes gwPaneIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .gw-step-title-group {
-  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .gw-screen-title {
-  font-family: 'Lilita One', var(--font-display, sans-serif);
+  font-family: 'Lilita One', sans-serif;
   font-size: 22px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--neo-text-main);
-  margin: 0;
-  line-height: 1.15;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
+  color: var(--neo-black);
+  margin: 0;
+  line-height: 1.1;
 }
 
-.gw-screen-subtitle {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--neo-text-muted);
-  margin: 4px 0 0 0;
-}
-
-/* ── STEP 1: Difficulty Cards (Android List-Tile Format) ── */
+/* ── STEP 1: Difficulty Cards ── */
 .gw-difficulty-grid {
   display: flex;
   flex-direction: column;
@@ -268,92 +241,77 @@
 }
 
 .gw-diff-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
-  border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 12px 14px;
+  background: var(--neo-card-surface);
+  border: 3px solid var(--neo-black);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  padding: 14px 16px;
   display: flex;
   align-items: center;
-  text-align: left;
-  gap: 12px;
+  justify-content: space-between;
   cursor: pointer;
-  position: relative;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
-  touch-action: manipulation;
-  user-select: none;
-  min-height: 64px;
+  transition: all 0.12s ease;
 }
 
 .gw-diff-card:active {
-  transform: scale(0.98);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  transform: translate(2px, 2px);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
 }
 
 .gw-diff-card.selected {
-  background: var(--neo-yellow-light);
-  box-shadow: 5px 5px 0px var(--neo-shadow-black);
+  border-color: var(--neo-black);
+  box-shadow: 4px 4px 0px var(--neo-black);
 }
 
-.gw-diff-card.popcorn.selected {
-  background: var(--neo-blue-light);
-}
-
-.gw-diff-card.director.selected {
-  background: var(--neo-pink-light);
-}
+.gw-diff-card.popcorn.selected { background: var(--neo-cyan-light); }
+.gw-diff-card.cinephile.selected { background: var(--neo-yellow-light); }
+.gw-diff-card.director.selected { background: var(--neo-coral-light); }
 
 .gw-diff-icon-wrap {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  background: var(--neo-bg-cream);
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  background: #FFFFFF;
+  border: 2px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--neo-text-main);
   flex-shrink: 0;
+  color: var(--neo-black);
 }
 
-.gw-diff-card.selected .gw-diff-icon-wrap {
-  background: #FFFFFF;
+.gw-diff-icon-wrap svg,
+.gw-diff-icon-wrap .ui-icon {
+  width: 26px !important;
+  height: 26px !important;
 }
 
 .gw-diff-info-col {
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  margin-left: 14px;
+  gap: 3px;
 }
 
 .gw-diff-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--neo-text-main);
-  margin: 0;
-  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--neo-black);
 }
 
 .gw-diff-badge {
-  display: inline-block;
   font-family: var(--font-mono, monospace);
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: 999px;
-  letter-spacing: 0.05em;
-  border: 1.5px solid var(--neo-border-black);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
-  width: fit-content;
-  line-height: 1.2;
+  border: 1.5px solid var(--neo-black);
 }
 
 .gw-badge-easy { background: var(--neo-green-light); color: #14532D; }
@@ -363,16 +321,16 @@
 .gw-radio-pill {
   width: 24px;
   height: 24px;
-  min-width: 24px;
   border-radius: 999px;
-  border: 2.5px solid var(--neo-border-black);
+  border: 2px solid var(--neo-black);
   background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: auto;
-  flex-shrink: 0;
-  transition: all 0.15s ease;
+}
+
+.gw-diff-card.selected .gw-radio-pill {
+  background: var(--neo-black);
 }
 
 .gw-radio-dot {
@@ -380,18 +338,13 @@
   height: 8px;
   border-radius: 999px;
   background: transparent;
-  transition: all 0.15s ease;
-}
-
-.gw-diff-card.selected .gw-radio-pill {
-  background: var(--neo-border-black);
 }
 
 .gw-diff-card.selected .gw-radio-dot {
-  background: #FFFFFF;
+  background: var(--neo-yellow);
 }
 
-/* ── STEP 2: Section Multi-Select Cards (Android Format) ── */
+/* ── STEP 2: Sections Multi-Select ── */
 .gw-section-grid {
   display: flex;
   flex-direction: column;
@@ -399,81 +352,70 @@
 }
 
 .gw-sec-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
-  border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 12px 14px;
+  background: var(--neo-card-surface);
+  border: 3px solid var(--neo-black);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
-  touch-action: manipulation;
-  user-select: none;
-  min-height: 64px;
+  transition: all 0.12s ease;
 }
 
 .gw-sec-card:active {
-  transform: scale(0.98);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  transform: translate(2px, 2px);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
 }
 
 .gw-sec-card.selected {
   background: var(--neo-yellow-light);
-  box-shadow: 5px 5px 0px var(--neo-shadow-black);
 }
 
 .gw-sec-left {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex: 1;
-  min-width: 0;
 }
 
 .gw-sec-icon-wrap {
   width: 44px;
   height: 44px;
-  min-width: 44px;
-  border-radius: 12px;
-  background: var(--neo-bg-cream);
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 2px solid var(--neo-black);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--neo-text-main);
-  flex-shrink: 0;
+  color: var(--neo-black);
 }
 
-.gw-sec-card.selected .gw-sec-icon-wrap {
-  background: #FFFFFF;
+.gw-sec-icon-wrap svg,
+.gw-sec-icon-wrap .ui-icon {
+  width: 24px !important;
+  height: 24px !important;
 }
 
 .gw-sec-title {
   font-family: 'Lilita One', sans-serif;
   font-size: 17px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--neo-text-main);
-  line-height: 1.1;
-  margin: 0;
+  text-transform: uppercase;
+  color: var(--neo-black);
 }
 
 .gw-checkbox-pill {
   width: 28px;
   height: 28px;
-  min-width: 28px;
   border-radius: 8px;
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  border: 2px solid var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--neo-bg-cream);
+  background: #FFFFFF;
   color: transparent;
-  transition: all 0.15s ease;
 }
 
 .gw-sec-card.selected .gw-checkbox-pill {
@@ -488,67 +430,61 @@
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 900;
-  padding: 4px 12px;
+  text-transform: uppercase;
+  padding: 4px 10px;
   background: var(--neo-green-light);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  border: 2px solid var(--neo-black);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
   border-radius: 999px;
   color: #14532D;
-  margin-top: 4px;
-  width: fit-content;
 }
 
-/* ── STEP 3: Rounds Configuration (Android Steppers) ── */
+/* ── STEP 3: Rounds Stepper & Ticket ── */
 .gw-rounds-config-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .gw-round-row-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
-  border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 12px 14px;
+  background: var(--neo-card-surface);
+  border: 3px solid var(--neo-black);
+  border-radius: 14px;
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
 }
 
 .gw-round-row-left {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1;
-  min-width: 0;
 }
 
 .gw-round-sec-name {
   font-family: 'Lilita One', sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 900;
-  color: var(--neo-text-main);
-  text-align: left;
+  text-transform: uppercase;
+  color: var(--neo-black);
 }
 
 .gw-round-stepper-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
 }
 
 .gw-step-btn {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 12px;
-  background: var(--neo-bg-cream);
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
+  color: var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -556,91 +492,36 @@
   font-weight: 900;
   font-size: 20px;
   cursor: pointer;
-  transition: all 0.12s ease;
   user-select: none;
-  touch-action: manipulation;
-}
-
-.gw-step-btn:hover {
-  background: var(--neo-yellow);
 }
 
 .gw-step-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0px 0px 0px var(--neo-shadow-black);
-}
-
-.gw-stepper-val {
-  min-width: 40px;
-  text-align: center;
-  font-family: 'Lilita One', var(--font-mono, monospace);
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--neo-text-main);
-  user-select: none;
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 0.5px 0.5px 0px var(--neo-black);
 }
 
 input.gw-stepper-val,
 .gw-stepper-input {
-  width: 54px;
-  height: 44px;
-  padding: 0 4px;
+  width: 52px;
+  height: 42px;
   text-align: center;
   font-family: 'Lilita One', var(--font-mono, monospace);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 900;
-  color: var(--neo-text-main, #111);
-  background: #ffffff;
-  border: 2.5px solid var(--neo-border-black, #111);
-  border-radius: 12px;
-  box-shadow: 2px 2px 0px var(--neo-shadow-black, #111);
-  cursor: text;
-  user-select: text;
-  touch-action: manipulation;
-  transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  color: var(--neo-black);
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  border-radius: 10px;
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
   -webkit-appearance: none;
   -moz-appearance: textfield;
 }
 
-input.gw-stepper-val::-webkit-outer-spin-button,
-input.gw-stepper-val::-webkit-inner-spin-button,
-.gw-stepper-input::-webkit-outer-spin-button,
-.gw-stepper-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input.gw-stepper-val:hover,
-.gw-stepper-input:hover {
-  background: var(--neo-yellow, #fef08a);
-}
-
-input.gw-stepper-val:focus,
-.gw-stepper-input:focus {
-  outline: none;
-  background: #ffffff;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 2px #7c3aed, 2px 2px 0px var(--neo-shadow-black, #111);
-}
-
-.gw-stepper-input.fallback-warning {
-  animation: neoShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
-  border-color: #ef4444 !important;
-  background: #fef2f2 !important;
-}
-
-@keyframes neoShake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-  40%, 60% { transform: translate3d(3px, 0, 0); }
-}
-
 .gw-rounds-summary-bar {
-  background: var(--neo-blue-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  border-radius: 16px;
+  background: var(--neo-cyan-light);
+  border: 3px dashed var(--neo-black);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  border-radius: 14px;
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -650,113 +531,104 @@ input.gw-stepper-val:focus,
 
 .gw-summary-label {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
-  color: var(--neo-text-main);
+  color: var(--neo-black);
 }
 
 .gw-summary-count {
   font-family: 'Lilita One', sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 900;
-  color: var(--neo-text-main);
+  color: var(--neo-black);
+  background: var(--neo-yellow);
+  padding: 4px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--neo-black);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
 }
 
-/* ── Sticky Bottom Action Bar (Thumb-Level Dock) ── */
+/* ── Bottom Action Footer ── */
 .gw-footer {
-  padding: 12px 18px max(14px, env(safe-area-inset-bottom, 0px)) 18px;
-  border-top: 3.5px solid var(--neo-border-black);
-  background: var(--neo-bg-cream);
+  padding: 14px 18px 18px 18px;
+  border-top: 3.5px solid var(--neo-black);
+  background: var(--neo-bg-canvas);
   display: flex;
   align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .gw-btn-back {
   background: #FFFFFF;
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
-  padding: 12px 18px;
-  min-height: 48px;
-  border-radius: 14px;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
+  color: var(--neo-black);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  font-family: 'Lilita One', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.12s ease;
-  touch-action: manipulation;
-}
-
-.gw-btn-back:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
 }
 
 .gw-btn-primary {
-  flex: 1;
-  background: var(--neo-green);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
-  padding: 12px 20px;
-  min-height: 48px;
-  border-radius: 14px;
+  background: var(--neo-yellow);
+  border: 3px solid var(--neo-black);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  color: var(--neo-black);
+  font-family: 'Lilita One', sans-serif;
+  font-size: 17px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  font-family: 'Lilita One', sans-serif;
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: all 0.12s ease;
-  touch-action: manipulation;
+  flex: 1;
+}
+
+#gwEnterLobbyBtn.gw-btn-primary {
+  background: var(--neo-green);
+  color: #FFFFFF;
 }
 
 .gw-btn-primary:active:not(:disabled) {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  box-shadow: 1px 1px 0px var(--neo-black);
 }
 
 .gw-btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
 }
 
-/* ── Toast Confirmation (Neobrutalism) ── */
 .gw-toast {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(30px);
-  background: var(--neo-border-black);
-  border: 3px solid var(--neo-yellow);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  padding: 12px 20px;
-  border-radius: 12px;
-  color: var(--neo-bg-cream);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  background: var(--neo-black);
+  border: 2.5px solid var(--neo-yellow);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 900;
   z-index: 10001;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .gw-toast.active {
@@ -764,39 +636,3 @@ input.gw-stepper-val:focus,
   opacity: 1;
   pointer-events: auto;
 }
-
-/* ── Keyframe Animations ── */
-@keyframes gwFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes gwPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-.gw-loading-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 0;
-}
-
-.gw-loading-dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--neo-border-black);
-  border: 1.5px solid var(--neo-border-black);
-  animation: gwDotBounce 0.9s infinite alternate;
-}
-
-.gw-loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--neo-yellow); }
-.gw-loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--neo-green); }
-
-@keyframes gwDotBounce {
-  0% { transform: translateY(0); opacity: 0.3; }
-  100% { transform: translateY(-5px); opacity: 1; }
-}
-

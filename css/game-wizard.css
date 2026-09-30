@@ -1,31 +1,39 @@
 /* ═══════════════════════════════════════════════════════════════════
-   SCOOPCAST AAA GAME CREATION FLOW & LOBBY SYSTEM
-   Pure Neobrutalism Design System | Bold 4px Borders | Hard Drop Shadows
-   Zero Blur | High-Contrast Retro Cinema Palette | Responsive Desktop & Mobile
+   SCOOPCAST MULTIPLAYER ROOM SETUP CONSOLE
+   Pure Neobrutalism Design System | Brand New From Scratch
+   Heavy 3.5px-4px Solid Borders | 0px Blur Hard Drop Shadows
+   Canary Yellow & Retro Arcade Palette | Minimalist Typography
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-  --neo-bg-cream: #fffdf5;
-  --neo-card-white: #ffffff;
-  --neo-border-black: #121212;
-  --neo-shadow-black: #121212;
-  --neo-yellow: #facc15;
-  --neo-yellow-light: #fef08a;
-  --neo-green: #22c55e;
-  --neo-green-light: #86efac;
-  --neo-blue-light: #cae6ff;
-  --neo-pink-light: #ffd8df;
-  --neo-purple: #c084fc;
-  --neo-text-main: #121212;
-  --neo-text-muted: #555555;
+  --neo-bg-canvas: #FFFDF0;
+  --neo-card-surface: #FFFFFF;
+  --neo-black: #111827;
+  --neo-yellow: #FFE600;
+  --neo-yellow-light: #FEF08A;
+  --neo-cyan: #38BDF8;
+  --neo-cyan-light: #BAE6FD;
+  --neo-green: #22C55E;
+  --neo-green-light: #86EFAC;
+  --neo-coral: #FF5376;
+  --neo-coral-light: #FECDD3;
+  --neo-purple: #C084FC;
+  --neo-purple-light: #E9D5FF;
+  --neo-border-width: 3.5px;
+  --neo-border: var(--neo-border-width) solid var(--neo-black);
+  --neo-shadow-sm: 2px 2px 0px var(--neo-black);
+  --neo-shadow-md: 4px 4px 0px var(--neo-black);
+  --neo-shadow-lg: 8px 8px 0px var(--neo-black);
+  --wizard-accent-gold: var(--neo-yellow);
+  --wizard-text-muted: #4B5563;
 }
 
-/* ── Modal Overlay ── */
+/* ── Modal Backdrop ── */
 .gw-modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(17, 24, 39, 0.75);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;
@@ -42,34 +50,34 @@
   pointer-events: auto;
 }
 
-/* ── Wizard Dialog Container (Neobrutalism) ── */
+/* ── Main Arcade Dialog Deck ── */
 .gw-dialog {
   width: 100%;
-  max-width: 740px;
+  max-width: 720px;
   max-height: 92vh;
   display: flex;
   flex-direction: column;
-  background: var(--neo-bg-cream);
-  border: 4px solid var(--neo-border-black);
+  background: var(--neo-bg-canvas);
+  border: 4px solid var(--neo-black);
   border-radius: 20px;
-  box-shadow: 8px 8px 0px var(--neo-shadow-black);
+  box-shadow: var(--neo-shadow-lg);
   overflow: hidden;
-  transform: scale(0.95) translateY(10px);
-  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: scale(0.96) translateY(12px);
+  transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .gw-modal-overlay.active .gw-dialog {
   transform: scale(1) translateY(0);
 }
 
-/* ── Top Header & Progress Stepper ── */
+/* ── Top Header Bar ── */
 .gw-header {
-  padding: 18px 24px 16px 24px;
-  border-bottom: 4px solid var(--neo-border-black);
+  padding: 16px 20px 14px 20px;
+  border-bottom: 4px solid var(--neo-black);
   background: var(--neo-yellow);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .gw-header-top {
@@ -86,198 +94,217 @@
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  background: var(--neo-border-black);
+  letter-spacing: 0.14em;
+  background: var(--neo-black);
   color: var(--neo-yellow);
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 8px;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--neo-black);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
-.gw-brand-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--neo-yellow);
-  border-radius: 50%;
-  animation: gwPulse 1.8s infinite;
+.gw-brand-tag svg {
+  color: var(--neo-yellow);
+  width: 14px;
+  height: 14px;
 }
 
 .gw-close-btn {
-  background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
+  color: var(--neo-black);
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-weight: 900;
-  font-size: 14px;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gw-close-btn:hover {
-  background: #ff6b6b;
-  color: #ffffff;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  background: var(--neo-coral);
+  color: #FFFFFF;
+  transform: translate(-1.5px, -1.5px);
+  box-shadow: 4px 4px 0px var(--neo-black);
 }
 
 .gw-close-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  transform: translate(2px, 2px);
+  box-shadow: 0.5px 0.5px 0px var(--neo-black);
 }
 
-/* ── Progress Stepper Bar ── */
+/* ── Cartridge-Style Stepper Rack (Tactile Step Navigation) ── */
+.gw-stepper-rack,
 .gw-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
+.gw-step-tab,
 .gw-step-node {
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  border-radius: 10px;
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
+  padding: 8px 6px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
-  position: relative;
-}
-
-.gw-step-pill {
-  width: 100%;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.15);
-  border: 2px solid var(--neo-border-black);
-  overflow: hidden;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.gw-step-node.active .gw-step-pill {
-  background: var(--neo-border-black);
-}
-
-.gw-step-node.completed .gw-step-pill {
-  background: var(--neo-green);
-}
-
-.gw-step-labels {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 6px;
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #333333;
-  margin-top: -4px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
 }
 
-.gw-step-labels span.active {
-  color: var(--neo-border-black);
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
+.gw-step-tab .gw-tab-num {
+  font-weight: 900;
+  opacity: 0.6;
 }
 
-/* ── Content Viewport ── */
+.gw-step-tab:hover:not(.active) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  background: #FFFDF0;
+}
+
+.gw-step-tab.active,
+.gw-step-node.active {
+  background: var(--neo-black);
+  color: var(--neo-yellow);
+  border-color: var(--neo-black);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.25);
+  transform: translate(-1px, -1px);
+}
+
+.gw-step-tab.active .gw-tab-num {
+  opacity: 1;
+  color: var(--neo-yellow);
+}
+
+.gw-step-tab.completed,
+.gw-step-node.completed {
+  background: var(--neo-green-light);
+  color: #14532D;
+}
+
+/* Fallback legacy stepper support */
+.gw-step-pill {
+  display: none;
+}
+.gw-step-labels {
+  display: none;
+}
+
+/* ── Content Body ── */
 .gw-content-body {
-  padding: 24px;
+  padding: 22px 24px;
   overflow-y: auto;
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--neo-bg-cream);
+  background: var(--neo-bg-canvas);
 }
 
 .gw-content-body::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
 }
 .gw-content-body::-webkit-scrollbar-track {
-  background: #f4f4ee;
-  border-left: 2px solid var(--neo-border-black);
+  background: #F3F0D9;
+  border-left: 2.5px solid var(--neo-black);
 }
 .gw-content-body::-webkit-scrollbar-thumb {
   background: var(--neo-yellow);
-  border: 2px solid var(--neo-border-black);
+  border: 2.5px solid var(--neo-black);
   border-radius: 999px;
 }
 
 .gw-step-pane {
   display: none;
   flex-direction: column;
-  gap: 20px;
-  animation: gwFadeIn 0.2s ease-out forwards;
+  gap: 18px;
+  animation: gwPaneIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .gw-step-pane.active {
   display: flex;
 }
 
-/* ── Step Headings ── */
+@keyframes gwPaneIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Minimalist Section Titles ── */
 .gw-step-title-group {
-  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .gw-screen-title {
   font-family: 'Lilita One', var(--font-display, sans-serif);
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--neo-text-main);
-  margin: 0;
-  line-height: 1.15;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  color: var(--neo-black);
+  margin: 0;
+  line-height: 1;
 }
 
-.gw-screen-subtitle {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px;
-  font-weight: 700;
-  color: var(--neo-text-muted);
-  margin: 6px 0 0 0;
-}
-
-/* ── STEP 1: Difficulty Cards ── */
+/* ── STEP 1: Difficulty Bento Cards ── */
 .gw-difficulty-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 14px;
 }
 
 .gw-diff-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
+  background: var(--neo-card-surface);
+  border: 3.5px solid var(--neo-black);
   border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  padding: 20px 16px;
+  box-shadow: var(--neo-shadow-md);
+  padding: 20px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   cursor: pointer;
   position: relative;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
 .gw-diff-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  transform: translate(-2.5px, -2.5px);
+  box-shadow: 6px 6px 0px var(--neo-black);
 }
 
 .gw-diff-card.selected {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  border-color: var(--neo-border-black);
+  box-shadow: 6px 6px 0px var(--neo-black);
+  border-color: var(--neo-black);
 }
 
 .gw-diff-card.popcorn.selected {
-  background: var(--neo-blue-light);
+  background: var(--neo-cyan-light);
 }
 
 .gw-diff-card.cinephile.selected {
@@ -285,57 +312,43 @@
 }
 
 .gw-diff-card.director.selected {
-  background: var(--neo-pink-light);
+  background: var(--neo-coral-light);
 }
-
-.gw-diff-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: transparent;
-}
-
-.gw-diff-card.popcorn.selected::before { background: var(--neo-green); }
-.gw-diff-card.cinephile.selected::before { background: var(--neo-yellow); }
-.gw-diff-card.director.selected::before { background: #ef4444; }
 
 .gw-diff-icon-wrap {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   border-radius: 14px;
-  background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  color: var(--neo-text-main);
-  transition: transform 0.2s ease;
+  margin-bottom: 12px;
+  color: var(--neo-black);
+  transition: transform 0.15s ease;
 }
 
 .gw-diff-icon-wrap svg,
 .gw-diff-icon-wrap .ui-icon {
-  width: 28px !important;
-  height: 28px !important;
+  width: 30px !important;
+  height: 30px !important;
   flex-shrink: 0;
 }
 
 .gw-diff-card.selected .gw-diff-icon-wrap {
-  transform: scale(1.08);
-  background: #ffffff;
+  transform: scale(1.06);
 }
 
 .gw-diff-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  color: var(--neo-text-main);
-  margin-bottom: 4px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--neo-black);
+  margin-bottom: 6px;
 }
 
 .gw-diff-badge {
@@ -343,40 +356,33 @@
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   padding: 3px 10px;
   border-radius: 999px;
-  letter-spacing: 0.06em;
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  border: 2px solid var(--neo-black);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
 }
 
-.gw-badge-easy { background: var(--neo-green-light); color: #14532d; }
-.gw-badge-medium { background: var(--neo-yellow); color: #713f12; }
-.gw-badge-hard { background: #fca5a5; color: #7f1d1d; }
-
-.gw-diff-info-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
+.gw-badge-easy { background: var(--neo-green-light); color: #14532D; }
+.gw-badge-medium { background: var(--neo-yellow); color: #713F12; }
+.gw-badge-hard { background: #FCA5A5; color: #7F1D1D; }
 
 .gw-radio-pill {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
-  border: 2.5px solid var(--neo-border-black);
-  background: var(--neo-bg-cream);
+  border: 2.5px solid var(--neo-black);
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 12px;
-  box-shadow: 1.5px 1.5px 0px var(--neo-shadow-black);
-  transition: all 0.15s ease;
+  margin-top: 14px;
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
+  transition: all 0.12s ease;
 }
 
 .gw-diff-card.selected .gw-radio-pill {
-  background: var(--neo-border-black);
+  background: var(--neo-black);
 }
 
 .gw-radio-dot {
@@ -384,42 +390,14 @@
   height: 8px;
   border-radius: 999px;
   background: transparent;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gw-diff-card.selected .gw-radio-dot {
   background: var(--neo-yellow);
 }
 
-.gw-loading-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 0;
-}
-
-.gw-loading-dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--neo-border-black);
-  border: 1.5px solid var(--neo-border-black);
-  animation: gwDotBounce 0.9s infinite alternate;
-}
-
-.gw-loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--neo-yellow); }
-.gw-loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--neo-green); }
-
-@keyframes gwDotBounce {
-  0% { transform: translateY(0); opacity: 0.3; }
-  100% { transform: translateY(-5px); opacity: 1; }
-}
-
-.gw-diff-desc {
-  display: none;
-}
-
-/* ── STEP 2: Section Multi-Select Cards ── */
+/* ── STEP 2: Challenge Types Multi-Select ── */
 .gw-section-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -427,28 +405,27 @@
 }
 
 .gw-sec-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
+  background: var(--neo-card-surface);
+  border: 3.5px solid var(--neo-black);
   border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  box-shadow: var(--neo-shadow-md);
   padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gw-sec-card:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
+  box-shadow: 6px 6px 0px var(--neo-black);
 }
 
 .gw-sec-card.selected {
   background: var(--neo-yellow-light);
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  border-color: var(--neo-border-black);
+  box-shadow: 6px 6px 0px var(--neo-black);
 }
 
 .gw-sec-left {
@@ -458,66 +435,52 @@
 }
 
 .gw-sec-icon-wrap {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 12px;
-  background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--neo-text-main);
+  color: var(--neo-black);
   flex-shrink: 0;
 }
 
 .gw-sec-icon-wrap svg,
 .gw-sec-icon-wrap .ui-icon {
-  width: 24px !important;
-  height: 24px !important;
+  width: 26px !important;
+  height: 26px !important;
   flex-shrink: 0;
-}
-
-.gw-sec-card.selected .gw-sec-icon-wrap {
-  background: #ffffff;
-}
-
-.gw-sec-info {
-  text-align: left;
 }
 
 .gw-sec-title {
   font-family: 'Lilita One', sans-serif;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 900;
-  color: var(--neo-text-main);
-  margin-bottom: 3px;
-}
-
-.gw-sec-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--neo-text-muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--neo-black);
 }
 
 .gw-checkbox-pill {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--neo-bg-cream);
+  background: #FFFFFF;
   color: transparent;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gw-sec-card.selected .gw-checkbox-pill {
   background: var(--neo-green);
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .gw-selected-count-badge {
@@ -527,27 +490,28 @@
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 900;
-  padding: 4px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
   background: var(--neo-green-light);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
   border-radius: 999px;
-  color: #14532d;
-  margin-top: 4px;
+  color: #14532D;
 }
 
-/* ── STEP 3: Rounds Configuration ── */
+/* ── STEP 3: Rounds Stepper & Arcade Ticket ── */
 .gw-rounds-config-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .gw-round-row-card {
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
+  background: var(--neo-card-surface);
+  border: 3.5px solid var(--neo-black);
   border-radius: 16px;
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  box-shadow: var(--neo-shadow-md);
   padding: 16px 20px;
   display: flex;
   align-items: center;
@@ -558,15 +522,16 @@
 .gw-round-row-left {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 170px;
+  gap: 14px;
 }
 
 .gw-round-sec-name {
   font-family: 'Lilita One', sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
-  color: var(--neo-text-main);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--neo-black);
 }
 
 .gw-round-stepper-wrap {
@@ -576,19 +541,19 @@
 }
 
 .gw-step-btn {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
-  background: var(--neo-bg-cream);
-  border: 2.5px solid var(--neo-border-black);
-  box-shadow: 2.5px 2.5px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
+  color: var(--neo-black);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono, monospace);
   font-weight: 900;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: all 0.12s ease;
   user-select: none;
@@ -597,41 +562,31 @@
 .gw-step-btn:hover {
   background: var(--neo-yellow);
   transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0px var(--neo-shadow-black);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
 }
 
 .gw-step-btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 0.5px 0.5px 0px var(--neo-shadow-black);
-}
-
-.gw-stepper-val {
-  min-width: 44px;
-  text-align: center;
-  font-family: 'Lilita One', var(--font-mono, monospace);
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--neo-text-main);
-  user-select: none;
+  box-shadow: 0.5px 0.5px 0px var(--neo-black);
 }
 
 input.gw-stepper-val,
 .gw-stepper-input {
-  width: 52px;
-  height: 38px;
+  width: 56px;
+  height: 42px;
   padding: 0 4px;
   text-align: center;
   font-family: 'Lilita One', var(--font-mono, monospace);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
-  color: var(--neo-text-main, #111);
-  background: #ffffff;
-  border: 2.5px solid var(--neo-border-black, #111);
+  color: var(--neo-black);
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
   border-radius: 10px;
-  box-shadow: 2px 2px 0px var(--neo-shadow-black, #111);
+  box-shadow: 2px 2px 0px var(--neo-black);
   cursor: text;
   user-select: text;
-  transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   -webkit-appearance: none;
   -moz-appearance: textfield;
 }
@@ -646,24 +601,22 @@ input.gw-stepper-val::-webkit-inner-spin-button,
 
 input.gw-stepper-val:hover,
 .gw-stepper-input:hover {
-  background: var(--neo-yellow, #fef08a);
-  transform: translateY(-1px);
-  box-shadow: 2.5px 2.5px 0px var(--neo-shadow-black, #111);
+  background: var(--neo-yellow-light);
 }
 
 input.gw-stepper-val:focus,
 .gw-stepper-input:focus {
   outline: none;
-  background: #ffffff;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 2px #7c3aed, 2px 2px 0px var(--neo-shadow-black, #111);
+  background: #FFFFFF;
+  border-color: var(--neo-black);
+  box-shadow: 0 0 0 2px var(--neo-yellow), 2.5px 2.5px 0px var(--neo-black);
   transform: translateY(-1px);
 }
 
 .gw-stepper-input.fallback-warning {
   animation: neoShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
-  border-color: #ef4444 !important;
-  background: #fef2f2 !important;
+  border-color: #EF4444 !important;
+  background: #FEF2F2 !important;
 }
 
 @keyframes neoShake {
@@ -673,10 +626,11 @@ input.gw-stepper-val:focus,
   40%, 60% { transform: translate3d(3px, 0, 0); }
 }
 
+/* ── Arcade Ticket Summary Bar ── */
 .gw-rounds-summary-bar {
-  background: var(--neo-blue-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  background: var(--neo-cyan-light);
+  border: 3.5px dashed var(--neo-black);
+  box-shadow: var(--neo-shadow-md);
   border-radius: 16px;
   padding: 14px 20px;
   display: flex;
@@ -687,20 +641,26 @@ input.gw-stepper-val:focus,
 
 .gw-summary-label {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
   text-transform: uppercase;
-  color: var(--neo-text-main);
+  letter-spacing: 0.1em;
+  color: var(--neo-black);
 }
 
 .gw-summary-count {
   font-family: 'Lilita One', sans-serif;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
-  color: var(--neo-text-main);
+  color: var(--neo-black);
+  background: var(--neo-yellow);
+  padding: 4px 16px;
+  border-radius: 10px;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
 }
 
-/* ── STEP 4: ScoopCast Default Avatar & Profile System ── */
+/* ── STEP 4: Profile & Avatar Picker (Neobrutalism) ── */
 #gwStepPane-4 {
   gap: 12px;
 }
@@ -725,44 +685,98 @@ input.gw-stepper-val:focus,
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
-  color: var(--neo-border-black);
-  letter-spacing: 0.05em;
+  color: var(--neo-black);
+  letter-spacing: 0.08em;
 }
 
 #gwStepPane-4 .mp-input {
-  height: 50px;
-  min-height: 50px;
+  height: 48px;
   background: #FFFFFF;
-  border: 3px solid var(--neo-border-black);
+  border: 3px solid var(--neo-black);
   border-radius: 12px;
   padding: 0 14px;
   font-size: 15px;
-  font-weight: 800;
-  color: var(--neo-text-main);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  font-weight: 900;
+  color: var(--neo-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
   outline: none;
   font-family: var(--font-mono, monospace);
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 #gwStepPane-4 .mp-input:focus {
   background: var(--neo-yellow-light);
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  box-shadow: 4px 4px 0px var(--neo-black);
 }
 
 #gwStepPane-4 .mp-inline-preview-badge {
-  height: 50px;
-  min-height: 50px;
+  height: 48px;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 0 12px;
-  background: var(--neo-card-white);
-  border: 3px solid var(--neo-border-black);
+  background: var(--neo-card-surface);
+  border: 3px solid var(--neo-black);
   border-radius: 12px;
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
 }
+
+#gwStepPane-4 .mp-hero-preview-frame {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 2px solid var(--neo-black);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#gwStepPane-4 .mp-hero-check-pill {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--neo-green);
+  border: 1.5px solid var(--neo-black);
+  border-radius: 999px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+#gwStepPane-4 .mp-hero-char-name {
+  font-family: 'Lilita One', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--neo-black);
+  line-height: 1.1;
+}
+
+#gwStepPane-4 .mp-hero-tags-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+#gwStepPane-4 .mp-hero-cat-tag,
+#gwStepPane-4 .mp-hero-format-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1.5px solid var(--neo-black);
+}
+
+#gwStepPane-4 .mp-hero-cat-tag { background: var(--neo-yellow); }
+#gwStepPane-4 .mp-hero-format-tag { background: #FFFFFF; }
 
 #gwStepPane-4 .mp-avatar-picker-wrap {
   display: flex;
@@ -773,96 +787,233 @@ input.gw-stepper-val:focus,
   min-height: 0;
 }
 
-#gwStepPane-4 .mp-avatar-scroll-area {
-  min-height: 200px;
-  max-height: 270px;
-  height: 240px;
-  overflow-y: auto;
-  border: 3px solid var(--neo-border-black);
-  border-radius: 14px;
-  padding: 10px;
-  background: #FFFFFF;
-  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 680px) {
-  #gwStepPane-4 .mp-credentials-row-join {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  #gwStepPane-4 .mp-avatar-search-bar {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  #gwStepPane-4 .mp-avatar-search-input-wrap {
-    min-width: 100%;
-    width: 100%;
-  }
-  #gwStepPane-4 .mp-shuffle-btn,
-  #gwStepPane-4 .mp-custom-upload-btn {
-    flex: 1;
-    font-size: 11px;
-    padding: 0 10px;
-    height: 38px;
-  }
-  #gwStepPane-4 .mp-avatar-scroll-area {
-    min-height: 150px;
-    max-height: 190px;
-  }
-}
-
-/* ── Bottom Navigation Bar ── */
-.gw-footer {
-  padding: 16px 24px 20px 24px;
-  border-top: 4px solid var(--neo-border-black);
-  background: var(--neo-bg-cream);
+#gwStepPane-4 .mp-avatar-search-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  gap: 8px;
 }
 
-.gw-btn-back {
-  background: var(--neo-bg-cream);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 3px 3px 0px var(--neo-shadow-black);
-  color: var(--neo-text-main);
+#gwStepPane-4 .mp-avatar-search-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+#gwStepPane-4 .search-icon-slot {
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+  color: var(--neo-black);
+}
+
+#gwStepPane-4 .mp-avatar-search-input {
+  width: 100%;
+  height: 42px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  border-radius: 10px;
+  padding: 0 36px 0 36px;
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
+  outline: none;
+}
+
+#gwStepPane-4 .mp-avatar-search-clear {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--neo-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gwStepPane-4 .mp-shuffle-btn,
+#gwStepPane-4 .mp-custom-upload-btn {
+  height: 42px;
+  padding: 0 14px;
+  background: #FFFFFF;
+  border: 2.5px solid var(--neo-black);
+  border-radius: 10px;
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
   font-family: var(--font-mono, monospace);
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 12px 20px;
+  color: var(--neo-black);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+
+#gwStepPane-4 .mp-shuffle-btn:hover,
+#gwStepPane-4 .mp-custom-upload-btn:hover {
+  background: var(--neo-yellow);
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+}
+
+#gwStepPane-4 .mp-avatar-category-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px;
+}
+
+#gwStepPane-4 .mp-avatar-category-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+#gwStepPane-4 .mp-category-tab {
+  padding: 5px 12px;
+  background: #FFFFFF;
+  border: 2px solid var(--neo-black);
+  border-radius: 999px;
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--neo-black);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+#gwStepPane-4 .mp-category-tab:hover {
+  background: var(--neo-yellow-light);
+}
+
+#gwStepPane-4 .mp-category-tab.active {
+  background: var(--neo-yellow);
+  box-shadow: 2px 2px 0px var(--neo-black);
+}
+
+#gwStepPane-4 .mp-avatar-scroll-area {
+  min-height: 190px;
+  max-height: 250px;
+  height: 230px;
+  overflow-y: auto;
+  border: 3px solid var(--neo-black);
+  border-radius: 14px;
+  padding: 10px;
+  background: #FFFFFF;
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.08);
+}
+
+#gwStepPane-4 .mp-infinite-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+  gap: 8px;
+}
+
+#gwStepPane-4 .mp-circular-avatar-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.12s ease;
+}
+
+#gwStepPane-4 .mp-circular-avatar-btn:hover {
+  transform: translate(-1.5px, -1.5px) scale(1.05);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+  z-index: 2;
+}
+
+#gwStepPane-4 .mp-circular-avatar-btn.selected {
+  border-color: var(--neo-black);
+  box-shadow: 0 0 0 2px var(--neo-yellow), 3px 3px 0px var(--neo-black);
+  transform: scale(1.05);
+  z-index: 3;
+}
+
+#gwStepPane-4 .mp-avatar-item-check {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: var(--neo-green);
+  border: 1.5px solid var(--neo-black);
+  border-radius: 999px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+/* ── Bottom Tactile Action Footer ── */
+.gw-footer {
+  padding: 16px 20px 18px 20px;
+  border-top: 4px solid var(--neo-black);
+  background: var(--neo-bg-canvas);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gw-btn-back {
+  background: #FFFFFF;
+  border: 3px solid var(--neo-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
+  color: var(--neo-black);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 18px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 }
 
 .gw-btn-back:hover {
-  background: #f4f4ee;
+  background: #F3F4F6;
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  box-shadow: 4px 4px 0px var(--neo-black);
 }
 
 .gw-btn-back:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--neo-black);
 }
 
 .gw-btn-primary {
-  background: var(--neo-green);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  color: #121212;
+  background: var(--neo-yellow);
+  border: 3.5px solid var(--neo-black);
+  box-shadow: var(--neo-shadow-md);
+  color: var(--neo-black);
   font-family: 'Lilita One', var(--font-display, sans-serif);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 900;
   letter-spacing: 0.04em;
-  padding: 14px 28px;
+  text-transform: uppercase;
+  padding: 12px 26px;
   border-radius: 12px;
   display: inline-flex;
   align-items: center;
@@ -870,47 +1021,73 @@ input.gw-stepper-val:focus,
   gap: 10px;
   cursor: pointer;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  min-width: 160px;
+  min-width: 150px;
+}
+
+#gwEnterLobbyBtn.gw-btn-primary {
+  background: var(--neo-green);
+  color: #FFFFFF;
 }
 
 .gw-btn-primary:hover:not(:disabled) {
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  background: #16a34a;
-  color: #ffffff;
+  box-shadow: 6px 6px 0px var(--neo-black);
 }
 
 .gw-btn-primary:active:not(:disabled) {
   transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  box-shadow: 1px 1px 0px var(--neo-black);
 }
 
 .gw-btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 2px 2px 0px var(--neo-shadow-black);
+  box-shadow: 2px 2px 0px var(--neo-black);
 }
 
-/* ── STEP 5: Locked Settings Badge in Lobby (Neobrutalism) ── */
+/* ── High-Contrast Toast Notice ── */
+.gw-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  background: var(--neo-black);
+  border: 3px solid var(--neo-yellow);
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10001;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gw-toast.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Lobby Badges & Preloaders ── */
 .gw-locked-badge-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 18px;
-  border-radius: 14px;
+  padding: 10px 16px;
+  border-radius: 12px;
   background: var(--neo-yellow-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
   cursor: pointer;
-  position: relative;
-  transition: all 0.18s ease;
-}
-
-.gw-locked-badge-wrap:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  background: var(--neo-yellow);
 }
 
 .gw-locked-title {
@@ -921,24 +1098,22 @@ input.gw-stepper-val:focus,
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--neo-text-main);
+  color: var(--neo-black);
 }
 
 .gw-locked-detail {
   font-family: 'DM Sans', sans-serif;
   font-size: 12px;
   font-weight: 700;
-  color: #444444;
+  color: #374151;
 }
 
-/* ── Unready Notice & Preload Progress in Lobby (Neobrutalism) ── */
 .gw-asset-notice-box {
   background: var(--neo-yellow-light);
-  border: 3px solid var(--neo-border-black);
-  box-shadow: 4px 4px 0px var(--neo-shadow-black);
-  border-radius: 14px;
-  padding: 12px 18px;
+  border: 2.5px solid var(--neo-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
+  border-radius: 12px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -946,33 +1121,11 @@ input.gw-stepper-val:focus,
   margin-top: 10px;
 }
 
-.gw-asset-notice-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: #854d0e;
-}
-
-.gw-asset-player-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neo-text-main);
-}
-
 .gw-progress-track {
   width: 90px;
   height: 8px;
-  background: var(--neo-bg-cream);
-  border: 2px solid var(--neo-border-black);
-  box-shadow: 1px 1px 0px var(--neo-shadow-black);
+  background: #FFFFFF;
+  border: 2px solid var(--neo-black);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -980,53 +1133,11 @@ input.gw-stepper-val:focus,
 .gw-progress-fill {
   height: 100%;
   background: var(--neo-green);
-  border-right: 2px solid var(--neo-border-black);
-  border-radius: 999px;
+  border-right: 2px solid var(--neo-black);
   transition: width 0.3s ease;
 }
 
-/* ── Toast Confirmation (Neobrutalism) ── */
-.gw-toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(30px);
-  background: var(--neo-border-black);
-  border: 3px solid var(--neo-yellow);
-  box-shadow: 6px 6px 0px var(--neo-shadow-black);
-  padding: 12px 22px;
-  border-radius: 12px;
-  color: var(--neo-bg-cream);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 10001;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gw-toast.active {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ── Keyframe Animations ── */
-@keyframes gwFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes gwPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-/* ── Mobile Responsive Overrides (Neobrutalism) ── */
+/* ── Mobile Responsive Overrides ── */
 @media (max-width: 768px) {
   .gw-modal-overlay {
     padding: 0;
@@ -1041,19 +1152,30 @@ input.gw-stepper-val:focus,
     border-left: none;
     border-right: none;
     border-bottom: none;
-    box-shadow: 0 -6px 0px var(--neo-shadow-black);
+    box-shadow: 0 -6px 0px var(--neo-black);
   }
 
   .gw-header {
-    padding: 16px 18px 12px 18px;
+    padding: 14px 16px 10px 16px;
   }
 
   .gw-content-body {
-    padding: 16px 18px;
+    padding: 16px;
   }
 
   .gw-screen-title {
-    font-size: 22px;
+    font-size: 20px;
+  }
+
+  .gw-stepper-rack,
+  .gw-stepper {
+    gap: 6px;
+  }
+
+  .gw-step-tab,
+  .gw-step-node {
+    padding: 6px 4px;
+    font-size: 10px;
   }
 
   .gw-difficulty-grid {
@@ -1071,23 +1193,58 @@ input.gw-stepper-val:focus,
 
   .gw-diff-icon-wrap {
     margin-bottom: 0;
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
   }
 
-  .gw-avatar-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .gw-diff-info-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gw-radio-pill {
+    margin-top: 0;
+  }
+
+  #gwStepPane-4 .mp-credentials-row-join {
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
 
+  #gwStepPane-4 .mp-avatar-search-bar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  #gwStepPane-4 .mp-avatar-search-input-wrap {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  #gwStepPane-4 .mp-shuffle-btn,
+  #gwStepPane-4 .mp-custom-upload-btn {
+    flex: 1;
+    font-size: 11px;
+    padding: 0 10px;
+    height: 38px;
+  }
+
+  #gwStepPane-4 .mp-avatar-scroll-area {
+    min-height: 150px;
+    max-height: 180px;
+  }
+
   .gw-footer {
-    padding: 12px 18px 16px 18px;
+    padding: 12px 16px 16px 16px;
   }
 
   .gw-btn-primary {
     flex: 1;
     padding: 12px 18px;
-    font-size: 15px;
+    font-size: 16px;
   }
 }

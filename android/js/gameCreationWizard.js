@@ -464,9 +464,9 @@
       if (!container) return;
 
       const secMeta = {
-        frame: { name: 'Guess The Frame', icon: WIZARD_ICONS.frame },
-        dialogue: { name: 'Guess The Dialogue', icon: WIZARD_ICONS.dialogue },
-        eyes: { name: 'Guess The Eyes', icon: WIZARD_ICONS.eyes }
+        frame: { name: 'FRAMES', icon: WIZARD_ICONS.frame },
+        dialogue: { name: 'DIALOGUES', icon: WIZARD_ICONS.dialogue },
+        eyes: { name: 'EYES', icon: WIZARD_ICONS.eyes }
       };
 
       const html = this.state.sections.map(secKey => {
@@ -513,9 +513,9 @@
       container.innerHTML = html + `
         <div class="gw-rounds-summary-bar">
           <div class="flex flex-col text-left">
-            <span class="gw-summary-label">Total Match Rounds</span>
-            <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:700; color:${isValid ? 'var(--neo-text-muted)' : '#dc2626'};">
-              ${isValid ? '3 to 80 rounds' : (total < 3 ? 'Min 3 rounds required' : 'Max 80 rounds exceeded')}
+            <span class="gw-summary-label">TOTAL ROUNDS</span>
+            <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:900; color:${isValid ? 'var(--wizard-text-muted)' : '#EF4444'};">
+              ${isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds')}
             </span>
           </div>
           <span class="gw-summary-count" id="gwSummaryTotalCount">${total}</span>
