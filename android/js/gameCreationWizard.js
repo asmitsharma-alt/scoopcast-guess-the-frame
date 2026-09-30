@@ -206,16 +206,106 @@
     // ── STEP 3: Round Configuration ──
     setSectionRounds(sectionKey, amount) {
       const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
-      const val = Math.max(1, Math.min(maxPerSec, Number(amount) || 5));
+      let val = Number(amount);
+      if (isNaN(val) || val < 1) {
+        val = 1;
+      } else if (val > maxPerSec) {
+        this.showNotice(`⚠️ Maximum rounds for ${sectionKey === 'eyes' ? 'Guess The Eyes' : 'this section'} is ${maxPerSec}. Reset to ${maxPerSec}.`);
+        val = maxPerSec;
+      }
       this.state.rounds[sectionKey] = val;
-      this.renderStep3();
+      const inputEl = document.getElementById(`gwRoundInput-${sectionKey}`);
+      if (inputEl) {
+        inputEl.value = val;
+        this.updateRoundsSummary();
+      } else {
+        this.renderStep3();
+      }
     },
 
     adjustSectionRounds(sectionKey, delta) {
       const current = this.state.rounds[sectionKey] || 5;
       const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
-      const next = Math.max(1, Math.min(maxPerSec, current + delta));
-      this.setSectionRounds(sectionKey, next);
+      const target = current + delta;
+      if (target > maxPerSec) {
+        this.showNotice(`⚠️ Maximum rounds for ${sectionKey === 'eyes' ? 'Guess The Eyes' : 'this section'} is ${maxPerSec}.`);
+        return;
+      }
+      if (target < 1) {
+        return;
+      }
+      this.state.rounds[sectionKey] = target;
+      const inputEl = document.getElementById(`gwRoundInput-${sectionKey}`);
+      if (inputEl) {
+        inputEl.value = target;
+        this.updateRoundsSummary();
+      } else {
+        this.renderStep3();
+      }
+    },
+
+    handleRoundInput(sectionKey, inputEl) {
+      if (!inputEl) return;
+      const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
+      const raw = inputEl.value;
+
+      // Allow empty while user is actively typing / backspacing
+      if (raw === '' || raw === null) {
+        return;
+      }
+
+      const val = parseInt(raw, 10);
+      if (isNaN(val)) return;
+
+      if (val > maxPerSec) {
+        this.showNotice(`⚠️ Maximum rounds for ${sectionKey === 'eyes' ? 'Guess The Eyes' : 'this section'} is ${maxPerSec}. Fallback to ${maxPerSec} applied.`);
+        inputEl.value = maxPerSec;
+        this.state.rounds[sectionKey] = maxPerSec;
+        inputEl.classList.add('fallback-warning');
+        setTimeout(() => inputEl.classList.remove('fallback-warning'), 400);
+      } else if (val < 1) {
+        this.state.rounds[sectionKey] = 1;
+      } else {
+        this.state.rounds[sectionKey] = val;
+      }
+
+      this.updateRoundsSummary();
+    },
+
+    handleRoundBlur(sectionKey, inputEl) {
+      if (!inputEl) return;
+      const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
+      let val = parseInt(inputEl.value, 10);
+
+      if (isNaN(val) || val < 1) {
+        val = 1;
+        inputEl.value = 1;
+      } else if (val > maxPerSec) {
+        this.showNotice(`⚠️ Maximum rounds for ${sectionKey === 'eyes' ? 'Guess The Eyes' : 'this section'} is ${maxPerSec}. Fallback to ${maxPerSec} applied.`);
+        val = maxPerSec;
+        inputEl.value = maxPerSec;
+        inputEl.classList.add('fallback-warning');
+        setTimeout(() => inputEl.classList.remove('fallback-warning'), 400);
+      }
+
+      this.state.rounds[sectionKey] = val;
+      this.updateRoundsSummary();
+    },
+
+    updateRoundsSummary() {
+      const total = this.getTotalRounds();
+      const isValid = total >= 3 && total <= 80;
+
+      const countEl = document.getElementById('gwSummaryTotalCount');
+      if (countEl) countEl.textContent = total;
+
+      const msgEl = document.getElementById('gwRoundsValidationMsg');
+      if (msgEl) {
+        msgEl.style.color = isValid ? 'var(--neo-text-muted, #64748b)' : '#dc2626';
+        msgEl.textContent = isValid ? '3 to 80 rounds' : (total < 3 ? 'Min 3 rounds required' : 'Max 80 rounds exceeded');
+      }
+
+      this.updateNavigationButtons();
     },
 
     getTotalRounds() {
@@ -382,6 +472,7 @@
       const html = this.state.sections.map(secKey => {
         const meta = secMeta[secKey];
         const currentCount = this.state.rounds[secKey] || 5;
+        const maxPerSec = secKey === 'eyes' ? 10 : 40;
 
         return `
           <div class="gw-round-row-card">
@@ -394,7 +485,22 @@
 
             <div class="gw-round-stepper-wrap">
               <button type="button" class="gw-step-btn" onclick="CreateRoomWizard.adjustSectionRounds('${secKey}', -1)" aria-label="Decrease rounds">−</button>
-              <span class="gw-stepper-val">${currentCount}</span>
+              <input
+                type="number"
+                id="gwRoundInput-${secKey}"
+                class="gw-stepper-val gw-stepper-input"
+                value="${currentCount}"
+                min="1"
+                max="${maxPerSec}"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                title="Click to write rounds (Max ${maxPerSec})"
+                onclick="this.select()"
+                onfocus="this.select()"
+                oninput="CreateRoomWizard.handleRoundInput('${secKey}', this)"
+                onblur="CreateRoomWizard.handleRoundBlur('${secKey}', this)"
+                onkeydown="if(event.key==='Enter'){this.blur();}"
+              />
               <button type="button" class="gw-step-btn" onclick="CreateRoomWizard.adjustSectionRounds('${secKey}', 1)" aria-label="Increase rounds">+</button>
             </div>
           </div>
@@ -408,11 +514,11 @@
         <div class="gw-rounds-summary-bar">
           <div class="flex flex-col text-left">
             <span class="gw-summary-label">Total Match Rounds</span>
-            <span style="font-size:11px; font-weight:700; color:${isValid ? 'var(--neo-text-muted)' : '#dc2626'};">
+            <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:700; color:${isValid ? 'var(--neo-text-muted)' : '#dc2626'};">
               ${isValid ? '3 to 80 rounds' : (total < 3 ? 'Min 3 rounds required' : 'Max 80 rounds exceeded')}
             </span>
           </div>
-          <span class="gw-summary-count">${total}</span>
+          <span class="gw-summary-count" id="gwSummaryTotalCount">${total}</span>
         </div>
       `;
 

@@ -13905,7 +13905,7 @@
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-frames"></span>
                       </div>
                       <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostFramesRoundsBtn">20</span>
+                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostFramesRoundsBtn" onclick="PlayerLobby.promptSetRounds('frames')" title="Click to write number of rounds (Max 40)">20</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
                       </div>
                       <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
@@ -13923,7 +13923,7 @@
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-eyes"></span>
                       </div>
                       <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostEyesRoundsBtn">10</span>
+                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostEyesRoundsBtn" onclick="PlayerLobby.promptSetRounds('eyes')" title="Click to write number of rounds (Max 10)">10</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
                       </div>
                       <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
@@ -13941,7 +13941,7 @@
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-dialogue"></span>
                       </div>
                       <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none" id="hostDialogueRoundsBtn">10</span>
+                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostDialogueRoundsBtn" onclick="PlayerLobby.promptSetRounds('dialogue')" title="Click to write number of rounds (Max 40)">10</span>
                         <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
                       </div>
                       <div class="grid grid-cols-2 gap-1.5 mt-auto pt-2 border-t-2 border-dashed border-outline/20">
@@ -15639,6 +15639,54 @@
 
       cycleRounds(mode) {
         this.adjustRounds(mode, 1);
+      },
+
+      promptSetRounds(mode) {
+        if (GameController._onlineMode && !MultiplayerEngine.isHost) return;
+        SoundManager.playClick();
+        if (!MultiplayerEngine.hostSettings) {
+          MultiplayerEngine.hostSettings = {
+            category: 'all',
+            categories: ['frames', 'eyes', 'dialogue'],
+            roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
+            rounds: 40,
+            timer: 30
+          };
+        }
+        const s = MultiplayerEngine.hostSettings;
+        if (!s.roundsByMode) s.roundsByMode = { frames: 20, eyes: 10, dialogue: 10 };
+        if (!s.categories) s.categories = ['frames', 'eyes', 'dialogue'];
+        
+        const maxRounds = (mode === 'frames' || mode === 'dialogue') ? 40 : 10;
+        const current = Number(s.roundsByMode[mode]) || 0;
+        const input = prompt(`Enter number of rounds for ${mode === 'eyes' ? 'Guess The Eyes' : (mode === 'dialogue' ? 'Guess The Dialogue' : 'Guess The Frame')} (Max ${maxRounds}):`, current);
+        if (input === null) return;
+        let val = parseInt(input, 10);
+        if (isNaN(val)) return;
+        if (val > maxRounds) {
+          alert(`⚠️ Maximum rounds for ${mode} is ${maxRounds}. Falling back to ${maxRounds}.`);
+          val = maxRounds;
+        } else if (val < 0) {
+          val = 0;
+        }
+
+        s.roundsByMode[mode] = val;
+        if (val > 0 && !s.categories.includes(mode)) {
+          s.categories.push(mode);
+        } else if (val === 0 && s.categories.includes(mode) && s.categories.length > 1) {
+          s.categories = s.categories.filter(c => c !== mode);
+        }
+
+        s.rounds = Object.values(s.roundsByMode).reduce((a, b) => a + b, 0);
+        if (s.categories.length === 3) s.category = 'all';
+        else if (s.categories.length === 1) s.category = s.categories[0];
+        else s.category = 'mixed';
+
+        if (GameController._onlineMode && MultiplayerEngine.isHost) {
+          MultiplayerEngine.sendEvent('UPDATE_HOST_SETTINGS', { settings: s });
+          MultiplayerEngine.broadcastState('SETTINGS_UPDATED');
+        }
+        this.render();
       },
 
       adjustTimer(delta) {

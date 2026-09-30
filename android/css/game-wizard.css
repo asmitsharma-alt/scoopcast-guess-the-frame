@@ -580,6 +580,62 @@
   user-select: none;
 }
 
+input.gw-stepper-val,
+.gw-stepper-input {
+  width: 54px;
+  height: 44px;
+  padding: 0 4px;
+  text-align: center;
+  font-family: 'Lilita One', var(--font-mono, monospace);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--neo-text-main, #111);
+  background: #ffffff;
+  border: 2.5px solid var(--neo-border-black, #111);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0px var(--neo-shadow-black, #111);
+  cursor: text;
+  user-select: text;
+  touch-action: manipulation;
+  transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+input.gw-stepper-val::-webkit-outer-spin-button,
+input.gw-stepper-val::-webkit-inner-spin-button,
+.gw-stepper-input::-webkit-outer-spin-button,
+.gw-stepper-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.gw-stepper-val:hover,
+.gw-stepper-input:hover {
+  background: var(--neo-yellow, #fef08a);
+}
+
+input.gw-stepper-val:focus,
+.gw-stepper-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 2px #7c3aed, 2px 2px 0px var(--neo-shadow-black, #111);
+}
+
+.gw-stepper-input.fallback-warning {
+  animation: neoShake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+  border-color: #ef4444 !important;
+  background: #fef2f2 !important;
+}
+
+@keyframes neoShake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
 .gw-rounds-summary-bar {
   background: var(--neo-blue-light);
   border: 3px solid var(--neo-border-black);
