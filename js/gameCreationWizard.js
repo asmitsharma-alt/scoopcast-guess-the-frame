@@ -165,15 +165,15 @@
         }
       }
 
-      // Validation before leaving Step 3 (rounds between 3 and 30)
+      // Validation before leaving Step 3 (rounds between 3 and 80)
       if (this.currentStep === 3 && stepNum > 3) {
         const total = this.getTotalRounds();
         if (total < 3) {
           this.showNotice('Minimum game length is 3 rounds.');
           return;
         }
-        if (total > 30) {
-          this.showNotice('Maximum game length is 30 rounds.');
+        if (total > 80) {
+          this.showNotice('Maximum game length is 80 rounds.');
           return;
         }
       }
@@ -475,7 +475,7 @@
         nextBtn.style.display = this.currentStep < 4 ? 'inline-flex' : 'none';
         if (this.currentStep === 3) {
           const total = this.getTotalRounds();
-          nextBtn.disabled = total < 3 || total > 30;
+          nextBtn.disabled = total < 3 || total > 80;
         } else {
           nextBtn.disabled = false;
         }

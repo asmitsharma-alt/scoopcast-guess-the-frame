@@ -27,7 +27,9 @@ const mockWindow = {};
 const mockDoc = {
   getElementById: () => null,
   querySelector: () => null,
-  querySelectorAll: () => []
+  querySelectorAll: () => [],
+  createElement: () => ({ classList: { add: () => {}, remove: () => {} }, style: {} }),
+  body: { appendChild: () => {}, removeChild: () => {} }
 };
 const mockLocalStorage = {
   store: {},
@@ -70,11 +72,17 @@ const total80 = DesktopWizard.getTotalRounds();
 const isValid80 = total80 >= 3 && total80 <= 80;
 assert(isValid80 === true, "Desktop Wizard: 80 total rounds is considered valid (<= 80)", `Got isValid = ${isValid80}`);
 
-DesktopWizard.state.rounds.eyes = 5;
+DesktopWizard.state.rounds = { frame: 40, dialogue: 40 };
+DesktopWizard.state.sections = ['frame', 'dialogue'];
+DesktopWizard.currentStep = 3;
+DesktopWizard.goToStep(4);
+assert(DesktopWizard.currentStep === 4, "Desktop Wizard: Navigates from Step 3 to Step 4 with 80 rounds without 'Maximum game length is 30 rounds' error", `Ended at step ${DesktopWizard.currentStep}`);
+
+DesktopWizard.state.rounds = { frame: 40, dialogue: 40, eyes: 5 };
 DesktopWizard.state.sections = ['frame', 'dialogue', 'eyes'];
-const total85 = DesktopWizard.getTotalRounds();
-const isValid85 = total85 >= 3 && total85 <= 80;
-assert(isValid85 === false, "Desktop Wizard: 85 total rounds correctly triggers validation error (> 80)", `Got isValid = ${isValid85}`);
+DesktopWizard.currentStep = 3;
+DesktopWizard.goToStep(4);
+assert(DesktopWizard.currentStep === 3, "Desktop Wizard: Blocks transition to Step 4 when total rounds = 85 (> 80)", `Ended at step ${DesktopWizard.currentStep}`);
 
 // ── TEST SUITE 2: Android Wizard Logic (android/js/gameCreationWizard.js) ──
 console.log("\n--- TEST SUITE 2: Android Wizard Logic ---");
