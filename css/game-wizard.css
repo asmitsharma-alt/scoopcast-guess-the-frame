@@ -78,6 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .gw-header-top {
@@ -660,171 +661,241 @@ input.gw-stepper-val:focus,
   box-shadow: 2px 2px 0px var(--neo-black);
 }
 
-/* ── STEP 4: Profile & Avatar Picker (Neobrutalism) ── */
+/* ── STEP 4: Profile & Avatar Picker (Neobrutalism UI) ── */
 #gwStepPane-4 {
-  gap: 12px;
+  gap: 14px;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
-#gwStepPane-4 .mp-credentials-row-join {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  width: 100%;
+/* ── Profile Top Deck (2 Columns on Desktop) ── */
+.gw-profile-top-deck {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: stretch;
   flex-shrink: 0;
+  width: 100%;
 }
 
-#gwStepPane-4 .mp-form-group {
+.gw-profile-card {
+  background: var(--neo-card-surface);
+  border: 3.5px solid var(--neo-black);
+  border-radius: 16px;
+  box-shadow: var(--neo-shadow-md);
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
   text-align: left;
+  box-sizing: border-box;
 }
 
-#gwStepPane-4 .mp-label {
+.gw-field-label {
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 900;
   text-transform: uppercase;
   color: var(--neo-black);
   letter-spacing: 0.08em;
+  display: block;
 }
 
-#gwStepPane-4 .mp-input {
-  height: 48px;
+.gw-input-wrapper {
+  width: 100%;
+}
+
+.gw-name-input {
+  width: 100%;
+  height: 52px;
   background: #FFFFFF;
   border: 3px solid var(--neo-black);
   border-radius: 12px;
   padding: 0 14px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 900;
   color: var(--neo-black);
-  box-shadow: 3px 3px 0px var(--neo-black);
+  box-shadow: 2.5px 2.5px 0px var(--neo-black);
   outline: none;
   font-family: var(--font-mono, monospace);
   transition: all 0.12s ease;
+  box-sizing: border-box;
 }
 
-#gwStepPane-4 .mp-input:focus {
+.gw-name-input:focus {
   background: var(--neo-yellow-light);
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0px var(--neo-black);
 }
 
-#gwStepPane-4 .mp-inline-preview-badge {
-  height: 48px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px;
-  background: var(--neo-card-surface);
-  border: 3px solid var(--neo-black);
-  border-radius: 12px;
-  box-shadow: 3px 3px 0px var(--neo-black);
+.gw-field-hint {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  color: #6B7280;
+  letter-spacing: 0.04em;
 }
 
-#gwStepPane-4 .mp-hero-preview-frame {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  border: 2px solid var(--neo-black);
+/* ── Active Avatar Showcase (Big 76px Preview) ── */
+.gw-avatar-showcase-card {
+  background: var(--neo-card-surface);
+}
+
+.gw-showcase-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.gw-showcase-frame {
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  min-height: 76px;
+  border-radius: 14px;
+  border: 3px solid var(--neo-black);
+  box-shadow: 3px 3px 0px var(--neo-black);
   overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background-color: var(--neo-yellow);
 }
 
-#gwStepPane-4 .mp-hero-check-pill {
+.gw-showcase-frame img,
+.gw-showcase-frame .img-contain-fit {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gw-showcase-check {
   position: absolute;
   bottom: -2px;
   right: -2px;
   background: var(--neo-green);
-  border: 1.5px solid var(--neo-black);
+  border: 2px solid var(--neo-black);
   border-radius: 999px;
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
 }
 
-#gwStepPane-4 .mp-hero-char-name {
+.gw-showcase-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.gw-showcase-name {
   font-family: 'Lilita One', sans-serif;
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 900;
   color: var(--neo-black);
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.1;
 }
 
-#gwStepPane-4 .mp-hero-tags-row {
+.gw-showcase-tags {
   display: flex;
-  gap: 4px;
-  margin-top: 2px;
+  align-items: center;
+  gap: 6px;
 }
 
-#gwStepPane-4 .mp-hero-cat-tag,
-#gwStepPane-4 .mp-hero-format-tag {
+.gw-tag-cat,
+.gw-tag-fmt {
   font-family: var(--font-mono, monospace);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
-  padding: 1px 6px;
-  border-radius: 4px;
-  border: 1.5px solid var(--neo-black);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 2px solid var(--neo-black);
+  box-shadow: 1.5px 1.5px 0px var(--neo-black);
 }
 
-#gwStepPane-4 .mp-hero-cat-tag { background: var(--neo-yellow); }
-#gwStepPane-4 .mp-hero-format-tag { background: #FFFFFF; }
+.gw-tag-cat { background: var(--neo-yellow); color: var(--neo-black); }
+.gw-tag-fmt { background: #FFFFFF; color: var(--neo-black); }
 
-#gwStepPane-4 .mp-avatar-picker-wrap {
+/* ── Avatar Studio Section ── */
+.gw-avatar-studio-section {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 100%;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  text-align: left;
+}
+
+.gw-studio-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
   min-height: 0;
 }
 
-#gwStepPane-4 .mp-avatar-search-bar {
+.gw-studio-search-bar {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
-#gwStepPane-4 .mp-avatar-search-input-wrap {
+.gw-studio-search-input-wrap {
   position: relative;
   flex: 1;
   display: flex;
   align-items: center;
 }
 
-#gwStepPane-4 .search-icon-slot {
+.gw-search-icon {
   position: absolute;
   left: 12px;
   pointer-events: none;
   color: var(--neo-black);
+  display: flex;
+  align-items: center;
 }
 
-#gwStepPane-4 .mp-avatar-search-input {
+.gw-studio-search-input {
   width: 100%;
   height: 42px;
   background: #FFFFFF;
   border: 2.5px solid var(--neo-black);
   border-radius: 10px;
-  padding: 0 36px 0 36px;
+  padding: 0 36px 0 38px;
   font-family: var(--font-mono, monospace);
   font-size: 13px;
   font-weight: 800;
   color: var(--neo-black);
   box-shadow: 2px 2px 0px var(--neo-black);
   outline: none;
+  box-sizing: border-box;
 }
 
-#gwStepPane-4 .mp-avatar-search-clear {
+.gw-studio-search-input:focus {
+  background: var(--neo-yellow-light);
+  box-shadow: 3px 3px 0px var(--neo-black);
+}
+
+.gw-studio-search-clear {
   position: absolute;
-  right: 8px;
+  right: 10px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -834,8 +905,7 @@ input.gw-stepper-val:focus,
   justify-content: center;
 }
 
-#gwStepPane-4 .mp-shuffle-btn,
-#gwStepPane-4 .mp-custom-upload-btn {
+.gw-studio-btn {
   height: 42px;
   padding: 0 14px;
   background: #FFFFFF;
@@ -843,7 +913,7 @@ input.gw-stepper-val:focus,
   border-radius: 10px;
   box-shadow: 2.5px 2.5px 0px var(--neo-black);
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -854,65 +924,62 @@ input.gw-stepper-val:focus,
   cursor: pointer;
   transition: all 0.12s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-#gwStepPane-4 .mp-shuffle-btn:hover,
-#gwStepPane-4 .mp-custom-upload-btn:hover {
+.gw-shuffle-btn:hover {
   background: var(--neo-yellow);
   transform: translate(-1px, -1px);
   box-shadow: 3.5px 3.5px 0px var(--neo-black);
 }
 
-#gwStepPane-4 .mp-avatar-category-bar {
+.gw-upload-btn:hover {
+  background: #F3F4F6;
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0px var(--neo-black);
+}
+
+.gw-studio-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0.5px 0.5px 0px var(--neo-black);
+}
+
+.gw-studio-category-bar {
   display: flex;
   align-items: center;
   gap: 6px;
   overflow-x: auto;
-  padding: 4px 2px;
+  overflow-y: hidden;
+  height: 38px;
+  min-height: 38px;
+  padding: 2px 2px 4px 2px;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-#gwStepPane-4 .mp-avatar-category-bar::-webkit-scrollbar {
+.gw-studio-category-bar::-webkit-scrollbar {
   height: 4px;
 }
-
-#gwStepPane-4 .mp-category-tab {
-  padding: 5px 12px;
-  background: #FFFFFF;
-  border: 2px solid var(--neo-black);
-  border-radius: 999px;
-  box-shadow: 1.5px 1.5px 0px var(--neo-black);
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  color: var(--neo-black);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.12s ease;
+.gw-studio-category-bar::-webkit-scrollbar-thumb {
+  background: var(--neo-black);
+  border-radius: 4px;
 }
 
-#gwStepPane-4 .mp-category-tab:hover {
-  background: var(--neo-yellow-light);
-}
-
-#gwStepPane-4 .mp-category-tab.active {
-  background: var(--neo-yellow);
-  box-shadow: 2px 2px 0px var(--neo-black);
-}
-
-#gwStepPane-4 .mp-avatar-scroll-area {
-  min-height: 190px;
-  max-height: 250px;
-  height: 230px;
+.gw-studio-scroll-area {
+  flex: 1 1 auto;
+  min-height: 140px;
+  max-height: 230px;
   overflow-y: auto;
-  border: 3px solid var(--neo-black);
+  overflow-x: hidden;
+  border: 3.5px solid var(--neo-black);
   border-radius: 14px;
   padding: 10px;
   background: #FFFFFF;
   box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
-#gwStepPane-4 .mp-infinite-avatar-grid {
+.gw-studio-avatar-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
   gap: 8px;
@@ -932,6 +999,7 @@ input.gw-stepper-val:focus,
   justify-content: center;
   overflow: hidden;
   transition: all 0.12s ease;
+  box-sizing: border-box;
 }
 
 #gwStepPane-4 .mp-circular-avatar-btn:hover {
@@ -1209,22 +1277,33 @@ input.gw-stepper-val:focus,
     margin-top: 0;
   }
 
+  .gw-profile-top-deck,
   #gwStepPane-4 .mp-credentials-row-join {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
+  .gw-showcase-frame {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    min-height: 64px;
+  }
+
+  .gw-studio-search-bar,
   #gwStepPane-4 .mp-avatar-search-bar {
     flex-wrap: wrap;
     gap: 6px;
   }
 
+  .gw-studio-search-input-wrap,
   #gwStepPane-4 .mp-avatar-search-input-wrap {
     min-width: 100%;
     width: 100%;
   }
 
+  .gw-shuffle-btn,
+  .gw-upload-btn,
   #gwStepPane-4 .mp-shuffle-btn,
   #gwStepPane-4 .mp-custom-upload-btn {
     flex: 1;
@@ -1233,8 +1312,9 @@ input.gw-stepper-val:focus,
     height: 38px;
   }
 
+  .gw-studio-scroll-area,
   #gwStepPane-4 .mp-avatar-scroll-area {
-    min-height: 150px;
+    min-height: 130px;
     max-height: 180px;
   }
 
