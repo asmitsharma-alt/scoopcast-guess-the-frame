@@ -1,7 +1,7 @@
 // Scoopcast Guess The Frame - Production Service Worker
 // Enables instant 0ms asset retrieval via Cache-First strategy
 
-const CACHE_NAME = 'gtf-cache-v9';
+const CACHE_NAME = 'gtf-cache-v11';
 const CORE_PRECACHE = [
   '/',
   '/css/tailwind.min.css',
@@ -50,12 +50,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Always bypass Service Worker cache for Admin Panel, dynamic database files, and manifests
+  // Always bypass Service Worker cache for Admin Panel, dynamic database files, manifests, and wizard scripts
   if (
     url.pathname.includes('/admin') ||
     url.pathname.includes('/data/') ||
     url.pathname.includes('/assets_manifest.json') ||
-    url.pathname.includes('/weekly_drops.json')
+    url.pathname.includes('/weekly_drops.json') ||
+    url.pathname.includes('gameCreationWizard')
   ) {
     return;
   }
