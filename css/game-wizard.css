@@ -335,7 +335,7 @@
   font-weight: 900;
   letter-spacing: 0.02em;
   color: var(--neo-text-main);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .gw-diff-badge {
@@ -348,19 +348,75 @@
   letter-spacing: 0.06em;
   border: 2px solid var(--neo-border-black);
   box-shadow: 1px 1px 0px var(--neo-shadow-black);
-  margin-bottom: 10px;
 }
 
 .gw-badge-easy { background: var(--neo-green-light); color: #14532d; }
 .gw-badge-medium { background: var(--neo-yellow); color: #713f12; }
 .gw-badge-hard { background: #fca5a5; color: #7f1d1d; }
 
+.gw-diff-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gw-radio-pill {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 2.5px solid var(--neo-border-black);
+  background: var(--neo-bg-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  box-shadow: 1.5px 1.5px 0px var(--neo-shadow-black);
+  transition: all 0.15s ease;
+}
+
+.gw-diff-card.selected .gw-radio-pill {
+  background: var(--neo-border-black);
+}
+
+.gw-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: transparent;
+  transition: all 0.15s ease;
+}
+
+.gw-diff-card.selected .gw-radio-dot {
+  background: var(--neo-yellow);
+}
+
+.gw-loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+}
+
+.gw-loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--neo-border-black);
+  border: 1.5px solid var(--neo-border-black);
+  animation: gwDotBounce 0.9s infinite alternate;
+}
+
+.gw-loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--neo-yellow); }
+.gw-loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--neo-green); }
+
+@keyframes gwDotBounce {
+  0% { transform: translateY(0); opacity: 0.3; }
+  100% { transform: translateY(-5px); opacity: 1; }
+}
+
 .gw-diff-desc {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12.5px;
-  font-weight: 700;
-  line-height: 1.4;
-  color: var(--neo-text-muted);
+  display: none;
 }
 
 /* ── STEP 2: Section Multi-Select Cards ── */

@@ -128,7 +128,7 @@
 
     init() {
       // Load saved preferences if available
-      const savedName = localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
+      const savedName = localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || '';
       if (savedName) this.state.playerName = savedName;
 
       const savedAvatar = localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : '') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
@@ -349,7 +349,7 @@
     // ── STEP 5: Create Lobby & Lock Configuration ──
     async enterLobby() {
       const nameInput = document.getElementById('hostPlayerNameInput');
-      const enteredName = (nameInput && nameInput.value.trim()) || this.state.playerName || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
+      const enteredName = (nameInput && nameInput.value.trim()) || this.state.playerName || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Player';
 
       const selectedAvatar = (typeof AvatarPicker !== 'undefined' ? AvatarPicker.selectedAvatar : null) || this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
 
@@ -553,10 +553,11 @@
     renderStep4() {
       const nameInput = document.getElementById('hostPlayerNameInput');
       if (nameInput) {
-        if (!nameInput.value || !nameInput.value.trim()) {
-          nameInput.value = this.state.playerName || localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || 'Maverick';
+        const saved = this.state.playerName || localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '');
+        if (saved && (!nameInput.value || !nameInput.value.trim())) {
+          nameInput.value = saved;
         }
-        this.state.playerName = nameInput.value.trim();
+        this.state.playerName = (nameInput.value || '').trim();
       }
 
       if (typeof AvatarPicker !== 'undefined') {

@@ -70,8 +70,8 @@
   </script>
   <script src="/js/icons.js"></script>
   <link rel="stylesheet" href="/css/avatar-picker.css">
-  <link rel="stylesheet" href="/css/game-wizard.css?v=5.4">
-  <script src="/js/gameCreationWizard.js?v=5.4"></script>
+  <link rel="stylesheet" href="/css/game-wizard.css?v=6.0">
+  <script src="/js/gameCreationWizard.js?v=6.0"></script>
   <!-- Vercel Web Analytics & Speed Insights -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
@@ -13584,7 +13584,7 @@
     </div>
 
 
-    <!-- AAA GAME CREATION SETUP WIZARD (Cinematic Glassmorphism UI) -->
+    <!-- AAA GAME CREATION SETUP WIZARD (Neobrutalism UI) -->
     <div class="gw-modal-overlay" id="gameCreationWizardModal" aria-hidden="true">
       <div class="gw-dialog" role="dialog" aria-modal="true" aria-labelledby="gwScreenTitle">
         
@@ -13592,8 +13592,8 @@
         <div class="gw-header">
           <div class="gw-header-top">
             <div class="gw-brand-tag">
-              <span class="gw-brand-dot"></span>
-              <span>ScoopCast Multiplayer</span>
+              <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor"/></svg>
+              <span>ROOM SETUP</span>
             </div>
             <button type="button" class="gw-close-btn" onclick="CreateRoomWizard.close()" aria-label="Close setup wizard">
               <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
@@ -13632,8 +13632,7 @@
           <!-- STEP 1: SELECT GAME MODE -->
           <div class="gw-step-pane active" id="gwStepPane-1">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title" id="gwScreenTitle">Choose Your Challenge</h2>
-              <p class="gw-screen-subtitle">Select the difficulty tier for this multiplayer lobby.</p>
+              <h2 class="gw-screen-title" id="gwScreenTitle">Choose Difficulty</h2>
             </div>
 
             <div class="gw-difficulty-grid">
@@ -13650,9 +13649,13 @@
                     <path d="M15.5 10.5l.5 12" stroke="#EF4444" stroke-width="2.5" />
                   </svg>
                 </div>
-                <div class="gw-diff-title">Popcorn Mode</div>
-                <div class="gw-diff-badge gw-badge-easy">Easy</div>
-                <p class="gw-diff-desc">Popular movies and recognizable scenes.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Popcorn Mode</div>
+                  <div class="gw-diff-badge gw-badge-easy">Easy</div>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
 
               <!-- Cinephile Mode -->
@@ -13669,9 +13672,13 @@
                     <path d="M17 16.5h4"/>
                   </svg>
                 </div>
-                <div class="gw-diff-title">Cinephile Mode</div>
-                <div class="gw-diff-badge gw-badge-medium">Medium</div>
-                <p class="gw-diff-desc">For players who know movies beyond famous scenes.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Cinephile Mode</div>
+                  <div class="gw-diff-badge gw-badge-medium">Medium</div>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
 
               <!-- Director's Cut Mode -->
@@ -13684,18 +13691,21 @@
                     <path d="m6.18 5.276 3.1 3.899"/>
                   </svg>
                 </div>
-                <div class="gw-diff-title">Director's Cut</div>
-                <div class="gw-diff-badge gw-badge-hard">Hard</div>
-                <p class="gw-diff-desc">Rare scenes and challenging frames.</p>
+                <div class="gw-diff-info-col">
+                  <div class="gw-diff-title">Director's Cut</div>
+                  <div class="gw-diff-badge gw-badge-hard">Hard</div>
+                </div>
+                <div class="gw-radio-pill">
+                  <div class="gw-radio-dot"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- STEP 2: SELECT GAME SECTION -->
           <div class="gw-step-pane" id="gwStepPane-2">
-            <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">Choose Your Challenge Type</h2>
-              <p class="gw-screen-subtitle">Select one or multiple challenges to feature in the match playlist.</p>
+            <div class="gw-step-title-group flex items-center justify-between">
+              <h2 class="gw-screen-title">Challenge Types</h2>
               <div class="gw-selected-count-badge" id="gwSelectedSectionsCount">
                 <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>Selected: 2 of 3</span>
@@ -13715,7 +13725,6 @@
                   </div>
                   <div class="gw-sec-info">
                     <div class="gw-sec-title">Guess The Frame</div>
-                    <div class="gw-sec-desc">Identify the movie from a cinematic frame.</div>
                   </div>
                 </div>
                 <div class="gw-checkbox-pill">
@@ -13735,7 +13744,6 @@
                   </div>
                   <div class="gw-sec-info">
                     <div class="gw-sec-title">Guess The Dialogue</div>
-                    <div class="gw-sec-desc">Guess the movie from famous dialogues.</div>
                   </div>
                 </div>
                 <div class="gw-checkbox-pill">
@@ -13755,7 +13763,6 @@
                   </div>
                   <div class="gw-sec-info">
                     <div class="gw-sec-title">Guess The Eyes</div>
-                    <div class="gw-sec-desc">Guess the character or movie from a close-up eye shot.</div>
                   </div>
                 </div>
                 <div class="gw-checkbox-pill">
@@ -13768,8 +13775,7 @@
           <!-- STEP 3: ROUND CONFIGURATION -->
           <div class="gw-step-pane" id="gwStepPane-3">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">Set Your Game Length</h2>
-              <p class="gw-screen-subtitle">Configure the round distribution for your selected challenge modes.</p>
+              <h2 class="gw-screen-title">Game Length</h2>
             </div>
 
             <div class="gw-rounds-config-list" id="gwRoundsContainer">
@@ -13780,22 +13786,22 @@
           <!-- STEP 4: CREATE PLAYER PROFILE -->
           <div class="gw-step-pane" id="gwStepPane-4">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">Create Player Profile</h2>
-              <p class="gw-screen-subtitle">Enter your name and pick your character avatar.</p>
+              <h2 class="gw-screen-title">Player Profile</h2>
             </div>
 
             <!-- Credentials Row: Player Name & Character Preview -->
             <div class="mp-credentials-row-join">
               <!-- 1. Player Name -->
               <div class="mp-form-group" style="flex: 1;">
-                <label class="mp-label">Your Player Name</label>
+                <label class="mp-label">Your Nickname</label>
                 <input
                   type="text"
                   id="hostPlayerNameInput"
                   class="mp-input font-bold"
-                  placeholder="Enter your name (e.g. Maverick)"
+                  placeholder="Enter your nickname..."
                   maxlength="16"
-                  value="Maverick"
+                  value=""
+                  autocomplete="off"
                   oninput="if(typeof MultiplayerEngine!=='undefined') MultiplayerEngine.playerName = this.value; CreateRoomWizard.setPlayerName(this.value);"
                   onkeydown="if(event.key==='Enter') CreateRoomWizard.enterLobby();"
                 />
@@ -13803,13 +13809,13 @@
 
               <!-- 2. Character Preview Badge -->
               <div class="mp-form-group" id="hostPreviewContainer">
-                <label class="mp-label">Character Preview</label>
+                <label class="mp-label">Avatar Preview</label>
                 <div class="mp-inline-preview-badge" id="hostPreviewBadge">
                   <div class="mp-hero-preview-frame" id="hostPreviewFrame" style="background-color: #facc15;">
                     <img
                       id="hostPreviewImg"
                       src="https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg"
-                      alt="Aman"
+                      alt="Avatar"
                       class="img-contain-fit"
                       onerror="AvatarPicker.handleImgError(this)"
                     />
@@ -13830,7 +13836,7 @@
 
             <!-- Choose Character From All Avatars Section -->
             <div class="mp-form-group" style="flex: 1; min-height: 0;">
-              <label class="mp-label">Choose Character From All Avatars</label>
+              <label class="mp-label">Choose Avatar</label>
               <div class="mp-avatar-picker-wrap">
                 <!-- Search & Actions Bar -->
                 <div class="mp-avatar-search-bar">
@@ -13842,7 +13848,7 @@
                       type="text"
                       id="hostAvatarSearchInput"
                       class="mp-avatar-search-input"
-                      placeholder="Search 1,800+ avatars (e.g. 'naruto', 'goku', 'walter', 'batman')..."
+                      placeholder="Search 1,800+ avatars (e.g. naruto, walter, goku)..."
                       oninput="AvatarPicker.handleSearch(this.value, 'hostSearchClearBtn')"
                     />
                     <button
@@ -13863,7 +13869,7 @@
 
                   <button type="button" class="mp-custom-upload-btn" onclick="document.getElementById('hostFileUploadInput').click()">
                     <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                    <span>Upload SVG / GIF</span>
+                    <span>Upload</span>
                   </button>
                   <input
                     type="file"
@@ -13881,8 +13887,7 @@
                 <div class="mp-avatar-scroll-area" id="hostAvatarScrollArea" onscroll="AvatarPicker.handleInfiniteScroll('hostAvatarScrollArea')">
                   <div class="mp-infinite-avatar-grid" id="hostAvatarGrid"></div>
                   <div class="mp-infinite-loading-indicator" id="hostLoadingIndicator">
-                    <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                    <span>Scroll for more avatars...</span>
+                    <span class="gw-loading-dots"><span></span><span></span><span></span></span>
                   </div>
                 </div>
               </div>
