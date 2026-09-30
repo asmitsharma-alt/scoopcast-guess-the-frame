@@ -537,8 +537,8 @@ export class TriviaRoom extends Room<GameState> {
           this.awardCorrectGuess(client, player);
           return;
         }
-        // Otherwise, if it contains spoiler content, block it
-        if (FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
+        // Only block spoilers from players who already answered (to prevent revealing to others)
+        if (player.hasGuessedCorrectly && FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
           client.send("chat_warning", {
             message: "⚠️ Your message was blocked to protect players from spoilers!"
           });
