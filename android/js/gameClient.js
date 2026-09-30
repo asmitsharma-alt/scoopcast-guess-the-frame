@@ -924,19 +924,26 @@ const GameClient = {
       GAME_SECTIONS.forEach(sec => {
         if (Array.isArray(sec.frames)) {
           sec.frames.forEach(f => {
-            if (f.content) items.push({ content: f.content, type: f.type || 'image', revealContent: f.revealContent });
-            if (f.revealContent && !items.some(it => it.content === f.revealContent)) {
-              items.push({ content: f.revealContent, type: 'image' });
+            if (f.type !== 'dialogue') {
+              if (f.content) items.push({ content: f.content, type: f.type || 'image', revealContent: f.revealContent });
+              if (f.revealContent && !items.some(it => it.content === f.revealContent)) {
+                items.push({ content: f.revealContent, type: 'image' });
+              }
             }
           });
         }
       });
     }
 
-    // Failsafe timer: guarantee full readiness within 1.8s max so host is never stuck
+    if (items.length === 0) {
+      reportProgress(100, 'ready');
+      return;
+    }
+
+    // Failsafe timer: guarantee full readiness within 1.2s max so host is never stuck
     const failsafe = setTimeout(() => {
       reportProgress(100, 'ready');
-    }, 1800);
+    }, 1200);
 
     if (typeof AssetPreloader !== 'undefined' && AssetPreloader.preloadRoomAssets) {
       AssetPreloader.preloadRoomAssets(items, (pct, status) => {

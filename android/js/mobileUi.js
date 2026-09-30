@@ -143,6 +143,9 @@ const MediaCache = {
 
   preload(rawSrc) {
     if (!rawSrc) return Promise.resolve(null);
+    if (typeof rawSrc === 'string' && !rawSrc.startsWith('http') && !rawSrc.startsWith('/') && !rawSrc.startsWith('data:')) {
+      return Promise.resolve(null);
+    }
     const url = resolveMediaPath(rawSrc);
     if (!url) return Promise.resolve(null);
 
@@ -187,7 +190,7 @@ const MediaCache = {
     return p;
   },
 
-  async preloadBatch(urls, batchSize = 6) {
+  async preloadBatch(urls, batchSize = 12) {
     if (!Array.isArray(urls) || urls.length === 0) return;
     for (let i = 0; i < urls.length; i += batchSize) {
       const chunk = urls.slice(i, i + batchSize);
