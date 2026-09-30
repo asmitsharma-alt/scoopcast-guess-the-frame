@@ -29,6 +29,7 @@ export class TriviaRoom extends Room<GameState> {
   private currentSecretItem: CatalogItem | null = null;
   private roundTimerDuration: number = GAME_CONFIG.defaultTimerDuration;
   private autoAdvanceTimer: any = null;
+  private countdownTimer: any = null;
   private gameSeed: string = "";
   private roundStartTime: number = 0;
   private playerGuessTimes: Map<string, number> = new Map();
@@ -106,24 +107,60 @@ export class TriviaRoom extends Room<GameState> {
       }
     }
     if (this.state.players.size >= this.maxClients) {
-      throw new Error(`Room is full (${this.maxClients} players maximum).`);
+      const targetUid = options?.userId ? String(options.userId).trim() : null;
+      const isReconnecting = targetUid && Array.from(this.state.players.values()).some(p => p.userId === targetUid);
+      if (!isReconnecting) {
+        throw new Error(`Room is full (${this.maxClients} players maximum).`);
+      }
     }
     return true;
   }
 
   onJoin(client: Client, options: { name?: string; avatar?: string; userId?: string }) {
-    const isFirst = this.state.players.size === 0;
+    const targetUserId = (options.userId || client.sessionId).trim();
+
+    // Check for existing ghost player with the same userId (reconnection or duplicate tab)
+    let existingGhostId: string | null = null;
+    let existingGhostPlayer: Player | null = null;
+    for (const [sId, p] of this.state.players.entries()) {
+      if (p.userId === targetUserId && sId !== client.sessionId) {
+        existingGhostId = sId;
+        existingGhostPlayer = p;
+        break;
+      }
+    }
+
+    const isFirst = this.state.players.size === 0 || (existingGhostPlayer?.isHost ?? false);
 
     const player = new Player();
     player.id = client.sessionId;
-    player.userId = (options.userId || client.sessionId).trim();
-    player.name = (options.name || `Player ${this.state.players.size + 1}`).trim().slice(0, 18);
-    player.avatar = this.validateAvatar(options.avatar);
+    player.userId = targetUserId;
+    player.name = (options.name || (existingGhostPlayer ? existingGhostPlayer.name : `Player ${this.state.players.size + 1}`)).trim().slice(0, 18);
+    player.avatar = this.validateAvatar(options.avatar || existingGhostPlayer?.avatar);
     player.isHost = isFirst;
     player.connected = true;
     player.assetProgress = 0;
     player.isReady = false;
     player.assetStatus = "waiting";
+
+    if (existingGhostPlayer && existingGhostId) {
+      // Inherit previous session data seamlessly so player doesn't lose score/streak/ready status
+      player.score = existingGhostPlayer.score;
+      player.streak = existingGhostPlayer.streak;
+      player.hasGuessedCorrectly = existingGhostPlayer.hasGuessedCorrectly;
+      player.hasUsedHint = existingGhostPlayer.hasUsedHint;
+      player.isHost = existingGhostPlayer.isHost;
+      player.assetProgress = Math.max(player.assetProgress, existingGhostPlayer.assetProgress);
+      player.isReady = existingGhostPlayer.isReady;
+      player.assetStatus = existingGhostPlayer.assetStatus;
+
+      // Remove the old ghost player from state immediately so there are no duplicate players
+      this.state.players.delete(existingGhostId);
+
+      if (player.isHost) {
+        this.state.currentHostId = client.sessionId;
+      }
+    }
 
     this.state.players.set(client.sessionId, player);
 
@@ -148,7 +185,11 @@ export class TriviaRoom extends Room<GameState> {
       playerCount: this.state.players.size
     });
 
-    this.addSystemChatMessage(`👋 ${player.name} joined the game`);
+    if (existingGhostPlayer) {
+      this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
+    } else {
+      this.addSystemChatMessage(`👋 ${player.name} joined the game`);
+    }
   }
 
   async onLeave(client: Client, consented: boolean) {
@@ -165,24 +206,29 @@ export class TriviaRoom extends Room<GameState> {
     }
 
     try {
-      if (consented) {
-        throw new Error("consented leave");
+      // Immediate cleanup for voluntary leaves OR lobby / game_over (prevents ghost players in lobby)
+      if (consented || this.state.phase === "lobby" || this.state.phase === "game_over") {
+        throw new Error("immediate leave");
       }
-      // Unconsented disconnects (network blip, refresh) get 15s to reconnect
-      await this.allowReconnection(client, 15);
+      // Unconsented disconnects during active gameplay get 12s to reconnect
+      await this.allowReconnection(client, 12);
       player.connected = true;
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
     } catch (e) {
-      this.state.players.delete(client.sessionId);
-      this.addSystemChatMessage(`🚪 ${player.name} left the game`);
+      // Only delete if the player in state is still THIS sessionId (wasn't already replaced by onJoin deduplication)
+      const currentInState = this.state.players.get(client.sessionId);
+      if (currentInState && currentInState.id === client.sessionId) {
+        this.state.players.delete(client.sessionId);
+        this.addSystemChatMessage(`🚪 ${player.name} left the game`);
+      }
 
-      // If host wasn't migrated yet (e.g. was only player earlier or edge condition)
+      // If host wasn't migrated yet
       if (wasHost && this.state.players.size > 0 && !Array.from(this.state.players.values()).some(p => p.isHost)) {
         this.migrateHost();
       }
 
       // Check if all remaining players have guessed
-      if (this.state.phase === "playing") {
+      if (this.state.phase === "playing" || this.state.phase === "tie_breaker") {
         this.checkRoundCompletion();
       }
     } finally {
@@ -197,6 +243,11 @@ export class TriviaRoom extends Room<GameState> {
   onDispose() {
     if (this.autoAdvanceTimer) {
       clearTimeout(this.autoAdvanceTimer);
+      this.autoAdvanceTimer = null;
+    }
+    if (this.countdownTimer) {
+      this.countdownTimer.clear();
+      this.countdownTimer = null;
     }
   }
 
@@ -228,24 +279,20 @@ export class TriviaRoom extends Room<GameState> {
         player.assetStatus = 'ready';
       }
 
-      try {
-        GameDatabase.getInstance().saveOrUpdatePlayerSession({
-          playerId: player.id,
-          roomId: this.state.roomCode,
-          username: player.name,
-          avatarId: player.avatar,
-          assetStatus: player.assetStatus,
-          readyStatus: player.isReady
-        });
-      } catch(e) {}
-
-      this.broadcast("player_asset_update", {
-        playerId: player.id,
-        name: player.name,
-        progress: player.assetProgress,
-        status: player.assetStatus,
-        isReady: player.isReady
-      });
+      // Debounce DB writes — only persist at milestones (25%, 50%, 75%, 100%)
+      if (progress === 25 || progress === 50 || progress === 75 || progress >= 100) {
+        try {
+          GameDatabase.getInstance().saveOrUpdatePlayerSession({
+            playerId: player.id,
+            roomId: this.state.roomCode,
+            username: player.name,
+            avatarId: player.avatar,
+            assetStatus: player.assetStatus,
+            readyStatus: player.isReady
+          });
+        } catch(e) {}
+      }
+      // No manual broadcast needed — Colyseus auto-syncs @type schema fields to all clients
     });
 
     // ── Explicit Player Ready ──
@@ -269,14 +316,7 @@ export class TriviaRoom extends Room<GameState> {
           readyStatus: player.isReady
         });
       } catch(e) {}
-
-      this.broadcast("player_asset_update", {
-        playerId: player.id,
-        name: player.name,
-        progress: player.assetProgress,
-        status: player.assetStatus,
-        isReady: player.isReady
-      });
+      // No manual broadcast needed — Colyseus auto-syncs @type schema fields to all clients
     });
 
     // ── Host starts the game ──
@@ -315,12 +355,20 @@ export class TriviaRoom extends Room<GameState> {
       // Generate a fresh random game seed for this match
       this.gameSeed = `${this.state.roomCode}_${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
 
-      this.buildPlaylist(category, requestedRounds, weeklyOnly, message?.roundsByMode);
+      const roundsByMode = message?.roundsByMode || {
+        frames: this.state.gameSettings.frameRounds,
+        dialogue: this.state.gameSettings.dialogueRounds,
+        eyes: this.state.gameSettings.eyesRounds
+      };
+
+      this.buildPlaylist(category, requestedRounds, weeklyOnly, roundsByMode);
       if (this.currentPlaylist.length === 0) return;
 
       this.state.totalRounds = this.currentPlaylist.length;
 
       // Reset player scores & round status
+      this.playerGuessTimes.clear();
+      this.playerCorrectCount.clear();
       this.state.players.forEach((p) => {
         p.score = 0;
         p.hasGuessedCorrectly = false;
@@ -331,10 +379,18 @@ export class TriviaRoom extends Room<GameState> {
       this.state.timeRemaining = 3;
       this.setMetadata({ roomCode: this.state.roomCode, phase: "countdown", playerCount: this.state.players.size });
 
-      const countdownInterval = this.clock.setInterval(() => {
+      if (this.countdownTimer) {
+        this.countdownTimer.clear();
+        this.countdownTimer = null;
+      }
+
+      this.countdownTimer = this.clock.setInterval(() => {
         this.state.timeRemaining--;
         if (this.state.timeRemaining <= 0) {
-          countdownInterval.clear();
+          if (this.countdownTimer) {
+            this.countdownTimer.clear();
+            this.countdownTimer = null;
+          }
           this.startRound(0);
         }
       }, 1000);
@@ -402,6 +458,10 @@ export class TriviaRoom extends Room<GameState> {
         clearTimeout(this.autoAdvanceTimer);
         this.autoAdvanceTimer = null;
       }
+      if (this.countdownTimer) {
+        this.countdownTimer.clear();
+        this.countdownTimer = null;
+      }
       this.state.phase = "game_over";
       this.setMetadata({ roomCode: this.state.roomCode, phase: "game_over", playerCount: this.state.players.size });
       this.addSystemChatMessage("🏁 Match ended early by Host.");
@@ -416,11 +476,18 @@ export class TriviaRoom extends Room<GameState> {
         clearTimeout(this.autoAdvanceTimer);
         this.autoAdvanceTimer = null;
       }
+      if (this.countdownTimer) {
+        this.countdownTimer.clear();
+        this.countdownTimer = null;
+      }
       this.state.phase = "lobby";
       this.state.currentRound = 0;
       this.state.revealedAnswer = "";
       this.state.revealedContent = "";
       this.state.currentRoundWinners.clear();
+      this.state.chatMessages.clear();
+      this.playerGuessTimes.clear();
+      this.playerCorrectCount.clear();
       this.state.players.forEach(p => {
         p.score = 0;
         p.hasGuessedCorrectly = false;
@@ -564,6 +631,8 @@ export class TriviaRoom extends Room<GameState> {
 
   /** Shared helper: award points, streaks, and notify the client for a correct guess. */
   private awardCorrectGuess(client: any, player: any) {
+    if (this.state.phase !== "playing" && this.state.phase !== "tie_breaker") return;
+    if (player.hasGuessedCorrectly) return;
     player.hasGuessedCorrectly = true;
     const guessSeconds = Math.max(0.1, Number(((Date.now() - this.roundStartTime) / 1000).toFixed(2)));
     this.playerGuessTimes.set(player.id, guessSeconds);
@@ -608,7 +677,7 @@ export class TriviaRoom extends Room<GameState> {
   }
 
   private updateTick() {
-    if (this.state.phase === "playing" && !this.state.isPaused) {
+    if ((this.state.phase === "playing" || this.state.phase === "tie_breaker") && !this.state.isPaused) {
       this.state.timeRemaining--;
       if (this.state.timeRemaining <= 0) {
         this.finishRound();
@@ -617,6 +686,15 @@ export class TriviaRoom extends Room<GameState> {
   }
 
   private startRound(index: number) {
+    if (this.autoAdvanceTimer) {
+      clearTimeout(this.autoAdvanceTimer);
+      this.autoAdvanceTimer = null;
+    }
+    if (this.countdownTimer) {
+      this.countdownTimer.clear();
+      this.countdownTimer = null;
+    }
+
     if (index >= this.currentPlaylist.length) {
       this.checkForTieBreakerOrGameOver();
       return;

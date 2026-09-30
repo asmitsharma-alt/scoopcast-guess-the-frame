@@ -133,8 +133,8 @@ const httpServer = http.createServer(app);
 const gameServer = new Server({
   transport: new WebSocketTransport({
     server: httpServer,
-    pingInterval: 10000, // 10s ping interval
-    pingMaxRetries: 6    // 6 retries = 60s tolerance for cellular networks (4G/5G)
+    pingInterval: 5000,  // 5s ping interval for responsive network heartbeat
+    pingMaxRetries: 4    // 4 retries = 20s detection for dropped mobile connections
   })
 });
 
