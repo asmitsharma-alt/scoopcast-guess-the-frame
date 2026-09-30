@@ -12,6 +12,8 @@ export interface EnrichedFrameMetadata {
   region: 'hollywood' | 'bollywood' | 'regional' | 'international';
   genre: string;
   leadActor: string;
+  character?: string;
+  displayAnswer?: string;
   difficulty: number; // 1 - 10
   qualityScore: number; // 50 - 100
   discoveryValue: number; // 10 - 100
@@ -123,11 +125,15 @@ export class MetadataEnricher {
     type: 'image' | 'dialogue' | 'eye';
     content: string;
     answer: string;
+    displayAnswer?: string;
     year?: string;
     tag?: string;
     aliases?: string[];
     dialogue?: string;
     revealContent?: string;
+    character?: string;
+    actor?: string;
+    region?: 'hollywood' | 'bollywood' | 'regional' | 'international';
   }): EnrichedFrameMetadata {
     const title = raw.answer.trim();
     const cleanTitle = title.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -144,26 +150,30 @@ export class MetadataEnricher {
     }
 
     // 2. Region Classification
-    let region: 'hollywood' | 'bollywood' | 'regional' | 'international' = 'hollywood';
-    if (this.BOLLYWOOD_TITLES.has(cleanTitle)) {
-      region = 'bollywood';
-    } else if (this.REGIONAL_INDIAN_TITLES.has(cleanTitle)) {
-      region = 'regional';
-    } else if (this.INTERNATIONAL_TITLES.has(cleanTitle)) {
-      region = 'international';
-    } else {
-      // Heuristics for Indian cinema titles
-      if (/\b(kumar|singh|kapoor|khan|sharma|bhai|ki|ka|hai|aur|dil|prem|raja|kalki|devara|salaar|jawan|pathaan|stree|brahmastra)\b/i.test(title)) {
+    let region: 'hollywood' | 'bollywood' | 'regional' | 'international' = raw.region || 'hollywood';
+    if (!raw.region) {
+      if (this.BOLLYWOOD_TITLES.has(cleanTitle)) {
         region = 'bollywood';
+      } else if (this.REGIONAL_INDIAN_TITLES.has(cleanTitle)) {
+        region = 'regional';
+      } else if (this.INTERNATIONAL_TITLES.has(cleanTitle)) {
+        region = 'international';
+      } else {
+        // Heuristics for Indian cinema titles
+        if (/\b(kumar|singh|kapoor|khan|sharma|bhai|ki|ka|hai|aur|dil|prem|raja|kalki|devara|salaar|jawan|pathaan|stree|brahmastra)\b/i.test(title)) {
+          region = 'bollywood';
+        }
       }
     }
 
     // 3. Lead Actor Detection
-    let leadActor = 'Ensemble Cast';
-    for (const pat of this.ACTOR_PATTERNS) {
-      if (pat.regex.test(title)) {
-        leadActor = pat.actor;
-        break;
+    let leadActor = raw.actor || 'Ensemble Cast';
+    if (!raw.actor) {
+      for (const pat of this.ACTOR_PATTERNS) {
+        if (pat.regex.test(title)) {
+          leadActor = pat.actor;
+          break;
+        }
       }
     }
 
@@ -245,7 +255,9 @@ export class MetadataEnricher {
       tag: raw.tag,
       aliases: raw.aliases,
       dialogue: raw.dialogue,
-      revealContent: raw.revealContent
+      revealContent: raw.revealContent,
+      character: raw.character,
+      displayAnswer: raw.displayAnswer
     };
   }
 }

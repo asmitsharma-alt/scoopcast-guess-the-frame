@@ -500,11 +500,26 @@ export class TriviaRoom extends Room<GameState> {
       player.hasUsedHint = true;
       player.score = Math.max(0, player.score - GAME_CONFIG.scoring.hintCost);
 
-      const masked = HintGenerator.generateMaskedHint(this.currentSecretAnswer);
+      let hintText = "";
+      if (this.currentSecretItem && (this.currentSecretItem.type === "dialogue" || this.currentSecretItem.category === "dialogue")) {
+        const char = this.currentSecretItem.character;
+        const act = this.currentSecretItem.actor;
+        if (char && act) {
+          hintText = `Character / Actor: ${char} (${act})`;
+        } else if (char) {
+          hintText = `Character: ${char}`;
+        } else if (act) {
+          hintText = `Actor: ${act}`;
+        } else {
+          hintText = HintGenerator.generateMaskedHint(this.currentSecretAnswer);
+        }
+      } else {
+        hintText = HintGenerator.generateMaskedHint(this.currentSecretAnswer);
+      }
 
       // Sent privately ONLY to this client
       client.send("hint_response", {
-        maskedHint: masked,
+        maskedHint: hintText,
         pointsDeducted: GAME_CONFIG.scoring.hintCost
       });
 
@@ -625,7 +640,7 @@ export class TriviaRoom extends Room<GameState> {
 
   private finishRound() {
     this.state.phase = "round_reveal";
-    this.state.revealedAnswer = this.currentSecretAnswer;
+    this.state.revealedAnswer = this.currentSecretItem?.displayAnswer || this.currentSecretAnswer;
     this.setMetadata({ roomCode: this.state.roomCode, phase: "round_reveal", playerCount: this.state.players.size });
 
     if (this.currentSecretItem && this.currentSecretItem.type === "eye") {

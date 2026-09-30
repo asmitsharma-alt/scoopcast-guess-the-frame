@@ -1,3 +1,5 @@
+import { DIALOGUE_CATALOG } from "./dialogueCatalog";
+
 export type MediaType = 'image' | 'dialogue' | 'eye';
 
 export interface CatalogItem {
@@ -8,9 +10,13 @@ export interface CatalogItem {
   revealContent?: string;
   dialogue?: string;
   answer: string;
+  displayAnswer?: string; // What to show when revealed (e.g. '***** ****' for Fight Club)
   year?: string;
+  character?: string;
+  actor?: string;
+  region?: 'bollywood' | 'hollywood' | 'regional' | 'international';
   aliases?: string[];
-  tag?: 'new' | 'classic';
+  tag?: 'new' | 'classic' | 'modern' | string;
 }
 
 export const CATALOG: CatalogItem[] = [
@@ -9016,101 +9022,8 @@ export const CATALOG: CatalogItem[] = [
     tag: "classic"
   },
 
-  // ── Guess The Dialogue (10 Local Dialogues) ──
-  {
-    id: "d_1",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Say hello to my little friend!",
-    dialogue: "Say hello to my little friend!",
-    answer: "SCARFACE",
-    year: "1983"
-  },
-  {
-    id: "d_2",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Some people just want to watch the world burn.",
-    dialogue: "Some people just want to watch the world burn.",
-    answer: "THE DARK KNIGHT",
-    year: "2008",
-    aliases: ["DARK KNIGHT"]
-  },
-  {
-    id: "d_3",
-    category: "dialogue",
-    type: "dialogue",
-    content: "I don't want to kill you. I don't want to hurt you. I don't want your life.",
-    dialogue: "I don't want to kill you. I don't want to hurt you. I don't want your life.",
-    answer: "CAPTAIN AMERICA: THE WINTER SOLDIER",
-    year: "2014",
-    aliases: ["CAPTAIN AMERICA THE WINTER SOLDIER", "THE WINTER SOLDIER", "WINTER SOLDIER"]
-  },
-  {
-    id: "d_4",
-    category: "dialogue",
-    type: "dialogue",
-    content: "I drink your milkshake!",
-    dialogue: "I drink your milkshake!",
-    answer: "THERE WILL BE BLOOD",
-    year: "2007"
-  },
-  {
-    id: "d_5",
-    category: "dialogue",
-    type: "dialogue",
-    content: "What we do in life echoes in eternity.",
-    dialogue: "What we do in life echoes in eternity.",
-    answer: "GLADIATOR",
-    year: "2000"
-  },
-  {
-    id: "d_6",
-    category: "dialogue",
-    type: "dialogue",
-    content: "The city is flying, we're fighting an army of robots, and I have a bow and arrow. None of this makes sense.",
-    dialogue: "The city is flying, we're fighting an army of robots, and I have a bow and arrow. None of this makes sense.",
-    answer: "AVENGERS: AGE OF ULTRON",
-    year: "2015",
-    aliases: ["AVENGERS AGE OF ULTRON", "AGE OF ULTRON"]
-  },
-  {
-    id: "d_7",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Tareekh pe tareekh.",
-    dialogue: "Tareekh pe tareekh.",
-    answer: "DAMINI",
-    year: "1993"
-  },
-  {
-    id: "d_8",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Aap purush hi nahi, mahapurush hain.",
-    dialogue: "Aap purush hi nahi, mahapurush hain.",
-    answer: "ANDAZ APNA APNA",
-    year: "1994"
-  },
-  {
-    id: "d_9",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Rishte mein toh hum tumhare baap lagte hain.",
-    dialogue: "Rishte mein toh hum tumhare baap lagte hain.",
-    answer: "SHAHENSHAH",
-    year: "1988"
-  },
-  {
-    id: "d_10",
-    category: "dialogue",
-    type: "dialogue",
-    content: "Insaan ko dibbe mein sirf tab hona chahiye jab woh mar chuka ho.",
-    dialogue: "Insaan ko dibbe mein sirf tab hona chahiye jab woh mar chuka ho.",
-    answer: "ZINDAGI NA MILEGI DOBARA",
-    year: "2011",
-    aliases: ["ZNMD"]
-  },
+  // ── Guess The Dialogue (400 Curated Dialogues: 200 Bollywood + 200 Hollywood) ──
+  ...DIALOGUE_CATALOG,
 
   // ── Guess The Eye (10 Local Celebrities) ──
   {

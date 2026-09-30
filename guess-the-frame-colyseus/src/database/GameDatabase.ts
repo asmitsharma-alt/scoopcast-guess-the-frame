@@ -98,6 +98,8 @@ export class GameDatabase {
         aliases_json TEXT,
         dialogue TEXT,
         reveal_content TEXT,
+        character TEXT,
+        display_answer TEXT,
         is_active INTEGER NOT NULL DEFAULT 1,
         created_at INTEGER NOT NULL
       );
@@ -161,6 +163,9 @@ export class GameDatabase {
         PRIMARY KEY (player_id, room_id)
       );
     `);
+
+    try { this.db.exec("ALTER TABLE frames_metadata ADD COLUMN character TEXT;"); } catch(e) {}
+    try { this.db.exec("ALTER TABLE frames_metadata ADD COLUMN display_answer TEXT;"); } catch(e) {}
   }
 
   private prepareStatements() {
@@ -188,14 +193,18 @@ export class GameDatabase {
         frame_id, movie_id, movie_title, content_url, category, type, year,
         franchise, region, genre, lead_actor, difficulty, quality_score,
         discovery_value, perceptual_hash, tag, aliases_json, dialogue,
-        reveal_content, is_active, created_at
+        reveal_content, character, display_answer, is_active, created_at
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(frame_id) DO UPDATE SET
         content_url = excluded.content_url,
         category = excluded.category,
         type = excluded.type,
         year = excluded.year,
+        region = excluded.region,
+        lead_actor = excluded.lead_actor,
+        character = excluded.character,
+        display_answer = excluded.display_answer,
         tag = excluded.tag,
         aliases_json = excluded.aliases_json,
         dialogue = excluded.dialogue,
@@ -369,6 +378,8 @@ export class GameDatabase {
             enriched.aliases ? JSON.stringify(enriched.aliases) : null,
             enriched.dialogue || null,
             enriched.revealContent || null,
+            enriched.character || null,
+            enriched.displayAnswer || null,
             1,
             now
           );
@@ -520,6 +531,8 @@ export class GameDatabase {
       region: r.region,
       genre: r.genre,
       leadActor: r.lead_actor,
+      character: r.character || undefined,
+      displayAnswer: r.display_answer || undefined,
       difficulty: Number(r.difficulty),
       qualityScore: Number(r.quality_score),
       discoveryValue: Number(r.discovery_value),

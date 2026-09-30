@@ -66,9 +66,11 @@ export class FrameEngine {
         type: c.type,
         year: c.year ? parseInt(c.year) : 2000,
         franchise: 'none',
-        region: 'international',
+        region: c.region || 'international',
         genre: 'cinema',
-        leadActor: '',
+        leadActor: c.actor || '',
+        character: c.character,
+        displayAnswer: c.displayAnswer,
         difficulty: 5,
         qualityScore: 50,
         discoveryValue: 20,
@@ -219,6 +221,54 @@ export class FrameEngine {
       return [];
     }
 
+    // ── Half Bollywood / Half Hollywood split for dialogue rounds ──
+    // If odd number of rounds, Bollywood gets 1 extra
+    if (category === 'dialogue') {
+      const bollyPool = pool.filter(f => f.region === 'bollywood');
+      const hollyPool = pool.filter(f => f.region === 'hollywood');
+
+      // Only apply split if we have both pools with enough items
+      if (bollyPool.length > 0 && hollyPool.length > 0) {
+        const bollyTarget = Math.ceil(targetCount / 2);
+        const hollyTarget = Math.floor(targetCount / 2);
+
+        const bollyPicks = this.pickFromPool(bollyPool, bollyTarget, seenFrameFrequencies, rng);
+        const hollyPicks = this.pickFromPool(hollyPool, hollyTarget, seenFrameFrequencies, rng);
+
+        const combined = [...bollyPicks, ...hollyPicks];
+
+        // Shuffle the combined playlist so Bollywood and Hollywood are interleaved
+        for (let i = combined.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          const temp = combined[i];
+          combined[i] = combined[j];
+          combined[j] = temp;
+        }
+
+        // Record memory cooldown
+        const now = Date.now();
+        for (const item of combined) {
+          this.memoryCooldowns.set(item.frameId, now);
+        }
+
+        return combined;
+      }
+    }
+
+    // Standard random selection for non-dialogue categories
+    return this.pickFromPool(pool, targetCount, seenFrameFrequencies, rng);
+  }
+
+  /**
+   * Helper: picks targetCount unique items from pool with unseen-first priority,
+   * no duplicate movies, and franchise diversity.
+   */
+  private pickFromPool(
+    pool: EnrichedFrameMetadata[],
+    targetCount: number,
+    seenFrameFrequencies: Map<string, number>,
+    rng: () => number
+  ): EnrichedFrameMetadata[] {
     // Split into unseen and seen frames so player never sees repeated frames while unseen remain
     const unseen: EnrichedFrameMetadata[] = [];
     const seen: EnrichedFrameMetadata[] = [];
@@ -528,11 +578,15 @@ export class FrameEngine {
       type: meta.type,
       content: meta.contentUrl,
       answer: meta.movieTitle,
+      displayAnswer: meta.displayAnswer,
       year: meta.year ? String(meta.year) : undefined,
       tag: (meta.tag as any) || 'classic',
       aliases: meta.aliases,
       dialogue: meta.dialogue,
-      revealContent: meta.revealContent
+      revealContent: meta.revealContent,
+      character: meta.character,
+      actor: meta.leadActor,
+      region: meta.region
     };
   }
 
