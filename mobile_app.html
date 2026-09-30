@@ -453,16 +453,13 @@
             </button>
           </div>
 
-          <!-- Tactile Arcade Cartridge Step Navigation (3 Steps) -->
+          <!-- Tactile Arcade Cartridge Step Navigation (2 Steps) -->
           <div class="gw-stepper-rack">
             <button type="button" class="gw-step-tab active" id="gwStepNode-1" onclick="CreateRoomWizard.goToStep(1)">
-              <span class="gw-tab-num">01</span> MODE
+              <span class="gw-tab-num">01</span> TYPES
             </button>
             <button type="button" class="gw-step-tab" id="gwStepNode-2" onclick="CreateRoomWizard.goToStep(2)">
-              <span class="gw-tab-num">02</span> TYPES
-            </button>
-            <button type="button" class="gw-step-tab" id="gwStepNode-3" onclick="CreateRoomWizard.goToStep(3)">
-              <span class="gw-tab-num">03</span> ROUNDS
+              <span class="gw-tab-num">02</span> ROUNDS
             </button>
           </div>
         </div>
@@ -470,83 +467,10 @@
         <!-- Body / Panes -->
         <div class="gw-content-body">
           
-          <!-- STEP 1: SELECT GAME MODE -->
+          <!-- STEP 1: SELECT GAME SECTION -->
           <div class="gw-step-pane active" id="gwStepPane-1">
             <div class="gw-step-title-group">
-              <h2 class="gw-screen-title" id="gwScreenTitle">DIFFICULTY</h2>
-            </div>
-
-            <div class="gw-difficulty-grid">
-              <!-- Popcorn Mode -->
-              <div class="gw-diff-card popcorn" id="gwDiffCard-popcorn" onclick="CreateRoomWizard.selectMode('popcorn')">
-                <div class="gw-diff-icon-wrap">
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;">
-                    <path d="M6 10a2.8 2.8 0 0 1-.8-5.3 3.5 3.5 0 0 1 5-2.2 3.8 3.8 0 0 1 6.6.5 3.2 3.2 0 0 1 4 2.8 2.8 2.8 0 0 1-.8 4.2Z" fill="#FACC15" />
-                    <path d="M8.5 6.5a1.5 1.5 0 0 0 1.8.8" stroke="#713F12" stroke-width="1.8" />
-                    <path d="M13.7 6.2a1.5 1.5 0 0 1 1.8.8" stroke="#713F12" stroke-width="1.8" />
-                    <path d="M4 10.5h16l-2.2 11a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L4 10.5Z" fill="#FFF" />
-                    <path d="M8.5 10.5 8 22.5" stroke="#EF4444" stroke-width="2.5" />
-                    <path d="M12 10.5v12" stroke="#EF4444" stroke-width="2.5" />
-                    <path d="M15.5 10.5l.5 12" stroke="#EF4444" stroke-width="2.5" />
-                  </svg>
-                </div>
-                <div class="gw-diff-info-col">
-                  <div class="gw-diff-title">Popcorn</div>
-                  <span class="gw-diff-badge gw-badge-easy">Easy</span>
-                </div>
-                <div class="gw-radio-pill">
-                  <div class="gw-radio-dot"></div>
-                </div>
-              </div>
-
-              <!-- Cinephile Mode -->
-              <div class="gw-diff-card cinephile selected" id="gwDiffCard-cinephile" onclick="CreateRoomWizard.selectMode('cinephile')">
-                <div class="gw-diff-icon-wrap">
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;">
-                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                    <path d="M7 3v18"/>
-                    <path d="M3 7.5h4"/>
-                    <path d="M3 12h18"/>
-                    <path d="M3 16.5h4"/>
-                    <path d="M17 3v18"/>
-                    <path d="M17 7.5h4"/>
-                    <path d="M17 16.5h4"/>
-                  </svg>
-                </div>
-                <div class="gw-diff-info-col">
-                  <div class="gw-diff-title">Cinephile</div>
-                  <span class="gw-diff-badge gw-badge-medium">Medium</span>
-                </div>
-                <div class="gw-radio-pill">
-                  <div class="gw-radio-dot"></div>
-                </div>
-              </div>
-
-              <!-- Director's Cut Mode -->
-              <div class="gw-diff-card director" id="gwDiffCard-director" onclick="CreateRoomWizard.selectMode('director')">
-                <div class="gw-diff-icon-wrap">
-                  <svg class="lucide ui-icon" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;">
-                    <path d="m12.296 3.464 3.02 3.956"/>
-                    <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z"/>
-                    <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <path d="m6.18 5.276 3.1 3.899"/>
-                  </svg>
-                </div>
-                <div class="gw-diff-info-col">
-                  <div class="gw-diff-title">Director</div>
-                  <span class="gw-diff-badge gw-badge-hard">Hard</span>
-                </div>
-                <div class="gw-radio-pill">
-                  <div class="gw-radio-dot"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 2: SELECT GAME SECTION -->
-          <div class="gw-step-pane" id="gwStepPane-2">
-            <div class="gw-step-title-group">
-              <h2 class="gw-screen-title">CHALLENGES</h2>
+              <h2 class="gw-screen-title" id="gwScreenTitle">CHALLENGES</h2>
               <div class="gw-selected-count-badge" id="gwSelectedSectionsCount">
                 <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>
                 <span>Selected: 2 of 3</span>
@@ -607,14 +531,14 @@
             </div>
           </div>
 
-          <!-- STEP 3: ROUND CONFIGURATION -->
-          <div class="gw-step-pane" id="gwStepPane-3">
+          <!-- STEP 2: ROUND CONFIGURATION -->
+          <div class="gw-step-pane" id="gwStepPane-2">
             <div class="gw-step-title-group">
               <h2 class="gw-screen-title">ROUNDS</h2>
             </div>
 
             <div class="gw-rounds-config-list" id="gwRoundsContainer">
-              <!-- Dynamically rendered by CreateRoomWizard.renderStep3() -->
+              <!-- Dynamically rendered by CreateRoomWizard.renderStep2() -->
             </div>
           </div>
 

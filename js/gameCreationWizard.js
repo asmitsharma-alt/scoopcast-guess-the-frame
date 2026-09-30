@@ -155,18 +155,18 @@
     },
 
     goToStep(stepNum) {
-      if (stepNum < 1 || stepNum > 4) return;
+      if (stepNum < 1 || stepNum > 3) return;
 
-      // Validation before leaving Step 2 (at least one section must be chosen)
-      if (this.currentStep === 2 && stepNum > 2) {
+      // Validation before leaving Step 1 (at least one challenge section must be chosen)
+      if (this.currentStep === 1 && stepNum > 1) {
         if (!this.state.sections || this.state.sections.length === 0) {
           this.showNotice('Please select at least one challenge section.');
           return;
         }
       }
 
-      // Validation before leaving Step 3 (rounds between 3 and 80)
-      if (this.currentStep === 3 && stepNum > 3) {
+      // Validation before leaving Step 2 (rounds between 3 and 80)
+      if (this.currentStep === 2 && stepNum > 2) {
         const total = this.getTotalRounds();
         if (total < 3) {
           this.showNotice('Minimum game length is 3 rounds.');
@@ -181,8 +181,8 @@
       this.currentStep = stepNum;
       this.render();
 
-      // Focus name input and render avatar picker when landing on Step 4
-      if (this.currentStep === 4) {
+      // Focus name input and render avatar picker when landing on Step 3
+      if (this.currentStep === 3) {
         if (typeof AvatarPicker !== 'undefined') {
           const currentAvatar = this.state.avatarUrl || localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : null) || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
           AvatarPicker.selectedAvatar = currentAvatar;
@@ -208,15 +208,7 @@
       this.goToStep(this.currentStep - 1);
     },
 
-    // ── STEP 1: Difficulty Mode ──
-    selectMode(modeId) {
-      if (['popcorn', 'cinephile', 'director'].includes(modeId)) {
-        this.state.mode = modeId;
-        this.renderStep1();
-      }
-    },
-
-    // ── STEP 2: Game Sections Multi-Select ──
+    // ── STEP 1: Game Sections Multi-Select ──
     toggleSection(sectionKey) {
       const idx = this.state.sections.indexOf(sectionKey);
       if (idx > -1) {
@@ -248,7 +240,7 @@
         inputEl.value = val;
         this.updateRoundsSummary();
       } else {
-        this.renderStep3();
+        this.renderStep2();
       }
     },
 
@@ -269,7 +261,7 @@
         inputEl.value = target;
         this.updateRoundsSummary();
       } else {
-        this.renderStep3();
+        this.renderStep2();
       }
     },
 
@@ -367,7 +359,7 @@
       const totalRounds = this.getTotalRounds();
       if (totalRounds < 3 || totalRounds > 80) {
         this.showNotice('Please ensure total rounds are between 3 and 80.');
-        this.goToStep(3);
+        this.goToStep(2);
         return;
       }
 
@@ -432,12 +424,11 @@
       this.renderStep1();
       this.renderStep2();
       this.renderStep3();
-      this.renderStep4();
       this.updateNavigationButtons();
     },
 
     renderStepper() {
-      for (let i = 1; i <= 4; i++) {
+      for (let i = 1; i <= 3; i++) {
         const node = document.getElementById(`gwStepNode-${i}`);
         const label = document.getElementById(`gwStepLabel-${i}`);
         const pane = document.getElementById(`gwStepPane-${i}`);
@@ -458,20 +449,8 @@
       }
     },
 
+    // Step 1: Challenge Categories
     renderStep1() {
-      const cards = {
-        popcorn: document.getElementById('gwDiffCard-popcorn'),
-        cinephile: document.getElementById('gwDiffCard-cinephile'),
-        director: document.getElementById('gwDiffCard-director')
-      };
-
-      Object.entries(cards).forEach(([key, el]) => {
-        if (!el) return;
-        el.classList.toggle('selected', this.state.mode === key);
-      });
-    },
-
-    renderStep2() {
       const sections = ['frame', 'dialogue', 'eyes'];
       sections.forEach(sec => {
         const card = document.getElementById(`gwSecCard-${sec}`);
@@ -486,7 +465,8 @@
       }
     },
 
-    renderStep3() {
+    // Step 2: Rounds Configuration
+    renderStep2() {
       const container = document.getElementById('gwRoundsContainer');
       if (!container) return;
 
@@ -550,7 +530,8 @@
       `;
     },
 
-    renderStep4() {
+    // Step 3: Player Profile & Avatar Studio
+    renderStep3() {
       const nameInput = document.getElementById('hostPlayerNameInput');
       if (nameInput) {
         const saved = this.state.playerName || localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '');
@@ -579,8 +560,8 @@
       }
 
       if (nextBtn) {
-        nextBtn.style.display = this.currentStep < 4 ? 'inline-flex' : 'none';
-        if (this.currentStep === 3) {
+        nextBtn.style.display = this.currentStep < 3 ? 'inline-flex' : 'none';
+        if (this.currentStep === 2) {
           const total = this.getTotalRounds();
           nextBtn.disabled = total < 3 || total > 80;
         } else {
@@ -589,7 +570,7 @@
       }
 
       if (enterBtn) {
-        enterBtn.style.display = this.currentStep === 4 ? 'inline-flex' : 'none';
+        enterBtn.style.display = this.currentStep === 3 ? 'inline-flex' : 'none';
       }
     }
   };

@@ -155,12 +155,12 @@
     },
 
     goToStep(stepNum) {
-      if (stepNum < 1 || stepNum > 3) return;
+      if (stepNum < 1 || stepNum > 2) return;
 
       if (typeof Haptics !== 'undefined' && Haptics.tap) Haptics.tap();
 
-      // Validation before leaving Step 2 (at least one section must be chosen)
-      if (this.currentStep === 2 && stepNum > 2) {
+      // Validation before leaving Step 1 (at least one section must be chosen)
+      if (this.currentStep === 1 && stepNum > 1) {
         if (!this.state.sections || this.state.sections.length === 0) {
           this.showNotice('Please select at least one challenge section.');
           return;
@@ -179,15 +179,7 @@
       this.goToStep(this.currentStep - 1);
     },
 
-    // ── STEP 1: Difficulty Mode ──
-    selectMode(modeId) {
-      if (['popcorn', 'cinephile', 'director'].includes(modeId)) {
-        this.state.mode = modeId;
-        this.renderStep1();
-      }
-    },
-
-    // ── STEP 2: Game Sections Multi-Select ──
+    // ── STEP 1: Game Sections Multi-Select ──
     toggleSection(sectionKey) {
       const idx = this.state.sections.indexOf(sectionKey);
       if (idx > -1) {
@@ -219,7 +211,7 @@
         inputEl.value = val;
         this.updateRoundsSummary();
       } else {
-        this.renderStep3();
+        this.renderStep2();
       }
     },
 
@@ -240,7 +232,7 @@
         inputEl.value = target;
         this.updateRoundsSummary();
       } else {
-        this.renderStep3();
+        this.renderStep2();
       }
     },
 
@@ -400,17 +392,16 @@
       }, 3200);
     },
 
-    // ── Render Methods (3-Step Android Flow) ──
+    // ── Render Methods (2-Step Android Flow) ──
     render() {
       this.renderStepper();
       this.renderStep1();
       this.renderStep2();
-      this.renderStep3();
       this.updateNavigationButtons();
     },
 
     renderStepper() {
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 2; i++) {
         const node = document.getElementById(`gwStepNode-${i}`);
         const label = document.getElementById(`gwStepLabel-${i}`);
         const pane = document.getElementById(`gwStepPane-${i}`);
@@ -431,20 +422,8 @@
       }
     },
 
+    // Step 1: Challenge Categories
     renderStep1() {
-      const cards = {
-        popcorn: document.getElementById('gwDiffCard-popcorn'),
-        cinephile: document.getElementById('gwDiffCard-cinephile'),
-        director: document.getElementById('gwDiffCard-director')
-      };
-
-      Object.entries(cards).forEach(([key, el]) => {
-        if (!el) return;
-        el.classList.toggle('selected', this.state.mode === key);
-      });
-    },
-
-    renderStep2() {
       const sections = ['frame', 'dialogue', 'eyes'];
       sections.forEach(sec => {
         const card = document.getElementById(`gwSecCard-${sec}`);
@@ -459,7 +438,8 @@
       }
     },
 
-    renderStep3() {
+    // Step 2: Rounds Configuration
+    renderStep2() {
       const container = document.getElementById('gwRoundsContainer');
       if (!container) return;
 
@@ -535,13 +515,13 @@
       }
 
       if (nextBtn) {
-        nextBtn.style.display = this.currentStep < 3 ? 'inline-flex' : 'none';
+        nextBtn.style.display = this.currentStep < 2 ? 'inline-flex' : 'none';
         nextBtn.disabled = false;
       }
 
       if (enterBtn) {
-        enterBtn.style.display = this.currentStep === 3 ? 'inline-flex' : 'none';
-        if (this.currentStep === 3) {
+        enterBtn.style.display = this.currentStep === 2 ? 'inline-flex' : 'none';
+        if (this.currentStep === 2) {
           const total = this.getTotalRounds();
           enterBtn.disabled = total < 3 || total > 80;
         }

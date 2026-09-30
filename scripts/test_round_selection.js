@@ -74,15 +74,15 @@ assert(isValid80 === true, "Desktop Wizard: 80 total rounds is considered valid 
 
 DesktopWizard.state.rounds = { frame: 40, dialogue: 40 };
 DesktopWizard.state.sections = ['frame', 'dialogue'];
-DesktopWizard.currentStep = 3;
-DesktopWizard.goToStep(4);
-assert(DesktopWizard.currentStep === 4, "Desktop Wizard: Navigates from Step 3 to Step 4 with 80 rounds without 'Maximum game length is 30 rounds' error", `Ended at step ${DesktopWizard.currentStep}`);
+DesktopWizard.currentStep = 2;
+DesktopWizard.goToStep(3);
+assert(DesktopWizard.currentStep === 3, "Desktop Wizard: Navigates from Step 2 to Step 3 with 80 rounds without 'Maximum game length is 30 rounds' error", `Ended at step ${DesktopWizard.currentStep}`);
 
 DesktopWizard.state.rounds = { frame: 40, dialogue: 40, eyes: 5 };
 DesktopWizard.state.sections = ['frame', 'dialogue', 'eyes'];
-DesktopWizard.currentStep = 3;
-DesktopWizard.goToStep(4);
-assert(DesktopWizard.currentStep === 3, "Desktop Wizard: Blocks transition to Step 4 when total rounds = 85 (> 80)", `Ended at step ${DesktopWizard.currentStep}`);
+DesktopWizard.currentStep = 2;
+DesktopWizard.goToStep(3);
+assert(DesktopWizard.currentStep === 2, "Desktop Wizard: Blocks transition to Step 3 when total rounds = 85 (> 80)", `Ended at step ${DesktopWizard.currentStep}`);
 
 // ── TEST SUITE 2: Android Wizard Logic (android/js/gameCreationWizard.js) ──
 console.log("\n--- TEST SUITE 2: Android Wizard Logic ---");
