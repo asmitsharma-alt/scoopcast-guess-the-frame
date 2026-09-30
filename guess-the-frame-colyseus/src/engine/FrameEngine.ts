@@ -120,7 +120,7 @@ export class FrameEngine {
         const dCount = Number(roundsByMode.dialogue) || 0;
         const eCount = Number(roundsByMode.eyes) || 0;
 
-        const frames = this.selectRandomPlaylist('frames', fCount, seenFrameFrequencies, rng, options.weeklyOnly);
+        const frames = this.selectFullyRandomFrames(fCount);
         const dialogues = this.selectRandomPlaylist('dialogue', dCount, seenFrameFrequencies, rng, options.weeklyOnly);
         const eyes = this.selectRandomPlaylist('eyes', eCount, seenFrameFrequencies, rng, options.weeklyOnly);
 
@@ -128,13 +128,20 @@ export class FrameEngine {
         return combined.map(f => this.toCatalogItem(f));
       }
 
-      const selected = this.selectRandomPlaylist(
-        category,
-        rounds,
-        seenFrameFrequencies,
-        rng,
-        options.weeklyOnly
-      );
+      if (category === 'dialogue') {
+        const selected = this.selectRandomPlaylist(
+          category,
+          rounds,
+          seenFrameFrequencies,
+          rng,
+          options.weeklyOnly
+        );
+        return selected.map(f => this.toCatalogItem(f));
+      }
+
+      const selected = (category === 'frames' || category === 'all')
+        ? this.selectFullyRandomFrames(rounds)
+        : this.selectRandomPlaylist(category, rounds, seenFrameFrequencies, rng, options.weeklyOnly);
 
       return selected.map(f => this.toCatalogItem(f));
     }
@@ -199,6 +206,49 @@ export class FrameEngine {
    *   2. No duplicate movie or major franchise in the same match.
    *   3. Unseen frames are prioritized over seen frames to prevent repetition across matches.
    */
+  /**
+   * Pure, unbiased, literally 100% random frame selection across all 1,000 pristine frames.
+   * Employs an unbiased Fisher-Yates (Knuth) shuffle with high-entropy randomness.
+   * Guarantees:
+   *   1. Every single frame in the catalog has equal probability of being picked.
+   *   2. No weekly-only 40-frame lock.
+   *   3. No database seen-frequency or history bias.
+   *   4. No artificial franchise blacklisting.
+   *   5. No duplicate frames within the same match.
+   */
+  public selectFullyRandomFrames(targetCount: number): EnrichedFrameMetadata[] {
+    const pool = this.cachedFrames.filter(f => f.category === 'frames');
+    if (pool.length === 0) return [];
+
+    // Clone the entire pool of 1,000 frames
+    const candidates = [...pool];
+
+    // High-entropy Fisher-Yates shuffle
+    for (let i = candidates.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = candidates[i];
+      candidates[i] = candidates[j];
+      candidates[j] = temp;
+    }
+
+    const selected: EnrichedFrameMetadata[] = [];
+    const usedFrameIds = new Set<string>();
+
+    for (const item of candidates) {
+      if (selected.length >= targetCount) break;
+      if (usedFrameIds.has(item.frameId)) continue;
+      selected.push(item);
+      usedFrameIds.add(item.frameId);
+    }
+
+    return selected;
+  }
+
+  /**
+   * Completely random selection across the catalog.
+   * For dialogue: Preserves exact Bollywood/Hollywood balanced algorithm and cooldowns.
+   * For frames: Employs pure unbiased uniform random sampling across all 1,000 frames.
+   */
   public selectRandomPlaylist(
     category: string,
     targetCount: number,
@@ -206,6 +256,11 @@ export class FrameEngine {
     rng: () => number,
     weeklyOnly?: boolean
   ): EnrichedFrameMetadata[] {
+    // Pure, literal random selection for frames
+    if (category === 'frames') {
+      return this.selectFullyRandomFrames(targetCount);
+    }
+
     let pool = [...this.cachedFrames];
     if (category !== 'all') {
       pool = pool.filter(f => f.category === category);

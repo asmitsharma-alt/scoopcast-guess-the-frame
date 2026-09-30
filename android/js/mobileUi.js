@@ -575,7 +575,7 @@ const UI = {
         const totalRounds = s.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;
         const timer = s.timer || 30;
         const category = s.category || 'all';
-        const weeklyOnly = s.weeklyOnly !== undefined ? s.weeklyOnly : true;
+        const weeklyOnly = s.weeklyOnly !== undefined ? s.weeklyOnly : false;
 
         GameClient.startGame({ roundsByMode: counts, rounds: totalRounds, timer, category, weeklyOnly });
       });

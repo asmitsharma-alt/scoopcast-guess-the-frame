@@ -13085,7 +13085,7 @@
       font-variant-numeric: tabular-nums !important;
     }
 
-    /* ── Cinematic Round Intro Overlay ── */
+    /* ── Neobrutalist Round Intro Overlay ── */
     .round-intro-overlay {
       position: fixed;
       inset: 0;
@@ -13093,12 +13093,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(10, 10, 15, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(0, 0, 0, 0.75);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.2s ease;
     }
     .round-intro-overlay.active {
       opacity: 1;
@@ -13109,50 +13107,66 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 36px 56px;
-      background: #18181b;
-      border: 3px solid #000;
-      border-radius: 24px;
-      box-shadow: 8px 8px 0px #000;
-      transform: scale(0.9);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-      min-width: 300px;
+      padding: 34px 50px;
+      background: #FFE600;
+      border: 4px solid #000000;
+      border-radius: 18px;
+      box-shadow: 8px 8px 0px #000000;
+      transform: scale(0.9) rotate(-1.5deg);
+      transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      min-width: 320px;
+      max-width: 90vw;
     }
     .round-intro-overlay.active .round-intro-card {
-      transform: scale(1);
+      transform: scale(1) rotate(0deg);
     }
     .round-intro-badge {
       display: inline-block;
+      font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
       font-size: 1.15rem;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: #000;
-      background: #facc15;
+      color: #000000;
+      background: #38BDF8;
       padding: 6px 18px;
-      border: 2px solid #000;
-      border-radius: 9999px;
-      box-shadow: 3px 3px 0px #000;
+      border: 3px solid #000000;
+      border-radius: 999px;
+      box-shadow: 3px 3px 0px #000000;
       margin-bottom: 16px;
     }
     .round-intro-title {
-      font-size: 2.2rem;
+      font-family: 'Space Grotesk', 'Syne', -apple-system, sans-serif;
+      font-size: 2.3rem;
       font-weight: 900;
-      color: #ffffff;
+      color: #000000;
       letter-spacing: -0.5px;
-      margin-bottom: 16px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      line-height: 1.1;
+    }
+    .round-intro-pulse {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .round-intro-sub {
+      font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 2px;
-      color: #4ade80;
+      color: #FFFFFF;
+      background: #000000;
+      padding: 6px 18px;
+      border: 2px solid #000000;
+      border-radius: 8px;
+      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.4);
       text-transform: uppercase;
-      animation: pulseGetReadyDesktop 1s ease-in-out infinite alternate;
+      animation: punchyReadyDesktop 0.8s ease-in-out infinite alternate;
     }
-    @keyframes pulseGetReadyDesktop {
-      0% { opacity: 0.6; transform: scale(0.98); }
-      100% { opacity: 1; transform: scale(1.02); }
+    @keyframes punchyReadyDesktop {
+      0% { transform: scale(0.96); }
+      100% { transform: scale(1.04); }
     }
 
   </style>
@@ -15699,7 +15713,7 @@
             roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
             rounds: 40,
             timer: 30,
-            weeklyOnly: true
+            weeklyOnly: false
           };
         }
         const settings = MultiplayerEngine.hostSettings;
@@ -18119,7 +18133,7 @@
         roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
         rounds: 40,
         timer: 30,
-        weeklyOnly: true
+        weeklyOnly: false
       },
       isPaused: false,
       isJoining: false,
@@ -18634,7 +18648,7 @@
           roundsByMode: counts,
           rounds: totalR,
           timer: 30,
-          weeklyOnly: true,
+          weeklyOnly: false,
           isLocked: true
         };
 
@@ -18658,7 +18672,7 @@
           mode: modeCapitalized,
           sections: sections.map(s => s === 'frame' ? 'frames' : s),
           roundsByMode: counts,
-          weeklyOnly: true
+          weeklyOnly: false
         });
 
         this.colyseusRoom = room;
@@ -18758,7 +18772,7 @@
         this.roomCode = this.generateRoomCode();
         this.roomId = 'room_' + this.roomCode;
         if (!this.hostSettings) {
-          this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30, weeklyOnly: true, isLocked: true };
+          this.hostSettings = { category: 'all', categories: ['frames', 'eyes', 'dialogue'], roundsByMode: { frames: 20, eyes: 10, dialogue: 10 }, rounds: 40, timer: 30, weeklyOnly: false, isLocked: true };
         }
 
         localStorage.setItem('gtf_player_name', this.playerName);

@@ -362,7 +362,7 @@ const GameClient = {
     roundsByMode: { frames: 20, eyes: 10, dialogue: 10 },
     rounds: 40,
     timer: 30,
-    weeklyOnly: true
+    weeklyOnly: false
   },
   currentPlaylist: [],
   currentPlayIndex: -1,
@@ -638,7 +638,7 @@ const GameClient = {
       roundsByMode: counts,
       rounds: totalR,
       timer: 30,
-      weeklyOnly: true
+      weeklyOnly: false
     });
   },
 
@@ -667,7 +667,7 @@ const GameClient = {
       roundsByMode: counts,
       rounds: totalR,
       timer: options.timer || 30,
-      weeklyOnly: options.weeklyOnly !== undefined ? options.weeklyOnly : true,
+      weeklyOnly: options.weeklyOnly !== undefined ? options.weeklyOnly : false,
       isLocked: true
     };
 
@@ -706,7 +706,7 @@ const GameClient = {
         rounds: totalR,
         category: this.hostSettings.category || 'all',
         roundsByMode: counts,
-        weeklyOnly: this.hostSettings.weeklyOnly !== undefined ? this.hostSettings.weeklyOnly : true
+        weeklyOnly: this.hostSettings.weeklyOnly !== undefined ? this.hostSettings.weeklyOnly : false
       });
 
       this.colyseusRoom = room;
@@ -994,7 +994,7 @@ const GameClient = {
     const cat = options.category || this.hostSettings.category || 'all';
     const totalRounds = options.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;
     const timer = Number(options.timer) || this.hostSettings.timer || 30;
-    const weeklyOnly = options.weeklyOnly !== undefined ? Boolean(options.weeklyOnly) : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : true);
+    const weeklyOnly = options.weeklyOnly !== undefined ? Boolean(options.weeklyOnly) : (this.hostSettings && this.hostSettings.weeklyOnly !== undefined ? Boolean(this.hostSettings.weeklyOnly) : false);
 
     this.hostSettings = { ...this.hostSettings, category: cat, rounds: totalRounds, timer, roundsByMode: counts, weeklyOnly };
 

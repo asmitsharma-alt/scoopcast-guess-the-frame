@@ -352,7 +352,7 @@ export class TriviaRoom extends Room<GameState> {
 
       const category = message?.category || 'all';
       const requestedRounds = Number(message?.rounds) || GAME_CONFIG.defaultRounds;
-      const weeklyOnly = message?.weeklyOnly !== undefined ? Boolean(message.weeklyOnly) : true;
+      const weeklyOnly = message?.weeklyOnly !== undefined ? Boolean(message.weeklyOnly) : false;
       if (message?.timer) {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
       }
