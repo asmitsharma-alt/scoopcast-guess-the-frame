@@ -881,6 +881,38 @@ const UI = {
     }
   },
 
+  showRoundIntro(roundNum, totalRounds, mediaType) {
+    let overlay = document.getElementById('roundIntroOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'roundIntroOverlay';
+      overlay.className = 'round-intro-overlay';
+      overlay.innerHTML = `
+        <div class="round-intro-card">
+          <div class="round-intro-badge" id="roundIntroBadge">ROUND 1</div>
+          <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+          <div class="round-intro-pulse">
+            <span class="round-intro-sub">GET READY...</span>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+    const badge = document.getElementById('roundIntroBadge');
+    const title = document.getElementById('roundIntroTitle');
+    const modeLabel = mediaType === 'dialogue' ? 'Guess the Dialogue' : (mediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame');
+    if (badge) badge.textContent = `ROUND ${roundNum || 1} / ${totalRounds || 20}`;
+    if (title) title.textContent = modeLabel;
+    overlay.classList.add('active');
+  },
+
+  hideRoundIntro() {
+    const overlay = document.getElementById('roundIntroOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
+  },
+
   promptRejoinModal(session) {
     const modal = document.getElementById('rejoinModal');
     if (!modal || !session) return;

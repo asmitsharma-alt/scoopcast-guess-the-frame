@@ -62,11 +62,16 @@ async function runIntegrationTest() {
     await new Promise((r) => setTimeout(r, 200));
     assert.strictEqual(room1.state.phase, "lobby", "Non-host cannot start game");
 
+    // Both players signal ready
+    room1.send("player_ready", { ready: true });
+    room2.send("player_ready", { ready: true });
+    await new Promise((r) => setTimeout(r, 200));
+
     // Host starts the game
     room1.send("start_game", { rounds: 3, timer: 15 });
 
-    // Wait for countdown (3s) + round transition
-    console.log("  * Waiting for countdown and round start...");
+    // Wait for countdown (3s) + round_intro (1.8s) + round transition
+    console.log("  * Waiting for countdown, round intro, and round start...");
     await new Promise<void>((resolve) => {
       const interval = setInterval(() => {
         if (room1.state.phase === "playing") {

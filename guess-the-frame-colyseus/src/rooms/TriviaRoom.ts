@@ -30,6 +30,7 @@ export class TriviaRoom extends Room<GameState> {
   private roundTimerDuration: number = GAME_CONFIG.defaultTimerDuration;
   private autoAdvanceTimer: any = null;
   private countdownTimer: any = null;
+  private roundIntroTimer: any = null;
   private gameSeed: string = "";
   private roundStartTime: number = 0;
   private playerGuessTimes: Map<string, number> = new Map();
@@ -249,6 +250,10 @@ export class TriviaRoom extends Room<GameState> {
       this.countdownTimer.clear();
       this.countdownTimer = null;
     }
+    if (this.roundIntroTimer) {
+      clearTimeout(this.roundIntroTimer);
+      this.roundIntroTimer = null;
+    }
   }
 
   private setupMessageHandlers() {
@@ -462,6 +467,10 @@ export class TriviaRoom extends Room<GameState> {
         this.countdownTimer.clear();
         this.countdownTimer = null;
       }
+      if (this.roundIntroTimer) {
+        clearTimeout(this.roundIntroTimer);
+        this.roundIntroTimer = null;
+      }
       this.state.phase = "game_over";
       this.setMetadata({ roomCode: this.state.roomCode, phase: "game_over", playerCount: this.state.players.size });
       this.addSystemChatMessage("🏁 Match ended early by Host.");
@@ -479,6 +488,10 @@ export class TriviaRoom extends Room<GameState> {
       if (this.countdownTimer) {
         this.countdownTimer.clear();
         this.countdownTimer = null;
+      }
+      if (this.roundIntroTimer) {
+        clearTimeout(this.roundIntroTimer);
+        this.roundIntroTimer = null;
       }
       this.state.phase = "lobby";
       this.state.currentRound = 0;
@@ -557,8 +570,12 @@ export class TriviaRoom extends Room<GameState> {
     this.onMessage("skip_round", (client) => {
       const player = this.state.players.get(client.sessionId);
       if (!player || !player.isHost) return;
-      if (this.state.phase !== "playing") return;
+      if (this.state.phase !== "playing" && this.state.phase !== "round_intro") return;
 
+      if (this.roundIntroTimer) {
+        clearTimeout(this.roundIntroTimer);
+        this.roundIntroTimer = null;
+      }
       this.addSystemChatMessage(`⏭ Host skipped the frame`);
       this.finishRound();
     });
@@ -694,13 +711,16 @@ export class TriviaRoom extends Room<GameState> {
       this.countdownTimer.clear();
       this.countdownTimer = null;
     }
+    if (this.roundIntroTimer) {
+      clearTimeout(this.roundIntroTimer);
+      this.roundIntroTimer = null;
+    }
 
     if (index >= this.currentPlaylist.length) {
       this.checkForTieBreakerOrGameOver();
       return;
     }
 
-    this.roundStartTime = Date.now();
     this.playerGuessTimes.clear();
 
     this.currentPlaylistIndex = index;
@@ -721,13 +741,29 @@ export class TriviaRoom extends Room<GameState> {
     this.state.currentMediaContent = item.content;
     this.state.currentYear = item.year || "";
     this.state.currentRound = index + 1;
-    this.state.timeRemaining = this.roundTimerDuration;
     this.state.isPaused = false;
-    this.state.phase = "playing";
-    this.setMetadata({ roomCode: this.state.roomCode, phase: "playing", playerCount: this.state.players.size });
+
+    // Phase 1: Small synchronized round intro (1.8s)
+    // Shows "ROUND X" while clients pre-warm and decode the image into GPU VRAM
+    this.state.timeRemaining = 2;
+    this.state.phase = "round_intro";
+    this.setMetadata({ roomCode: this.state.roomCode, phase: "round_intro", playerCount: this.state.players.size });
+
+    this.roundIntroTimer = setTimeout(() => {
+      if (this.state.phase === "round_intro") {
+        this.roundStartTime = Date.now();
+        this.state.timeRemaining = this.roundTimerDuration;
+        this.state.phase = "playing";
+        this.setMetadata({ roomCode: this.state.roomCode, phase: "playing", playerCount: this.state.players.size });
+      }
+    }, 1800);
   }
 
   private finishRound() {
+    if (this.roundIntroTimer) {
+      clearTimeout(this.roundIntroTimer);
+      this.roundIntroTimer = null;
+    }
     this.state.phase = "round_reveal";
     this.state.revealedAnswer = this.currentSecretItem?.displayAnswer || this.currentSecretAnswer;
     this.setMetadata({ roomCode: this.state.roomCode, phase: "round_reveal", playerCount: this.state.players.size });

@@ -13085,6 +13085,76 @@
       font-variant-numeric: tabular-nums !important;
     }
 
+    /* ── Cinematic Round Intro Overlay ── */
+    .round-intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .round-intro-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .round-intro-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 36px 56px;
+      background: #18181b;
+      border: 3px solid #000;
+      border-radius: 24px;
+      box-shadow: 8px 8px 0px #000;
+      transform: scale(0.9);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      min-width: 300px;
+    }
+    .round-intro-overlay.active .round-intro-card {
+      transform: scale(1);
+    }
+    .round-intro-badge {
+      display: inline-block;
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #000;
+      background: #facc15;
+      padding: 6px 18px;
+      border: 2px solid #000;
+      border-radius: 9999px;
+      box-shadow: 3px 3px 0px #000;
+      margin-bottom: 16px;
+    }
+    .round-intro-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+    .round-intro-sub {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #4ade80;
+      text-transform: uppercase;
+      animation: pulseGetReadyDesktop 1s ease-in-out infinite alternate;
+    }
+    @keyframes pulseGetReadyDesktop {
+      0% { opacity: 0.6; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1.02); }
+    }
+
   </style>
   <!-- Colyseus Realtime Multiplayer Engine -->
   <!-- Colyseus Game Engine (Local Bundle + CDN Fallback) -->
@@ -20357,7 +20427,22 @@
             }
           } else if (state.phase === "countdown") {
             this.executeGameStart();
+          } else if (state.phase === "round_intro") {
+            this.executeGameStart();
+            const roundNum = state.currentRound || 1;
+            // Preload and GPU-decode upcoming frame media in background right now!
+            if (state.currentMediaContent && state.currentMediaType !== 'dialogue') {
+              if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadImage) {
+                FrameDisplay.preloadImage(state.currentMediaContent);
+              }
+            }
+            if (typeof UI !== 'undefined' && UI.showRoundIntro) {
+              UI.showRoundIntro(roundNum, state.totalRounds || 20, state.currentMediaType || 'image');
+            }
           } else if (state.phase === "playing") {
+            if (typeof UI !== 'undefined' && UI.hideRoundIntro) {
+              UI.hideRoundIntro();
+            }
             const roundNum = state.currentRound || 1;
             const roundIndex = roundNum - 1;
 
@@ -21467,6 +21552,39 @@
           document.body.classList.toggle('is-client-player', !shouldShow);
         }
       },
+
+      showRoundIntro(roundNum, totalRounds, mediaType) {
+        let overlay = document.getElementById('roundIntroOverlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'roundIntroOverlay';
+          overlay.className = 'round-intro-overlay';
+          overlay.innerHTML = `
+            <div class="round-intro-card">
+              <div class="round-intro-badge" id="roundIntroBadge">ROUND 1</div>
+              <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+              <div class="round-intro-pulse">
+                <span class="round-intro-sub">GET READY...</span>
+              </div>
+            </div>
+          `;
+          document.body.appendChild(overlay);
+        }
+        const badge = document.getElementById('roundIntroBadge');
+        const title = document.getElementById('roundIntroTitle');
+        const modeLabel = mediaType === 'dialogue' ? 'Guess the Dialogue' : (mediaType === 'eye' ? 'Guess the Eye' : 'Guess the Frame');
+        if (badge) badge.textContent = `ROUND ${roundNum || 1} / ${totalRounds || 20}`;
+        if (title) title.textContent = modeLabel;
+        overlay.classList.add('active');
+      },
+
+      hideRoundIntro() {
+        const overlay = document.getElementById('roundIntroOverlay');
+        if (overlay) {
+          overlay.classList.remove('active');
+        }
+      },
+
       updateLoadProgress(progress, type) {
         const isOnline = type === 'online';
         const barId = isOnline ? 'onlineLoadBar' : 'loadBar';

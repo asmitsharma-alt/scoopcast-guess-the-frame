@@ -3387,3 +3387,73 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
 .hud-score, .hud-timer, .room-badge-code, #lobbyRoomCodeText, .lobby-metric-chip, .score-badge, .timer-pill, .count-badge {
   font-variant-numeric: tabular-nums !important;
 }
+
+/* ── Cinematic Round Intro Overlay ── */
+.round-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.round-intro-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.round-intro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 36px;
+  background: #18181b;
+  border: 3px solid #000;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000;
+  transform: scale(0.9);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 250px;
+}
+.round-intro-overlay.active .round-intro-card {
+  transform: scale(1);
+}
+.round-intro-badge {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #000;
+  background: #facc15;
+  padding: 4px 14px;
+  border: 2px solid #000;
+  border-radius: 9999px;
+  box-shadow: 2px 2px 0px #000;
+  margin-bottom: 12px;
+}
+.round-intro-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.round-intro-sub {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #4ade80;
+  text-transform: uppercase;
+  animation: pulseGetReady 1s ease-in-out infinite alternate;
+}
+@keyframes pulseGetReady {
+  0% { opacity: 0.6; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1.02); }
+}

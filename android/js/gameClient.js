@@ -1402,7 +1402,23 @@ const GameClient = {
           UI.showCountdownOverlay();
         }
         if (typeof SoundEffects !== 'undefined') SoundEffects.playTick();
+      } else if (state.phase === "round_intro") {
+        if (typeof UI !== 'undefined' && UI.showScreen) {
+          UI.showScreen('gameScreen');
+        }
+        // Pre-warm the upcoming frame immediately in background while intro card is showing
+        if (state.currentMediaContent && state.currentMediaType !== 'dialogue') {
+          if (typeof MediaCache !== 'undefined' && MediaCache.preload) {
+            MediaCache.preload(state.currentMediaContent);
+          }
+        }
+        if (typeof UI !== 'undefined' && UI.showRoundIntro) {
+          UI.showRoundIntro(state.currentRound || 1, state.totalRounds || 20, state.currentMediaType || 'image');
+        }
       } else if (state.phase === "playing") {
+        if (typeof UI !== 'undefined' && UI.hideRoundIntro) {
+          UI.hideRoundIntro();
+        }
         const roundNum = state.currentRound || 1;
         const roundIndex = roundNum - 1;
         const needsNewRound = (
