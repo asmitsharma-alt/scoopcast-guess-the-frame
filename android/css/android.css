@@ -3384,7 +3384,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   font-variant-numeric: tabular-nums !important;
 }
 
-/* ── Bold Colorful Neobrutalist Round Intro Overlay (Zero Black) ── */
+/* ── Bold, Colorful Neobrutalist Round Intro Overlay (Neoblurism) ── */
 .round-intro-overlay {
   position: fixed;
   inset: 0;
@@ -3392,58 +3392,111 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(26, 12, 56, 0.85);
+  background: radial-gradient(circle at 50% 45%, rgba(124, 58, 237, 0.55) 0%, rgba(20, 10, 45, 0.88) 100%);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.22s ease;
 }
 .round-intro-overlay.active {
   opacity: 1;
   pointer-events: auto;
 }
 .round-intro-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 26px 28px;
-  background: #7C3AED;
-  border: 3.5px solid #FFFFFF;
-  border-radius: 18px;
-  box-shadow: 6px 6px 0px #00F0FF;
-  transform: scale(0.9) rotate(-1.5deg);
-  transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  min-width: 250px;
-  max-width: 88vw;
+  padding: 30px 28px;
+  background: #FFE600;
+  border: 4px solid #121212;
+  border-radius: 20px;
+  box-shadow: 8px 8px 0px #121212, 14px 14px 0px #FF2E93;
+  transform: scale(0.85) rotate(-2deg);
+  transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 270px;
+  max-width: 90vw;
 }
 .round-intro-overlay.active .round-intro-card {
   transform: scale(1) rotate(0deg);
 }
-.round-intro-badge {
-  display: inline-block;
+.round-intro-corner-star {
+  position: absolute;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  animation: neoStarFloatMobile 2s ease-in-out infinite alternate;
+}
+.round-intro-corner-star.star-tl {
+  top: -12px;
+  left: -12px;
+  color: #00F0FF;
+  text-shadow: 2px 2px 0px #121212;
+}
+.round-intro-corner-star.star-br {
+  bottom: -12px;
+  right: -12px;
+  color: #00FFA3;
+  text-shadow: 2px 2px 0px #121212;
+  animation-delay: 0.5s;
+}
+@keyframes neoStarFloatMobile {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(-4px) rotate(15deg); }
+}
+.round-intro-pill-tag {
   font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #3B0764;
-  background: #00FFA3;
-  padding: 5px 16px;
-  border: 2.5px solid #FFFFFF;
+  color: #FFFFFF;
+  background: #7C3AED;
+  padding: 4px 12px;
+  border: 2px solid #121212;
   border-radius: 999px;
-  box-shadow: 2.5px 2.5px 0px #00F0FF;
+  box-shadow: 2.5px 2.5px 0px #121212;
+  margin-bottom: 10px;
+  transform: rotate(1.5deg);
+}
+.round-intro-badge {
+  display: inline-block;
+  font-family: 'Lilita One', 'Space Grotesk', cursive, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background: #FF2E93;
+  padding: 6px 18px;
+  border: 3px solid #121212;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0px #121212;
   margin-bottom: 14px;
+  transform: rotate(-2deg);
+}
+.round-intro-title-wrap {
+  background: #FFFFFF;
+  border: 3px solid #121212;
+  border-radius: 14px;
+  padding: 8px 18px;
+  box-shadow: 4px 4px 0px #121212;
+  margin-bottom: 16px;
+  max-width: 100%;
 }
 .round-intro-title {
-  font-family: 'Space Grotesk', 'Syne', -apple-system, sans-serif;
-  font-size: 1.7rem;
+  font-family: 'Lilita One', 'Space Grotesk', Impact, sans-serif;
+  font-size: 1.85rem;
   font-weight: 900;
-  color: #FFFFFF;
-  text-shadow: 2.5px 2.5px 0px #3B0764;
+  color: #121212;
   letter-spacing: -0.5px;
   text-transform: uppercase;
-  margin-bottom: 16px;
   line-height: 1.15;
+  margin: 0;
 }
 .round-intro-pulse {
   display: inline-flex;
@@ -3451,20 +3504,21 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   justify-content: center;
 }
 .round-intro-sub {
-  font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
-  font-size: 0.85rem;
+  font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
   font-weight: 900;
   letter-spacing: 1.5px;
-  color: #FFFFFF;
-  background: #FF5722;
-  padding: 6px 16px;
-  border: 2px solid #FFFFFF;
-  border-radius: 8px;
-  box-shadow: 2.5px 2.5px 0px #00F0FF;
+  color: #121212;
+  background: #00FFA3;
+  padding: 7px 18px;
+  border: 2.5px solid #121212;
+  border-radius: 10px;
+  box-shadow: 3px 3px 0px #121212;
   text-transform: uppercase;
-  animation: punchyReadyMobile 0.8s ease-in-out infinite alternate;
+  transform: rotate(2deg);
+  animation: neoReadyBounceMobile 0.75s ease-in-out infinite alternate;
 }
-@keyframes punchyReadyMobile {
-  0% { transform: scale(0.96); }
-  100% { transform: scale(1.04); }
+@keyframes neoReadyBounceMobile {
+  0% { transform: scale(0.96) rotate(1deg); }
+  100% { transform: scale(1.05) rotate(2.5deg); }
 }

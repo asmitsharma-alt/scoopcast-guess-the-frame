@@ -889,8 +889,13 @@ const UI = {
       overlay.className = 'round-intro-overlay';
       overlay.innerHTML = `
         <div class="round-intro-card">
+          <span class="round-intro-corner-star star-tl">★</span>
+          <span class="round-intro-corner-star star-br">✦</span>
+          <div class="round-intro-pill-tag">⚡ CINEMA SHOWDOWN ⚡</div>
           <div class="round-intro-badge" id="roundIntroBadge">ROUND 1</div>
-          <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+          <div class="round-intro-title-wrap">
+            <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+          </div>
           <div class="round-intro-pulse">
             <span class="round-intro-sub">GET READY...</span>
           </div>

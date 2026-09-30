@@ -3468,116 +3468,131 @@
 
     /* ——— ROUND INTRO ——— */
     .round-intro-ov {
-      background: #07070e;
+      background: radial-gradient(circle at 50% 45%, rgba(124, 58, 237, 0.6) 0%, rgba(20, 10, 45, 0.9) 100%);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
     }
 
-
-    .rio-content {
+    .round-intro-ov .rio-content {
       position: relative;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 14px;
+      background: #FFE600;
+      border: 4.5px solid #121212;
+      box-shadow: 10px 10px 0px #121212, 18px 18px 0px #00F0FF;
+      border-radius: 26px;
+      padding: 36px 54px;
+      transform: scale(0.85) rotate(-1.5deg);
+      transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90vw;
+    }
+
+    .round-intro-ov.on .rio-content {
+      transform: scale(1) rotate(0deg);
     }
 
     /* "ROUND" badge */
     .rio-badge {
-      font-size: clamp(11px, 2vw, 15px);
-      font-weight: 800;
-      letter-spacing: 7px;
+      font-family: 'Lilita One', 'Space Grotesk', cursive, sans-serif;
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 900;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, .35);
-      padding: 5px 16px 5px 23px;
-      border: 1px solid rgba(255, 255, 255, .1);
-      border-radius: 50px;
+      color: #FFFFFF;
+      background: #FF2E93;
+      padding: 6px 24px;
+      border: 3px solid #121212;
+      border-radius: 999px;
+      box-shadow: 3.5px 3.5px 0px #121212;
+      transform: rotate(-2.5deg);
     }
 
-    /* GIANT round number — punch in */
+    /* GIANT round number — bold punch in */
     .rio-num {
-      font-size: clamp(110px, 28vw, 240px);
+      font-family: 'Lilita One', Impact, sans-serif;
+      font-size: clamp(90px, 20vw, 170px);
       font-weight: 900;
-      line-height: .9;
-      background: linear-gradient(135deg, #fff 0%, var(--neon-pink) 50%, var(--gold) 100%);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: rioNumIn .5s cubic-bezier(.34, 1.56, .64, 1) both,
-        rioGlow 2s ease-in-out .5s infinite;
-      filter: drop-shadow(0 0 60px rgba(255, 46, 146, .5));
+      line-height: 0.92;
+      color: #7C3AED;
+      text-shadow: 6px 6px 0px #121212, 11px 11px 0px #00FFA3;
+      margin: 4px 0;
+      -webkit-text-fill-color: initial;
+      animation: rioNumIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
 
     @keyframes rioNumIn {
       from {
-        transform: scale(2.5);
+        transform: scale(2.2) rotate(4deg);
         opacity: 0;
-        filter: blur(20px);
       }
-
       to {
-        transform: scale(1);
+        transform: scale(1) rotate(0deg);
         opacity: 1;
-        filter: blur(0);
-      }
-    }
-
-    @keyframes rioGlow {
-
-      0%,
-      100% {
-        filter: drop-shadow(0 0 50px rgba(255, 46, 146, .4));
-      }
-
-      50% {
-        filter: drop-shadow(0 0 90px rgba(255, 46, 146, .85)) drop-shadow(0 0 140px rgba(255, 215, 0, .3));
       }
     }
 
     /* "GET READY" label */
     .rio-tag {
-      font-size: clamp(12px, 2.2vw, 18px);
-      font-weight: 800;
-      letter-spacing: 6px;
-      padding-right: 6px;
+      font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+      font-size: clamp(13px, 2vw, 18px);
+      font-weight: 900;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, .45);
-      animation: rioTagFade .8s ease .4s both;
+      color: #121212;
+      background: #00FFA3;
+      padding: 8px 26px;
+      border: 3px solid #121212;
+      border-radius: 12px;
+      box-shadow: 3.5px 3.5px 0px #121212;
+      transform: rotate(2deg);
+      animation: rioTagFade 0.4s ease 0.2s both;
     }
 
     @keyframes rioTagFade {
       from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(12px) rotate(2deg);
       }
-
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) rotate(2deg);
       }
     }
 
     .rio-dots {
       display: flex;
-      gap: 20px;
-      margin-top: 28px;
+      gap: 16px;
+      margin-top: 8px;
       justify-content: center;
     }
 
     .rio-dot {
-      width: clamp(10px, 2.5vw, 16px);
-      height: clamp(10px, 2.5vw, 16px);
+      width: clamp(14px, 3vw, 22px);
+      height: clamp(14px, 3vw, 22px);
       border-radius: 50%;
-      background: rgba(255, 255, 255, .12);
-      border: 1.5px solid rgba(255, 255, 255, .08);
-      transition: all .3s;
+      background: #FFFFFF;
+      border: 3px solid #121212;
+      box-shadow: 2.5px 2.5px 0px #121212;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .rio-dot.a {
-      background: var(--neon-pink);
-      box-shadow: 0 0 20px var(--neon-pink), 0 0 40px rgba(255, 46, 146, .4);
-      transform: scale(1.4);
-      border-color: transparent;
+    .rio-dot#rd1.on,
+    .rio-dot#rd1.a {
+      background: #FF2E93;
+      transform: scale(1.35);
+    }
+    .rio-dot#rd2.on,
+    .rio-dot#rd2.a {
+      background: #FFE600;
+      transform: scale(1.35);
+    }
+    .rio-dot#rd3.on,
+    .rio-dot#rd3.a {
+      background: #00FFA3;
+      transform: scale(1.35);
     }
 
     
@@ -13085,7 +13100,7 @@
       font-variant-numeric: tabular-nums !important;
     }
 
-    /* ── Bold Colorful Neobrutalist Round Intro Overlay (Zero Black) ── */
+    /* ── Bold, Colorful Neobrutalist Round Intro Overlay (Neoblurism) ── */
     .round-intro-overlay {
       position: fixed;
       inset: 0;
@@ -13093,58 +13108,111 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(26, 12, 56, 0.85);
+      background: radial-gradient(circle at 50% 45%, rgba(124, 58, 237, 0.55) 0%, rgba(20, 10, 45, 0.88) 100%);
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.22s ease;
     }
     .round-intro-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
     .round-intro-card {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 34px 52px;
-      background: #7C3AED;
-      border: 4px solid #FFFFFF;
-      border-radius: 20px;
-      box-shadow: 8px 8px 0px #00F0FF;
-      transform: scale(0.9) rotate(-1.5deg);
-      transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      padding: 38px 54px;
+      background: #FFE600;
+      border: 4.5px solid #121212;
+      border-radius: 24px;
+      box-shadow: 10px 10px 0px #121212, 18px 18px 0px #FF2E93;
+      transform: scale(0.85) rotate(-2deg);
+      transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       min-width: 320px;
       max-width: 90vw;
     }
     .round-intro-overlay.active .round-intro-card {
       transform: scale(1) rotate(0deg);
     }
+    .round-intro-corner-star {
+      position: absolute;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+      animation: neoStarFloat 2s ease-in-out infinite alternate;
+    }
+    .round-intro-corner-star.star-tl {
+      top: -14px;
+      left: -14px;
+      color: #00F0FF;
+      text-shadow: 2px 2px 0px #121212;
+    }
+    .round-intro-corner-star.star-br {
+      bottom: -14px;
+      right: -14px;
+      color: #00FFA3;
+      text-shadow: 2px 2px 0px #121212;
+      animation-delay: 0.5s;
+    }
+    @keyframes neoStarFloat {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-5px) rotate(15deg); }
+    }
+    .round-intro-pill-tag {
+      font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      background: #7C3AED;
+      padding: 4px 16px;
+      border: 2.5px solid #121212;
+      border-radius: 999px;
+      box-shadow: 3px 3px 0px #121212;
+      margin-bottom: 12px;
+      transform: rotate(1.5deg);
+    }
     .round-intro-badge {
       display: inline-block;
-      font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
-      font-size: 1.15rem;
+      font-family: 'Lilita One', 'Space Grotesk', cursive, sans-serif;
+      font-size: 1.25rem;
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: #3B0764;
-      background: #00FFA3;
-      padding: 6px 20px;
-      border: 3px solid #FFFFFF;
+      color: #FFFFFF;
+      background: #FF2E93;
+      padding: 7px 24px;
+      border: 3.5px solid #121212;
       border-radius: 999px;
-      box-shadow: 3.5px 3.5px 0px #00F0FF;
+      box-shadow: 4px 4px 0px #121212;
       margin-bottom: 16px;
+      transform: rotate(-2.5deg);
+    }
+    .round-intro-title-wrap {
+      background: #FFFFFF;
+      border: 3.5px solid #121212;
+      border-radius: 16px;
+      padding: 10px 28px;
+      box-shadow: 5px 5px 0px #121212;
+      margin-bottom: 18px;
+      max-width: 100%;
     }
     .round-intro-title {
-      font-family: 'Space Grotesk', 'Syne', -apple-system, sans-serif;
-      font-size: 2.3rem;
+      font-family: 'Lilita One', 'Space Grotesk', Impact, sans-serif;
+      font-size: 2.5rem;
       font-weight: 900;
-      color: #FFFFFF;
-      text-shadow: 3px 3px 0px #3B0764;
+      color: #121212;
       letter-spacing: -0.5px;
       text-transform: uppercase;
-      margin-bottom: 18px;
       line-height: 1.1;
+      margin: 0;
     }
     .round-intro-pulse {
       display: inline-flex;
@@ -13152,22 +13220,23 @@
       justify-content: center;
     }
     .round-intro-sub {
-      font-family: 'Space Grotesk', 'DM Sans', -apple-system, sans-serif;
-      font-size: 0.95rem;
+      font-family: 'Lilita One', 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
       font-weight: 900;
       letter-spacing: 2px;
-      color: #FFFFFF;
-      background: #FF5722;
-      padding: 7px 20px;
-      border: 2.5px solid #FFFFFF;
-      border-radius: 10px;
-      box-shadow: 3px 3px 0px #00F0FF;
+      color: #121212;
+      background: #00FFA3;
+      padding: 9px 26px;
+      border: 3px solid #121212;
+      border-radius: 12px;
+      box-shadow: 4px 4px 0px #121212;
       text-transform: uppercase;
-      animation: punchyReadyDesktop 0.8s ease-in-out infinite alternate;
+      transform: rotate(2deg);
+      animation: neoReadyBounce 0.75s ease-in-out infinite alternate;
     }
-    @keyframes punchyReadyDesktop {
-      0% { transform: scale(0.96); }
-      100% { transform: scale(1.04); }
+    @keyframes neoReadyBounce {
+      0% { transform: scale(0.96) rotate(1deg); }
+      100% { transform: scale(1.05) rotate(2.5deg); }
     }
 
   </style>
@@ -21627,8 +21696,13 @@
           overlay.className = 'round-intro-overlay';
           overlay.innerHTML = `
             <div class="round-intro-card">
+              <span class="round-intro-corner-star star-tl">★</span>
+              <span class="round-intro-corner-star star-br">✦</span>
+              <div class="round-intro-pill-tag">⚡ CINEMA SHOWDOWN ⚡</div>
               <div class="round-intro-badge" id="roundIntroBadge">ROUND 1</div>
-              <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+              <div class="round-intro-title-wrap">
+                <div class="round-intro-title" id="roundIntroTitle">Guess the Frame</div>
+              </div>
               <div class="round-intro-pulse">
                 <span class="round-intro-sub">GET READY...</span>
               </div>
