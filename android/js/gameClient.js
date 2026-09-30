@@ -655,11 +655,11 @@ const GameClient = {
       ? { ...options.roundsByMode }
       : { frames: 20, eyes: 10, dialogue: 10 };
     const counts = {
-      frames: Math.min(30, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
-      dialogue: Math.min(30, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
-      eyes: Math.min(30, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
+      frames: Math.min(40, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 20))),
+      dialogue: Math.min(40, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 10))),
+      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 10)))
     };
-    const totalR = Object.values(counts).reduce((a, b) => a + b, 0) || 40;
+    const totalR = Math.min(80, Object.values(counts).reduce((a, b) => a + b, 0) || 40);
 
     this.hostSettings = {
       mode: options.mode || 'Popcorn',
@@ -987,9 +987,9 @@ const GameClient = {
 
     const rawCounts = options.roundsByMode || this.hostSettings.roundsByMode || { frames: 5, eyes: 5, dialogue: 5 };
     const counts = {
-      frames: Math.min(30, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 5))),
-      dialogue: Math.min(30, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 5))),
-      eyes: Math.min(30, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 5)))
+      frames: Math.min(40, Math.max(0, Number(rawCounts.frames !== undefined ? rawCounts.frames : 5))),
+      dialogue: Math.min(40, Math.max(0, Number(rawCounts.dialogue !== undefined ? rawCounts.dialogue : 5))),
+      eyes: Math.min(10, Math.max(0, Number(rawCounts.eyes !== undefined ? rawCounts.eyes : 5)))
     };
     const cat = options.category || this.hostSettings.category || 'all';
     const totalRounds = options.rounds || Object.values(counts).reduce((a, b) => a + b, 0) || 15;

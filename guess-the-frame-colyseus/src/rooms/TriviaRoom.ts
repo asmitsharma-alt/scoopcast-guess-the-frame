@@ -64,12 +64,12 @@ export class TriviaRoom extends Room<GameState> {
     rawSections.forEach(s => this.state.gameSettings.sections.push(s));
 
     const rbm = options.roundsByMode || {};
-    this.state.gameSettings.frameRounds = Number(rbm.frame !== undefined ? rbm.frame : (rbm.frames !== undefined ? rbm.frames : 7));
-    this.state.gameSettings.dialogueRounds = Number(rbm.dialogue !== undefined ? rbm.dialogue : 5);
-    this.state.gameSettings.eyesRounds = Number(rbm.eyes !== undefined ? rbm.eyes : 0);
+    this.state.gameSettings.frameRounds = Math.min(40, Math.max(0, Number(rbm.frame !== undefined ? rbm.frame : (rbm.frames !== undefined ? rbm.frames : 7))));
+    this.state.gameSettings.dialogueRounds = Math.min(40, Math.max(0, Number(rbm.dialogue !== undefined ? rbm.dialogue : 5)));
+    this.state.gameSettings.eyesRounds = Math.min(10, Math.max(0, Number(rbm.eyes !== undefined ? rbm.eyes : 0)));
 
     let totalRounds = options.rounds || (this.state.gameSettings.frameRounds + this.state.gameSettings.dialogueRounds + this.state.gameSettings.eyesRounds);
-    totalRounds = Math.max(3, Math.min(30, totalRounds));
+    totalRounds = Math.max(3, Math.min(80, totalRounds));
     this.state.gameSettings.totalRounds = totalRounds;
     this.state.totalRounds = totalRounds;
     this.state.gameSettings.isLocked = true;

@@ -2256,10 +2256,6 @@ body.keyboard-open .live-typing-mirror {
 .winner-row-nb.silver { background: #E2E8F0; }
 .winner-row-nb.bronze { background: #FFEDD5; }
 
-/* Round intro overlay disabled on mobile build */
-.round-intro-overlay {
-  display: none !important;
-}
 
 /* ══════════════════════════════════════════════════════════════
    REVEAL SCREEN CINEMATIC ANIMATIONS
@@ -3388,7 +3384,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   font-variant-numeric: tabular-nums !important;
 }
 
-/* ── Neobrutalist Round Intro Overlay ── */
+/* ── Bold Colorful Neobrutalist Round Intro Overlay (Zero Black) ── */
 .round-intro-overlay {
   position: fixed;
   inset: 0;
@@ -3396,7 +3392,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(26, 12, 56, 0.85);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -3411,10 +3407,10 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   align-items: center;
   text-align: center;
   padding: 26px 28px;
-  background: #FFE600;
-  border: 3.5px solid #000000;
-  border-radius: 16px;
-  box-shadow: 6px 6px 0px #000000;
+  background: #7C3AED;
+  border: 3.5px solid #FFFFFF;
+  border-radius: 18px;
+  box-shadow: 6px 6px 0px #00F0FF;
   transform: scale(0.9) rotate(-1.5deg);
   transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   min-width: 250px;
@@ -3430,19 +3426,20 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   font-weight: 900;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #000000;
-  background: #38BDF8;
-  padding: 5px 14px;
-  border: 2.5px solid #000000;
+  color: #3B0764;
+  background: #00FFA3;
+  padding: 5px 16px;
+  border: 2.5px solid #FFFFFF;
   border-radius: 999px;
-  box-shadow: 2.5px 2.5px 0px #000000;
+  box-shadow: 2.5px 2.5px 0px #00F0FF;
   margin-bottom: 14px;
 }
 .round-intro-title {
   font-family: 'Space Grotesk', 'Syne', -apple-system, sans-serif;
   font-size: 1.7rem;
   font-weight: 900;
-  color: #000000;
+  color: #FFFFFF;
+  text-shadow: 2.5px 2.5px 0px #3B0764;
   letter-spacing: -0.5px;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -3459,11 +3456,11 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   font-weight: 900;
   letter-spacing: 1.5px;
   color: #FFFFFF;
-  background: #000000;
-  padding: 5px 14px;
-  border: 2px solid #000000;
-  border-radius: 6px;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+  background: #FF5722;
+  padding: 6px 16px;
+  border: 2px solid #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 2.5px 2.5px 0px #00F0FF;
   text-transform: uppercase;
   animation: punchyReadyMobile 0.8s ease-in-out infinite alternate;
 }

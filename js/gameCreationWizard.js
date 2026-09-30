@@ -241,7 +241,8 @@
 
     adjustSectionRounds(sectionKey, delta) {
       const current = this.state.rounds[sectionKey] || 5;
-      const next = Math.max(1, Math.min(20, current + delta));
+      const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
+      const next = Math.max(1, Math.min(maxPerSec, current + delta));
       this.setSectionRounds(sectionKey, next);
     },
 
@@ -273,8 +274,8 @@
       }
 
       const totalRounds = this.getTotalRounds();
-      if (totalRounds < 3 || totalRounds > 30) {
-        this.showNotice('Please ensure total rounds are between 3 and 30.');
+      if (totalRounds < 3 || totalRounds > 80) {
+        this.showNotice('Please ensure total rounds are between 3 and 80.');
         this.goToStep(3);
         return;
       }
@@ -427,14 +428,14 @@
       }).join('');
 
       const total = this.getTotalRounds();
-      const isValid = total >= 3 && total <= 30;
+      const isValid = total >= 3 && total <= 80;
 
       container.innerHTML = html + `
         <div class="gw-rounds-summary-bar">
           <div class="flex flex-col text-left">
             <span class="gw-summary-label">Total Match Rounds</span>
             <span style="font-size:11px; color:${isValid ? 'var(--wizard-text-muted)' : '#f87171'};">
-              ${isValid ? 'Min 3 rounds • Max 30 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 30 rounds')}
+              ${isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds')}
             </span>
           </div>
           <span class="gw-summary-count">${total}</span>
