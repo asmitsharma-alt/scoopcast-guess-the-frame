@@ -443,47 +443,7 @@ export class TriviaRoom extends Room<GameState> {
       const isMatch = FuzzyMatcher.isMatch(guessText, this.currentSecretAnswer);
 
       if (isMatch) {
-        player.hasGuessedCorrectly = true;
-        const guessSeconds = Math.max(0.1, Number(((Date.now() - this.roundStartTime) / 1000).toFixed(2)));
-        this.playerGuessTimes.set(player.id, guessSeconds);
-        const prevCorrect = this.playerCorrectCount.get(player.id) || 0;
-        this.playerCorrectCount.set(player.id, prevCorrect + 1);
-
-        const pos = this.state.currentRoundWinners.length + 1;
-        let basePoints = 0;
-        if (pos === 1) basePoints = GAME_CONFIG.scoring.firstPlace;
-        else if (pos === 2) basePoints = GAME_CONFIG.scoring.secondPlace;
-        else if (pos === 3) basePoints = GAME_CONFIG.scoring.thirdPlace;
-
-        // Streak multiplier: 2 in a row = 1.5x, 3+ in a row = 2.0x!
-        player.streak = (player.streak || 0) + 1;
-        let multiplier = 1.0;
-        if (player.streak >= 3) multiplier = 2.0;
-        else if (player.streak === 2) multiplier = 1.5;
-
-        const points = Math.round(basePoints * multiplier);
-        player.score += points;
-
-        const winner = new RoundWinner();
-        winner.playerId = player.id;
-        winner.playerName = player.name;
-        winner.avatar = player.avatar;
-        winner.position = pos;
-        winner.points = points;
-        winner.streak = player.streak;
-        this.state.currentRoundWinners.push(winner);
-
-        // Notify client of success
-        client.send("guess_result", {
-          isCorrect: true,
-          points: points,
-          position: pos,
-          streak: player.streak,
-          multiplier
-        });
-
-        // Dedicated round winner banner is handled authoritatively by state.currentRoundWinners.onAdd
-        this.checkRoundCompletion();
+        this.awardCorrectGuess(client, player);
       } else {
         client.send("guess_result", {
           isCorrect: false
@@ -570,8 +530,14 @@ export class TriviaRoom extends Room<GameState> {
       const rawText = String(message?.text || '').trim();
       if (!rawText || rawText.length > 200) return;
 
-      // Anti-Spoiler filter active during round
+      // During a round, check if the chat message is actually a correct answer
       if (this.state.phase === "playing" && this.currentSecretAnswer) {
+        // If player hasn't guessed yet and this is a valid answer, auto-accept it
+        if (!player.hasGuessedCorrectly && FuzzyMatcher.isMatch(rawText, this.currentSecretAnswer)) {
+          this.awardCorrectGuess(client, player);
+          return;
+        }
+        // Otherwise, if it contains spoiler content, block it
         if (FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
           client.send("chat_warning", {
             message: "⚠️ Your message was blocked to protect players from spoilers!"
@@ -594,6 +560,51 @@ export class TriviaRoom extends Room<GameState> {
         this.state.chatMessages.shift();
       }
     });
+  }
+
+  /** Shared helper: award points, streaks, and notify the client for a correct guess. */
+  private awardCorrectGuess(client: any, player: any) {
+    player.hasGuessedCorrectly = true;
+    const guessSeconds = Math.max(0.1, Number(((Date.now() - this.roundStartTime) / 1000).toFixed(2)));
+    this.playerGuessTimes.set(player.id, guessSeconds);
+    const prevCorrect = this.playerCorrectCount.get(player.id) || 0;
+    this.playerCorrectCount.set(player.id, prevCorrect + 1);
+
+    const pos = this.state.currentRoundWinners.length + 1;
+    let basePoints = 0;
+    if (pos === 1) basePoints = GAME_CONFIG.scoring.firstPlace;
+    else if (pos === 2) basePoints = GAME_CONFIG.scoring.secondPlace;
+    else if (pos === 3) basePoints = GAME_CONFIG.scoring.thirdPlace;
+
+    // Streak multiplier: 2 in a row = 1.5x, 3+ in a row = 2.0x!
+    player.streak = (player.streak || 0) + 1;
+    let multiplier = 1.0;
+    if (player.streak >= 3) multiplier = 2.0;
+    else if (player.streak === 2) multiplier = 1.5;
+
+    const points = Math.round(basePoints * multiplier);
+    player.score += points;
+
+    const winner = new RoundWinner();
+    winner.playerId = player.id;
+    winner.playerName = player.name;
+    winner.avatar = player.avatar;
+    winner.position = pos;
+    winner.points = points;
+    winner.streak = player.streak;
+    this.state.currentRoundWinners.push(winner);
+
+    // Notify client of success
+    client.send("guess_result", {
+      isCorrect: true,
+      points: points,
+      position: pos,
+      streak: player.streak,
+      multiplier
+    });
+
+    // Dedicated round winner banner is handled authoritatively by state.currentRoundWinners.onAdd
+    this.checkRoundCompletion();
   }
 
   private updateTick() {
