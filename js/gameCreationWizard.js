@@ -234,7 +234,8 @@
 
     // ── STEP 3: Round Configuration ──
     setSectionRounds(sectionKey, amount) {
-      const val = Math.max(1, Math.min(20, Number(amount) || 5));
+      const maxPerSec = sectionKey === 'eyes' ? 10 : 40;
+      const val = Math.max(1, Math.min(maxPerSec, Number(amount) || 5));
       this.state.rounds[sectionKey] = val;
       this.renderStep3();
     },
