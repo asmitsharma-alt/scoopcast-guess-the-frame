@@ -448,6 +448,14 @@
     totalAssets: 0,
     failedCount: 0,
 
+    optimizeUrl(url) {
+      if (!url || typeof url !== 'string') return url;
+      if (url.includes('res.cloudinary.com') && url.includes('/upload/') && !url.includes('/upload/f_auto,q_auto/') && !url.endsWith('.svg')) {
+        return url.replace('/upload/', '/upload/f_auto,q_auto/');
+      }
+      return url;
+    },
+
     async preloadRoomAssets(playlist, onProgress) {
       if (!Array.isArray(playlist) || playlist.length === 0) {
         if (onProgress) onProgress(100, 'ready');
@@ -458,42 +466,61 @@
       this.verifiedCount = 0;
       this.failedCount = 0;
 
+      const seenUrls = new Set();
       const assetUrls = [];
 
       playlist.forEach(item => {
-        if (item.content) assetUrls.push({ url: item.content, type: item.type || 'image' });
-        if (item.revealContent) assetUrls.push({ url: item.revealContent, type: 'image' });
-        if (item.audioUrl) assetUrls.push({ url: item.audioUrl, type: 'audio' });
+        if (!item) return;
+        // Text dialogue rounds do not require any image asset downloads
+        if (item.type !== 'dialogue') {
+          if (item.content && typeof item.content === 'string' && (item.content.startsWith('http') || item.content.startsWith('/') || item.content.startsWith('data:'))) {
+            const optUrl = this.optimizeUrl(item.content);
+            if (!seenUrls.has(optUrl)) {
+              seenUrls.add(optUrl);
+              assetUrls.push({ url: optUrl, type: item.type || 'image' });
+            }
+          }
+          if (item.revealContent && typeof item.revealContent === 'string' && (item.revealContent.startsWith('http') || item.revealContent.startsWith('/') || item.revealContent.startsWith('data:'))) {
+            const optReveal = this.optimizeUrl(item.revealContent);
+            if (!seenUrls.has(optReveal)) {
+              seenUrls.add(optReveal);
+              assetUrls.push({ url: optReveal, type: 'image' });
+            }
+          }
+        }
+        if (item.audioUrl && typeof item.audioUrl === 'string' && !seenUrls.has(item.audioUrl)) {
+          seenUrls.add(item.audioUrl);
+          assetUrls.push({ url: item.audioUrl, type: 'audio' });
+        }
       });
 
-      this.totalAssets = Math.max(1, assetUrls.length);
-
-      // Report initial download state
-      if (onProgress) onProgress(15, 'downloading');
-
-      // Preload in batches with overall maximum timeout of 2 seconds
-      const BATCH_SIZE = 6;
-      let isTimedOut = false;
-      const overallTimer = setTimeout(() => {
-        isTimedOut = true;
-      }, 2000);
-
-      try {
-        for (let i = 0; i < assetUrls.length; i += BATCH_SIZE) {
-          if (isTimedOut) break;
-          const batch = assetUrls.slice(i, i + BATCH_SIZE);
-          await Promise.allSettled(batch.map(item => this.verifySingleAsset(item)));
-          
-          const currentProgress = Math.min(92, Math.round(((i + batch.length) / this.totalAssets) * 90));
-          if (onProgress) onProgress(currentProgress, 'downloading');
-        }
-      } finally {
-        clearTimeout(overallTimer);
+      if (assetUrls.length === 0) {
+        this.isPreloading = false;
+        if (onProgress) onProgress(100, 'ready');
+        return true;
       }
 
-      // Quick verification phase
-      if (onProgress) onProgress(95, 'verifying');
-      await new Promise(r => setTimeout(r, 100));
+      this.totalAssets = assetUrls.length;
+      if (onProgress) onProgress(10, 'downloading');
+
+      // High-concurrency worker pool (up to 12 parallel requests via HTTP/2 multiplexing)
+      const CONCURRENCY = Math.min(12, assetUrls.length);
+      let currentIndex = 0;
+      let completedCount = 0;
+
+      const runWorker = async () => {
+        while (currentIndex < assetUrls.length) {
+          const idx = currentIndex++;
+          const targetItem = assetUrls[idx];
+          await this.verifySingleAsset(targetItem);
+          completedCount++;
+          const progress = Math.min(98, Math.round(10 + (completedCount / this.totalAssets) * 88));
+          if (onProgress) onProgress(progress, progress >= 90 ? 'verifying' : 'downloading');
+        }
+      };
+
+      const workers = Array.from({ length: CONCURRENCY }, () => runWorker());
+      await Promise.allSettled(workers);
 
       this.isPreloading = false;
       if (onProgress) onProgress(100, 'ready');
@@ -502,26 +529,27 @@
 
     verifySingleAsset(item) {
       return new Promise(resolve => {
-        let settled = false;
-        const done = (ok) => {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timeoutId);
-          if (ok) this.verifiedCount++; else this.failedCount++;
-          resolve(ok);
-        };
-        const timeoutId = setTimeout(() => done(false), 1200);
-
         if (item.type === 'audio') {
           const audio = new Audio();
           audio.preload = 'auto';
-          audio.oncanplaythrough = () => done(true);
-          audio.onerror = () => done(false);
+          audio.oncanplaythrough = () => { this.verifiedCount++; resolve(true); };
+          audio.onerror = () => { this.failedCount++; resolve(false); };
           audio.src = item.url;
         } else {
           const img = new Image();
-          img.onload = () => done(true);
-          img.onerror = () => done(false);
+          img.decoding = 'async';
+          img.fetchPriority = 'high';
+          img.onload = async () => {
+            try {
+              if (typeof img.decode === 'function') await img.decode();
+            } catch(e) {}
+            this.verifiedCount++;
+            resolve(true);
+          };
+          img.onerror = () => {
+            this.failedCount++;
+            resolve(false);
+          };
           img.src = item.url;
         }
       });

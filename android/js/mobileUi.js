@@ -190,12 +190,20 @@ const MediaCache = {
     return p;
   },
 
-  async preloadBatch(urls, batchSize = 12) {
+  async preloadBatch(urls, concurrency = 12) {
     if (!Array.isArray(urls) || urls.length === 0) return;
-    for (let i = 0; i < urls.length; i += batchSize) {
-      const chunk = urls.slice(i, i + batchSize);
-      await Promise.allSettled(chunk.map(u => this.preload(u)));
-    }
+    const cleanUrls = [...new Set(urls.filter(Boolean))];
+    let idx = 0;
+    const worker = async () => {
+      while (idx < cleanUrls.length) {
+        const target = cleanUrls[idx++];
+        try {
+          await this.preload(target);
+        } catch(e) {}
+      }
+    };
+    const workers = Array.from({ length: Math.min(concurrency, cleanUrls.length) }, () => worker());
+    await Promise.allSettled(workers);
   },
 
   preloadCatalog() {

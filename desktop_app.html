@@ -18652,9 +18652,15 @@
           this.renderLobbyUI();
         };
 
+        // 1.2s failsafe to guarantee full readiness even on slow networks
+        const failsafe = setTimeout(() => {
+          reportProgress(100, 'ready');
+        }, 1200);
+
         if (typeof FrameDisplay !== 'undefined' && FrameDisplay.preloadAll) {
           FrameDisplay.preloadAll(p => {
             const pct = typeof p === 'number' ? p : (p && p.percent !== undefined ? p.percent : 0);
+            if (pct >= 100) clearTimeout(failsafe);
             const status = pct >= 100 ? 'ready' : (pct >= 85 ? 'verifying' : 'downloading');
             reportProgress(pct, status);
           });
@@ -18664,6 +18670,7 @@
             step += 25;
             if (step >= 100) {
               clearInterval(interval);
+              clearTimeout(failsafe);
               reportProgress(100, 'ready');
             } else {
               reportProgress(step, step >= 85 ? 'verifying' : 'downloading');
@@ -21679,34 +21686,61 @@
 
       /* Preload all frames for progress tracking */
       async preloadAll(onProgress) {
+        const seenUrls = new Set();
         const priorityImages = [];
 
-        const collect = frames => frames.forEach(f => {
-          if ((f.type === 'image' || f.type === 'eye') && f.content) {
-            priorityImages.push(f.content);
+        const addUrl = raw => {
+          if (!raw || typeof raw !== 'string') return;
+          if (!raw.startsWith('http') && !raw.startsWith('/') && !raw.startsWith('data:')) return;
+          const opt = optimizeCloudinaryUrl(raw);
+          if (!seenUrls.has(opt)) {
+            seenUrls.add(opt);
+            priorityImages.push(opt);
           }
-          if (f.type === 'eye' && f.revealContent) priorityImages.push(f.revealContent);
+        };
+
+        const collect = frames => frames.forEach(f => {
+          if (!f || f.type === 'dialogue') return;
+          if ((f.type === 'image' || f.type === 'eye') && f.content) addUrl(f.content);
+          if (f.type === 'eye' && f.revealContent) addUrl(f.revealContent);
         });
         GS.sections.forEach(s => collect(s.frames));
         if (GS.tieBreaker && Array.isArray(GS.tieBreaker.frames)) collect(GS.tieBreaker.frames);
 
-        // Player assets: avatars + winner trophy images (priority)
+        // Player assets: avatars
         GS.players.forEach(p => {
-          priorityImages.push(resolvePlayerAvatar(p, 'aman'));
+          addUrl(resolvePlayerAvatar(p, 'aman'));
         });
 
-        let loaded = 0;
         const totalPriority = priorityImages.length;
-        if (totalPriority === 0) { if (onProgress) onProgress({ loaded: 0, total: 0, percent: 100 }); return; }
-
-        // Load critical match assets in high-performance batches
-        const BATCH = 16;
-        for (let i = 0; i < priorityImages.length; i += BATCH) {
-          const batch = priorityImages.slice(i, i + BATCH);
-          const results = await Promise.allSettled(batch.map(src => this.preloadImage(src)));
-          loaded += results.length;
-          if (onProgress) onProgress({ loaded, total: totalPriority, percent: Math.min(100, Math.round((loaded / totalPriority) * 100)) });
+        if (totalPriority === 0) {
+          if (onProgress) onProgress({ loaded: 0, total: 0, percent: 100 });
+          return;
         }
+
+        // High-concurrency worker pool (up to 16 parallel requests via HTTP/2 multiplexing)
+        let loaded = 0;
+        let currentIndex = 0;
+        const CONCURRENCY = Math.min(16, priorityImages.length);
+
+        const runWorker = async () => {
+          while (currentIndex < priorityImages.length) {
+            const idx = currentIndex++;
+            const src = priorityImages[idx];
+            await this.preloadImage(src);
+            loaded++;
+            if (onProgress) {
+              onProgress({
+                loaded,
+                total: totalPriority,
+                percent: Math.min(100, Math.round((loaded / totalPriority) * 100))
+              });
+            }
+          }
+        };
+
+        const workers = Array.from({ length: CONCURRENCY }, () => runWorker());
+        await Promise.allSettled(workers);
       },
 
       /* Preload next few frames */
