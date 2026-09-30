@@ -3392,9 +3392,9 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 45%, rgba(124, 58, 237, 0.55) 0%, rgba(20, 10, 45, 0.88) 100%);
-  backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.22s ease;
@@ -3455,7 +3455,7 @@ body.keyboard-open .drawer-sheet.open .drawer-body {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: #FFFFFF;
-  background: #7C3AED;
+  background: #2563EB;
   padding: 4px 12px;
   border: 2px solid #121212;
   border-radius: 999px;

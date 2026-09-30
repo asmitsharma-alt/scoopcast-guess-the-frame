@@ -1,7 +1,7 @@
 // Scoopcast Guess The Frame - Production Service Worker
 // Enables instant 0ms asset retrieval via Cache-First strategy
 
-const CACHE_NAME = 'gtf-cache-v14';
+const CACHE_NAME = 'gtf-cache-v15';
 const CORE_PRECACHE = [
   '/',
   '/css/tailwind.min.css',
