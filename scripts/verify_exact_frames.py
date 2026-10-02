@@ -56,7 +56,8 @@ def verify_frames():
                     'rating': parts[4],
                     'url': url
                 })
-    print(f"Loaded {len(expected_frames)} expected curated frames from answers (1).md")
+    from apply_easy_popular_frames import EASY_POPULAR_TITLES
+    print(f"Loaded {len(EASY_POPULAR_TITLES)} easy & popular titles in filter")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(channel="msedge", headless=True)
@@ -75,19 +76,17 @@ def verify_frames():
 
         assert frames is not None, "FAILED: window.GS.sections[0].frames is null or undefined"
         print(f"Browser loaded frame pool of length: {len(frames)}")
-        assert len(frames) == 500, f"FAILED: Expected exactly 500 frames, got {len(frames)}"
+        assert len(frames) == 149, f"FAILED: Expected exactly 149 frames, got {len(frames)}"
 
         # 4. Verify all frames are Cloudinary imdb-top500-frame-quiz
         non_cloudinary = [f for f in frames if not (isinstance(f.get('content'), str) and 'imdb-top500-frame-quiz' in f['content'])]
         assert len(non_cloudinary) == 0, f"FAILED: Found non-Cloudinary frames: {non_cloudinary}"
-        print(f"All 500 frames strictly use Cloudinary 'imdb-top500-frame-quiz' URLs")
+        print(f"All {len(frames)} frames strictly use Cloudinary 'imdb-top500-frame-quiz' URLs")
 
-        # 5. Verify every single URL in browser matches the expected URLs set
-        expected_urls = {f['url'] for f in expected_frames}
-        browser_urls = {f['content'] for f in frames}
-        missing_urls = expected_urls - browser_urls
-        assert len(missing_urls) == 0, f"FAILED: {len(missing_urls)} expected URLs missing from browser pool: {list(missing_urls)[:5]}"
-        print(f"Exact match: 100% (500/500) of answers (1).md frames are present in the browser pool!")
+        # 5. Verify every single movie in the pool is in EASY_POPULAR_TITLES
+        non_popular = [f for f in frames if f.get('answer') not in EASY_POPULAR_TITLES]
+        assert len(non_popular) == 0, f"FAILED: Found non-popular frames: {non_popular}"
+        print(f"All 149 frames are 100% verified EASY & ULTRA-POPULAR household movies!")
 
         # 6. Verify Fight Club masking
         fight_club = [f for f in frames if f.get('answer') == 'FIGHT CLUB']
@@ -139,8 +138,8 @@ def verify_frames():
             return 0;
         }""")
         print(f"Mobile app GAME_SECTIONS[0].frames count: {mobile_frames_count}")
-        assert mobile_frames_count == 500, f"Expected 500 frames on mobile, got {mobile_frames_count}"
-        print("Mobile client synchronized with exact 500 frames!")
+        assert mobile_frames_count == 149, f"Expected 149 frames on mobile, got {mobile_frames_count}"
+        print("Mobile client synchronized with exact 149 easy frames!")
 
         browser.close()
 

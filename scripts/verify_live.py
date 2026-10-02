@@ -21,7 +21,7 @@ def main():
         print(f"All 100% Curated Cloudinary URLs: {all_curated}")
         print(f"Sample First 3 Frames: {sample}")
         
-        assert frames_count == 500, f"Expected 500 frames, got {frames_count}"
+        assert frames_count == 149, f"Expected 149 frames, got {frames_count}"
         assert all_curated, "Not all frames are from the curated Cloudinary set"
         
         # Take a live screenshot
