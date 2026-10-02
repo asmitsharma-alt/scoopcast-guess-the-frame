@@ -7,6 +7,8 @@ import { WebSocketTransport } from "@colyseus/ws-transport";
 import { monitor } from "@colyseus/monitor";
 import { TriviaRoom } from "./rooms/TriviaRoom";
 
+import path from "path";
+
 dotenv.config();
 
 const port = Number(process.env.PORT || 2567);
@@ -25,8 +27,15 @@ app.use(cors({
 app.options("*", cors());
 app.use(express.json());
 
-// ── Root Info Endpoint ──
+// ── Static Assets & Web App Hosting ──
+const rootStaticDir = path.resolve(__dirname, "../../");
+app.use(express.static(rootStaticDir));
+
+// ── Root Endpoint ──
 app.get("/", (req: Request, res: Response) => {
+  if (req.headers.accept && req.headers.accept.includes("text/html")) {
+    return res.redirect("/android/index.html");
+  }
   res.status(200).json({
     name: "Scoopcast: Guess The Frame — Colyseus Multiplayer Server",
     status: "online",
@@ -34,7 +43,9 @@ app.get("/", (req: Request, res: Response) => {
       health: "/health",
       ping: "/ping",
       colyseusMonitor: "/colyseus",
-      roomLookup: "/api/room/:code"
+      roomLookup: "/api/room/:code",
+      mobileApp: "/android/index.html",
+      desktopApp: "/desktop_app.html"
     }
   });
 });

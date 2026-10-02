@@ -282,27 +282,23 @@ const GAME_SECTIONS = [
     id: 1,
     name: 'Guess the Frame',
     frames: [
-      { type: 'image', content: '/GUESSTHEFRAME/American History X (1998).webp', answer: 'AMERICAN HISTORY X', year: '1998', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Avengers Infinity War (2018).webp', answer: 'AVENGERS INFINITY WAR', year: '2018', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Baahubali 2 The Conclusion (2017).webp', answer: 'BAAHUBALI 2 THE CONCLUSION', year: '2017', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Balan - The Boy (2026).webp', answer: 'BALAN - THE BOY', year: '2026', tag: 'new' },
-      { type: 'image', content: '/GUESSTHEFRAME/Before Sunset (2004).webp', answer: 'BEFORE SUNSET', year: '2004', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Billu (2009).webp', answer: 'BILLU', year: '2009', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Certified Copy (2010).webp', answer: 'CERTIFIED COPY', year: '2010', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Dallas Buyers Club (2013).webp', answer: 'DALLAS BUYERS CLUB', year: '2013', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Dune Part Two (2024).webp', answer: 'DUNE PART TWO', year: '2024', tag: 'new' },
-      { type: 'image', content: '/GUESSTHEFRAME/GO GOA GONE (2013).webp', answer: 'GO GOA GONE', year: '2013', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/I Saw the Devil (2010).webp', answer: 'I SAW THE DEVIL', year: '2010', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Irumudi (2026).webp', answer: 'IRUMUDI', year: '2026', tag: 'new' },
-      { type: 'image', content: '/GUESSTHEFRAME/Karwaan (2018).webp', answer: 'KARWAAN', year: '2018', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Nirvanna.the.Band.the.Show.the.Movie (2025).webp', answer: 'NIRVANNA THE BAND THE SHOW THE MOVIE', year: '2025', tag: 'new' },
-      { type: 'image', content: '/GUESSTHEFRAME/October (2018).webp', answer: 'OCTOBER', year: '2018', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/premalu (2024).webp', answer: 'PREMALU', year: '2024', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Rang De Basanti (2006).webp', answer: 'RANG DE BASANTI', year: '2006', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Requiem for a Dream (2000).webp', answer: 'REQUIEM FOR A DREAM', year: '2000', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/S_O Satyamurthy (2015).webp', answer: 'S/O SATYAMURTHY', year: '2015', tag: 'classic' },
-      { type: 'image', content: '/GUESSTHEFRAME/Stand by Me (1986).webp', answer: 'STAND BY ME', year: '1986', tag: 'classic' }
-    ]
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0001.jpg", answer: "THE SHAWSHANK REDEMPTION", year: "1994", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878459/imdb-top500-frame-quiz/frame_0002.jpg", answer: "THE GODFATHER", year: "1972", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0003.jpg", answer: "THE DARK KNIGHT", year: "2008", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0004.jpg", answer: "THE LORD OF THE RINGS: THE RETURN OF THE KING", year: "2003", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878545/imdb-top500-frame-quiz/frame_0005.jpg", answer: "SCHINDLER'S LIST", year: "1993", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878545/imdb-top500-frame-quiz/frame_0006.jpg", answer: "THE GODFATHER PART II", year: "1974", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878459/imdb-top500-frame-quiz/frame_0007.jpg", answer: "12 ANGRY MEN", year: "1957", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0008.jpg", answer: "THE LORD OF THE RINGS: THE FELLOWSHIP OF THE RING", year: "2001", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878545/imdb-top500-frame-quiz/frame_0009.jpg", answer: "INCEPTION", year: "2010", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0010.jpg", answer: "FIGHT CLUB", year: "1999", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878354/imdb-top500-frame-quiz/frame_0011.jpg", answer: "FORREST GUMP", year: "1994", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878575/imdb-top500-frame-quiz/frame_0012.jpg", answer: "PULP FICTION", year: "1994", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878576/imdb-top500-frame-quiz/frame_0013.jpg", answer: "THE LORD OF THE RINGS: THE TWO TOWERS", year: "2002", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878576/imdb-top500-frame-quiz/frame_0014.jpg", answer: "THE GOOD, THE BAD AND THE UGLY", year: "1966", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878576/imdb-top500-frame-quiz/frame_0015.jpg", answer: "INTERSTELLAR", year: "2014", tag: "classic" },
+            { type: "image", content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790878576/imdb-top500-frame-quiz/frame_0017.jpg", answer: "STAR WARS: EPISODE V - THE EMPIRE STRIKES BACK", year: "1980", tag: "classic" }
+          ]
   },
   {
     id: 2,
@@ -337,6 +333,19 @@ const GAME_SECTIONS = [
     ]
   }
 ];
+
+// Auto-sync dynamic Cloudinary frames from data/frames.json
+(async function syncDynamicFrames() {
+  try {
+    const res = await fetch('/data/frames.json?v=' + Date.now());
+    if (res.ok) {
+      const dynamicFrames = await res.json();
+      if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
+        GAME_SECTIONS[0].frames = dynamicFrames;
+      }
+    }
+  } catch (e) {}
+})();
 
 /* ══════════════════════════════════════════════════════════════════
    UNIFIED REALTIME GAME CLIENT (ANDROID MOBILE ENGINE - COLYSEUS)
@@ -410,18 +419,17 @@ const GameClient = {
     const urlParams = new URLSearchParams(window.location.search);
     const param = urlParams.get('colyseus');
     if (param) return param;
+
+    const host = window.location.hostname;
+    const isLocal = !host || host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host.startsWith('192.168.') || host.startsWith('10.') || urlParams.has('local');
+
+    if (isLocal) {
+      const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${proto}//${host || 'localhost'}:2567`;
+    }
+
     const saved = localStorage.getItem('gtf_colyseus_url');
     if (saved) return saved;
-
-    // Check if running on mobile device or native container (Capacitor/Cordova/WebView)
-    const isMobileDevice = window.Capacitor !== undefined ||
-                           window.location.protocol === 'capacitor:' ||
-                           window.location.protocol === 'file:' ||
-                           /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (urlParams.has('local')) {
-      return 'ws://localhost:2567';
-    }
 
     return 'wss://guess-the-frame-colyseus.onrender.com';
   },
@@ -430,12 +438,17 @@ const GameClient = {
     const urlParams = new URLSearchParams(window.location.search);
     const param = urlParams.get('colyseus_http');
     if (param) return param;
+
+    const host = window.location.hostname;
+    const isLocal = !host || host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0' || host.startsWith('192.168.') || host.startsWith('10.') || urlParams.has('local');
+
+    if (isLocal) {
+      const proto = window.location.protocol === 'https:' ? 'https:' : 'http:';
+      return `${proto}//${host || 'localhost'}:2567`;
+    }
+
     const saved = localStorage.getItem('gtf_colyseus_http_url');
     if (saved) return saved;
-
-    if (urlParams.has('local')) {
-      return 'http://localhost:2567';
-    }
 
     return 'https://guess-the-frame-colyseus.onrender.com';
   },
@@ -562,7 +575,7 @@ const GameClient = {
 
   checkActiveSession() {
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
+    const roomParam = urlParams.get('room') || urlParams.get('join') || urlParams.get('code');
 
     let savedSession = null;
     try {
@@ -578,7 +591,11 @@ const GameClient = {
         this.promptRejoinModal(savedSession);
         return;
       }
-      this.joinGame(upperCode);
+      // Do NOT auto-join lobby! Stay on Home Screen so player can pick Avatar and Name.
+      this.pendingRoomCode = upperCode;
+      if (typeof UI !== 'undefined' && UI.prefillJoinCode) {
+        UI.prefillJoinCode(upperCode);
+      }
     } else if (isRecent) {
       this.promptRejoinModal(savedSession);
     } else if (savedSession) {
@@ -609,9 +626,13 @@ const GameClient = {
       UI.closeRejoinModal();
     }
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
+    const roomParam = urlParams.get('room') || urlParams.get('join') || urlParams.get('code');
     if (roomParam) {
-      this.joinGame(roomParam.trim().toUpperCase());
+      const upperCode = roomParam.trim().toUpperCase();
+      this.pendingRoomCode = upperCode;
+      if (typeof UI !== 'undefined' && UI.prefillJoinCode) {
+        UI.prefillJoinCode(upperCode);
+      }
     }
   },
 

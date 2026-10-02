@@ -73,9 +73,166 @@ export class MetadataEnricher {
     'parasite', 'spirited away', 'oldboy', 'pan\'s labyrinth', 'city of god', 'amelie', 'roma',
     'seven samurai', 'stalker', 'the 400 blows', 'bicycle thieves', 'breathless', 'in the mood for love',
     'memories of murder', 'crouching tiger, hidden dragon', 'la haine', 'the hunt', 'another round',
-    'portrait of a lady on fire', 'the zone of interest', 'anatomy of a fall', 'drive my car',
     'close', 'the worst person in the world', 'cinema paradiso', 'ran', 'rashomon', 'persona'
   ]);
+
+  public static readonly TIER1_HOUSEHOLD_TITLES = new Set([
+    // ── Marvel MCU & Sony Marvel ──
+    "IRON MAN", "IRON MAN 2", "IRON MAN 3",
+    "THE AVENGERS", "AVENGERS: INFINITY WAR", "AVENGERS: ENDGAME",
+    "SPIDER-MAN: NO WAY HOME", "SPIDER-MAN: ACROSS THE SPIDER-VERSE",
+    "GUARDIANS OF THE GALAXY VOL. 3", "BLACK PANTHER",
+    "BLACK PANTHER: WAKANDA FOREVER",
+    "THOR: LOVE AND THUNDER", "THOR: RAGNAROK",
+    "CAPTAIN AMERICA: CIVIL WAR", "DEADPOOL", "DEADPOOL 2",
+    "ANT-MAN AND THE WASP: QUANTUMANIA", "BLACK WIDOW",
+    "DOCTOR STRANGE IN THE MULTIVERSE OF MADNESS",
+    "SHANG-CHI AND THE LEGEND OF THE TEN RINGS", "THE MARVELS",
+    "HULK",
+
+    // ── DC ──
+    "THE DARK KNIGHT", "THE DARK KNIGHT RISES", "BATMAN BEGINS",
+    "THE BATMAN", "JOKER", "JOKER: FOLIE À DEUX",
+    "WONDER WOMAN", "MAN OF STEEL", "THE SUICIDE SQUAD",
+
+    // ── Nolan / Spielberg / Cameron / Ridley Scott ──
+    "INCEPTION", "INTERSTELLAR", "OPPENHEIMER",
+    "TITANIC", "AVATAR", "AVATAR: THE WAY OF WATER",
+    "JURASSIC PARK", "JURASSIC WORLD", "THE LOST WORLD: JURASSIC PARK",
+    "SAVING PRIVATE RYAN", "FORREST GUMP", "THE GREEN MILE",
+    "GLADIATOR", "NAPOLEON (2023)", "BLACK HAWK DOWN",
+    "KILLERS OF THE FLOWER MOON",
+
+    // ── Star Wars ──
+    "STAR WARS", "STAR WARS (1977)",
+    "THE EMPIRE STRIKES BACK", "RETURN OF THE JEDI",
+    "STAR WARS: EPISODE IX - THE RISE OF SKYWALKER",
+
+    // ── The Matrix / John Wick ──
+    "THE MATRIX", "THE MATRIX RESURRECTIONS",
+    "JOHN WICK", "JOHN WICK: CHAPTER 3 - PARABELLUM", "JOHN WICK: CHAPTER 4",
+    "BALLERINA",
+
+    // ── Action / Thriller mega-hits ──
+    "TOP GUN: MAVERICK", "TOP GUN", "MAD MAX: FURY ROAD", "FURIOSA",
+    "BACK TO THE FUTURE", "BACK TO THE FUTURE II", "BACK TO THE FUTURE PART III",
+    "DIE HARD", "DIE HARD WITH A VENGEANCE", "SPEED",
+    "MEN IN BLACK", "BRAVEHEART", "ARMAGEDDON",
+    "BULLET TRAIN", "AMBULANCE",
+    "TRUE LIES", "CRIMSON TIDE", "POINT BREAK",
+    "MISSION: IMPOSSIBLE - DEAD RECKONING PART ONE",
+    "WANTED", "MONKEY MAN",
+
+    // ── James Bond (all recognizable) ──
+    "SKYFALL", "GOLDENEYE", "NO TIME TO DIE", "SPECTRE",
+    "QUANTUM OF SOLACE", "GOLDFINGER", "FROM RUSSIA WITH LOVE",
+    "DIE ANOTHER DAY", "THUNDERBALL",
+    "THE SPY WHO LOVED ME", "MOONRAKER",
+    "THE WORLD IS NOT ENOUGH", "TOMORROW NEVER DIES",
+    "THE LIVING DAYLIGHTS", "LICENCE TO KILL",
+    "THE MAN WITH THE GOLDEN GUN", "LIVE AND LET DIE",
+    "OCTOPUSSY", "A VIEW TO A KILL", "FOR YOUR EYES ONLY",
+    "DIAMONDS ARE FOREVER", "YOU ONLY LIVE TWICE",
+    "ON HER MAJESTY",
+
+    // ── Horror everyone knows ──
+    "THE TEXAS CHAINSAW MASSACRE", "THE AMITYVILLE HORROR",
+    "INSIDIOUS", "INSIDIOUS: CHAPTER 2",
+    "HALLOWEEN II (1981)", "HALLOWEEN KILLS",
+    "THE BLACK PHONE", "TALK TO ME", "NOPE", "BARBARIAN",
+    "THE EXORCIST: BELIEVER", "CANDYMAN (2021)",
+    "28 YEARS LATER",
+
+    // ── Universally known classics ──
+    "THE GODFATHER", "PULP FICTION", "FIGHT CLUB",
+    "THE SHAWSHANK REDEMPTION", "THE WOLF OF WALL STREET",
+    "DJANGO UNCHAINED", "GOODFELLAS", "SCARFACE",
+    "APOCALYPSE NOW", "THELMA & LOUISE",
+    "THE GREAT DICTATOR", "HIGH NOON",
+    "BARBIE", "PARASITE", "SALTBURN",
+    "WONKA", "ELVIS", "CHALLENGERS",
+    "POOR THINGS", "EVERYTHING EVERYWHERE ALL AT ONCE",
+    "THE BANSHEES OF INISHERIN",
+    "OPPENHEIMER", "THE FABELMANS",
+    "GLASS ONION", "KNIVES OUT", "THE MENU",
+
+    // ── 90s/2000s hits everyone remembers ──
+    "ESCAPE FROM NEW YORK", "CONAN THE BARBARIAN",
+    "THE MASK", "HACKERS", "FEAR AND LOATHING IN LAS VEGAS",
+    "BORN ON THE FOURTH OF JULY", "ZERO DARK THIRTY",
+    "HOUSE OF GUCCI", "LAST ACTION HERO",
+    "THE OUTSIDERS", "A STREETCAR NAMED DESIRE",
+    "CREED II", "CREED III",
+    "THE GREAT GATSBY (2013)", "THE GREATEST SHOWMAN",
+    "BEVERLY HILLS COP II", "CONTACT",
+    "WALK THE LINE", "IN THE HEAT OF THE NIGHT",
+    "PLANET OF THE APES (1968)", "THE APARTMENT",
+    "MEMOIRS OF A GEISHA", "THE LAST EMPEROR",
+
+    // ── Dune ──
+    "DUNE (2021)", "DUNE: PART 2",
+
+    // ── Ghostbusters ──
+    "GHOSTBUSTERS", "GHOSTBUSTERS 2", "GHOSTBUSTERS: AFTERLIFE",
+
+    // ── Godzilla / Kong ──
+    "GODZILLA MINUS ONE", "GODZILLA VS. KONG",
+    "GODZILLA X KONG: THE NEW EMPIRE", "GODZILLA: KING OF THE MONSTERS",
+
+    // ── Alien franchise ──
+    "ALIENS", "ALIEN: ROMULUS",
+
+    // ── Hunger Games ──
+    "THE HUNGER GAMES: THE BALLAD OF SONGBIRDS & SNAKES",
+
+    // ── Animated (instant recognition) ──
+    "THE LION KING", "TOY STORY", "FINDING NEMO", "SHREK",
+    "ALADDIN", "COCO", "UP", "THE INCREDIBLES", "INSIDE OUT",
+    "KUNG FU PANDA", "HOW TO TRAIN YOUR DRAGON",
+    "THE LITTLE MERMAID", "SLEEPING BEAUTY (1959)",
+    "ROBIN HOOD (1973)", "THE BOY AND THE HERON",
+    "SUZUME", "YOUR NAME.",
+    "TEENAGE MUTANT NINJA TURTLES: MUTANT MAYHEM",
+    "ROBOT DREAMS", "GRAVE OF THE FIREFLIES",
+
+    // ── Jim Carrey / Comedy everyone knows ──
+    "THE MASK", "BEETLEJUICE BEETLEJUICE",
+    "ADDAMS FAMILY VALUES", "HOW THE GRINCH STOLE CHRISTMAS",
+    "MOONSTRUCK",
+
+    // ── Horror / Thriller well-known ──
+    "EVIL DEAD RISE", "SPEAK NO EVIL",
+    "A HAUNTING IN VENICE", "KNOCK AT THE CABIN",
+    "THE WHALE", "SOCIETY OF THE SNOW",
+    "REBEL RIDGE", "SINNERS",
+    "LEAVE THE WORLD BEHIND",
+
+    // ── IP Man (known martial arts) ──
+    "IP MAN", "IP MAN 2", "IP MAN 3", "IP MAN 4: THE FINALE",
+
+    // ── More well-known movies found in catalog ──
+    "IT CHAPTER TWO", "SPENCER", "PRISCILLA",
+    "THE KARATE KID",
+    "THE MASK",
+
+
+    // ── Indian mega-blockbusters ──
+    "RRR", "BAAHUBALI", "BAAHUBALI 2", "BAAHUBALI 2 THE CONCLUSION",
+    "SHOLAY", "3 IDIOTS", "LAGAAN", "DANGAL",
+    "DILWALE DULHANIA LE JAYENGE", "KABHI KHUSHI KABHIE GHAM",
+    "PK", "JAWAN", "PATHAAN",
+    "KGF", "HERA PHERI", "STREE"
+  ]);
+
+  public static isPopularMovie(title: string): boolean {
+    if (!title) return false;
+    const clean = title.toUpperCase().trim();
+    if (this.TIER1_HOUSEHOLD_TITLES.has(clean)) return true;
+    // Check without year or parenthesis (e.g. "DUNE (2021)" -> "DUNE")
+    const withoutParen = clean.replace(/\s*\(\d{4}\)\s*/g, '').trim();
+    if (this.TIER1_HOUSEHOLD_TITLES.has(withoutParen)) return true;
+    return false;
+  }
 
   private static readonly ACTOR_PATTERNS: Array<{ regex: RegExp; actor: string }> = [
     { regex: /\b(iron man|sherlock holmes|oppenheimer|avengers)\b/i, actor: 'Robert Downey Jr.' },

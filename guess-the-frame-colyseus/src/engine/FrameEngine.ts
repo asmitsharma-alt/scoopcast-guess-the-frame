@@ -1,5 +1,5 @@
 import { GameDatabase } from "../database/GameDatabase";
-import { EnrichedFrameMetadata } from "./metadataEnricher";
+import { MetadataEnricher, EnrichedFrameMetadata } from "./metadataEnricher";
 import { PerceptualHash } from "../utils/perceptualHash";
 import { CATALOG, CatalogItem } from "../data/catalog";
 
@@ -207,41 +207,81 @@ export class FrameEngine {
    *   3. Unseen frames are prioritized over seen frames to prevent repetition across matches.
    */
   /**
-   * Pure, unbiased, literally 100% random frame selection across all 1,000 pristine frames.
-   * Employs an unbiased Fisher-Yates (Knuth) shuffle with high-entropy randomness.
-   * Guarantees:
-   *   1. Every single frame in the catalog has equal probability of being picked.
-   *   2. No weekly-only 40-frame lock.
-   *   3. No database seen-frequency or history bias.
-   *   4. No artificial franchise blacklisting.
-   *   5. No duplicate frames within the same match.
+   * Selects a dynamic, balanced playlist of frames strictly from popular, mainstream movies.
+   * Bans obscure, indie, or unfamiliar arthouse films.
+   * Delivers a balanced mixture of:
+   *   - Easy (~40%): Iconic megahits and central characters (difficulty 1 - 4)
+   *   - Medium (~40%): Popular hits, distinctive settings and memorable scenes (difficulty 5 - 7)
+  /**
+   * Selects a fun, highly recognizable playlist of frames strictly from Tier-1 Household-Name Blockbusters.
+   * Eliminates obscure, indie, or underrated movies completely.
+   * Leans heavily on EASY & instantly recognizable frames (~70% Easy, ~30% Medium).
+   * Prevents duplicate movies within the same match.
    */
   public selectFullyRandomFrames(targetCount: number): EnrichedFrameMetadata[] {
-    const pool = this.cachedFrames.filter(f => f.category === 'frames');
-    if (pool.length === 0) return [];
-
-    // Clone the entire pool of 1,000 frames
-    const candidates = [...pool];
-
-    // High-entropy Fisher-Yates shuffle
-    for (let i = candidates.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = candidates[i];
-      candidates[i] = candidates[j];
-      candidates[j] = temp;
+    // 1. Strict Household-Name Blockbuster Filter: Only allow undisputed global hits
+    let popularPool = this.cachedFrames.filter(f => f.category === 'frames' && MetadataEnricher.isPopularMovie(f.movieTitle));
+    
+    // Safety fallback: If popular pool is smaller than requested rounds, fallback to all frames
+    if (popularPool.length < targetCount) {
+      popularPool = this.cachedFrames.filter(f => f.category === 'frames');
     }
+    if (popularPool.length === 0) return [];
+
+    // Helper: Fisher-Yates shuffle
+    const shuffle = <T>(arr: T[]): T[] => {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+      }
+      return copy;
+    };
+
+    // 2. Partition into Easy (difficulty <= 4) and Medium (difficulty 5 - 7)
+    // Avoid obscure hard frames entirely so players have a fun, accessible guessing experience!
+    const easyPool = shuffle(popularPool.filter(f => f.difficulty <= 4));
+    const mediumPool = shuffle(popularPool.filter(f => f.difficulty >= 5 && f.difficulty <= 7));
+
+    // Quotas: ~70% Easy, ~30% Medium
+    let easyQuota = Math.max(1, Math.round(targetCount * 0.7));
+    let mediumQuota = targetCount - easyQuota;
 
     const selected: EnrichedFrameMetadata[] = [];
-    const usedFrameIds = new Set<string>();
+    const usedMovieIds = new Set<string>();
 
-    for (const item of candidates) {
-      if (selected.length >= targetCount) break;
-      if (usedFrameIds.has(item.frameId)) continue;
-      selected.push(item);
-      usedFrameIds.add(item.frameId);
+    const pickFromBucket = (bucket: EnrichedFrameMetadata[], quota: number) => {
+      let count = 0;
+      for (const item of bucket) {
+        if (count >= quota || selected.length >= targetCount) break;
+        if (!usedMovieIds.has(item.movieId)) {
+          selected.push(item);
+          usedMovieIds.add(item.movieId);
+          count++;
+        }
+      }
+    };
+
+    // Pick Easy frames first, then Medium frames
+    pickFromBucket(easyPool.length > 0 ? easyPool : popularPool, easyQuota);
+    pickFromBucket(mediumPool.length > 0 ? mediumPool : popularPool, mediumQuota);
+
+    // If quotas were not fully met due to movie deduplication, fill from all remaining popular frames
+    if (selected.length < targetCount) {
+      const remainingPopular = shuffle(popularPool);
+      for (const item of remainingPopular) {
+        if (selected.length >= targetCount) break;
+        if (!usedMovieIds.has(item.movieId)) {
+          selected.push(item);
+          usedMovieIds.add(item.movieId);
+        }
+      }
     }
 
-    return selected;
+    // 3. Dynamic pacing: Shuffle so Easy and Medium are smoothly interleaved across rounds
+    return shuffle(selected);
   }
 
   /**
@@ -324,6 +364,14 @@ export class FrameEngine {
     seenFrameFrequencies: Map<string, number>,
     rng: () => number
   ): EnrichedFrameMetadata[] {
+    // Prioritize popular, mainstream movies for frame categories
+    if (pool.some(f => f.category === 'frames')) {
+      const popFrames = pool.filter(f => f.category !== 'frames' || MetadataEnricher.isPopularMovie(f.movieTitle));
+      if (popFrames.length >= targetCount) {
+        pool = popFrames;
+      }
+    }
+
     // Split into unseen and seen frames so player never sees repeated frames while unseen remain
     const unseen: EnrichedFrameMetadata[] = [];
     const seen: EnrichedFrameMetadata[] = [];
@@ -423,6 +471,12 @@ export class FrameEngine {
     let pool = this.cachedFrames;
     if (category !== 'all') {
       pool = pool.filter(f => f.category === category);
+    }
+    if (category === 'frames' || category === 'all') {
+      const popPool = pool.filter(f => f.category !== 'frames' || MetadataEnricher.isPopularMovie(f.movieTitle));
+      if (popPool.length >= targetCount) {
+        pool = popPool;
+      }
     }
     if (weeklyOnly) {
       const weekly = pool.filter(f => f.tag === 'new');

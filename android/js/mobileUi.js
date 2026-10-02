@@ -488,8 +488,14 @@ const UI = {
         joinModal.classList.add('active');
         const joinInput = document.getElementById('joinCodeInput');
         if (joinInput) {
-          joinInput.value = '';
+          const pending = (typeof GameClient !== 'undefined' && GameClient.pendingRoomCode) || '';
+          if (pending && !joinInput.value) {
+            joinInput.value = pending;
+          }
           joinInput.focus();
+          if (joinInput.value) {
+            joinInput.select();
+          }
         }
       });
     }
@@ -498,6 +504,7 @@ const UI = {
     const confirmJoinBtn = document.getElementById('btnConfirmJoin');
     if (confirmJoinBtn) {
       confirmJoinBtn.addEventListener('click', () => {
+        this.saveName();
         const joinInput = document.getElementById('joinCodeInput');
         if (joinInput) {
           if (typeof Haptics !== 'undefined') Haptics.tap();
@@ -947,6 +954,28 @@ const UI = {
   closeRejoinModal() {
     const modal = document.getElementById('rejoinModal');
     if (modal) modal.classList.remove('active');
+  },
+
+  prefillJoinCode(code) {
+    if (!code) return;
+    const cleanCode = String(code).trim().toUpperCase();
+    const joinInput = document.getElementById('joinCodeInput');
+    if (joinInput) {
+      joinInput.value = cleanCode;
+    }
+    
+    // Update the "JOIN WITH CODE" button text on Home Screen
+    const openJoinBtn = document.getElementById('btnOpenJoin');
+    if (openJoinBtn) {
+      const span = openJoinBtn.querySelector('span');
+      if (span) {
+        span.textContent = `JOIN ROOM (${cleanCode})`;
+      }
+    }
+
+    if (typeof this.showToast === 'function') {
+      this.showToast(`Invite code ${cleanCode} ready! Choose your avatar & name, then tap Join.`);
+    }
   },
 
   confirmHostEndGame() {
