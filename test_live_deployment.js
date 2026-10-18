@@ -2,10 +2,15 @@
 const https = require('https');
 const http = require('http');
 
-function fetchUrl(url, headers = {}, timeoutMs = 45000) {
+function fetchUrl(url, headers = {}, timeoutMs = 45000, followRedirects = true) {
   return new Promise((resolve, reject) => {
     const lib = url.startsWith('https') ? https : http;
     const req = lib.get(url, { headers }, (res) => {
+      // Follow 301/302/307 redirects if enabled
+      if (followRedirects && (res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307 || res.statusCode === 308) && res.headers.location) {
+        const nextUrl = new URL(res.headers.location, url).toString();
+        return resolve(fetchUrl(nextUrl, headers, timeoutMs, followRedirects));
+      }
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, body: data }));
@@ -65,7 +70,7 @@ async function runVerification() {
     assertTest('Desktop root serves Desktop build with cinema background', desktopRootRes.body.includes('cinema_bg.webp'));
 
     // 2c. Legacy /android/ endpoint must redirect to clean root /
-    const androidRedirectRes = await fetchUrl('https://scoopcast-me.vercel.app/android/');
+    const androidRedirectRes = await fetchUrl('https://scoopcast-me.vercel.app/android/', {}, 45000, false);
     assertTest('Legacy /android/ redirects to clean root /', androidRedirectRes.status === 307 || androidRedirectRes.status === 308 || (androidRedirectRes.headers && androidRedirectRes.headers.location === '/'), `Status: ${androidRedirectRes.status}`);
   } catch (err) {
     assertTest('Vercel routing functional', false, err.message);
@@ -81,7 +86,7 @@ async function runVerification() {
     { name: 'Android Haptics Script', url: 'https://scoopcast-me.vercel.app/android/js/haptics.js', expectedType: 'application/javascript' },
     { name: 'Android Keyboard Script', url: 'https://scoopcast-me.vercel.app/android/js/keyboard.js', expectedType: 'application/javascript' },
     { name: 'Android PWA Manifest', url: 'https://scoopcast-me.vercel.app/android/manifest.json', expectedType: 'application/json' },
-    { name: 'Movie Frame WebP', url: 'https://scoopcast-me.vercel.app/GUESSTHEFRAME/12th%20Fail%20(2023).webp', expectedType: 'image/webp' }
+    { name: 'Movie Frame WebP', url: 'https://scoopcast-me.vercel.app/GUESSTHEFRAME/All_Movie_Frames/12%20Angry%20Men%20(1957)%20-%20Frame%2001.webp', expectedType: 'image/webp' }
   ];
 
   for (const asset of assetsToTest) {
@@ -102,7 +107,7 @@ async function runVerification() {
     const client = new Client('wss://guess-the-frame-colyseus.onrender.com');
 
     console.log('  * Connecting WebSocket to Render server...');
-    const room = await client.joinOrCreate('trivia_room', {
+    const room = await client.create('trivia_room', {
       name: 'VerificationBot',
       avatar: 'aman'
     });
