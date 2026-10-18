@@ -351,10 +351,18 @@ export class GameDatabase {
     const countRow = this.db.prepare("SELECT COUNT(*) as count FROM frames_metadata").get() as any;
     const existingCount = Number(countRow?.count || 0);
 
-    // If empty or catalog has more items, populate/upsert
-    if (existingCount < CATALOG.length) {
-      this.db.exec("BEGIN TRANSACTION;");
-      try {
+    // Sync database with current CATALOG: remove deleted items and upsert active ones
+    this.db.exec("BEGIN TRANSACTION;");
+    try {
+      const currentIds = new Set(CATALOG.map(c => c.id));
+      const existingRows = this.db.prepare("SELECT frame_id FROM frames_metadata").all() as any[];
+      for (const row of existingRows) {
+        if (!currentIds.has(row.frame_id)) {
+          this.db.prepare("DELETE FROM frames_metadata WHERE frame_id = ?").run(row.frame_id);
+        }
+      }
+
+      if (existingCount !== CATALOG.length) {
         const now = Date.now();
         for (const raw of CATALOG) {
           const enriched = MetadataEnricher.enrich(raw);
@@ -384,11 +392,11 @@ export class GameDatabase {
             now
           );
         }
-        this.db.exec("COMMIT;");
-      } catch (err) {
-        this.db.exec("ROLLBACK;");
-        console.error("[GameDatabase] Failed to seed catalog metadata:", err);
       }
+      this.db.exec("COMMIT;");
+    } catch (err) {
+      this.db.exec("ROLLBACK;");
+      console.error("[GameDatabase] Failed to seed catalog metadata:", err);
     }
   }
 

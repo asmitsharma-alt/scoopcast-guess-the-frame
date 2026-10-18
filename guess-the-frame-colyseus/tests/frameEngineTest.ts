@@ -53,7 +53,7 @@ async function runRecommendationEngineTests() {
     roomCode: "TEST_DIV",
     playerIds: ["user_diversity_test"],
     rounds: 7,
-    category: "frames",
+    category: "dialogue",
     gameSeed: "test_seed_diversity_123"
   });
 
@@ -123,7 +123,7 @@ async function runRecommendationEngineTests() {
       roomCode: `MATCH_${m}`,
       playerIds: [testUserId],
       rounds: 7,
-      category: "frames",
+      category: "dialogue",
       gameSeed: `seed_m_${m}_${Date.now()}`
     });
 
@@ -160,7 +160,7 @@ async function runRecommendationEngineTests() {
     roomCode: "ROOM_ALPHA",
     playerIds: ["player_alice", "player_bob"],
     rounds: 7,
-    category: "frames",
+    category: "dialogue",
     gameSeed: "SEED_ALPHA_FIXED",
     ignoreCooldown: true
   });
@@ -169,7 +169,7 @@ async function runRecommendationEngineTests() {
     roomCode: "ROOM_ALPHA",
     playerIds: ["player_alice", "player_bob"],
     rounds: 7,
-    category: "frames",
+    category: "dialogue",
     gameSeed: "SEED_ALPHA_FIXED",
     ignoreCooldown: true
   });
@@ -178,7 +178,7 @@ async function runRecommendationEngineTests() {
     roomCode: "ROOM_BETA",
     playerIds: ["player_charlie", "player_dave"],
     rounds: 7,
-    category: "frames",
+    category: "dialogue",
     gameSeed: "SEED_BETA_DISTINCT"
   });
 
@@ -201,7 +201,7 @@ async function runRecommendationEngineTests() {
       roomCode: `ROOM_${i}`,
       playerIds: [`user_${i % 100}`],
       rounds: 7,
-      category: "frames",
+      category: "dialogue",
       gameSeed: `seed_stress_${i}`
     });
   }

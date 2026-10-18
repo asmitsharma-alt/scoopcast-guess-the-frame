@@ -616,13 +616,13 @@ export class TriviaRoom extends Room<GameState> {
 
       // During a round, check if the chat message is actually a correct answer
       if (this.state.phase === "playing" && this.currentSecretAnswer) {
-        // If player hasn't guessed yet and this is a valid answer, auto-accept it
+        // If player hasn't guessed yet and this is an exact match, auto-accept it
         if (!player.hasGuessedCorrectly && FuzzyMatcher.isMatch(rawText, this.currentSecretAnswer)) {
           this.awardCorrectGuess(client, player);
           return;
         }
-        // Only block spoilers from players who already answered (to prevent revealing to others)
-        if (player.hasGuessedCorrectly && FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
+        // Block spoilers in chat to protect players from spoilers
+        if (FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
           client.send("chat_warning", {
             message: "⚠️ Your message was blocked to protect players from spoilers!"
           });
