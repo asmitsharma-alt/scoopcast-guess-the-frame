@@ -191,6 +191,14 @@ export class TriviaRoom extends Room<GameState> {
     } else {
       this.addSystemChatMessage(`👋 ${player.name} joined the game`);
     }
+
+    // If joining an active match, immediately send playlist media URLs to preload
+    if (this.state.phase !== 'lobby' && this.currentPlaylist && this.currentPlaylist.length > 0) {
+      const mediaUrlsToPreload = this.currentPlaylist
+        .filter(item => item.content && item.category !== 'dialogue')
+        .map(item => item.content);
+      client.send("preload_match_media", { mediaUrls: mediaUrlsToPreload });
+    }
   }
 
   async onLeave(client: Client, consented: boolean) {
@@ -370,6 +378,12 @@ export class TriviaRoom extends Room<GameState> {
       if (this.currentPlaylist.length === 0) return;
 
       this.state.totalRounds = this.currentPlaylist.length;
+
+      // Broadcast sanitized media URLs to all clients so they immediately preload upcoming frames in background
+      const mediaUrlsToPreload = this.currentPlaylist
+        .filter(item => item.content && item.category !== 'dialogue')
+        .map(item => item.content);
+      this.broadcast("preload_match_media", { mediaUrls: mediaUrlsToPreload });
 
       // Reset player scores & round status
       this.playerGuessTimes.clear();

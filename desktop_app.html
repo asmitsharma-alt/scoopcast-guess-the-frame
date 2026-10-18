@@ -20350,6 +20350,15 @@
           this.renderLobbyUI();
         });
 
+        room.onMessage("preload_match_media", (data) => {
+          if (data && Array.isArray(data.mediaUrls)) {
+            console.log(`[FrameDisplay] Preloading ${data.mediaUrls.length} match frames for zero-latency gameplay...`);
+            if (typeof FrameDisplay !== 'undefined' && FrameDisplay.warmPlaylistUrls) {
+              FrameDisplay.warmPlaylistUrls(data.mediaUrls);
+            }
+          }
+        });
+
         if (room.state && room.state.currentRoundWinners) {
           room.state.currentRoundWinners.onAdd((winner) => {
             if (winner && typeof ChatEngine !== 'undefined') {
@@ -21864,6 +21873,16 @@
         }
       },
 
+      /* Instant warmup of match frame URLs into memory */
+      async warmPlaylistUrls(urls) {
+        if (!Array.isArray(urls) || urls.length === 0) return;
+        const BATCH = 8;
+        for (let i = 0; i < urls.length; i += BATCH) {
+          const chunk = urls.slice(i, i + BATCH);
+          await Promise.allSettled(chunk.map(src => this.preloadImage(src)));
+        }
+      },
+
       /* Preload all frames for progress tracking */
       async preloadAll(onProgress) {
         const seenUrls = new Set();
@@ -22083,7 +22102,11 @@
 
         const frameContentUrl = optimizeCloudinaryUrl(f.content);
 
-        // Instant cache fast-path
+        newImg.loading = 'eager';
+        newImg.decoding = 'async';
+        newImg.fetchPriority = 'high';
+
+        // Instant cache fast-path: if already in imageCache, apply immediately!
         if (GS.imageCache.has(frameContentUrl)) {
           const cached = GS.imageCache.get(frameContentUrl);
           if (cached && cached.complete && cached.naturalWidth > 0) {
@@ -22094,42 +22117,30 @@
           }
         }
 
-        // If not in instant cache, display loader while fetching
+        // Display loader while fetching directly into the DOM image
         if (stageLoader) stageLoader.style.display = 'block';
 
-        try {
-          await this.preloadImage(frameContentUrl);
-
-          // Check if still valid after async preload
-          if (GS.currentFrameLoader !== frameRef) return;
-
-          newImg.onload = async () => {
-            if (GS.currentFrameLoader !== frameRef) {
-              newImg.onload = null; newImg.onerror = null; newImg.removeAttribute('src');
-              return;
-            }
-            try { if (newImg.decode) await newImg.decode(); } catch (e) { }
-            applyImage(newImg);
-          };
-
-          newImg.onerror = () => {
-            if (stageLoader) stageLoader.style.display = 'none';
-            PaletteManager.reset();
-            layer.innerHTML = `<span class="frame-emoji-big"><svg class="svg-icon"><use href="#icon-clapperboard" /></svg></span>`;
-            layer.style.opacity = '1';
-          };
-
-          newImg.src = frameContentUrl;
-          if (newImg.complete && newImg.naturalWidth > 0) {
-            applyImage(newImg);
+        newImg.onload = async () => {
+          if (GS.currentFrameLoader !== frameRef) {
+            newImg.onload = null; newImg.onerror = null; newImg.removeAttribute('src');
+            return;
           }
+          try { if (newImg.decode) await newImg.decode(); } catch (e) { }
+          GS.imageCache.set(frameContentUrl, newImg);
+          applyImage(newImg);
+        };
 
-        } catch (e) {
+        newImg.onerror = () => {
           if (stageLoader) stageLoader.style.display = 'none';
-          if (GS.currentFrameLoader !== frameRef) return;
           PaletteManager.reset();
           layer.innerHTML = `<span class="frame-emoji-big"><svg class="svg-icon"><use href="#icon-clapperboard" /></svg></span>`;
           layer.style.opacity = '1';
+        };
+
+        newImg.src = frameContentUrl;
+        if (newImg.complete && newImg.naturalWidth > 0) {
+          GS.imageCache.set(frameContentUrl, newImg);
+          applyImage(newImg);
         }
 
         this.preloadUpcoming();

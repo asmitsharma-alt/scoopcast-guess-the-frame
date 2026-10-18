@@ -81,60 +81,13 @@ function resolveMediaPath(src) {
 const ALL_GAME_FRAMES = [
   "/bg/guess_the_frame.webp",
   "/bg/cinema_bg.webp",
-  "/GUESSTHEFRAME/American History X (1998).webp",
-  "/GUESSTHEFRAME/Avengers Infinity War (2018).webp",
-  "/GUESSTHEFRAME/Baahubali 2 The Conclusion (2017).webp",
-  "/GUESSTHEFRAME/Balan - The Boy (2026).webp",
-  "/GUESSTHEFRAME/Before Sunset (2004).webp",
-  "/GUESSTHEFRAME/Billu (2009).webp",
-  "/GUESSTHEFRAME/Certified Copy (2010).webp",
-  "/GUESSTHEFRAME/Dallas Buyers Club (2013).webp",
-  "/GUESSTHEFRAME/Dune Part Two (2024).webp",
-  "/GUESSTHEFRAME/GO GOA GONE (2013).webp",
-  "/GUESSTHEFRAME/I Saw the Devil (2010).webp",
-  "/GUESSTHEFRAME/Irumudi (2026).webp",
-  "/GUESSTHEFRAME/Karwaan (2018).webp",
-  "/GUESSTHEFRAME/Nirvanna.the.Band.the.Show.the.Movie (2025).webp",
-  "/GUESSTHEFRAME/October (2018).webp",
-  "/GUESSTHEFRAME/premalu (2024).webp",
-  "/GUESSTHEFRAME/Rang De Basanti (2006).webp",
-  "/GUESSTHEFRAME/Requiem for a Dream (2000).webp",
-  "/GUESSTHEFRAME/S_O Satyamurthy (2015).webp",
-  "/GUESSTHEFRAME/Stand by Me (1986).webp",
-  "/GUESSTHEEYES/Bhuvan Bam copy.webp",
-  "/GUESSTHEEYES/Bhuvan Bam.webp",
-  "/GUESSTHEEYES/Daisy Edgar-Jones copy.webp",
-  "/GUESSTHEEYES/Daisy Edgar-Jones.webp",
-  "/GUESSTHEEYES/Dakota Johnson copy.webp",
-  "/GUESSTHEEYES/Dakota Johnson.webp",
-  "/GUESSTHEEYES/Dulquer Salmaan copy.webp",
-  "/GUESSTHEEYES/Dulquer Salmaan.webp",
-  "/GUESSTHEEYES/Elle Fanning copy.webp",
-  "/GUESSTHEEYES/Elle Fanning.webp",
-  "/GUESSTHEEYES/kiccha Sudeep copy.webp",
-  "/GUESSTHEEYES/kiccha Sudeep.webp",
-  "/GUESSTHEEYES/Kyle Chandler copy.webp",
-  "/GUESSTHEEYES/Kyle Chandler.webp",
-  "/GUESSTHEEYES/Robert Pattinson copy.webp",
-  "/GUESSTHEEYES/Robert Pattinson.webp",
-  "/GUESSTHEEYES/Salma Hayek copy.webp",
-  "/GUESSTHEEYES/Salma Hayek.webp",
-  "/GUESSTHEEYES/Sophie Turner copy.webp",
-  "/GUESSTHEEYES/Sophie Turner.webp",
+  "/avvtar/aman.svg",
+  "/avvtar/amish.svg",
+  "/avvtar/aziz.svg",
+  "/avvtar/vish.svg",
   "/tie_breaker/Anatomy of a Fall (2023).webp",
   "/tie_breaker/Eyes Wide Shut (1999).webp",
-  "/tie_breaker/Ghilli (2004).webp",
-  "/tie_breaker/La Haine(1995).webp",
-  "/tie_breaker/Mad Max 2.jpg.webp",
-  "/tie_breaker/Moonrise Kingdom (2012).webp",
-  "/tie_breaker/The Batman (2022).webp",
-  "/tie_breaker/The Holdovers(2023).webp",
-  "/tie_breaker/The Life of Chuck(2024).webp",
-  "/tie_breaker/The Lighthouse (2019).webp",
-  "/tie_breaker/The Wolf of Wall Street (2013).webp",
-  "/tie_breaker/They Call Him OG (2025).webp",
-  "/tie_breaker/Top Gun Maverick (2022).webp",
-  "/tie_breaker/Under the Silver Lake (2018).webp"
+  "/tie_breaker/The Batman (2022).webp"
 ];
 
 const MediaCache = {
@@ -1188,6 +1141,9 @@ const UI = {
         }
 
         const isCached = MediaCache.isCached(targetUrl);
+        imgEl.loading = 'eager';
+        imgEl.decoding = 'async';
+        imgEl.fetchPriority = 'high';
         imgEl.style.display = 'block';
         imgEl.src = targetUrl;
 

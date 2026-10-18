@@ -1280,6 +1280,15 @@ const GameClient = {
       }
     });
 
+    room.onMessage("preload_match_media", (data) => {
+      if (data && Array.isArray(data.mediaUrls)) {
+        console.log(`[MediaCache] Fast-preloading ${data.mediaUrls.length} match frames...`);
+        if (typeof MediaCache !== 'undefined' && MediaCache.preloadBatch) {
+          MediaCache.preloadBatch(data.mediaUrls, 8);
+        }
+      }
+    });
+
     room.onMessage("host_migrated", (data) => {
       console.log('[Colyseus] Host migrated to:', data);
       const wasHost = this.isHost;
