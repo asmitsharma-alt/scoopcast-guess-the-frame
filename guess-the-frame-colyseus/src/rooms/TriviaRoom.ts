@@ -15,6 +15,7 @@ export interface CreateRoomOptions {
   rounds?: number;
   roundsByMode?: { frame?: number; dialogue?: number; eyes?: number; frames?: number };
   timer?: number;
+  weeklyOnly?: boolean;
   userId?: string;
   name?: string;
   avatar?: string;
@@ -72,8 +73,16 @@ export class TriviaRoom extends Room<GameState> {
     totalRounds = Math.max(3, Math.min(80, totalRounds));
     this.state.gameSettings.totalRounds = totalRounds;
     this.state.totalRounds = totalRounds;
-    this.state.gameSettings.isLocked = true;
-    this.state.settingsLocked = true;
+    this.state.gameSettings.isLocked = false;
+    this.state.settingsLocked = false;
+
+    // Immediately build the initial match playlist using host's configured settings
+    const initialRoundsByMode = {
+      frames: this.state.gameSettings.frameRounds,
+      dialogue: this.state.gameSettings.dialogueRounds,
+      eyes: this.state.gameSettings.eyesRounds
+    };
+    this.buildPlaylist(options.category || 'all', totalRounds, options.weeklyOnly || false, initialRoundsByMode);
 
     // Persist Game Configuration in Database
     try {
@@ -192,11 +201,9 @@ export class TriviaRoom extends Room<GameState> {
       this.addSystemChatMessage(`👋 ${player.name} joined the game`);
     }
 
-    // If joining an active match, immediately send playlist media URLs to preload
-    if (this.state.phase !== 'lobby' && this.currentPlaylist && this.currentPlaylist.length > 0) {
-      const mediaUrlsToPreload = this.currentPlaylist
-        .filter(item => item.content && item.category !== 'dialogue')
-        .map(item => item.content);
+    // Send match media URLs to newly joined client so it preloads only the active session frames
+    const mediaUrlsToPreload = this.getPreloadMediaUrls();
+    if (mediaUrlsToPreload.length > 0) {
       client.send("preload_match_media", { mediaUrls: mediaUrlsToPreload });
     }
   }
@@ -374,15 +381,17 @@ export class TriviaRoom extends Room<GameState> {
         eyes: this.state.gameSettings.eyesRounds
       };
 
-      this.buildPlaylist(category, requestedRounds, weeklyOnly, roundsByMode);
+      if (!this.currentPlaylist || this.currentPlaylist.length === 0) {
+        this.buildPlaylist(category, requestedRounds, weeklyOnly, roundsByMode);
+      }
       if (this.currentPlaylist.length === 0) return;
 
       this.state.totalRounds = this.currentPlaylist.length;
+      this.state.settingsLocked = true;
+      this.state.gameSettings.isLocked = true;
 
       // Broadcast sanitized media URLs to all clients so they immediately preload upcoming frames in background
-      const mediaUrlsToPreload = this.currentPlaylist
-        .filter(item => item.content && item.category !== 'dialogue')
-        .map(item => item.content);
+      const mediaUrlsToPreload = this.getPreloadMediaUrls();
       this.broadcast("preload_match_media", { mediaUrls: mediaUrlsToPreload });
 
       // Reset player scores & round status
@@ -428,18 +437,33 @@ export class TriviaRoom extends Room<GameState> {
       if (!player || !player.isHost) return;
       if (this.state.phase !== "lobby") return;
 
-      // Enforce permanent lock on game settings after lobby creation
-      if (this.state.settingsLocked) {
-        client.send("settings_error", {
-          message: "Settings cannot be changed after lobby creation."
-        });
-        return;
-      }
-
       if (message?.timer) {
         this.roundTimerDuration = Math.max(10, Math.min(120, Number(message.timer)));
         this.state.timeRemaining = this.roundTimerDuration;
       }
+
+      if (message?.roundsByMode) {
+        if (message.roundsByMode.frames !== undefined) this.state.gameSettings.frameRounds = Number(message.roundsByMode.frames);
+        if (message.roundsByMode.dialogue !== undefined) this.state.gameSettings.dialogueRounds = Number(message.roundsByMode.dialogue);
+        if (message.roundsByMode.eyes !== undefined) this.state.gameSettings.eyesRounds = Number(message.roundsByMode.eyes);
+      }
+
+      const totalRounds = message?.rounds || (this.state.gameSettings.frameRounds + this.state.gameSettings.dialogueRounds + this.state.gameSettings.eyesRounds);
+      this.state.gameSettings.totalRounds = totalRounds;
+      this.state.totalRounds = totalRounds;
+
+      // Rebuild playlist with host's newly configured settings
+      const roundsByModeObj = {
+        frames: this.state.gameSettings.frameRounds,
+        dialogue: this.state.gameSettings.dialogueRounds,
+        eyes: this.state.gameSettings.eyesRounds
+      };
+      this.buildPlaylist(message?.category || 'all', totalRounds, message?.weeklyOnly || false, roundsByModeObj);
+
+      // Broadcast only the exact frames needed for this newly configured match
+      const mediaUrlsToPreload = this.getPreloadMediaUrls();
+      this.broadcast("preload_match_media", { mediaUrls: mediaUrlsToPreload });
+
       this.broadcast("settings_updated", {
         hostSettings: message,
         timer: this.roundTimerDuration
@@ -508,6 +532,8 @@ export class TriviaRoom extends Room<GameState> {
         this.roundIntroTimer = null;
       }
       this.state.phase = "lobby";
+      this.state.settingsLocked = false;
+      this.state.gameSettings.isLocked = false;
       this.state.currentRound = 0;
       this.state.revealedAnswer = "";
       this.state.revealedContent = "";
@@ -521,6 +547,17 @@ export class TriviaRoom extends Room<GameState> {
         p.hasUsedHint = false;
         p.streak = 0;
       });
+
+      // Generate a fresh random game seed and rebuild playlist for rematch
+      this.gameSeed = `${this.state.roomCode}_${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
+      const roundsByModeObj = {
+        frames: this.state.gameSettings.frameRounds,
+        dialogue: this.state.gameSettings.dialogueRounds,
+        eyes: this.state.gameSettings.eyesRounds
+      };
+      this.buildPlaylist('all', this.state.totalRounds, false, roundsByModeObj);
+      this.broadcast("preload_match_media", { mediaUrls: this.getPreloadMediaUrls() });
+
       this.setMetadata({ roomCode: this.state.roomCode, phase: "lobby", playerCount: this.state.players.size });
       this.broadcast("return_to_lobby", {});
     });
@@ -953,6 +990,25 @@ export class TriviaRoom extends Room<GameState> {
       }
       this.currentPlaylist = fallbackPool.slice(0, Math.min(count, fallbackPool.length));
     }
+  }
+
+  private getPreloadMediaUrls(): string[] {
+    const urls: string[] = [];
+    const seen = new Set<string>();
+    if (this.currentPlaylist && this.currentPlaylist.length > 0) {
+      this.currentPlaylist.forEach(item => {
+        if (!item || item.category === 'dialogue') return;
+        if (item.content && typeof item.content === 'string' && !seen.has(item.content)) {
+          seen.add(item.content);
+          urls.push(item.content);
+        }
+        if ((item as any).revealContent && typeof (item as any).revealContent === 'string' && !seen.has((item as any).revealContent)) {
+          seen.add((item as any).revealContent);
+          urls.push((item as any).revealContent);
+        }
+      });
+    }
+    return urls;
   }
 
   private addSystemChatMessage(htmlOrText: string) {

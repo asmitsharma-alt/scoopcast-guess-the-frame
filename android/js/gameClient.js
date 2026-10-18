@@ -334,18 +334,9 @@ const GAME_SECTIONS = [
   }
 ];
 
-// Auto-sync dynamic Cloudinary frames from data/frames.json
-(async function syncDynamicFrames() {
-  try {
-    const res = await fetch('/data/frames.json?v=' + Date.now());
-    if (res.ok) {
-      const dynamicFrames = await res.json();
-      if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
-        GAME_SECTIONS[0].frames = dynamicFrames;
-      }
-    }
-  } catch (e) {}
-})();
+// Dynamic frames are authoritative on the Colyseus server.
+// The server delivers only the exact match frames needed for the session upon match creation/start.
+// Do NOT download all 2,913 frames in the client lobby.
 
 /* ══════════════════════════════════════════════════════════════════
    UNIFIED REALTIME GAME CLIENT (ANDROID MOBILE ENGINE - COLYSEUS)
@@ -939,27 +930,15 @@ const GameClient = {
       }
     };
 
-    // Gather assets to preload in background
-    const items = [];
-    if (typeof GAME_SECTIONS !== 'undefined' && Array.isArray(GAME_SECTIONS)) {
-      GAME_SECTIONS.forEach(sec => {
-        if (Array.isArray(sec.frames)) {
-          sec.frames.forEach(f => {
-            if (f.type !== 'dialogue') {
-              if (f.content) items.push({ content: f.content, type: f.type || 'image', revealContent: f.revealContent });
-              if (f.revealContent && !items.some(it => it.content === f.revealContent)) {
-                items.push({ content: f.revealContent, type: 'image' });
-              }
-            }
-          });
-        }
-      });
-    }
-
-    if (items.length === 0) {
-      reportProgress(100, 'ready');
-      return;
-    }
+    // Gather core UI assets to preload (avatars & backgrounds)
+    const items = [
+      { content: '/bg/guess_the_frame.webp', type: 'image' },
+      { content: '/bg/cinema_bg.webp', type: 'image' },
+      { content: '/avvtar/aman.svg', type: 'image' },
+      { content: '/avvtar/amish.svg', type: 'image' },
+      { content: '/avvtar/aziz.svg', type: 'image' },
+      { content: '/avvtar/vish.svg', type: 'image' }
+    ];
 
     // Failsafe timer: guarantee full readiness within 1.2s max so host is never stuck
     const failsafe = setTimeout(() => {
@@ -1284,7 +1263,21 @@ const GameClient = {
       if (data && Array.isArray(data.mediaUrls)) {
         console.log(`[MediaCache] Fast-preloading ${data.mediaUrls.length} match frames...`);
         if (typeof MediaCache !== 'undefined' && MediaCache.preloadBatch) {
-          MediaCache.preloadBatch(data.mediaUrls, 8);
+          MediaCache.preloadBatch(data.mediaUrls, 8).then(() => {
+            const me = this.players.find(p => p.id === this.playerId);
+            if (me) {
+              me.assetProgress = 100;
+              me.assetStatus = 'ready';
+              me.isReady = true;
+            }
+            if (this.colyseusRoom) {
+              this.colyseusRoom.send('asset_progress', { progress: 100, status: 'ready' });
+              this.colyseusRoom.send('player_ready', { isReady: true });
+            }
+            if (typeof UI !== 'undefined' && UI.renderLobbyPlayers) {
+              UI.renderLobbyPlayers();
+            }
+          });
         }
       }
     });

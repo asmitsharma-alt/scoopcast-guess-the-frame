@@ -84,10 +84,7 @@ const ALL_GAME_FRAMES = [
   "/avvtar/aman.svg",
   "/avvtar/amish.svg",
   "/avvtar/aziz.svg",
-  "/avvtar/vish.svg",
-  "/tie_breaker/Anatomy of a Fall (2023).webp",
-  "/tie_breaker/Eyes Wide Shut (1999).webp",
-  "/tie_breaker/The Batman (2022).webp"
+  "/avvtar/vish.svg"
 ];
 
 const MediaCache = {

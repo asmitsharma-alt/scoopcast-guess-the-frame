@@ -16708,34 +16708,9 @@
     }
     window.shuffleFrames = shuffleArray;
 
-    // Auto-sync dynamic Cloudinary frames from data/frames.json or GitHub CDN
-    (async function syncDynamicFrames() {
-      const sources = [
-        '/data/frames.json?v=' + Date.now()
-      ];
-      for (const src of sources) {
-        try {
-          const res = await fetch(src);
-          if (res.ok) {
-            const dynamicFrames = await res.json();
-            if (Array.isArray(dynamicFrames) && dynamicFrames.length > 0) {
-              // Thoroughly randomize so players immediately get fresh 1080p frames from the start
-              GS.sections[0].frames = shuffleArray([...dynamicFrames]);
-              console.log('[Scoopcast] Successfully synced and randomized', dynamicFrames.length, 'frames from', src);
-              if (window.AdminStudio && typeof AdminStudio.renderSections === 'function') {
-                AdminStudio.renderSections();
-              }
-              if (typeof AdminPanel !== 'undefined' && typeof AdminPanel.renderSections === 'function') {
-                AdminPanel.renderSections();
-              }
-              break;
-            }
-          }
-        } catch (err) {
-          // Try next source
-        }
-      }
-    })();
+    // Dynamic frames are authoritative on the Colyseus server.
+    // The server delivers only the exact match frames needed for the session upon match creation/start.
+    // Do NOT download all 2,913 frames in the client lobby.
 
     const sectionIcons = ['<svg class="svg-icon"><use href="#icon-clapperboard" /></svg>', '<svg class="svg-icon"><use href="#icon-video" /></svg>', '<svg class="svg-icon"><use href="#icon-message-circle" /></svg>', '<svg class="svg-icon"><use href="#icon-tv" /></svg>', '<svg class="svg-icon"><use href="#icon-smile" /></svg>', '<svg class="svg-icon"><use href="#icon-tent" /></svg>', '<svg class="svg-icon"><use href="#icon-palette" /></svg>', '<svg class="svg-icon"><use href="#icon-gamepad-2" /></svg>', '<svg class="svg-icon"><use href="#icon-target" /></svg>', '<svg class="svg-icon"><use href="#icon-music" /></svg>', '<svg class="svg-icon"><use href="#icon-audio-lines" /></svg>'];
     const taglines = ['Get Ready!', 'Here We Go!', 'Eyes on Screen!', 'Think Fast!', 'Can You Guess?'];
@@ -20354,7 +20329,23 @@
           if (data && Array.isArray(data.mediaUrls)) {
             console.log(`[FrameDisplay] Preloading ${data.mediaUrls.length} match frames for zero-latency gameplay...`);
             if (typeof FrameDisplay !== 'undefined' && FrameDisplay.warmPlaylistUrls) {
-              FrameDisplay.warmPlaylistUrls(data.mediaUrls);
+              FrameDisplay.warmPlaylistUrls(data.mediaUrls).then(() => {
+                const me = GS.players.find(p => p.id === this.playerId);
+                if (me) {
+                  me.assetProgress = 100;
+                  me.assetStatus = 'ready';
+                  me.isReady = true;
+                  me.loaded = true;
+                }
+                if (typeof UI !== 'undefined' && UI.updateLoadProgress) {
+                  UI.updateLoadProgress(100, 'lobby');
+                }
+                if (this.colyseusRoom) {
+                  this.colyseusRoom.send('asset_progress', { progress: 100, status: 'ready' });
+                  this.colyseusRoom.send('player_ready', { isReady: true });
+                }
+                this.renderLobbyUI();
+              });
             }
           }
         });
@@ -21898,18 +21889,15 @@
           }
         };
 
-        const collect = frames => frames.forEach(f => {
-          if (!f || f.type === 'dialogue') return;
-          if ((f.type === 'image' || f.type === 'eye') && f.content) addUrl(f.content);
-          if (f.type === 'eye' && f.revealContent) addUrl(f.revealContent);
-        });
-        GS.sections.forEach(s => collect(s.frames));
-        if (GS.tieBreaker && Array.isArray(GS.tieBreaker.frames)) collect(GS.tieBreaker.frames);
-
-        // Player assets: avatars
+        // Core UI and Player assets (avatars + backgrounds)
         GS.players.forEach(p => {
           addUrl(resolvePlayerAvatar(p, 'aman'));
         });
+        if (typeof FOUNDER_AVATAR_URLS !== 'undefined') {
+          Object.values(FOUNDER_AVATAR_URLS).forEach(url => addUrl(url));
+        }
+        addUrl('/bg/guess_the_frame.webp');
+        addUrl('/bg/cinema_bg.webp');
 
         const totalPriority = priorityImages.length;
         if (totalPriority === 0) {
