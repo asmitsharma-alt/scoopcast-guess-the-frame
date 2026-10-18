@@ -614,15 +614,20 @@ export class TriviaRoom extends Room<GameState> {
       const rawText = String(message?.text || '').trim();
       if (!rawText || rawText.length > 200) return;
 
-      // During a round, check if the chat message is actually a correct answer
+      // During a round, check if the chat message is a spoiler or a direct guess
       if (this.state.phase === "playing" && this.currentSecretAnswer) {
-        // If player hasn't guessed yet and this is an exact match, auto-accept it
-        if (!player.hasGuessedCorrectly && FuzzyMatcher.isMatch(rawText, this.currentSecretAnswer)) {
+        const isSpoiler = FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer);
+        const isDirectGuess = FuzzyMatcher.isMatch(rawText, this.currentSecretAnswer);
+        const hasSpoilerChatter = /\b(answer\s+is|it['’]?s\s+|for\s+sure|i\s+think|answer\s*:|the\s+answer)\b/i.test(rawText);
+
+        // If it's a clean direct guess without spoiler chatter and player hasn't guessed, auto-accept it
+        if (!player.hasGuessedCorrectly && isDirectGuess && !hasSpoilerChatter) {
           this.awardCorrectGuess(client, player);
           return;
         }
-        // Block spoilers in chat to protect players from spoilers
-        if (FuzzyMatcher.isAnswerOrSpoiler(rawText, this.currentSecretAnswer)) {
+
+        // If it contains spoiler chatter or the secret answer, block it to protect other players
+        if (isSpoiler || isDirectGuess) {
           client.send("chat_warning", {
             message: "⚠️ Your message was blocked to protect players from spoilers!"
           });

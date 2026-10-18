@@ -120,7 +120,7 @@ export class FrameEngine {
         const dCount = Number(roundsByMode.dialogue) || 0;
         const eCount = Number(roundsByMode.eyes) || 0;
 
-        const frames = this.selectFullyRandomFrames(fCount);
+        const frames = this.selectFullyRandomFrames(fCount, rng, seenMovieIds, seenFrameFrequencies);
         const dialogues = this.selectRandomPlaylist('dialogue', dCount, seenFrameFrequencies, rng, options.weeklyOnly);
         const eyes = this.selectRandomPlaylist('eyes', eCount, seenFrameFrequencies, rng, options.weeklyOnly);
 
@@ -140,7 +140,7 @@ export class FrameEngine {
       }
 
       const selected = (category === 'frames' || category === 'all')
-        ? this.selectFullyRandomFrames(rounds)
+        ? this.selectFullyRandomFrames(rounds, rng, seenMovieIds, seenFrameFrequencies)
         : this.selectRandomPlaylist(category, rounds, seenFrameFrequencies, rng, options.weeklyOnly);
 
       return selected.map(f => this.toCatalogItem(f));
@@ -217,22 +217,28 @@ export class FrameEngine {
    * Eliminates obscure, indie, or underrated movies completely.
    * Leans heavily on EASY & instantly recognizable frames (~70% Easy, ~30% Medium).
    * Prevents duplicate movies within the same match.
+  /**
+   * Completely random movie selection across all local frames in the catalog.
+   * Guarantees:
+   *   1. Every movie in the 286-title local library has an equal probability of selection.
+   *   2. Exactly ONE frame per movie per session — no movie can EVER repeat within the same game.
+   *   3. Randomly samples one of the available scene frames for each chosen movie.
+   *   4. Prioritizes unseen movies/frames for connected players across consecutive matches.
    */
-  public selectFullyRandomFrames(targetCount: number): EnrichedFrameMetadata[] {
-    // 1. Strict Household-Name Blockbuster Filter: Only allow undisputed global hits
-    let popularPool = this.cachedFrames.filter(f => f.category === 'frames' && MetadataEnricher.isPopularMovie(f.movieTitle));
-    
-    // Safety fallback: If popular pool is smaller than requested rounds, fallback to all frames
-    if (popularPool.length < targetCount) {
-      popularPool = this.cachedFrames.filter(f => f.category === 'frames');
-    }
-    if (popularPool.length === 0) return [];
+  public selectFullyRandomFrames(
+    targetCount: number,
+    rng: () => number = Math.random,
+    seenMovieIds?: Set<string>,
+    seenFrameFrequencies?: Map<string, number>
+  ): EnrichedFrameMetadata[] {
+    const allFrames = this.cachedFrames.filter(f => f.category === 'frames');
+    if (allFrames.length === 0) return [];
 
-    // Helper: Fisher-Yates shuffle
+    // Helper: Fisher-Yates shuffle using deterministic rng
     const shuffle = <T>(arr: T[]): T[] => {
       const copy = [...arr];
       for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(rng() * (i + 1));
         const temp = copy[i];
         copy[i] = copy[j];
         copy[j] = temp;
@@ -240,47 +246,88 @@ export class FrameEngine {
       return copy;
     };
 
-    // 2. Partition into Easy (difficulty <= 4) and Medium (difficulty 5 - 7)
-    // Avoid obscure hard frames entirely so players have a fun, accessible guessing experience!
-    const easyPool = shuffle(popularPool.filter(f => f.difficulty <= 4));
-    const mediumPool = shuffle(popularPool.filter(f => f.difficulty >= 5 && f.difficulty <= 7));
-
-    // Quotas: ~70% Easy, ~30% Medium
-    let easyQuota = Math.max(1, Math.round(targetCount * 0.7));
-    let mediumQuota = targetCount - easyQuota;
-
-    const selected: EnrichedFrameMetadata[] = [];
-    const usedMovieIds = new Set<string>();
-
-    const pickFromBucket = (bucket: EnrichedFrameMetadata[], quota: number) => {
-      let count = 0;
-      for (const item of bucket) {
-        if (count >= quota || selected.length >= targetCount) break;
-        if (!usedMovieIds.has(item.movieId)) {
-          selected.push(item);
-          usedMovieIds.add(item.movieId);
-          count++;
-        }
+    // Group frames by movieId so we can select 1 unique movie per round
+    const framesByMovie = new Map<string, EnrichedFrameMetadata[]>();
+    for (const frame of allFrames) {
+      if (!framesByMovie.has(frame.movieId)) {
+        framesByMovie.set(frame.movieId, []);
       }
-    };
+      framesByMovie.get(frame.movieId)!.push(frame);
+    }
 
-    // Pick Easy frames first, then Medium frames
-    pickFromBucket(easyPool.length > 0 ? easyPool : popularPool, easyQuota);
-    pickFromBucket(mediumPool.length > 0 ? mediumPool : popularPool, mediumQuota);
+    const uniqueMovieIds = Array.from(framesByMovie.keys());
+    if (uniqueMovieIds.length === 0) return [];
 
-    // If quotas were not fully met due to movie deduplication, fill from all remaining popular frames
-    if (selected.length < targetCount) {
-      const remainingPopular = shuffle(popularPool);
-      for (const item of remainingPopular) {
-        if (selected.length >= targetCount) break;
-        if (!usedMovieIds.has(item.movieId)) {
-          selected.push(item);
-          usedMovieIds.add(item.movieId);
-        }
+    // Separate movies with unseen frames from movies where all frames have been seen
+    const unseenMovieIds: string[] = [];
+    const seenMoviePool: string[] = [];
+
+    for (const mId of uniqueMovieIds) {
+      const frames = framesByMovie.get(mId) || [];
+      const hasUnseenFrame = frames.some(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
+      const isMovieSeenRecently = seenMovieIds && (
+        seenMovieIds.has(mId) ||
+        seenMovieIds.has(frames[0]?.movieTitle.toLowerCase().replace(/[^a-z0-9]/g, '-'))
+      );
+
+      if (hasUnseenFrame && !isMovieSeenRecently) {
+        unseenMovieIds.push(mId);
+      } else {
+        seenMoviePool.push(mId);
       }
     }
 
-    // 3. Dynamic pacing: Shuffle so Easy and Medium are smoothly interleaved across rounds
+    // 1. Shuffled movies: Unseen movies first, followed by seen movies if needed
+    const candidateMovieIds = [...shuffle(unseenMovieIds), ...shuffle(seenMoviePool)];
+
+    // 2. Pick movies with strict session deduplication and franchise diversity
+    const selected: EnrichedFrameMetadata[] = [];
+    const selectedMovieIds = new Set<string>();
+    const selectedFranchises = new Set<string>();
+
+    for (const movieId of candidateMovieIds) {
+      if (selected.length >= targetCount) break;
+      if (selectedMovieIds.has(movieId)) continue;
+
+      const movieFrames = framesByMovie.get(movieId);
+      if (!movieFrames || movieFrames.length === 0) continue;
+
+      const franchise = movieFrames[0].franchise;
+      if (franchise && franchise !== 'none' && selectedFranchises.has(franchise)) {
+        continue;
+      }
+
+      // Pick an unseen frame for this movie if available
+      const unseenFrames = movieFrames.filter(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
+      const poolToPick = unseenFrames.length > 0 ? unseenFrames : movieFrames;
+      const randomFrameIndex = Math.floor(rng() * poolToPick.length);
+
+      selected.push(poolToPick[randomFrameIndex]);
+      selectedMovieIds.add(movieId);
+      if (franchise && franchise !== 'none') {
+        selectedFranchises.add(franchise);
+      }
+    }
+
+    // Fallback: If franchise constraint was too tight to reach targetCount, relax franchise restriction
+    if (selected.length < targetCount) {
+      for (const movieId of candidateMovieIds) {
+        if (selected.length >= targetCount) break;
+        if (selectedMovieIds.has(movieId)) continue;
+
+        const movieFrames = framesByMovie.get(movieId);
+        if (!movieFrames || movieFrames.length === 0) continue;
+
+        const unseenFrames = movieFrames.filter(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
+        const poolToPick = unseenFrames.length > 0 ? unseenFrames : movieFrames;
+        const randomFrameIndex = Math.floor(rng() * poolToPick.length);
+
+        selected.push(poolToPick[randomFrameIndex]);
+        selectedMovieIds.add(movieId);
+      }
+    }
+
+    // 3. Dynamic pacing: Shuffle so order within the match is unpredictable
     return shuffle(selected);
   }
 
