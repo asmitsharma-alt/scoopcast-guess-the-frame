@@ -457,8 +457,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2002.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 2,
     "tag": "classic"
@@ -468,8 +468,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2003.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 3,
     "tag": "classic"
@@ -479,8 +479,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2004.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 4,
     "tag": "classic"
@@ -490,8 +490,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2005.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 5,
     "tag": "classic"
@@ -501,8 +501,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2006.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 6,
     "tag": "classic"
@@ -512,8 +512,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2008.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 8,
     "tag": "classic"
@@ -523,8 +523,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2009.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 9,
     "tag": "classic"
@@ -534,8 +534,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2010.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 10,
     "tag": "classic"
@@ -545,8 +545,8 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/Am%C3%A9lie%20%282001%29%20-%20Frame%2011.webp",
-    "answer": "AMÉLIE",
-    "movie": "Amélie",
+    "answer": "AM\u00c9LIE",
+    "movie": "Am\u00e9lie",
     "year": "2001",
     "frameNumber": 11,
     "tag": "classic"
@@ -6839,15 +6839,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2001.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 1,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6855,15 +6855,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2002.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 2,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6871,15 +6871,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2003.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 3,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6887,15 +6887,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2004.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 4,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6903,15 +6903,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2005.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 5,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6919,15 +6919,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2006.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 6,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6935,15 +6935,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2007.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 7,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6951,15 +6951,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2008.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 8,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6967,15 +6967,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2009.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 9,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6983,15 +6983,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2010.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 10,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -6999,15 +6999,15 @@
     "category": "frames",
     "type": "image",
     "content": "/GUESSTHEFRAME/All_Movie_Frames/L%C3%A9on%20-%20The%20Professional%20%281994%29%20-%20Frame%2011.webp",
-    "answer": "LÉON - THE PROFESSIONAL",
-    "movie": "Léon - The Professional",
+    "answer": "L\u00c9ON - THE PROFESSIONAL",
+    "movie": "L\u00e9on - The Professional",
     "year": "1994",
     "frameNumber": 11,
     "tag": "classic",
     "aliases": [
-      "LÉON",
+      "L\u00c9ON",
       "THE PROFESSIONAL",
-      "LÉON THE PROFESSIONAL"
+      "L\u00c9ON THE PROFESSIONAL"
     ]
   },
   {
@@ -19284,5 +19284,12 @@
       "X2 X-MEN UNITED",
       "X2 X MEN UNITED"
     ]
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1792465197/scoopcast_frames/The_Tales_of_Hoffmann_1951.jpg",
+    "answer": "THE TALES OF HOFFMANN",
+    "year": "1951",
+    "tag": "classic"
   }
 ]
