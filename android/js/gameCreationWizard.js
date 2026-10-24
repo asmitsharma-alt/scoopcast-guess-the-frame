@@ -127,11 +127,23 @@
     },
 
     init() {
-      // Load saved preferences if available
-      const savedName = localStorage.getItem('gtf_player_name') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') || '';
+      // Load saved preferences if available (across mobile & desktop keys)
+      const nameInput = document.getElementById('playerNameInput');
+      const savedName = (nameInput && nameInput.value.trim()) ||
+                        localStorage.getItem('gtf_m_name') ||
+                        localStorage.getItem('gtf_player_name') ||
+                        (typeof GameClient !== 'undefined' ? GameClient.playerName : '') ||
+                        (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerName : '') ||
+                        (typeof UI !== 'undefined' ? UI.playerName : '') ||
+                        '';
       if (savedName) this.state.playerName = savedName;
 
-      const savedAvatar = localStorage.getItem('gtf_player_avatar') || (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : '') || 'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
+      const savedAvatar = localStorage.getItem('gtf_m_avatar') ||
+                          localStorage.getItem('gtf_player_avatar') ||
+                          (typeof GameClient !== 'undefined' ? GameClient.playerAvatar : '') ||
+                          (typeof MultiplayerEngine !== 'undefined' ? MultiplayerEngine.playerAvatar : '') ||
+                          (typeof UI !== 'undefined' ? UI.selectedAvatar : '') ||
+                          'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
       this.state.avatarUrl = savedAvatar;
     },
 
@@ -181,6 +193,8 @@
 
     // ── STEP 1: Game Sections Multi-Select ──
     toggleSection(sectionKey) {
+      if (typeof Haptics !== 'undefined' && Haptics.tap) Haptics.tap();
+
       const idx = this.state.sections.indexOf(sectionKey);
       if (idx > -1) {
         // Prevent deselecting if it's the last selected section
@@ -192,6 +206,7 @@
       } else {
         this.state.sections.push(sectionKey);
       }
+      this.renderStep1();
       this.renderStep2();
     },
 
@@ -311,25 +326,37 @@
       // Auto-retrieve player name and avatar from mobile home screen & storage
       const nameInput = document.getElementById('playerNameInput');
       const enteredName = (nameInput && nameInput.value.trim()) ||
-                          (typeof UI !== 'undefined' && UI.playerName) ||
-                          (typeof GameClient !== 'undefined' && GameClient.playerName) ||
+                          this.state.playerName ||
+                          localStorage.getItem('gtf_m_name') ||
                           localStorage.getItem('gtf_player_name') ||
+                          (typeof GameClient !== 'undefined' && GameClient.playerName) ||
+                          (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.playerName) ||
+                          (typeof UI !== 'undefined' && UI.playerName) ||
                           'Player';
 
-      const selectedAvatar = (typeof UI !== 'undefined' && UI.selectedAvatar) ||
-                             (typeof GameClient !== 'undefined' && GameClient.playerAvatar) ||
+      const selectedAvatar = this.state.avatarUrl ||
+                             localStorage.getItem('gtf_m_avatar') ||
                              localStorage.getItem('gtf_player_avatar') ||
+                             (typeof GameClient !== 'undefined' && GameClient.playerAvatar) ||
+                             (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.playerAvatar) ||
+                             (typeof UI !== 'undefined' && UI.selectedAvatar) ||
                              'https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg';
 
       this.state.playerName = enteredName;
       this.state.avatarUrl = selectedAvatar;
 
       localStorage.setItem('gtf_player_name', enteredName);
+      localStorage.setItem('gtf_m_name', enteredName);
       localStorage.setItem('gtf_player_avatar', selectedAvatar);
+      localStorage.setItem('gtf_m_avatar', selectedAvatar);
 
       if (typeof GameClient !== 'undefined') {
         GameClient.playerName = enteredName;
         GameClient.playerAvatar = selectedAvatar;
+      }
+      if (typeof MultiplayerEngine !== 'undefined') {
+        MultiplayerEngine.playerName = enteredName;
+        MultiplayerEngine.playerAvatar = selectedAvatar;
       }
 
       const totalRounds = this.getTotalRounds();
@@ -434,7 +461,7 @@
 
       const countBadge = document.getElementById('gwSelectedSectionsCount');
       if (countBadge) {
-        countBadge.innerHTML = `${WIZARD_ICONS.check} Selected: ${this.state.sections.length} of 3`;
+        countBadge.innerHTML = `${WIZARD_ICONS.check} <span>SELECTED: ${this.state.sections.length} OF 3</span>`;
       }
     },
 
@@ -492,7 +519,7 @@
 
       container.innerHTML = html + `
         <div class="gw-rounds-summary-bar">
-          <div class="flex flex-col text-left">
+          <div class="gw-summary-text-group">
             <span class="gw-summary-label">TOTAL ROUNDS</span>
             <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:900; color:${isValid ? 'var(--wizard-text-muted)' : '#EF4444'};">
               ${isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds')}
@@ -509,9 +536,14 @@
       const prevBtn = document.getElementById('gwPrevBtn');
       const nextBtn = document.getElementById('gwNextBtn');
       const enterBtn = document.getElementById('gwEnterLobbyBtn');
+      const spacer = document.querySelector('.gw-footer-spacer');
 
       if (prevBtn) {
         prevBtn.style.display = this.currentStep > 1 ? 'inline-flex' : 'none';
+      }
+
+      if (spacer) {
+        spacer.style.display = this.currentStep > 1 ? 'none' : 'block';
       }
 
       if (nextBtn) {

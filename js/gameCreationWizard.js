@@ -165,8 +165,8 @@
         }
       }
 
-      // Validation before leaving Step 2 (rounds between 3 and 80)
-      if (this.currentStep === 2 && stepNum > 2) {
+      // Validation before entering Step 3 (rounds between 3 and 80)
+      if (stepNum >= 3) {
         const total = this.getTotalRounds();
         if (total < 3) {
           this.showNotice('Minimum game length is 3 rounds.');
@@ -221,6 +221,7 @@
       } else {
         this.state.sections.push(sectionKey);
       }
+      this.renderStep1();
       this.renderStep2();
     },
 
@@ -397,7 +398,7 @@
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerHTML = `<span>Enter Lobby</span> ${WIZARD_ICONS.arrowRight}`;
+          submitBtn.innerHTML = `<span>CREATE ROOM</span> ${WIZARD_ICONS.arrowRight}`;
         }
       }
     },
@@ -461,7 +462,7 @@
 
       const countBadge = document.getElementById('gwSelectedSectionsCount');
       if (countBadge) {
-        countBadge.innerHTML = `${WIZARD_ICONS.check} Selected: ${this.state.sections.length} of 3`;
+        countBadge.innerHTML = `${WIZARD_ICONS.check} <span>SELECTED: ${this.state.sections.length} OF 3</span>`;
       }
     },
 
@@ -519,7 +520,7 @@
 
       container.innerHTML = html + `
         <div class="gw-rounds-summary-bar">
-          <div class="flex flex-col text-left">
+          <div class="gw-summary-text-group">
             <span class="gw-summary-label">TOTAL ROUNDS</span>
             <span id="gwRoundsValidationMsg" style="font-size:11px; font-weight:900; color:${isValid ? 'var(--wizard-text-muted)' : '#ef4444'};">
               ${isValid ? 'Min 3 rounds • Max 80 rounds' : (total < 3 ? 'Requires at least 3 rounds' : 'Exceeds maximum 80 rounds')}
@@ -554,9 +555,14 @@
       const prevBtn = document.getElementById('gwPrevBtn');
       const nextBtn = document.getElementById('gwNextBtn');
       const enterBtn = document.getElementById('gwEnterLobbyBtn');
+      const spacer = document.querySelector('.gw-footer-spacer');
 
       if (prevBtn) {
         prevBtn.style.display = this.currentStep > 1 ? 'inline-flex' : 'none';
+      }
+
+      if (spacer) {
+        spacer.style.display = this.currentStep > 1 ? 'none' : 'block';
       }
 
       if (nextBtn) {
