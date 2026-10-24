@@ -197,12 +197,20 @@ export class GameDatabase {
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(frame_id) DO UPDATE SET
+        movie_id = excluded.movie_id,
+        movie_title = excluded.movie_title,
         content_url = excluded.content_url,
         category = excluded.category,
         type = excluded.type,
         year = excluded.year,
+        franchise = excluded.franchise,
         region = excluded.region,
+        genre = excluded.genre,
         lead_actor = excluded.lead_actor,
+        difficulty = excluded.difficulty,
+        quality_score = excluded.quality_score,
+        discovery_value = excluded.discovery_value,
+        perceptual_hash = excluded.perceptual_hash,
         character = excluded.character,
         display_answer = excluded.display_answer,
         tag = excluded.tag,

@@ -225,6 +225,16 @@ export class FrameEngine {
    *   3. Randomly samples one of the available scene frames for each chosen movie.
    *   4. Prioritizes unseen movies/frames for connected players across consecutive matches.
    */
+  /**
+   * Balanced 50% Indian & 50% International movie selection across all pristine frames.
+   * Guarantees:
+   *   1. 50% Indian Cinema (Bollywood, Tollywood, Kollywood, Mollywood, Sandalwood, Punjabi, etc.)
+   *      and 50% International Cinema (Hollywood / global cinema).
+   *   2. Exactly ONE frame per movie per session — strictly ZERO duplicate movies or duplicate frames.
+   *   3. Randomly samples one of the available scene frames for each chosen movie.
+   *   4. Prioritizes unseen movies/frames for connected players across consecutive matches.
+   *   5. Interleaves/shuffles the selected rounds so players experience an exciting balanced mix throughout.
+   */
   public selectFullyRandomFrames(
     targetCount: number,
     rng: () => number = Math.random,
@@ -246,6 +256,12 @@ export class FrameEngine {
       return copy;
     };
 
+    // Helper: Check if a frame/movie belongs to Indian Cinema
+    const isIndianCinema = (region?: string): boolean => {
+      const r = (region || '').toLowerCase();
+      return r === 'bollywood' || r === 'regional' || r === 'indian';
+    };
+
     // Group frames by movieId so we can select 1 unique movie per round
     const framesByMovie = new Map<string, EnrichedFrameMetadata[]>();
     for (const frame of allFrames) {
@@ -255,68 +271,76 @@ export class FrameEngine {
       framesByMovie.get(frame.movieId)!.push(frame);
     }
 
-    const uniqueMovieIds = Array.from(framesByMovie.keys());
-    if (uniqueMovieIds.length === 0) return [];
+    // Separate unique movie IDs by region (Indian vs International)
+    const indianMovieIds: string[] = [];
+    const internationalMovieIds: string[] = [];
 
-    // Separate movies with unseen frames from movies where all frames have been seen
-    const unseenMovieIds: string[] = [];
-    const seenMoviePool: string[] = [];
-
-    for (const mId of uniqueMovieIds) {
-      const frames = framesByMovie.get(mId) || [];
-      const hasUnseenFrame = frames.some(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
-      const isMovieSeenRecently = seenMovieIds && (
-        seenMovieIds.has(mId) ||
-        seenMovieIds.has(frames[0]?.movieTitle.toLowerCase().replace(/[^a-z0-9]/g, '-'))
-      );
-
-      if (hasUnseenFrame && !isMovieSeenRecently) {
-        unseenMovieIds.push(mId);
+    for (const [mId, frames] of framesByMovie.entries()) {
+      if (isIndianCinema(frames[0]?.region)) {
+        indianMovieIds.push(mId);
       } else {
-        seenMoviePool.push(mId);
+        internationalMovieIds.push(mId);
       }
     }
 
-    // 1. Shuffled movies: Unseen movies first, followed by seen movies if needed
-    const candidateMovieIds = [...shuffle(unseenMovieIds), ...shuffle(seenMoviePool)];
+    // Prepare prioritized candidate lists (unseen first, then seen) for a given set of movie IDs
+    const prepareCandidatePool = (movieIds: string[]): string[] => {
+      const unseen: string[] = [];
+      const seen: string[] = [];
+      for (const mId of movieIds) {
+        const frames = framesByMovie.get(mId) || [];
+        const hasUnseenFrame = frames.some(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
+        const isMovieSeenRecently = seenMovieIds && (
+          seenMovieIds.has(mId) ||
+          seenMovieIds.has(frames[0]?.movieTitle.toLowerCase().replace(/[^a-z0-9]/g, '-'))
+        );
 
-    // 2. Pick movies with strict session deduplication and franchise diversity
+        if (hasUnseenFrame && !isMovieSeenRecently) {
+          unseen.push(mId);
+        } else {
+          seen.push(mId);
+        }
+      }
+      return [...shuffle(unseen), ...shuffle(seen)];
+    };
+
+    const indianCandidates = prepareCandidatePool(indianMovieIds);
+    const internationalCandidates = prepareCandidatePool(internationalMovieIds);
+
+    // Calculate 50% split (if odd targetCount, Indian gets 1 extra)
+    let targetIndian = Math.ceil(targetCount / 2);
+    let targetInternational = Math.floor(targetCount / 2);
+
+    // Adjust targets if either pool has fewer total unique movies than target
+    if (indianCandidates.length < targetIndian) {
+      const diff = targetIndian - indianCandidates.length;
+      targetIndian = indianCandidates.length;
+      targetInternational = Math.min(targetInternational + diff, internationalCandidates.length);
+    } else if (internationalCandidates.length < targetInternational) {
+      const diff = targetInternational - internationalCandidates.length;
+      targetInternational = internationalCandidates.length;
+      targetIndian = Math.min(targetIndian + diff, indianCandidates.length);
+    }
+
     const selected: EnrichedFrameMetadata[] = [];
     const selectedMovieIds = new Set<string>();
     const selectedFranchises = new Set<string>();
 
-    for (const movieId of candidateMovieIds) {
-      if (selected.length >= targetCount) break;
-      if (selectedMovieIds.has(movieId)) continue;
-
-      const movieFrames = framesByMovie.get(movieId);
-      if (!movieFrames || movieFrames.length === 0) continue;
-
-      const franchise = movieFrames[0].franchise;
-      if (franchise && franchise !== 'none' && selectedFranchises.has(franchise)) {
-        continue;
-      }
-
-      // Pick an unseen frame for this movie if available
-      const unseenFrames = movieFrames.filter(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
-      const poolToPick = unseenFrames.length > 0 ? unseenFrames : movieFrames;
-      const randomFrameIndex = Math.floor(rng() * poolToPick.length);
-
-      selected.push(poolToPick[randomFrameIndex]);
-      selectedMovieIds.add(movieId);
-      if (franchise && franchise !== 'none') {
-        selectedFranchises.add(franchise);
-      }
-    }
-
-    // Fallback: If franchise constraint was too tight to reach targetCount, relax franchise restriction
-    if (selected.length < targetCount) {
-      for (const movieId of candidateMovieIds) {
-        if (selected.length >= targetCount) break;
+    // Helper: Pick movies from candidate pool with zero duplicates & franchise diversity
+    const pickMoviesFromList = (candidateList: string[], count: number) => {
+      let picked = 0;
+      // Pass 1: With franchise check
+      for (const movieId of candidateList) {
+        if (picked >= count || selected.length >= targetCount) break;
         if (selectedMovieIds.has(movieId)) continue;
 
         const movieFrames = framesByMovie.get(movieId);
         if (!movieFrames || movieFrames.length === 0) continue;
+
+        const franchise = movieFrames[0].franchise;
+        if (franchise && franchise !== 'none' && selectedFranchises.has(franchise)) {
+          continue;
+        }
 
         const unseenFrames = movieFrames.filter(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
         const poolToPick = unseenFrames.length > 0 ? unseenFrames : movieFrames;
@@ -324,10 +348,53 @@ export class FrameEngine {
 
         selected.push(poolToPick[randomFrameIndex]);
         selectedMovieIds.add(movieId);
+        if (franchise && franchise !== 'none') {
+          selectedFranchises.add(franchise);
+        }
+        picked++;
+      }
+
+      // Pass 2: Relax franchise check if needed
+      if (picked < count) {
+        for (const movieId of candidateList) {
+          if (picked >= count || selected.length >= targetCount) break;
+          if (selectedMovieIds.has(movieId)) continue;
+
+          const movieFrames = framesByMovie.get(movieId);
+          if (!movieFrames || movieFrames.length === 0) continue;
+
+          const unseenFrames = movieFrames.filter(f => (seenFrameFrequencies?.get(f.frameId) || 0) === 0);
+          const poolToPick = unseenFrames.length > 0 ? unseenFrames : movieFrames;
+          const randomFrameIndex = Math.floor(rng() * poolToPick.length);
+
+          selected.push(poolToPick[randomFrameIndex]);
+          selectedMovieIds.add(movieId);
+          picked++;
+        }
+      }
+    };
+
+    // Pick 50% Indian and 50% International
+    pickMoviesFromList(indianCandidates, targetIndian);
+    pickMoviesFromList(internationalCandidates, targetInternational);
+
+    // Final fallback: If targetCount is still not reached, fill with any remaining unique movies
+    if (selected.length < targetCount) {
+      const allCandidates = [...indianCandidates, ...internationalCandidates];
+      for (const movieId of allCandidates) {
+        if (selected.length >= targetCount) break;
+        if (selectedMovieIds.has(movieId)) continue;
+
+        const movieFrames = framesByMovie.get(movieId);
+        if (!movieFrames || movieFrames.length === 0) continue;
+
+        const randomFrameIndex = Math.floor(rng() * movieFrames.length);
+        selected.push(movieFrames[randomFrameIndex]);
+        selectedMovieIds.add(movieId);
       }
     }
 
-    // 3. Dynamic pacing: Shuffle so order within the match is unpredictable
+    // Shuffle the combined playlist so Indian and International rounds are dynamically interleaved
     return shuffle(selected);
   }
 
@@ -345,7 +412,7 @@ export class FrameEngine {
   ): EnrichedFrameMetadata[] {
     // Pure, literal random selection for frames
     if (category === 'frames') {
-      return this.selectFullyRandomFrames(targetCount);
+      return this.selectFullyRandomFrames(targetCount, rng, undefined, seenFrameFrequencies);
     }
 
     let pool = [...this.cachedFrames];
