@@ -28982,5 +28982,12 @@
     "answer": "ROUND MIDNIGHT",
     "year": "1986",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1792953672/scoopcast_frames/Project_Power_2020.jpg",
+    "answer": "PROJECT POWER",
+    "year": "2020",
+    "tag": "classic"
   }
 ]
