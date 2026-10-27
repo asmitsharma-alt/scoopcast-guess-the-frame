@@ -29003,5 +29003,12 @@
     "answer": "SHADOW",
     "year": "2018",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793071358/scoopcast_frames/Return_Of_The_Jedi_1983.jpg",
+    "answer": "RETURN OF THE JEDI",
+    "year": "1983",
+    "tag": "classic"
   }
 ]
