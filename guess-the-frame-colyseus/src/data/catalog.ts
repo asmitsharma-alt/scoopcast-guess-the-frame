@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (2093 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (2094 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -18851,6 +18851,15 @@ export const CATALOG: CatalogItem[] = [
     answer: "RETURN OF THE JEDI",
     year: "1983",
     tag: "classic"
+  },
+  {
+    id: "f_2094",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793109151/scoopcast_frames/Sinners_2025.jpg",
+    answer: "SINNERS",
+    year: "2025",
+    tag: "new"
   },
 
   // ── Guess The Dialogue (400 Curated Dialogues: 200 Bollywood + 200 Hollywood) ──

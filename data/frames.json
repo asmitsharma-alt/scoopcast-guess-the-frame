@@ -29010,5 +29010,12 @@
     "answer": "RETURN OF THE JEDI",
     "year": "1983",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793109151/scoopcast_frames/Sinners_2025.jpg",
+    "answer": "SINNERS",
+    "year": "2025",
+    "tag": "new"
   }
 ]
