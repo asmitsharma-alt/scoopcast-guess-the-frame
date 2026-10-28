@@ -14038,239 +14038,249 @@
     <div id="playerLobbyScreen" class="screen flex flex-col font-sans text-on-surface p-4 md:p-6 overflow-y-auto justify-start items-center bg-transparent" style="background: rgba(255, 253, 245, 0.4) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); height: 100% !important; max-height: 100% !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important;">
       
 
-      <main class="max-w-[1200px] mx-auto px-4 md:px-6 flex flex-col gap-4 w-full my-0 py-4 pb-20">
-        <!-- Room Code Banner -->
-        <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 relative">
-          <div class="flex items-center gap-6 flex-1 w-full md:w-auto">
-            <div class="bg-neo-yellow border-4 border-on-surface p-4 flex flex-col items-center justify-center relative transform rotate-1 neo-shadow w-full md:w-auto min-w-[250px]">
-              <span class="font-label-sm text-label-sm uppercase absolute top-2 left-2 font-bold">Room Code</span>
-              <h2 class="font-headline-xl text-4xl font-black uppercase tracking-wider mt-4" id="displayRoomCode">----</h2>
-              <div class="absolute top-0 left-0 w-2 h-2 border-r-2 border-b-2 border-on-surface"></div>
-              <div class="absolute top-0 right-0 w-2 h-2 border-l-2 border-b-2 border-on-surface"></div>
-              <div class="absolute bottom-0 left-0 w-2 h-2 border-r-2 border-t-2 border-on-surface"></div>
-              <div class="absolute bottom-0 right-0 w-2 h-2 border-l-2 border-t-2 border-on-surface"></div>
+      <main class="max-w-[1240px] mx-auto px-4 md:px-6 flex flex-col gap-5 w-full my-0 py-4 pb-20">
+        <!-- Room Code Banner (Matching Screenshot Exact) -->
+        <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 relative">
+          <div class="flex items-center gap-4 flex-1 w-full md:w-auto">
+            <div class="bg-neo-yellow border-4 border-on-surface px-6 py-3 rounded-xl flex items-center gap-4 relative neo-shadow w-full md:w-auto min-w-[240px]">
+              <span class="font-label-sm text-[11px] uppercase absolute top-1.5 left-3 font-black text-on-surface">Room Code</span>
+              <h2 class="font-headline-xl text-4xl font-black uppercase tracking-wider mt-2.5 text-on-surface select-all" id="displayRoomCode">----</h2>
+              <!-- Notches -->
+              <div class="absolute top-0 left-0 w-2.5 h-2.5 border-r-2 border-b-2 border-on-surface bg-surface"></div>
+              <div class="absolute top-0 right-0 w-2.5 h-2.5 border-l-2 border-b-2 border-on-surface bg-surface"></div>
+              <div class="absolute bottom-0 left-0 w-2.5 h-2.5 border-r-2 border-t-2 border-on-surface bg-surface"></div>
+              <div class="absolute bottom-0 right-0 w-2.5 h-2.5 border-l-2 border-t-2 border-on-surface bg-surface"></div>
             </div>
-            <span class="material-symbols-outlined text-4xl hidden md:block text-neo-yellow">bolt</span>
+            <!-- Lightning Bolt -->
+            <div class="hidden md:flex items-center justify-center text-neo-yellow">
+              <svg class="w-10 h-10 fill-[#FDE047] stroke-black stroke-[1.5]" viewBox="0 0 24 24">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
           </div>
-          <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
-            <button type="button" id="copyLinkBtn" class="bg-primary-container border-2 border-on-surface px-4 py-3 font-label-bold text-label-bold uppercase flex items-center gap-2 neo-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all whitespace-nowrap cursor-pointer font-bold" onclick="MultiplayerEngine.copyRoomLink(this)">
-              <span class="material-symbols-outlined">content_copy</span>
+          <div class="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+            <button type="button" id="copyLinkBtn" class="bg-[#C4B5FD] text-on-surface border-2 border-on-surface rounded-xl px-4 py-2.5 font-label-bold text-xs uppercase flex items-center gap-2 neo-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] transition-all whitespace-nowrap cursor-pointer font-black" onclick="MultiplayerEngine.copyRoomLink(this)">
+              <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
               Copy Link
             </button>
-            <button type="button" id="shareRoomBtn" class="bg-neo-yellow border-2 border-on-surface px-4 py-3 font-label-bold text-label-bold uppercase flex items-center gap-2 neo-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all whitespace-nowrap cursor-pointer font-bold" onclick="MultiplayerEngine.shareRoomLink(this)">
-              <svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              Share
-            </button>
-            <div class="h-8 border-r-2 border-dashed border-outline hidden md:block"></div>
-            <div class="bg-neo-green border-2 border-on-surface px-4 py-2 flex items-center gap-2 font-label-bold text-label-bold uppercase whitespace-nowrap font-bold" id="lobbyConnectionStatus">
-              <span class="material-symbols-outlined text-base">cloud</span>
+            <div class="h-8 border-r-2 border-dashed border-outline/50 hidden md:block"></div>
+            <div class="bg-neo-green border-2 border-on-surface rounded-xl px-4 py-2 flex items-center gap-2.5 font-label-bold text-label-bold uppercase whitespace-nowrap font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" id="lobbyConnectionStatus">
+              <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
               <div class="flex flex-col text-left">
-                <span class="text-[10px] leading-tight">Colyseus Live</span>
-                <span class="text-[8px] leading-tight opacity-75 font-mono">Connected</span>
+                <span class="text-[11px] leading-tight font-black">Cloud Live</span>
+                <span class="text-[9px] leading-tight opacity-75 font-mono font-bold">Connected</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Main 2-Column Grid Layout -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          <!-- Left Column (Span 2) -->
-          <div class="md:col-span-2 flex flex-col gap-6 h-full justify-between">
-            <!-- Player Lobby Section -->
-            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col rounded-xl overflow-hidden shrink-0">
-              <div class="bg-neo-purple border-b-4 border-on-surface p-3 flex justify-between items-center">
-                <h3 class="font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-2 font-black">
-                  <span class="material-symbols-outlined">group</span>
+        <!-- Main 2-Column Grid Layout matching Screenshot -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT COLUMN (Span 7 / ~58-60%) -->
+          <div class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- 1. PLAYER LOBBY CARD -->
+            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col rounded-2xl overflow-hidden">
+              <div class="bg-neo-purple border-b-4 border-on-surface p-3.5 px-5 flex justify-between items-center">
+                <h3 class="font-headline-sm text-lg uppercase text-on-surface flex items-center gap-2.5 font-black">
+                  <svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                   Player Lobby
                 </h3>
-                <span class="bg-neo-yellow border-2 border-on-surface px-3 py-1 font-label-bold text-label-bold uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold" id="lobbyCount">4 / 10 Players</span>
+                <span class="bg-neo-yellow border-2 border-on-surface rounded-lg px-3 py-1 font-label-bold text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-black" id="lobbyCount">1 / 10 Players</span>
               </div>
-              <div class="p-6">
+              <div class="p-5">
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="lobbyPlayerList">
-                  <!-- Dynamic Players Injected Here -->
+                  <!-- Dynamic Players & Empty Slots Injected Here -->
                 </div>
               </div>
             </section>
 
-            <!-- Match Preparation Section -->
-            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between rounded-xl overflow-hidden flex-1">
-              <div class="bg-neo-blue border-b-4 border-on-surface p-3 flex items-center">
-                <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2 font-black">
-                  <span class="material-symbols-outlined" aria-hidden="true">movie</span>
-                  Match Preparation
-                </h3>
-              </div>
-              <div class="p-6 flex flex-col md:flex-row items-center gap-6">
-                <div class="w-24 h-24 bg-surface-variant border-4 border-on-surface flex items-center justify-center p-2 neo-shadow shrink-0">
-                  <div class="w-full h-full bg-surface border-2 border-on-surface flex flex-col items-center justify-center relative overflow-hidden">
-                    <div class="w-full h-3 bg-on-surface flex gap-1 px-1 items-center">
-                      <span class="w-1.5 h-1.5 bg-surface transform rotate-45"></span>
-                      <span class="w-1.5 h-1.5 bg-surface transform rotate-45"></span>
-                    </div>
-                    <span class="material-symbols-outlined text-2xl mt-1 text-on-surface">play_arrow</span>
-                  </div>
-                </div>
-                <div class="flex-1 w-full flex flex-col gap-3">
-                  <div class="flex justify-between items-end">
-                    <div>
-                      <h4 class="font-headline-md text-2xl font-black text-on-surface" id="loadTitleText">Match Ready!</h4>
-                      <p class="font-label-sm text-label-sm text-outline font-medium" id="loadSubtitleText">All Assets Loaded &amp; Ready</p>
-                    </div>
-                    <div class="bg-neo-yellow border-2 border-on-surface px-2 py-1 font-mono font-bold text-sm shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" id="loadPercent">100%</div>
-                  </div>
-                  <!-- Progress Bar -->
-                  <div class="w-full h-6 bg-surface-variant border-2 border-on-surface p-0.5 overflow-hidden">
-                    <div class="h-full bg-neo-green border-r-2 border-on-surface transition-all duration-300 relative" style="width: 100%" id="loadBar">
-                      <div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)] bg-[length:1rem_1rem]"></div>
-                    </div>
-                  </div>
-                  <div class="flex gap-4 font-label-bold text-xs font-semibold overflow-x-auto text-on-surface">
-                    <span class="flex items-center gap-1" id="prepStatusFrames"><span class="material-symbols-outlined fill text-neo-green text-sm" aria-hidden="true">check_box</span> Movie Frames Loaded</span>
-                    <span class="flex items-center gap-1"><span class="material-symbols-outlined fill text-neo-green text-sm" aria-hidden="true">check_box</span> Player Connections Stable</span>
-                    <span class="flex items-center gap-1"><span class="material-symbols-outlined fill text-neo-green text-sm" aria-hidden="true">check_box</span> Game Data Synchronized</span>
-                  </div>
-                </div>
-              </div>
-              <!-- Preload Progress & Unready Notice Box -->
-              <div id="lobbyAssetNoticeContainer" class="px-6 pb-6 pt-0 hidden"></div>
-            </section>
-          </div>
-
-          <!-- Right Column (Span 1) -->
-          <div class="md:col-span-1 flex flex-col h-full min-h-0">
-            <!-- MATCH CONFIGURATION (EXPANDED TO FILL FULL HEIGHT) -->
-            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between rounded-xl overflow-hidden h-full flex-1">
+            <!-- 2. MATCH CONFIGURATION CARD -->
+            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col rounded-2xl overflow-hidden">
               <!-- Header -->
-              <div class="bg-neo-purple border-b-4 border-on-surface p-3.5 flex items-center justify-between shrink-0">
-                <h3 class="font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-2 font-black">
-                  <span class="material-symbols-outlined font-black">tune</span>
+              <div class="bg-neo-purple border-b-4 border-on-surface p-3.5 px-5 flex items-center justify-between">
+                <h3 class="font-headline-sm text-lg uppercase text-on-surface flex items-center gap-2.5 font-black">
+                  <svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/><circle cx="8" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="10" cy="18" r="2"/></svg>
                   Match Configuration
                 </h3>
-                <span class="bg-surface border-2 border-on-surface px-2.5 py-1 font-label-bold text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-black" id="gameSettingsTotalBadge">40 Rounds</span>
+                <span class="bg-surface border-2 border-on-surface rounded-lg px-3 py-1 font-label-bold text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-black" id="gameSettingsTotalBadge">40 Rounds</span>
               </div>
 
-              <div class="p-5 flex flex-col justify-between flex-1 gap-4">
+              <div class="p-5 flex flex-col gap-4">
                 <!-- Locked Settings Banner (Online Mode) -->
                 <div id="lobbyLockedSettingsBanner" class="hidden"></div>
-                
-                <!-- Active Mode Toggle Badges -->
-                <div class="shrink-0">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="font-label-bold text-xs uppercase tracking-wider text-on-surface flex items-center gap-1.5 font-bold">
-                      <span class="material-symbols-outlined text-base text-neo-purple">category</span> Mode Rotation
-                    </span>
-                    <span class="font-label-sm text-[10px] text-outline uppercase font-bold">Active Mode</span>
+
+                <!-- Row 1: Mode Selection & Round Timer -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                  <!-- Left: Mode Selection -->
+                  <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between">
+                      <span class="font-label-bold text-xs uppercase tracking-wider text-on-surface font-black">Mode Selection</span>
+                      <span class="text-[10px] text-outline uppercase font-black">Active Mode</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2" id="categoryModeBadges">
+                      <!-- Frames -->
+                      <button type="button" id="modeBadge-frames" onclick="PlayerLobby.toggleMode('frames')" class="mode-badge border-2 border-on-surface py-2 px-1.5 rounded-xl font-label-bold text-[11px] uppercase flex items-center justify-center gap-1 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #cae6ff;">
+                        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                        <span>Frames</span>
+                      </button>
+                      <!-- Eyes -->
+                      <button type="button" id="modeBadge-eyes" onclick="PlayerLobby.toggleMode('eyes')" class="mode-badge border-2 border-on-surface py-2 px-1.5 rounded-xl font-label-bold text-[11px] uppercase flex items-center justify-center gap-1 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #86EFAC;">
+                        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span>Eyes</span>
+                      </button>
+                      <!-- Dialogue -->
+                      <button type="button" id="modeBadge-dialogue" onclick="PlayerLobby.toggleMode('dialogue')" class="mode-badge border-2 border-on-surface py-2 px-1.5 rounded-xl font-label-bold text-[11px] uppercase flex items-center justify-center gap-1 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #FEF08A;">
+                        <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <span>Dialogue</span>
+                      </button>
+                    </div>
                   </div>
-                  <div class="grid grid-cols-3 gap-2.5" id="categoryModeBadges">
-                    <!-- Frames Badge -->
-                    <button type="button" id="modeBadge-frames" onclick="PlayerLobby.toggleMode('frames')" class="mode-badge border-2 border-on-surface py-2.5 px-2 rounded-xl font-label-bold text-xs uppercase flex items-center justify-center gap-1.5 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #cae6ff;">
-                      <span class="material-symbols-outlined text-base">panorama</span>
-                      <span>Frames</span>
-                    </button>
-                    <!-- Eyes Badge -->
-                    <button type="button" id="modeBadge-eyes" onclick="PlayerLobby.toggleMode('eyes')" class="mode-badge border-2 border-on-surface py-2.5 px-2 rounded-xl font-label-bold text-xs uppercase flex items-center justify-center gap-1.5 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #86EFAC;">
-                      <span class="material-symbols-outlined text-base">visibility</span>
-                      <span>Eyes</span>
-                    </button>
-                    <!-- Dialogue Badge -->
-                    <button type="button" id="modeBadge-dialogue" onclick="PlayerLobby.toggleMode('dialogue')" class="mode-badge border-2 border-on-surface py-2.5 px-2 rounded-xl font-label-bold text-xs uppercase flex items-center justify-center gap-1.5 neo-shadow-sm active:translate-y-[1px] transition-all cursor-pointer font-black select-none" style="background-color: #FEF08A;">
-                      <span class="material-symbols-outlined text-base">chat</span>
-                      <span>Dialogue</span>
-                    </button>
+
+                  <!-- Right: Round Timer -->
+                  <div class="flex flex-col gap-1.5">
+                    <div class="flex items-center justify-between">
+                      <span class="font-label-bold text-xs uppercase tracking-wider text-on-surface font-black">Round Timer</span>
+                      <span class="text-[10px] text-outline uppercase font-black">Per Movie Frame</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button type="button" onclick="PlayerLobby.adjustTimer(-5)" class="w-9 h-9 rounded-xl bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-lg flex items-center justify-center neo-shadow-sm active:translate-y-[1px] cursor-pointer" title="Decrease timer">−</button>
+                      <div class="flex-1 bg-[#C4B5FD] border-2 border-on-surface rounded-xl py-2 px-3 font-black text-xs uppercase tracking-wide text-on-surface text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] select-none" id="hostTimerBtn" onclick="PlayerLobby.cycleTimer()">
+                        <span id="hostTimerBtnText">30S SECONDS</span>
+                      </div>
+                      <button type="button" onclick="PlayerLobby.adjustTimer(5)" class="w-9 h-9 rounded-xl bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-lg flex items-center justify-center neo-shadow-sm active:translate-y-[1px] cursor-pointer" title="Increase timer">+</button>
+                    </div>
                   </div>
                 </div>
 
-                <hr class="border-t-2 border-dashed border-outline/30 my-0 shrink-0"/>
+                <hr class="border-t-2 border-dashed border-outline/30 my-1"/>
 
-                <!-- Live Round Distribution Steppers (Per Mode) Expanded -->
-                <div class="flex-1 flex flex-col justify-between my-1">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="font-label-bold text-xs uppercase tracking-wider text-on-surface flex items-center gap-1.5 font-bold">
-                      <span class="material-symbols-outlined text-base text-neo-purple">grid_view</span> Rounds by Mode
-                    </span>
-                    <span class="font-label-sm text-[10px] text-outline uppercase font-bold">20 Frames • 10 Eyes • 10 Dialogue</span>
+                <!-- Row 2: Rounds By Mode (3 Mode Cards side-by-side) -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-label-bold text-xs uppercase tracking-wider text-on-surface font-black">Rounds by Mode</span>
+                    <span class="text-[10px] text-outline uppercase font-black">Per Active Mode</span>
                   </div>
 
-                  <div class="grid grid-cols-3 gap-2.5 flex-1 items-stretch">
+                  <div class="grid grid-cols-3 gap-3">
                     <!-- Frames Stepper Card -->
-                    <div id="modeCard-frames" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm transition-all relative overflow-hidden h-full" style="border-top: 4px solid #3b82f6;">
-                      <div class="flex items-center justify-between mb-1.5 pb-1.5 border-b-2 border-outline/20 cursor-pointer" onclick="PlayerLobby.toggleMode('frames')">
+                    <div id="modeCard-frames" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm relative overflow-hidden" style="border-top: 4px solid #3b82f6;">
+                      <div class="flex items-center justify-between pb-1.5 border-b-2 border-outline/20">
                         <span class="font-label-bold text-xs uppercase font-black text-on-surface flex items-center gap-1">
-                          <span class="material-symbols-outlined text-sm">panorama</span> Frame
+                          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                          Frames
                         </span>
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-frames"></span>
                       </div>
-                      <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostFramesRoundsBtn" onclick="PlayerLobby.promptSetRounds('frames')" title="Click to write number of rounds (Max 40)">20</span>
-                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
+                      <div class="flex flex-col items-center justify-center py-3">
+                        <span class="font-headline-xl text-3xl sm:text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostFramesRoundsBtn" onclick="PlayerLobby.promptSetRounds('frames')" title="Click to write number of rounds (Max 40)">20</span>
+                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1 tracking-wider font-black">Rounds</span>
+                      </div>
+                      <div class="flex items-center justify-center gap-2 pt-1 border-t-2 border-outline/10">
+                        <button type="button" onclick="PlayerLobby.adjustRounds('frames', -1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">−</button>
+                        <button type="button" onclick="PlayerLobby.adjustRounds('frames', 1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">+</button>
                       </div>
                     </div>
 
                     <!-- Eyes Stepper Card -->
-                    <div id="modeCard-eyes" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm transition-all relative overflow-hidden h-full" style="border-top: 4px solid #22c55e;">
-                      <div class="flex items-center justify-between mb-1.5 pb-1.5 border-b-2 border-outline/20 cursor-pointer" onclick="PlayerLobby.toggleMode('eyes')">
+                    <div id="modeCard-eyes" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm relative overflow-hidden" style="border-top: 4px solid #22c55e;">
+                      <div class="flex items-center justify-between pb-1.5 border-b-2 border-outline/20">
                         <span class="font-label-bold text-xs uppercase font-black text-on-surface flex items-center gap-1">
-                          <span class="material-symbols-outlined text-sm">visibility</span> Eyes
+                          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                          Eyes
                         </span>
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-eyes"></span>
                       </div>
-                      <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostEyesRoundsBtn" onclick="PlayerLobby.promptSetRounds('eyes')" title="Click to write number of rounds (Max 10)">10</span>
-                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
+                      <div class="flex flex-col items-center justify-center py-3">
+                        <span class="font-headline-xl text-3xl sm:text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostEyesRoundsBtn" onclick="PlayerLobby.promptSetRounds('eyes')" title="Click to write number of rounds (Max 10)">10</span>
+                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1 tracking-wider font-black">Rounds</span>
+                      </div>
+                      <div class="flex items-center justify-center gap-2 pt-1 border-t-2 border-outline/10">
+                        <button type="button" onclick="PlayerLobby.adjustRounds('eyes', -1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">−</button>
+                        <button type="button" onclick="PlayerLobby.adjustRounds('eyes', 1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">+</button>
                       </div>
                     </div>
 
                     <!-- Dialogue Stepper Card -->
-                    <div id="modeCard-dialogue" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm transition-all relative overflow-hidden h-full" style="border-top: 4px solid #eab308;">
-                      <div class="flex items-center justify-between mb-1.5 pb-1.5 border-b-2 border-outline/20 cursor-pointer" onclick="PlayerLobby.toggleMode('dialogue')">
+                    <div id="modeCard-dialogue" class="mode-round-card bg-surface border-2 border-on-surface rounded-xl p-3 flex flex-col justify-between neo-shadow-sm relative overflow-hidden" style="border-top: 4px solid #eab308;">
+                      <div class="flex items-center justify-between pb-1.5 border-b-2 border-outline/20">
                         <span class="font-label-bold text-xs uppercase font-black text-on-surface flex items-center gap-1">
-                          <span class="material-symbols-outlined text-sm">chat</span> Dialogue
+                          <svg class="ui-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                          Dialogue
                         </span>
                         <span class="mode-status-dot w-2.5 h-2.5 rounded-full bg-neo-green border border-on-surface" id="modeStatusDot-dialogue"></span>
                       </div>
-                      <div class="flex flex-col items-center justify-center py-4 flex-1">
-                        <span class="font-headline-xl text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostDialogueRoundsBtn" onclick="PlayerLobby.promptSetRounds('dialogue')" title="Click to write number of rounds (Max 40)">10</span>
-                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1.5 tracking-wider font-black">Rounds</span>
+                      <div class="flex flex-col items-center justify-center py-3">
+                        <span class="font-headline-xl text-3xl sm:text-4xl font-black text-on-surface leading-none cursor-pointer hover:text-primary transition-colors" id="hostDialogueRoundsBtn" onclick="PlayerLobby.promptSetRounds('dialogue')" title="Click to write number of rounds (Max 40)">10</span>
+                        <span class="text-[9px] font-label-bold uppercase text-outline mt-1 tracking-wider font-black">Rounds</span>
+                      </div>
+                      <div class="flex items-center justify-center gap-2 pt-1 border-t-2 border-outline/10">
+                        <button type="button" onclick="PlayerLobby.adjustRounds('dialogue', -1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">−</button>
+                        <button type="button" onclick="PlayerLobby.adjustRounds('dialogue', 1)" class="w-7 h-7 rounded-lg bg-surface hover:bg-slate-100 border-2 border-on-surface font-black text-xs flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] cursor-pointer">+</button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <hr class="border-t-2 border-dashed border-outline/30 my-0 shrink-0"/>
+                <!-- Asset status / notice container if preloading -->
+                <div id="lobbyAssetNoticeContainer" class="hidden"></div>
+              </div>
+            </section>
 
-                <!-- Timer Stepper (Inline Row) Expanded -->
-                <div class="flex items-center justify-between bg-surface-variant/40 border-2 border-on-surface rounded-xl p-4 neo-shadow-sm shrink-0">
-                  <div class="flex flex-col">
-                    <span class="font-label-bold text-xs uppercase font-bold text-on-surface flex items-center gap-1.5">
-                      <span class="material-symbols-outlined text-base text-neo-purple">timer</span>
-                      Round Timer
-                    </span>
-                    <span class="font-label-sm text-[10px] text-outline uppercase font-bold">Per movie frame</span>
-                  </div>
-                  <div class="font-headline-sm text-base uppercase font-black tracking-wide text-on-surface bg-primary-container border-2 border-on-surface rounded-lg px-4 py-2 neo-shadow-sm" id="hostTimerBtn">
-                    <span id="hostTimerBtnText">30s</span>
-                  </div>
+            <!-- 3. ACTION BUTTONS (START MATCH & LEAVE) -->
+            <div class="hidden md:flex flex-col gap-2">
+              <div id="lobbyStartNotice" class="hidden font-mono text-xs font-bold text-amber-900 bg-amber-100/90 border-2 border-amber-400 p-2.5 rounded-xl flex items-center justify-center gap-2"></div>
+              <div class="flex gap-4">
+                <button type="button" id="lobbyStartBtn" onclick="PlayerLobby.start()" class="w-1/2 bg-neo-green border-4 border-on-surface py-3.5 px-6 rounded-2xl font-headline-lg text-headline-lg uppercase flex items-center justify-between shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group cursor-pointer font-black">
+                  <span id="lobbyStartBtnText">Start Match</span>
+                  <svg class="ui-icon w-6 h-6 group-hover:translate-x-1.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <button type="button" onclick="PlayerLobby.back()" class="w-1/2 bg-surface border-4 border-on-surface py-3.5 px-6 rounded-2xl font-headline-sm text-headline-sm uppercase flex items-center justify-center gap-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer font-black">
+                  <svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Leave Lobby
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: LOBBY CHAT (Span 5 / ~40-42%) -->
+          <div class="lg:col-span-5 flex flex-col h-full">
+            <section class="bg-surface border-4 border-on-surface shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col rounded-2xl overflow-hidden h-full min-h-[580px]">
+              <!-- Header -->
+              <div class="bg-[#60A5FA] border-b-4 border-on-surface p-3.5 px-5 flex items-center justify-between shrink-0">
+                <h3 class="font-headline-sm text-lg uppercase text-on-surface flex items-center gap-2.5 font-black">
+                  <svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Lobby Chat
+                </h3>
+                <span class="bg-neo-green border-2 border-on-surface rounded-full px-2.5 py-0.5 font-label-bold text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center gap-1.5 font-black">
+                  <span class="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
+                  LIVE
+                </span>
+              </div>
+
+              <!-- Chat Message Stream -->
+              <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-3 min-h-[380px] max-h-[520px] bg-[#fffdf5]/60" id="lobbyChatStream">
+                <!-- Welcome Banner -->
+                <div class="bg-neo-yellow border-2 border-on-surface rounded-xl p-3 text-center font-black text-xs uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-on-surface select-none shrink-0">
+                  Lobby chat ready! Say hello!
                 </div>
+              </div>
 
-
+              <!-- Chat Input Box -->
+              <div class="p-3 bg-surface border-t-4 border-on-surface shrink-0">
+                <form id="lobbyChatForm" onsubmit="PlayerLobby.sendChat(event)" class="w-full flex items-center gap-2">
+                  <input type="text" id="lobbyChatInput" placeholder="Chat with lobby..." maxlength="180" autocomplete="off" class="flex-1 bg-surface border-2 border-on-surface rounded-xl px-3.5 py-2 font-bold text-sm text-on-surface placeholder:text-on-surface/40 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-black">
+                  <button type="submit" class="bg-[#3B82F6] hover:bg-blue-600 text-white border-2 border-on-surface rounded-xl px-4 py-2 font-black text-xs uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] transition-all cursor-pointer">
+                    <span>Send</span>
+                    <svg class="ui-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  </button>
+                </form>
               </div>
             </section>
           </div>
-        </div>
 
-        <!-- Desktop Action Buttons -->
-        <div class="hidden md:flex flex-col gap-2 mt-6">
-          <div id="lobbyStartNotice" class="hidden font-mono text-xs font-bold text-amber-900 bg-amber-100/90 border-2 border-amber-400 p-2.5 rounded-xl flex items-center justify-center gap-2"></div>
-          <div class="flex gap-4">
-            <button type="button" id="lobbyStartBtn" onclick="PlayerLobby.start()" class="w-1/2 bg-neo-green border-4 border-on-surface py-3.5 px-6 font-headline-lg text-headline-lg uppercase flex items-center justify-between shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all group cursor-pointer font-black">
-              <span id="lobbyStartBtnText">Start Match</span>
-              <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
-            </button>
-            <button type="button" onclick="PlayerLobby.back()" class="w-1/2 bg-surface border-4 border-on-surface py-3.5 px-6 font-headline-sm text-headline-sm uppercase flex items-center justify-center gap-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer font-bold">
-              <span class="material-symbols-outlined">logout</span>
-              Leave Lobby
-            </button>
-          </div>
         </div>
       </main>
 
@@ -15622,23 +15632,22 @@
               : (p.assetStatus === 'verifying' ? 'VERIFYING...' : `DOWNLOADING ${progress}%`);
 
             return `
-              <div class="bg-surface border-4 border-on-surface p-4 flex flex-col items-center justify-center relative neo-shadow rounded-xl transform transition-transform hover:-translate-y-1">
+              <div class="bg-surface border-4 border-on-surface p-3.5 flex flex-col items-center justify-center relative neo-shadow rounded-2xl transform transition-transform hover:-translate-y-0.5">
                 ${isH ? `
-                  <div class="absolute -top-3 -left-3 bg-neo-yellow border-2 border-on-surface px-2 py-0.5 font-label-bold text-[10px] uppercase flex items-center gap-1 z-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
-                    <svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST
+                  <div class="absolute -top-2.5 -left-2 bg-neo-yellow border-2 border-on-surface rounded px-1.5 py-0.5 font-label-bold text-[9px] uppercase flex items-center gap-1 z-10 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] font-black">
+                    <svg class="ui-icon" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 14h14v2H5v-2z"/></svg> HOST
                   </div>
                 ` : ''}
                 ${canRemove ? `
-                  <button type="button" onclick="PlayerLobby.remove(${i})" class="absolute -top-2.5 -right-2.5 bg-[#ff6b6b] text-white hover:bg-red-600 border-2 border-on-surface w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] transition-all z-10 cursor-pointer" title="Remove Player">✕</button>
+                  <button type="button" onclick="PlayerLobby.remove(${i})" class="absolute -top-2 -right-2 bg-[#ff6b6b] text-white hover:bg-red-600 border-2 border-on-surface w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[1px] transition-all z-10 cursor-pointer" title="Remove Player">✕</button>
                 ` : ''}
-                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-on-surface overflow-hidden mb-3 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" style="background-color: ${avColor};">
+                <div class="w-20 h-20 rounded-full border-4 border-on-surface overflow-hidden mb-2.5 flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" style="background-color: ${avColor};">
                   <img class="w-full h-full ${avFit}" src="${SecurityUtil.escapeHtml(avSrc)}" alt="${safeName}" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg'"/>
                 </div>
                 ${isMe ? `
-                  <div class="relative w-full max-w-[140px] flex items-center group">
+                  <div class="relative w-full max-w-[130px] flex items-center group">
                     <input type="text"
-                           class="w-full text-center font-black uppercase text-xs sm:text-sm px-2 py-1 border-2 border-on-surface rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-black transition-all cursor-text font-sans"
-                           style="background-color: ${avConfig.color}; color: #1a1a1a;"
+                           class="w-full text-center font-black uppercase text-xs px-2 py-1 border-2 border-on-surface rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-2 focus:ring-black transition-all cursor-text font-sans bg-[#F472B6] text-on-surface"
                            value="${safeName}"
                            maxlength="14"
                            placeholder="Name..."
@@ -15648,23 +15657,16 @@
                            onblur="PlayerLobby.renamePlayer(${i}, this.value)"
                            onkeydown="if(event.key==='Enter') this.blur();"
                     />
-                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"><svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
+                    <span class="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"><svg class="ui-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
                   </div>
                 ` : `
-                  <div class="border-2 border-on-surface px-3 py-1 rounded-lg font-headline-sm text-sm sm:text-base uppercase font-black tracking-wide text-on-surface truncate max-w-full text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" style="background-color: ${avConfig.color};">
+                  <div class="border-2 border-on-surface px-3 py-1 rounded-xl font-headline-sm text-xs uppercase font-black tracking-wide text-on-surface truncate max-w-[130px] w-full text-center shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-[#F472B6]">
                     ${safeName}
                   </div>
                 `}
-                <div class="mt-2.5 ${isPlayerReady ? 'bg-[#86EFAC] text-[#14532D]' : 'bg-[#FEF08A] text-[#854D0E]'} border-2 border-on-surface px-2.5 py-1 rounded-full font-label-bold text-[10px] uppercase font-black flex flex-col items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] w-full max-w-[140px]">
-                  <div class="flex items-center gap-1">
-                    ${isPlayerReady ? `<svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : `<svg class="ui-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`}
-                    <span>${statusLabel}</span>
-                  </div>
-                  ${!isPlayerReady ? `
-                    <div class="w-full bg-black/15 rounded-full h-1.5 overflow-hidden">
-                      <div class="bg-[#d97706] h-full rounded-full transition-all duration-300" style="width: ${progress}%;"></div>
-                    </div>
-                  ` : ''}
+                <div class="mt-2 ${isPlayerReady ? 'bg-[#86EFAC] text-on-surface' : 'bg-[#FEF08A] text-on-surface'} border-2 border-on-surface px-2.5 py-1 rounded-xl font-label-bold text-[10px] uppercase font-black flex items-center justify-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] w-full max-w-[130px]">
+                  ${isPlayerReady ? `<svg class="ui-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : `<svg class="ui-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`}
+                  <span>${statusLabel}</span>
                 </div>
               </div>
             `;
@@ -15676,16 +15678,16 @@
             const hideOnMobile = slotIdx >= 2 ? 'hidden sm:flex' : '';
             if (!isOnline) {
               return `
-                <div onclick="PlayerLobby.addLocalPlayer()" class="border-4 border-dashed border-outline/40 hover:border-outline hover:bg-surface/50 rounded-xl p-4 flex flex-col items-center justify-center h-36 opacity-60 hover:opacity-100 transition-all cursor-pointer ${hideOnMobile}" title="Click to add player">
-                  <span class="material-symbols-outlined text-4xl text-outline">person_add</span>
-                  <span class="font-label-bold text-[10px] uppercase font-bold text-outline mt-1">+ Add Player</span>
+                <div onclick="PlayerLobby.addLocalPlayer()" class="border-4 border-dashed border-[#9ca3af] bg-[#f9fafb]/50 hover:border-black hover:bg-surface/80 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[160px] opacity-70 hover:opacity-100 transition-all cursor-pointer ${hideOnMobile}" title="Click to add player">
+                  <svg class="ui-icon text-[#6b7280] mb-2" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                  <span class="font-label-bold text-[10px] uppercase font-black text-[#6b7280] tracking-wider">+ ADD PLAYER</span>
                 </div>
               `;
             }
             return `
-              <div class="border-4 border-dashed border-outline/40 rounded-xl p-4 flex flex-col items-center justify-center h-36 opacity-40 ${hideOnMobile}">
-                <span class="material-symbols-outlined text-4xl text-outline">person_add</span>
-                <span class="font-label-bold text-[9px] uppercase font-bold text-outline mt-1">Empty Slot</span>
+              <div class="border-4 border-dashed border-[#9ca3af] bg-[#f9fafb]/50 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[160px] opacity-70 ${hideOnMobile}">
+                <svg class="ui-icon text-[#6b7280] mb-2" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                <span class="font-label-bold text-[10px] uppercase font-black text-[#6b7280] tracking-wider">EMPTY SLOT</span>
               </div>
             `;
           }).join('');
@@ -15792,7 +15794,7 @@
 
         // Update Timer button
         const timerBtnText = document.getElementById('hostTimerBtnText');
-        if (timerBtnText) timerBtnText.textContent = `${settings.timer || 30}s`;
+        if (timerBtnText) timerBtnText.textContent = `${settings.timer || 30}S SECONDS`;
 
         // Update Weekly Drops Toggle
         const weeklyToggle = document.getElementById('toggleWeeklyDropsDesktop');
@@ -16153,6 +16155,88 @@
 
       cycleTimer() {
         this.adjustTimer(1);
+      },
+
+      sendChat(event) {
+        if (event) event.preventDefault();
+        const input = document.getElementById('lobbyChatInput');
+        if (!input) return;
+        const text = (input.value || '').trim();
+        if (!text) return;
+        input.value = '';
+
+        const clean = text.substring(0, 180);
+        if (MultiplayerEngine.colyseusRoom) {
+          MultiplayerEngine.colyseusRoom.send('send_chat', { text: clean });
+        } else {
+          this.appendChatMessage({
+            id: 'local_' + Date.now(),
+            senderId: MultiplayerEngine.playerId || 'local',
+            senderName: GS.players[0] ? GS.players[0].name : 'You',
+            senderAvatar: GS.players[0] ? (GS.players[0].avatar || 'aman') : 'aman',
+            text: clean,
+            timestamp: Date.now(),
+            isSystem: false
+          });
+        }
+      },
+
+      appendChatMessage(chat) {
+        if (!chat) return;
+        if (chat.id) {
+          if (!this._seenChatIds) this._seenChatIds = new Set();
+          if (this._seenChatIds.has(chat.id)) return;
+          this._seenChatIds.add(chat.id);
+          if (this._seenChatIds.size > 200) {
+            const first = this._seenChatIds.values().next().value;
+            this._seenChatIds.delete(first);
+          }
+        }
+
+        const stream = document.getElementById('lobbyChatStream');
+        if (!stream) return;
+
+        const isMe = (MultiplayerEngine.playerId && chat.senderId === MultiplayerEngine.playerId) ||
+                     (MultiplayerEngine.playerName && chat.senderName === MultiplayerEngine.playerName);
+        const isSystem = Boolean(chat.isSystem || chat.senderId === 'system' || chat.senderName === 'System');
+
+        const row = document.createElement('div');
+        if (isSystem) {
+          row.className = 'w-full flex justify-center my-1 select-none';
+          row.innerHTML = `<span class="bg-black/5 border border-black/20 rounded-full px-3 py-0.5 text-[10px] font-bold text-on-surface/70">${SecurityUtil.escapeHtml(chat.text || '')}</span>`;
+        } else {
+          const senderName = SecurityUtil.escapeHtml(chat.senderName || 'Player');
+          const safeText = SecurityUtil.escapeHtml(chat.text || '');
+          const av = resolvePlayerAvatar({ avatar: chat.senderAvatar || 'aman' }, 'aman');
+          const avBg = getPlayerAvatarBg({ avatar: chat.senderAvatar || 'aman' }, '#facc15');
+          const timeStr = chat.timestamp ? new Date(chat.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
+          row.className = 'flex items-start gap-2.5 w-full';
+          row.innerHTML = `
+            <div class="w-8 h-8 rounded-full border-2 border-on-surface overflow-hidden shrink-0 shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center mt-0.5" style="background-color: ${avBg};">
+              <img src="${SecurityUtil.escapeHtml(av)}" alt="${senderName}" class="w-full h-full object-cover" onerror="this.src='https://res.cloudinary.com/xxvk1ruz/image/upload/v1789799893/scoopcast/avvtar/aman.svg'"/>
+            </div>
+            <div class="flex-1 flex flex-col min-w-0">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="font-black text-xs text-on-surface truncate ${isMe ? 'text-primary' : ''}">${senderName} ${isMe ? '<span class="text-[9px] font-bold text-outline font-sans">(You)</span>' : ''}</span>
+                <span class="text-[9px] font-mono font-bold text-outline">${timeStr}</span>
+              </div>
+              <div class="border-2 border-on-surface rounded-xl rounded-tl-none p-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-xs font-bold text-on-surface break-words leading-snug" style="background-color: ${isMe ? '#cae6ff' : '#ffffff'};">
+                ${safeText}
+              </div>
+            </div>
+          `;
+        }
+
+        stream.appendChild(row);
+        while (stream.children.length > 60) {
+          if (stream.children.length > 1 && stream.children[1] !== row) {
+            stream.children[1].remove();
+          } else {
+            break;
+          }
+        }
+        stream.scrollTop = stream.scrollHeight;
       },
 
       remove(i) {
@@ -20380,6 +20464,9 @@
 
         if (room.state && room.state.chatMessages) {
           room.state.chatMessages.onAdd((chat) => {
+            if (typeof PlayerLobby !== 'undefined' && PlayerLobby.appendChatMessage) {
+              PlayerLobby.appendChatMessage(chat);
+            }
             if (chat && typeof ChatEngine !== 'undefined') {
               // Suppress raw server system message if it's a guess/winner notification (handled by currentRoundWinners)
               if (chat.isSystem && typeof chat.text === 'string' && (

@@ -1,3 +1,5 @@
+import { DIALOGUE_CATALOG } from './dialogueCatalog';
+
 export type MediaType = 'image' | 'dialogue' | 'eye';
 
 export interface CatalogItem {
@@ -10,7 +12,11 @@ export interface CatalogItem {
   answer: string;
   year?: string;
   aliases?: string[];
-  tag?: 'new' | 'classic';
+  tag?: string;
+  region?: 'hollywood' | 'bollywood' | 'regional' | 'international';
+  actor?: string;
+  character?: string;
+  displayAnswer?: string;
 }
 
 export const CATALOG: CatalogItem[] = [

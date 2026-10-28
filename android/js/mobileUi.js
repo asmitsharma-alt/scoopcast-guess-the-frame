@@ -836,6 +836,12 @@ const UI = {
     if (hostRevealEndBtn) {
       hostRevealEndBtn.style.display = (screenId === 'revealScreen' && isHost) ? 'flex' : 'none';
     }
+
+    // Lobby Chat Mobile Floating Button
+    const fabLobbyChat = document.getElementById('fabLobbyChat');
+    if (fabLobbyChat) {
+      fabLobbyChat.style.display = (screenId === 'lobbyScreen') ? 'flex' : 'none';
+    }
   },
 
   showRoundIntro(roundNum, totalRounds, mediaType) {
@@ -952,6 +958,13 @@ const UI = {
     const dot = document.getElementById('chatUnreadDot');
     if (dot) dot.style.display = 'none';
 
+    // Clear unread counts for mobile lobby buttons
+    this.lobbyUnreadChatCount = 0;
+    const lobbyBadge = document.getElementById('lobbyChatBadge');
+    if (lobbyBadge) lobbyBadge.style.display = 'none';
+    const fabBadge = document.getElementById('fabLobbyChatBadge');
+    if (fabBadge) fabBadge.style.display = 'none';
+
     if (!drawer) return;
     const isOpen = drawer.classList.contains('open');
     if (isOpen) {
@@ -959,6 +972,17 @@ const UI = {
       if (backdrop) backdrop.classList.remove('active');
     } else {
       document.querySelectorAll('.drawer-sheet, .sidebar-panel').forEach(d => d.classList.remove('open'));
+
+      // Contextual title: Lobby Chat vs Live Room Chat
+      const drawerTitle = drawer.querySelector('.drawer-header span');
+      if (drawerTitle) {
+        if (this.currentScreen === 'lobbyScreen') {
+          drawerTitle.innerHTML = `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Lobby Chat`;
+        } else {
+          drawerTitle.innerHTML = `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Live Room Chat`;
+        }
+      }
+
       drawer.classList.add('open');
       if (backdrop) backdrop.classList.add('active');
       const chatInput = document.getElementById('chatInput');
@@ -1655,6 +1679,22 @@ const UI = {
         drawerStream.firstElementChild.remove();
       }
       drawerStream.scrollTop = drawerStream.scrollHeight;
+    }
+
+    // Lobby Chat Mobile unread indicator
+    if (this.currentScreen === 'lobbyScreen') {
+      const drawer = document.getElementById('chatDrawer');
+      const isDrawerOpen = drawer && drawer.classList.contains('open');
+      if (!isDrawerOpen && (!isMe || isSystem)) {
+        this.lobbyUnreadChatCount = (this.lobbyUnreadChatCount || 0) + 1;
+        const lobbyBadge = document.getElementById('lobbyChatBadge');
+        if (lobbyBadge) lobbyBadge.style.display = 'block';
+        const fabBadge = document.getElementById('fabLobbyChatBadge');
+        if (fabBadge) {
+          fabBadge.style.display = 'block';
+          fabBadge.textContent = this.lobbyUnreadChatCount > 9 ? '9+' : String(this.lobbyUnreadChatCount);
+        }
+      }
     }
 
     if (chat.isWinner) {
