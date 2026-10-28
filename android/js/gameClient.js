@@ -393,17 +393,18 @@ const GameClient = {
       MediaCache.preloadCatalog();
     }
 
-    // Fast Host Migration on tab close / reload / navigate away
+    // Host Migration on actual tab unload (do not trigger on temporary pagehide/backgrounding)
     const handleLeave = () => {
       if (this.colyseusRoom && this.isHost) {
         try {
           this.colyseusRoom.send("host_leaving");
-          this.colyseusRoom.leave(true);
+          if (this.colyseusRoom.state && this.colyseusRoom.state.phase === 'lobby') {
+            this.colyseusRoom.leave(true);
+          }
         } catch (e) {}
       }
     };
     window.addEventListener('beforeunload', handleLeave);
-    window.addEventListener('pagehide', handleLeave);
   },
 
   getColyseusEndpoint() {
@@ -803,14 +804,19 @@ const GameClient = {
         const roomRes = await fetch(`${httpEndpoint}/api/room/${cleanCode}`);
         if (roomRes.ok) {
           const roomData = await roomRes.json();
-          if (roomData && roomData.exists && roomData.roomId) {
-            resolvedRoomId = roomData.roomId;
+          if (roomData && roomData.exists) {
+            if (roomData.ongoing || (roomData.phase && roomData.phase !== 'lobby')) {
+              throw new Error("Game has already started! Joining after match start is not allowed.");
+            }
+            if (roomData.roomId) {
+              resolvedRoomId = roomData.roomId;
+            }
           }
         } else if (roomRes.status === 404) {
           throw new Error(`Lobby "${cleanCode}" not found. Verify room code with host!`);
         }
       } catch (err) {
-        if (err.message && err.message.includes('not found')) {
+        if (err.message && (err.message.includes('not found') || err.message.includes('already started') || err.message.includes('not permitted') || err.message.includes('not allowed'))) {
           throw err;
         }
         console.warn('[Colyseus] Room API lookup fallback:', err);
@@ -830,13 +836,15 @@ const GameClient = {
         room = await client.joinById(resolvedRoomId, {
           roomCode: this.roomCode,
           name: this.playerName,
-          avatar: this.playerAvatar
+          avatar: this.playerAvatar,
+          userId: this.playerId
         });
       } else {
         room = await client.join('trivia_room', {
           roomCode: this.roomCode,
           name: this.playerName,
-          avatar: this.playerAvatar
+          avatar: this.playerAvatar,
+          userId: this.playerId
         });
       }
 
@@ -1549,17 +1557,31 @@ const GameClient = {
         this._heartbeatInterval = null;
       }
 
-      // If unexpected disconnect (e.g. mobile 4G handover or screen lock), attempt reconnect
+      // If unexpected disconnect (e.g. mobile 4G handover or screen lock), attempt reconnect with retries
       const token = sessionStorage.getItem('gtf_m_reconnection_token');
       if (code !== 1000 && token && !this._isReconnecting) {
         this._isReconnecting = true;
         if (typeof UI !== 'undefined' && UI.showToast) {
           UI.showToast('⚠️ Connection interrupted. Reconnecting...');
         }
-        try {
-          const endpoint = this.getColyseusEndpoint();
-          const client = new Colyseus.Client(endpoint);
-          const reconnectedRoom = await client.reconnect(token);
+
+        let reconnectedRoom = null;
+        const endpoint = this.getColyseusEndpoint();
+        for (let attempt = 1; attempt <= 4; attempt++) {
+          try {
+            console.log(`[Colyseus] Reconnection attempt ${attempt}/4...`);
+            const client = new Colyseus.Client(endpoint);
+            reconnectedRoom = await client.reconnect(token);
+            if (reconnectedRoom) break;
+          } catch (e) {
+            console.warn(`[Colyseus] Reconnection attempt ${attempt} failed:`, e?.message || e);
+            if (attempt < 4) {
+              await new Promise(r => setTimeout(r, 2000));
+            }
+          }
+        }
+
+        if (reconnectedRoom) {
           this._isReconnecting = false;
           this.colyseusRoom = reconnectedRoom;
           this.playerId = reconnectedRoom.sessionId;
@@ -1568,10 +1590,10 @@ const GameClient = {
             UI.showToast('✅ Restored connection to game!');
           }
           return;
-        } catch (e) {
-          console.warn('[Colyseus] Automatic reconnection failed:', e);
-          this._isReconnecting = false;
         }
+
+        this._isReconnecting = false;
+        console.warn('[Colyseus] All automatic reconnection attempts exhausted');
       }
 
       this.colyseusRoom = null;

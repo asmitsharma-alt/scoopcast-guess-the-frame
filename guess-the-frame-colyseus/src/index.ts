@@ -31,6 +31,16 @@ app.use(express.json());
 const rootStaticDir = path.resolve(__dirname, "../../");
 app.use(express.static(rootStaticDir));
 
+app.get(['/admin', '/admin/'], (req: Request, res: Response) => {
+  res.sendFile(path.join(rootStaticDir, 'admin.html'));
+});
+app.get(['/desktop', '/desktop_app'], (req: Request, res: Response) => {
+  res.sendFile(path.join(rootStaticDir, 'desktop_app.html'));
+});
+app.get(['/mobile', '/mobile_app'], (req: Request, res: Response) => {
+  res.sendFile(path.join(rootStaticDir, 'mobile_app.html'));
+});
+
 // ── Root Endpoint ──
 app.get("/", (req: Request, res: Response) => {
   if (req.headers.accept && req.headers.accept.includes("text/html")) {
@@ -101,6 +111,8 @@ app.get("/api/room/:code", async (req: Request, res: Response) => {
       });
     }
 
+    const isOngoing = Boolean(match.metadata?.phase && match.metadata.phase !== "lobby");
+
     return res.status(200).json({
       exists: true,
       roomId: match.roomId,
@@ -109,7 +121,8 @@ app.get("/api/room/:code", async (req: Request, res: Response) => {
       maxClients: match.maxClients || 16,
       phase: match.metadata?.phase || "lobby",
       locked: Boolean(match.locked),
-      isFull: (match.clients || 0) >= (match.maxClients || 16)
+      isFull: (match.clients || 0) >= (match.maxClients || 16),
+      ongoing: isOngoing
     });
   } catch (err: any) {
     console.error("[API] Error in /api/room/:code:", err);

@@ -116,12 +116,17 @@ export class TriviaRoom extends Room<GameState> {
         throw new Error(`Invalid room code. Expected ${this.state.roomCode}, received ${code}`);
       }
     }
-    if (this.state.players.size >= this.maxClients) {
-      const targetUid = options?.userId ? String(options.userId).trim() : null;
-      const isReconnecting = targetUid && Array.from(this.state.players.values()).some(p => p.userId === targetUid);
-      if (!isReconnecting) {
-        throw new Error(`Room is full (${this.maxClients} players maximum).`);
-      }
+
+    const targetUid = options?.userId ? String(options.userId).trim() : null;
+    const isReconnecting = targetUid && Array.from(this.state.players.values()).some(p => p.userId === targetUid);
+
+    // Prevent players from joining after a game has started (except reconnecting players)
+    if (this.state.phase !== "lobby" && !isReconnecting) {
+      throw new Error("Game has already started. New players cannot join an ongoing game.");
+    }
+
+    if (this.state.players.size >= this.maxClients && !isReconnecting) {
+      throw new Error(`Room is full (${this.maxClients} players maximum).`);
     }
     return true;
   }
@@ -226,8 +231,8 @@ export class TriviaRoom extends Room<GameState> {
       if (consented || this.state.phase === "lobby" || this.state.phase === "game_over") {
         throw new Error("immediate leave");
       }
-      // Unconsented disconnects during active gameplay get 12s to reconnect
-      await this.allowReconnection(client, 12);
+      // Unconsented disconnects during active gameplay get resilient timeout to reconnect
+      await this.allowReconnection(client, GAME_CONFIG.reconnectionTimeout || 40);
       player.connected = true;
       this.addSystemChatMessage(`🔄 ${player.name} reconnected!`);
     } catch (e) {
@@ -405,6 +410,7 @@ export class TriviaRoom extends Room<GameState> {
 
       this.state.phase = "countdown";
       this.state.timeRemaining = 3;
+      this.lock(); // Lock room so matchmaker prevents new joins after game start
       this.setMetadata({ roomCode: this.state.roomCode, phase: "countdown", playerCount: this.state.players.size });
 
       if (this.countdownTimer) {
@@ -532,6 +538,7 @@ export class TriviaRoom extends Room<GameState> {
         this.roundIntroTimer = null;
       }
       this.state.phase = "lobby";
+      this.unlock(); // Unlock room when returning to lobby so new players can join
       this.state.settingsLocked = false;
       this.state.gameSettings.isLocked = false;
       this.state.currentRound = 0;

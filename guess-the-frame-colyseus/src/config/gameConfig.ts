@@ -4,6 +4,7 @@ export interface GameConfig {
   revealDuration: number;
   autoAdvanceDuration: number;
   maxPlayers: number;
+  reconnectionTimeout: number;
   scoring: {
     firstPlace: number;
     secondPlace: number;
@@ -18,6 +19,7 @@ export const GAME_CONFIG: GameConfig = {
   revealDuration: 5,
   autoAdvanceDuration: 20,  // 20s safety auto-advance after reveal
   maxPlayers: 16,
+  reconnectionTimeout: 40,  // 40s resilient reconnection window for active games
   scoring: {
     firstPlace: 10,
     secondPlace: 7,

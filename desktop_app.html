@@ -18359,8 +18359,16 @@
               const roomRes = await fetch(`${httpEndpoint}/api/room/${code}`);
               if (roomRes.ok) {
                 const roomData = await roomRes.json();
-                if (roomData && roomData.exists && roomData.roomId) {
-                  resolvedRoomId = roomData.roomId;
+                if (roomData && roomData.exists) {
+                  if (roomData.ongoing || (roomData.phase && roomData.phase !== 'lobby')) {
+                    alert('Game has already started! Joining after match start is not allowed.');
+                    this.clearActiveSession();
+                    UI.showScreen('homeScreen');
+                    return;
+                  }
+                  if (roomData.roomId) {
+                    resolvedRoomId = roomData.roomId;
+                  }
                 }
               }
             } catch (e) {
@@ -18916,14 +18924,19 @@
             const roomRes = await fetch(`${httpEndpoint}/api/room/${code}`);
             if (roomRes.ok) {
               const roomData = await roomRes.json();
-              if (roomData && roomData.exists && roomData.roomId) {
-                resolvedRoomId = roomData.roomId;
+              if (roomData && roomData.exists) {
+                if (roomData.ongoing || (roomData.phase && roomData.phase !== 'lobby')) {
+                  throw new Error('Game has already started! Joining after match start is not permitted.');
+                }
+                if (roomData.roomId) {
+                  resolvedRoomId = roomData.roomId;
+                }
               }
             } else if (roomRes.status === 404) {
               throw new Error(`Lobby "${code}" not found. Please verify the room code and ensure the host is online.`);
             }
           } catch (err) {
-            if (err.message && err.message.includes('not found')) {
+            if (err.message && (err.message.includes('not found') || err.message.includes('already started') || err.message.includes('not permitted') || err.message.includes('not allowed'))) {
               throw err;
             }
             console.warn('[Colyseus] Room API query fallback:', err);
@@ -20735,21 +20748,38 @@
             this._isReconnecting = true;
             this.updateConnectionStatus(false);
             console.log('[Colyseus] Attempting automatic reconnection with token...');
-            try {
-              const endpoint = this.getColyseusEndpoint();
-              const client = new Colyseus.Client(endpoint);
-              const reconnectedRoom = await client.reconnect(token);
+
+            let reconnectedRoom = null;
+            const endpoint = this.getColyseusEndpoint();
+            for (let attempt = 1; attempt <= 4; attempt++) {
+              try {
+                console.log(`[Colyseus] Desktop reconnection attempt ${attempt}/4...`);
+                const client = new Colyseus.Client(endpoint);
+                reconnectedRoom = await client.reconnect(token);
+                if (reconnectedRoom) break;
+              } catch (e) {
+                console.warn(`[Colyseus] Desktop reconnection attempt ${attempt} failed:`, e?.message || e);
+                if (attempt < 4) {
+                  await new Promise(r => setTimeout(r, 2000));
+                }
+              }
+            }
+
+            if (reconnectedRoom) {
               this._isReconnecting = false;
               this.colyseusRoom = reconnectedRoom;
               this.playerId = reconnectedRoom.sessionId;
               this.bindColyseusGame(reconnectedRoom);
               this.updateConnectionStatus(true);
               console.log('[Colyseus] Successfully reconnected to room!');
+              if (typeof UI !== 'undefined' && UI.showToast) {
+                UI.showToast('✅ Restored connection to game!');
+              }
               return;
-            } catch (e) {
-              console.warn('[Colyseus] Reconnection failed:', e);
-              this._isReconnecting = false;
             }
+
+            this._isReconnecting = false;
+            console.warn('[Colyseus] Desktop reconnection failed after 4 attempts');
           }
 
           this.colyseusRoom = null;
@@ -23408,13 +23438,15 @@
 
     /* Cleanup on page unload - prevent orphaned connections */
     const handleDesktopLeave = () => {
-      // Clean up Colyseus connection with fast host leaving
+      // Clean up Colyseus connection with host leaving ONLY if in lobby
       if (typeof MultiplayerEngine !== 'undefined' && MultiplayerEngine.colyseusRoom) {
         try {
           if (MultiplayerEngine.isHost) {
             MultiplayerEngine.colyseusRoom.send("host_leaving");
           }
-          MultiplayerEngine.colyseusRoom.leave(true);
+          if (MultiplayerEngine.colyseusRoom.state && MultiplayerEngine.colyseusRoom.state.phase === 'lobby') {
+            MultiplayerEngine.colyseusRoom.leave(true);
+          }
         } catch (e) { }
       }
     };
@@ -23455,7 +23487,7 @@
       if (GameController._roundIntroIntervalId) { clearInterval(GameController._roundIntroIntervalId); }
     });
 
-    window.addEventListener('pagehide', handleDesktopLeave);
+    // pagehide listener removed to prevent unexpected player disconnects on backgrounding
 
     
     
