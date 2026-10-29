@@ -1,5 +1,3 @@
-import { DIALOGUE_CATALOG } from './dialogueCatalog';
-
 export type MediaType = 'image' | 'dialogue' | 'eye';
 
 export interface CatalogItem {
@@ -12,15 +10,11 @@ export interface CatalogItem {
   answer: string;
   year?: string;
   aliases?: string[];
-  tag?: string;
-  region?: 'hollywood' | 'bollywood' | 'regional' | 'international';
-  actor?: string;
-  character?: string;
-  displayAnswer?: string;
+  tag?: 'new' | 'classic';
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (2094 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (2095 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -18866,6 +18860,15 @@ export const CATALOG: CatalogItem[] = [
     answer: "SINNERS",
     year: "2025",
     tag: "new"
+  },
+  {
+    id: "f_2095",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793285623/scoopcast_frames/Napoleon_2023_2023.jpg",
+    answer: "NAPOLEON (2023)",
+    year: "2023",
+    tag: "classic"
   },
 
   // ── Guess The Dialogue (400 Curated Dialogues: 200 Bollywood + 200 Hollywood) ──
