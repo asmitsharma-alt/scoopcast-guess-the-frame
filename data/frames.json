@@ -29031,5 +29031,12 @@
     "answer": "BIRDS OF PARADISE",
     "year": "2021",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589076/scoopcast_frames/Canoa_A_Shameful_Memory_1976.jpg",
+    "answer": "CANOA: A SHAMEFUL MEMORY",
+    "year": "1976",
+    "tag": "classic"
   }
 ]
