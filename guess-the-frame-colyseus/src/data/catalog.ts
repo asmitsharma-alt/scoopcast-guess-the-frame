@@ -14,7 +14,7 @@ export interface CatalogItem {
 }
 
 export const CATALOG: CatalogItem[] = [
-  // ── Guess The Frame (2097 Dynamic Cinema Frames) ──
+  // ── Guess The Frame (2099 Dynamic Cinema Frames) ──
   {
     id: "f_1",
     category: "frames",
@@ -18886,6 +18886,24 @@ export const CATALOG: CatalogItem[] = [
     content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790589076/scoopcast_frames/Canoa_A_Shameful_Memory_1976.jpg",
     answer: "CANOA: A SHAMEFUL MEMORY",
     year: "1976",
+    tag: "classic"
+  },
+  {
+    id: "f_2098",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793371531/scoopcast_frames/The_Wonder_2022.jpg",
+    answer: "THE WONDER",
+    year: "2022",
+    tag: "classic"
+  },
+  {
+    id: "f_2099",
+    category: "frames",
+    type: "image",
+    content: "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599368/scoopcast_frames/Three_Colours_Red_1994.jpg",
+    answer: "THREE COLOURS: RED",
+    year: "1994",
     tag: "classic"
   },
 

@@ -29038,5 +29038,19 @@
     "answer": "CANOA: A SHAMEFUL MEMORY",
     "year": "1976",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793371531/scoopcast_frames/The_Wonder_2022.jpg",
+    "answer": "THE WONDER",
+    "year": "2022",
+    "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790599368/scoopcast_frames/Three_Colours_Red_1994.jpg",
+    "answer": "THREE COLOURS: RED",
+    "year": "1994",
+    "tag": "classic"
   }
 ]
