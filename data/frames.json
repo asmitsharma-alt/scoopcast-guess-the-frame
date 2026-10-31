@@ -29052,5 +29052,12 @@
     "answer": "THREE COLOURS: RED",
     "year": "1994",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1790598355/scoopcast_frames/Asteroid_City_2023.jpg",
+    "answer": "ASTEROID CITY",
+    "year": "2023",
+    "tag": "classic"
   }
 ]
