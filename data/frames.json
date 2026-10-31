@@ -29059,5 +29059,12 @@
     "answer": "ASTEROID CITY",
     "year": "2023",
     "tag": "classic"
+  },
+  {
+    "type": "image",
+    "content": "https://res.cloudinary.com/nvwgbyr3/image/upload/v1793475606/scoopcast_frames/Fast_Company_1979.jpg",
+    "answer": "FAST COMPANY",
+    "year": "1979",
+    "tag": "classic"
   }
 ]
